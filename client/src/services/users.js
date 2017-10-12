@@ -2,6 +2,6 @@
  * Users service
  */
 
-import Resource from './resource'
+import Fetch from './fetch'
 
-export default new Resource('v1/passport/login')
+export default new Fetch('v1/passport/login')
