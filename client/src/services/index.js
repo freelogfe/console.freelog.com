@@ -5,8 +5,10 @@
 
 import TokenService from './tokens'
 import UserService from './users'
+import PolicyService from './policy'
 
 export {
   TokenService,
-  UserService
+  UserService,
+  PolicyService
 }

@@ -11,6 +11,10 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  node: {
+    module: "empty",
+    fs: "empty"
+  },
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

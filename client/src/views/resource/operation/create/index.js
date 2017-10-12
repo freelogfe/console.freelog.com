@@ -42,7 +42,7 @@ export default {
     },
     successHandler(res, file) {
       if (res.ret != 0) {
-        this.$message.error(res.msg);
+        this.$message.error(res.msg+'资源Id为: '+res.data);
       } else {
         this.$message.success('资源创建成功');
         setTimeout(() => {

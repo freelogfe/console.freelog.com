@@ -46,33 +46,7 @@ export default {
         }
       ]
     },
-    {
-      path: 'policy',
-      meta: {
-        requiresAuth: true,
-        title: '资源策略操作'
-      },
-      component: Container,
-      children: [
-        {
-          path: 'create',
-          meta: {
-            requiresAuth: true,
-            title: '创建资源策略'
-          },
-          component: resourcePolicyCreator
-        },
-        {
-          path: 'update',
-          hidden: true,
-          meta: {
-            requiresAuth: true,
-            title: '更新资源'
-          },
-          component: resourcePolicyUpdator
-        }
-      ]
-    },
+
     {
       path: 'list',
       meta: {
@@ -99,6 +73,7 @@ export default {
       children: [
         {
           path: 'create',
+          hidden: true,
           meta: {
             requiresAuth: true,
             title: '创建策略'
