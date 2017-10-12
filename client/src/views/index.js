@@ -3,7 +3,7 @@
 export const layout = resolve => require.ensure([], () => resolve(require('@/views/layout/layout.vue')), 'common')
 export const login = resolve => require.ensure([], () => resolve(require('@/views/login/index.vue')), 'login');
 export const error = resolve => require.ensure([], () => resolve(require('@/views/error.vue')), 'common');
-export const resourceCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/create/index.vue')), 'resource')
+export const resourceCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/operation/create/index.vue')), 'resource')
 export const resourceUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard');
 export const resourcePolicyCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
