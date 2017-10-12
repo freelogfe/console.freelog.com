@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="import" href="/public/JWTMiddleware.html">
+    <link rel="import" href="/public/SuccessMiddleware.html">
+    <link rel="import" href="/public/MiddleStack.html">
+</head>
+<body>
+<middleware-stack id="js-stack">
+    <middleware-jwt id="js-jwt"></middleware-jwt>
+    <middleware-success id="js-success"></middleware-success>
+</middleware-stack>
+
+<div id="js-output"></div>
+<script>
+    var $stack = document.querySelector('#js-stack');
+    var $output = document.querySelector('#js-output');
+
+    $stack.fetch('/login')
+            .then(function (res) {
+                $output.innerHTML = sessionStorage.getItem('Authorization');
+            });
+</script>
+</body>
+</html>

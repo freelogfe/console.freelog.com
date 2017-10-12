@@ -1,0 +1,38 @@
+<script>
+    'use strict'
+
+    class Middleware extends HTMLElement {
+        constructor() {
+            super();
+        }
+
+        connectedCallback() {
+            var self = this;
+            var MIDDLEWARE_STACK = 'MIDDLEWARE-STACK';
+            if (this.parentNode.nodeName === 'MIDDLEWARE-STACK') {
+                window.customElements.whenDefined(MIDDLEWARE_STACK.toLowerCase())
+                        .then(function () {
+                            self.parentNode.use(self);
+                        });
+            }
+        }
+
+
+        transform_request(target, req) {
+            return req;
+        }
+
+        transform_response(res) {
+            return res
+        }
+
+        set_next(mw) {
+            this.next = mw;
+        }
+
+        fetch(target, req) {
+            return this.next.fetch(target, this.transform_request(req)).then(this.transform_response);
+        }
+    }
+
+</script>

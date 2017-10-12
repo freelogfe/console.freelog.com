@@ -1,0 +1,22 @@
+@import "mixin.less";
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  [class^="el-icon-fa"], [class*=" el-icon-fa"] {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome!important;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  };
+}
+
+@import url("../../node_modules/font-awesome/less/font-awesome");
+@import url("../../node_modules/font-awesome/css/font-awesome.css");
+@fa-css-prefix: el-icon-fa;

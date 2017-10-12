@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="import" href="/public/JWTMiddleware.html">
+</head>
+<body>
+<middleware-jwt id="js-jwt"></middleware-jwt>
+<div id="js-output"></div>
+<input type="text" class="js-username" placeholder="username" name="username" value="daizch">
+<button class="js-login">login</button>
+<script>
+    var $jwt = document.querySelector('#js-jwt');
+    var $output = document.querySelector('#js-output');
+    $jwt.set_next(window);
+
+    document.querySelector('.js-login').addEventListener('click',function () {
+        fetch('/api/login?username='+document.querySelector('.js-username').value, {
+            method: 'get'
+        }).then(function (res) {
+            console.log(res)
+            res.json().then(function (data) {
+                $output.innerHTML = JSON.stringify(data);
+            })
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "daizch",
+      "password": "123456",
+      "email": "daizch@freelog.com",
+      "phone": "1234566789",
+      "roles": [
+        "admin",
+        "nodeUser",
+        "resourceUser"
+      ],
+      "created": "2017-01-11 04:06:54",
+      "updated": "2017-01-11 12:06:54",
+      "meta": {
+        "avatar": "https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?d=identicon",
+        "location": "ShenZhen, China",
+        "gender": "male"
+      }
+    },
+    {
+      "id": 2,
+      "username": "yuliang",
+      "password": "123456",
+      "email": "xiaoming@freelog.com",
+      "phone": "1234566789",
+      "roles": [
+        "nodeUser",
+        "resourceUser"
+      ],
+      "created": "2017-01-12 04:06:54",
+      "updated": "2017-03-11 04:06:54",
+      "meta": {
+        "avatar": "https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?d=identicon",
+        "location": "Beijing, China",
+        "gender": "male"
+      }
+    },
+    {
+      "id": 3,
+      "username": "Amy",
+      "password": "123456",
+      "email": "amy@freelog.com",
+      "phone": "1234566789",
+      "roles": [
+        "user"
+      ],
+      "created": "2017-02-11 04:06:54",
+      "updated": "2017-04-11 04:06:54",
+      "meta": {
+        "avatar": "https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?d=identicon",
+        "location": "Beijing, China",
+        "gender": "female"
+      }
+    },
+    {
+      "id": 4,
+      "username": "Tom123",
+      "password": "123456",
+      "email": "tom@freelog.com",
+      "phone": "1234566789",
+      "roles": [
+        "resourceUser"
+      ],
+      "created": "2017-05-11 04:06:54",
+      "updated": "2017-08-09 04:06:54",
+      "meta": {
+        "avatar": "https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?d=identicon",
+        "location": "ShenZhen, China",
+        "gender": "male"
+      }
+    },
+    {
+      "id": 5,
+      "username": "Jenny",
+      "password": "123456",
+      "email": "jenny@freelog.com",
+      "phone": "1234566789",
+      "roles": [
+        "nodeUser"
+      ],
+      "created": "2016-01-11 04:06:54",
+      "updated": "2017-01-11 04:06:54",
+      "meta": {
+        "avatar": "https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?d=identicon",
+        "location": "Beijing, China",
+        "gender": "female"
+      }
+    }
+  ]
+}

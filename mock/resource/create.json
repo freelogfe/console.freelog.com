@@ -1,0 +1,22 @@
+{
+  "ret": 0,
+  "errcode": 0,
+  "msg": "success",
+  "data": {
+    "resourceId": "b92382ad2ce08882ddb94be5fd1b46eae6a0607c",
+    "status": 1,
+    "resourceType": "Image",
+    "meta": {
+      "fileSize": 107907,
+      "mimeType": "image/png",
+      "sha1": "b92382ad2ce08882ddb94be5fd1b46eae6a0607c",
+      "width": 531,
+      "height": 186,
+      "systemMeta": {}
+    },
+    "resourceUrl": "http://freelog-shenzhen.oss-cn-shenzhen.aliyuncs.com/resources/image/c4a13543c6314cd8ab2f861c2d191a4c",
+    "userId": 1,
+    "resourceName": "b92382ad2c",
+    "mimeType": "image/png"
+  }
+}
