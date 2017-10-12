@@ -5,8 +5,10 @@
 
 import TokenService from './tokens'
 import UserService from './users'
+import ResourceService from './resource'
 
 export {
   TokenService,
-  UserService
+  UserService,
+  ResourceService
 }

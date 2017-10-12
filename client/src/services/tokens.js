@@ -2,6 +2,6 @@
  * Tokens service
  */
 
-import Resource from './resource'
+import Fetch from './fetch'
 
-export default new Resource('api/token')
+export default new Fetch('api/token')

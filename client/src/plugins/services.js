@@ -7,6 +7,7 @@ export default Vue => {
     var sn = name.replace(/service/i, '');
     sn = sn[0].toLowerCase() + sn.substr(1);
     services[sn] = Services[name];
+    services[name] = Services[name];
   });
 
   // mount the services to Vue

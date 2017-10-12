@@ -1,8 +1,8 @@
 <template>
   <div class="nav-menu-list">
     <el-menu default-active="" theme="dark" router>
-      <template v-for="navItem in navList">
-        <el-submenu index="#" v-if="navItem.children && !navItem.hidden">
+      <template v-for="(navItem,index) in navList">
+        <el-submenu :index="'nav-'+index" v-if="navItem.children && !navItem.hidden">
           <template slot="title">
             <span v-show="shouldShowTitle">{{navItem.meta.title}}</span>
           </template>

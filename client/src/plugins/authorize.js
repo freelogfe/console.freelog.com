@@ -6,11 +6,13 @@ export default Vue => {
 
     if (!to.meta.requiresAuth) return next()
 
-    store.dispatch('checkToken')
-      .then(valid => {
-        if (valid) return next()
-
-        next({ name: 'login', query: { redirect: to.fullPath } })
-      })
+    return next()
+    //todo
+    // store.dispatch('checkToken')
+    //   .then(valid => {
+    //     if (valid) return next()
+    //
+    //     next({ name: 'login', query: { redirect: to.fullPath } })
+    //   })
   })
 }

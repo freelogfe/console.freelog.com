@@ -7,8 +7,8 @@ export const resourceCreator = resolve => require.ensure([], () => resolve(requi
 export const resourceUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard');
 export const resourcePolicyCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
-export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
-export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
+export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
+export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/resource/detail/index.vue')), 'resource')
 
 export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')
 export const nodeUpdator = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
