@@ -27,7 +27,7 @@ export default {
           }
         })
     },
-    saveHandler(form){
+    signContactHandler(form){
 
     }
   }

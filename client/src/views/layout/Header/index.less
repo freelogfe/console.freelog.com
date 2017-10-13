@@ -28,13 +28,14 @@
   left: 0;
   right: 0;
   z-index: 9;
+  height: @header-height;
 }
 
 .brand {
   float: left;
   width: @sidebar-width;
-  height: 60px;
-  line-height: 60px;
+  height: 100%;
+  line-height: @header-height;
   text-align: center;
   font-size: 30px;
   a {
@@ -44,8 +45,8 @@
 
 .toolbar {
   .clearfix;
-  height: 60px;
-  line-height: 60px;
+  height: 100%;
+  line-height: @header-height;
   .left-nav-bar {
     float: left;
   }

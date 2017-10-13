@@ -8,12 +8,15 @@ export const resourceUpdator = resolve => require.ensure([], () => resolve(requi
 export const resourcePolicyCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
 export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
-export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/resource/detail/index.vue')), 'resource')
+export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/node/resource/detail/index.vue')), 'node')
+export const resourceDetailEditor = resolve => require.ensure([], () => resolve(require('@/views/resource/edit/index.vue')), 'resource')
 
 export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')
 export const nodeUpdator = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeList = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
+
+export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 
 
 export default {
@@ -29,5 +32,6 @@ export default {
   nodeCreator,
   nodeUpdator,
   nodeList,
-  nodeDetail
+  nodeDetail,
+  nodeResourceList
 }

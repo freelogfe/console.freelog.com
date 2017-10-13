@@ -7,10 +7,11 @@ import TokenService from './tokens'
 import UserService from './users'
 import PolicyService from './policy'
 import ResourceService from './resource'
-
+import G_ResourcesService from './g_resources'
 export {
   TokenService,
   UserService,
   PolicyService,
-  ResourceService
+  ResourceService,
+  G_ResourcesService
 }

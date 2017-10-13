@@ -1,0 +1,56 @@
+<template>
+  <section>
+    <el-form :model="detail" :rules="rules" class="resource-detail" ref="detail" label-width="100px">
+      <el-form-item label="resourceId" prop="resourceId">
+        <el-input v-model="detail.resourceId" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="resourceType" prop="resourceType">
+        <el-input v-model="detail.resourceId" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="resourceUrl" prop="resourceUrl">
+        <el-input v-model="detail.resourceUrl" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="resourceType" prop="resourceType">
+        <el-input v-model="detail.resourceType" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="resourceName" prop="resourceName">
+        <el-input v-model="detail.resourceName" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="mimeType" prop="mimeType">
+        <el-input v-model="detail.mimeType" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="createDate" prop="createDate">
+        <el-input v-model="detail.createDate" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="meta" prop="meta">
+        <template v-for="(val, key) in detail.meta">
+          <el-form-item :label="key" class="meta-detail-item">
+            <el-input :value="val" disabled></el-input>
+          </el-form-item>
+        </template>
+      </el-form-item>
+      <el-form-item class="btns">
+        <el-button type="primary" @click="signContactHandler('detail')">签约</el-button>
+      </el-form-item>
+    </el-form>
+  </section>
+</template>
+
+<script>
+  import ResourceDetail from './index'
+
+  export default ResourceDetail
+</script>
+
+<style lang="less" scoped>
+  .resource-detail {
+    width: 80%;
+    margin: auto;
+    .btns {
+      text-align: center;
+    }
+  }
+.meta-detail-item {
+  margin-bottom: 9px;
+}
+</style>

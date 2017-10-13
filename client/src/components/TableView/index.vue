@@ -1,20 +1,22 @@
 <template>
-  <div class="table-view-wrapper">
+  <div class="table-view-wrapper" v-loading.body="loading">
     <el-table
       class="table"
-      :data="data"
+      :data="tableData"
+      stripe
       border>
       <slot></slot>
     </el-table>
     <el-pagination
+      v-show="showPagination"
       class="pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
+      :current-page="pageMeta.page"
+      :page-sizes="[10, 20, 30, 50]"
+      :page-size="pageMeta.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
+      :total="100">
     </el-pagination>
   </div>
 </template>

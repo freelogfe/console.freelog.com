@@ -6,7 +6,7 @@ import {
   resourcePolicyCreator,
   resourcePolicyUpdator,
   resourceList,
-  resourceDetail
+  resourceDetailEditor
 } from '@/views'
 
 export default {
@@ -46,7 +46,6 @@ export default {
         }
       ]
     },
-
     {
       path: 'list',
       meta: {
@@ -56,12 +55,13 @@ export default {
       component: resourceList
     },
     {
-      path: 'detail',
+      path: 'detail/edit',
+      hidden: true,
       meta: {
         requiresAuth: true,
-        title: '资源详情'
+        title: '编辑资源详情'
       },
-      component: resourceDetail
+      component: resourceDetailEditor
     },
     {
       path: 'policy',

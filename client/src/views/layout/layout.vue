@@ -44,9 +44,13 @@
 
   .left-sidebar {
     position: fixed;
-    top: 60px;
+    top: @header-height;
     left: 0;
     bottom: 0;
+  }
+
+  .content {
+    margin-top: @header-height;
   }
 
   .content,

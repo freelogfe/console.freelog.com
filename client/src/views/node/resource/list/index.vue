@@ -19,7 +19,7 @@
         <template scope="scope">
           <el-button
             size="small"
-            @click="handleEdit(scope.row)">编辑</el-button>
+            @click="handleEdit(scope.row)">查看</el-button>
           <el-button
             size="small"
             @click="handlePolicy(scope.row)">policy</el-button>

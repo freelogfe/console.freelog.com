@@ -1,7 +1,7 @@
 import TableView from '@/components/TableView/index.vue'
 
 export default {
-  name: 'resource-list',
+  name: 'node-resource-list',
   data() {
     return {
       resourceList: []
@@ -21,14 +21,14 @@ export default {
             params: param
           }
         }
-        return this.$services.resource.get(param || {})
+        return this.$services.g_Resources.get(param || {})
       }
     },
     handlePolicy(resource) {
       this.$router.push({path: '/resource/policy/create', query: {resourceId: resource.resourceId}})
     },
     handleEdit(resource) {
-      this.$router.push({path: '/resource/detail/edit', query: {resourceId: resource.resourceId}})
+      this.$router.push({path: '/node/resources/detail', query: {resourceId: resource.resourceId}})
     }
   }
 }

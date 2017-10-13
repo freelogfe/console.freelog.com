@@ -4,7 +4,9 @@ import {
   nodeCreator,
   nodeUpdator,
   nodeList,
-  nodeDetail
+  nodeDetail,
+  nodeResourceList,
+  resourceDetail,
 } from '@/views'
 
 export default {
@@ -49,6 +51,23 @@ export default {
         title: '节点列表'
       },
       component: nodeList
+    },
+    {
+      path: 'resources',
+      meta: {
+        requiresAuth: true,
+        title: '资源列表'
+      },
+      component: nodeResourceList
+    },
+    {
+      path: 'resources/detail',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '资源详情'
+      },
+      component: resourceDetail
     },
     {
       path: 'detail',
