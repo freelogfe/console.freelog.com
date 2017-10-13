@@ -87,7 +87,7 @@ export default {
       component: Container,
       children : [
         {
-          path: 'signment',
+          path: 'sign',
           meta: {
             requiresAuth: true,
             title: '创建节点'

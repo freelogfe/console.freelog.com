@@ -25,7 +25,7 @@ export default {
       }
     },
     handlePolicy(resource) {
-      this.$router.push({path: '/resource/policy/create', query: {resourceId: resource.resourceId}})
+      this.$router.push({path: '/node/policyManagement/sign', query: {resourceId: resource.resourceId}})
     },
     handleEdit(resource) {
       this.$router.push({path: '/node/resources/detail', query: {resourceId: resource.resourceId}})
