@@ -11,10 +11,11 @@ export const resourceList = resolve => require.ensure([], () => resolve(require(
 export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/node/resource/detail/index.vue')), 'node')
 export const resourceDetailEditor = resolve => require.ensure([], () => resolve(require('@/views/resource/edit/index.vue')), 'resource')
 
-export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')
+export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/operation/create/index.vue')), 'node')
 export const nodeUpdator = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeList = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
+export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
 
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 
@@ -33,5 +34,6 @@ export default {
   nodeUpdator,
   nodeList,
   nodeDetail,
-  nodeResourceList
+  nodeResourceList,
+  nodePolicyManagement,
 }

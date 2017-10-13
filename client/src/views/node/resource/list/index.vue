@@ -19,10 +19,10 @@
         <template scope="scope">
           <el-button
             size="small"
-            @click="handleEdit(scope.row)">查看</el-button>
+            @click="handleEdit(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="handlePolicy(scope.row)">policy</el-button>
+            @click="handlePolicy(scope.row)">签约</el-button>
         </template>
       </el-table-column>
     </table-view>

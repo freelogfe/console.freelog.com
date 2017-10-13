@@ -7,6 +7,7 @@ import {
   nodeDetail,
   nodeResourceList,
   resourceDetail,
+  nodePolicyManagement
 } from '@/views'
 
 export default {
@@ -76,6 +77,24 @@ export default {
         title: '节点详情'
       },
       component: nodeDetail
+    },
+    {
+      path: 'policyManagement',
+      meta: {
+        requiresAuth: true,
+        title: '节点策略操作'
+      },
+      component: Container,
+      children : [
+        {
+          path: 'signment',
+          meta: {
+            requiresAuth: true,
+            title: '创建节点'
+          },
+          component: nodePolicyManagement
+        },
+      ]
     },
   ]
 }
