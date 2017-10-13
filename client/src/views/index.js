@@ -10,10 +10,11 @@ export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve
 export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
 export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/resource/detail/index.vue')), 'resource')
 
-export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')
+export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/operation/create/index.vue')), 'node')
 export const nodeUpdator = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeList = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('../views/main/index')), 'dashboard')
+export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
 
 
 export default {
@@ -29,5 +30,6 @@ export default {
   nodeCreator,
   nodeUpdator,
   nodeList,
-  nodeDetail
+  nodeDetail,
+  nodePolicyManagement,
 }
