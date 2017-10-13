@@ -2,6 +2,6 @@
  * Policy service
  */
 
-import Resource from './fetch'
+import Fetch from './fetch'
 
-export default new Resource('v1/resources/policies')
+export default new Fetch('v1/resources/policies')
