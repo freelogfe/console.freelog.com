@@ -3,13 +3,16 @@ import {mapGetters} from 'vuex'
 import NavMenu from '../NavMenu/index.vue'
 import nodeRoute from '@/router/node'
 import resourceRoute from '@/router/resource'
+import {nodeItemRoute} from '@/router/node'
+import node from "../../../router/node";
+
 
 export default {
   name: 'fl-sidebar',
   components: {
     'fl-nav-menu': NavMenu
   },
-  data () {
+  data() {
     return {
       navList: [],
       routeType: ''
@@ -19,27 +22,38 @@ export default {
     sidebar: 'sidebar'
   }),
   methods: {
-    changeRouteHandler(){
+    changeRouteHandler() {
       var fullPath = this.$route.fullPath;
-      var paths = fullPath.split('/').filter((v)=> {
+      var paths = fullPath.split('/').filter((v) => {
         return !!v;
       });
       var navList;
-      this.routeType = paths[0] || '';
+      var homePath;
 
-      switch (this.routeType) {
-        case 'node':
-          navList = nodeRoute.children;
-          break;
-        case 'resource':
-          navList = resourceRoute.children;
-          break;
-        default:
-          break;
+      if (this.$route.params.nodeId) {
+        homePath = `/node/${this.$route.params.nodeId}`;
+        navList = nodeItemRoute.children
+      } else {
+        this.routeType = paths[0] || '';
+        homePath =  '/' + this.routeType
+        switch (this.routeType) {
+          case 'node':
+            navList = nodeRoute.children;
+            break;
+          case 'resource':
+            navList = resourceRoute.children;
+            break;
+          default:
+            break;
+        }
       }
 
       if (navList) {
-        this.navList = navList;
+        navList = JSON.parse(JSON.stringify(navList)) //避免修改源数据
+        this.navList = navList.map((nav)=>{
+          nav.path = [homePath, nav.path].join('/')
+          return nav
+        });
         this.$store.dispatch('openSidebar')
       } else {
         this.navList = [];
@@ -53,7 +67,7 @@ export default {
   created() {
     this.changeRouteHandler();
   },
-  mounted(){
+  mounted() {
 
   }
 }

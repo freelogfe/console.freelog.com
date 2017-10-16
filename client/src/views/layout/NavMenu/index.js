@@ -8,12 +8,6 @@ export default {
       default(){
         return true
       }
-    },
-    routePath: {
-      type: String,
-      default(){
-        return '/'
-      }
     }
   },
   methods: {

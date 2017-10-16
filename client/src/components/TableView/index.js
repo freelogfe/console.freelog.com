@@ -3,7 +3,8 @@ export default {
   data() {
     return {
       loading: false,
-      tableData: []
+      tableData: [],
+      total: 0
     }
   },
   props: {
@@ -15,7 +16,7 @@ export default {
     },
     showPagination: {
       type: Boolean,
-      default: false
+      default: true
     },
     paginationOptions: {
       type: Object,
@@ -38,6 +39,7 @@ export default {
   },
   mounted() {
     this.tableData = this.data;
+    this.total = this.tableData.length
     this.load()
   },
   methods: {
@@ -49,7 +51,13 @@ export default {
           var data = res.data
           this.loading = false
           if (data.ret === 0) {
-            this.tableData = data.data
+            data = data.data
+            this.tableData = data.dataList || data;
+            //分页数据
+            if (data.dataList) {
+              this.total = data.totalItem
+              this.pageMeta.page = data.page || 1
+            }
           } else {
             this.$message.error(data.msg);
           }

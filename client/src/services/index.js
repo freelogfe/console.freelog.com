@@ -10,6 +10,8 @@ import ResourceService from './resource'
 import G_ResourcesService from './g_resources'
 import PresentablesService from './presentables'
 import ContractService from './contract'
+import NodesService from './nodes'
+
 
 export {
   TokenService,
@@ -18,5 +20,6 @@ export {
   ResourceService,
   G_ResourcesService,
   PresentablesService,
+  NodesService,
   ContractService
 }

@@ -7,12 +7,12 @@
             <span v-show="shouldShowTitle">{{navItem.meta.title}}</span>
           </template>
           <template v-for="subNav in navItem.children">
-            <el-menu-item :index="routePath+navItem.path+'/'+subNav.path" v-if="!subNav.hidden">
+            <el-menu-item :index="navItem.path+'/'+subNav.path" v-if="!subNav.hidden">
               <span v-show="shouldShowTitle">{{subNav.meta.title}}</span>
             </el-menu-item>
           </template>
         </el-submenu>
-        <el-menu-item :index="routePath+navItem.path" v-else-if="!navItem.hidden">
+        <el-menu-item :index="navItem.path" v-else-if="!navItem.hidden">
           <span v-show="shouldShowTitle">{{navItem.meta.title}}</span>
         </el-menu-item>
       </template>
