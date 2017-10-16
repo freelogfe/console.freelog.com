@@ -40,7 +40,7 @@ export default {
     },
     logout () {
       this.$store.dispatch('deleteToken')
-      this.$router.replace({path: '/login'})
+      this.$router.replace({path: '/login', query: {redirect: this.$route.fullPath}})
     }
   }
 }

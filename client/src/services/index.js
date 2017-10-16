@@ -8,10 +8,13 @@ import UserService from './users'
 import PolicyService from './policy'
 import ResourceService from './resource'
 import G_ResourcesService from './g_resources'
+import PresentablesService from './presentables'
+
 export {
   TokenService,
   UserService,
   PolicyService,
   ResourceService,
-  G_ResourcesService
+  G_ResourcesService,
+  PresentablesService
 }

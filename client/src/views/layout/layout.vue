@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div :class="[sidebar.openSidebar?'': 'collapse-sidebar']">
     <fl-header/>
-    <section :class="['main', sidebar.openSidebar?'': 'collapse-sidebar']">
+    <section class="main">
       <fl-sidebar class="left-sidebar"/>
       <main class="content">
         <fl-breadcrumb></fl-breadcrumb>
@@ -60,7 +60,7 @@
   }
 
   .collapse-sidebar {
-    .content {
+    .content,.footer-wrap {
       margin-left: 30px;
     }
   }

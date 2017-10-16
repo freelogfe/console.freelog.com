@@ -7,7 +7,8 @@ import {
   nodeDetail,
   nodeResourceList,
   resourceDetail,
-  nodePolicyManagement
+  nodePolicyManagement,
+  nodeMyResourceList
 } from '@/views'
 
 export default {
@@ -47,6 +48,7 @@ export default {
     },
     {
       path: 'list',
+      hidden: true,
       meta: {
         requiresAuth: true,
         title: '节点列表'
@@ -60,6 +62,14 @@ export default {
         title: '资源列表'
       },
       component: nodeResourceList
+    },
+    {
+      path: 'resources/mine',
+      meta: {
+        requiresAuth: true,
+        title: '我的资源'
+      },
+      component: nodeMyResourceList
     },
     {
       path: 'resources/detail',
@@ -85,7 +95,7 @@ export default {
         title: '节点策略操作'
       },
       component: Container,
-      children : [
+      children: [
         {
           path: 'sign',
           meta: {

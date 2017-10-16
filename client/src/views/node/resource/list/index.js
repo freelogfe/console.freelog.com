@@ -4,7 +4,8 @@ export default {
   name: 'node-resource-list',
   data() {
     return {
-      resourceList: []
+      resourceList: [],
+      query:''
     }
   },
   components: {
@@ -14,6 +15,15 @@ export default {
   mounted() {
   },
   methods: {
+    querySearchAsync(){
+
+    },
+    handleSelectSearchItem(){
+
+    },
+    queryHandler(){
+      this.$message.warning('待开发')
+    },
     loader() {
       return (param) => {
         if (typeof param === 'object') {
@@ -25,7 +35,7 @@ export default {
       }
     },
     handlePolicy(resource) {
-      this.$router.push({path: '/node/policyManagement/sign', query: {resourceId: resource.resourceId}})
+      this.$router.push({path: '/node/policyManagement/sign', query: {policyId: resource.policyId}})
     },
     handleEdit(resource) {
       this.$router.push({path: '/node/resources/detail', query: {resourceId: resource.resourceId}})

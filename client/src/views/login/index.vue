@@ -12,13 +12,16 @@
         <el-input type="text" v-model="model.userName" placeholder="请输入用户名"/>
       </el-form-item>
       <el-form-item label="密码" prop="passWord">
-        <el-input type="password" v-model="model.passWord" placeholder="请输入密码"/>
+        <el-input type="password" v-model="model.passWord" placeholder="请输入密码"
+                  @keyup.native.enter="submit('loginForm')"/>
       </el-form-item>
       <el-form-item>
         <el-checkbox v-model="checked">记住密码</el-checkbox>
       </el-form-item>
       <div class="login-btns">
-        <el-button type="primary" :loading="loading" @click="submit('loginForm')">{{ loading ? '登陆中...' : '登录' }}
+        <el-button type="primary"
+                   :loading="loading"
+                   @click="submit('loginForm')">{{ loading ? '登陆中...' : '登录' }}
         </el-button>
       </div>
     </el-form>
