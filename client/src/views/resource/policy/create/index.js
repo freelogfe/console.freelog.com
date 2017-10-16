@@ -63,6 +63,7 @@ export default {
       if (!this.$route.query.resourceId) {
         this.$message.error('没有资源Id, 请重新选择');
       };
+      console.log(this.textarea);
       this.$services.policy.post({
         resourceId: this.$route.query.resourceId,
         policyText: btoa(this.textarea),

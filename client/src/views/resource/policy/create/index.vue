@@ -3,6 +3,7 @@
     <el-row>
       <el-col :span="24"><div class="grid-content bg-purple">
         <el-input class="gap"
+        spellcheck="false"
           type="textarea"
           :rows="8"
           placeholder="请输入policy"
