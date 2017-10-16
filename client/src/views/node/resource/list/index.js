@@ -4,7 +4,8 @@ export default {
   name: 'node-resource-list',
   data() {
     return {
-      resourceList: []
+      resourceList: [],
+      query:''
     }
   },
   components: {
@@ -14,6 +15,15 @@ export default {
   mounted() {
   },
   methods: {
+    querySearchAsync(){
+
+    },
+    handleSelectSearchItem(){
+
+    },
+    queryHandler(){
+      this.$message.warning('待开发')
+    },
     loader() {
       return (param) => {
         if (typeof param === 'object') {

@@ -49,12 +49,11 @@ export default {
 
         this.$store.dispatch('userLogin', this.model)
           .then(token => {
-            this.$router.replace({path: this.$route.query.redirect || '/'})
+            this.$router.replace(this.$route.query.redirect || '/')
             this.loading = false
             this.rememberPasswordHandler(this.checked)
           })
           .catch(err => {
-            console.error(err)
             this.error = {title: '发生错误', message: '出现异常，请稍后再试！'}
             switch (err.response && err.response.status) {
               case 401:

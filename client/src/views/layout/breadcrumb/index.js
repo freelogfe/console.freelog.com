@@ -6,23 +6,27 @@ export default {
       breadcrumbs: []
     }
   },
-  created(){
+  created() {
   },
   watch: {
     $route: 'breadcrumbHandler'
   },
-  created(){
+  created() {
     this.breadcrumbHandler();
   },
   methods: {
-    breadcrumbHandler(){
+    breadcrumbHandler() {
       const matched = this.$route.matched;
-      this.breadcrumbs = matched.map((m)=>{
-        return {
-          path: m.path,
-          title: m.meta.title || ''
-        }
-      })
+      if (this.$route.name === '404') {
+        this.breadcrumbs = []
+      } else {
+        this.breadcrumbs = matched.map((m) => {
+          return {
+            path: m.path,
+            title: m.meta.title || ''
+          }
+        })
+      }
     }
   }
 }

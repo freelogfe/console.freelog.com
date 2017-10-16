@@ -18,6 +18,7 @@ export const nodeDetail = resolve => require.ensure([], () => resolve(require('.
 export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
 
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
+export const nodeMyResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/my-resources/index.vue')), 'node')
 
 
 export default {
@@ -36,4 +37,5 @@ export default {
   nodeDetail,
   nodeResourceList,
   nodePolicyManagement,
+  nodeMyResourceList
 }
