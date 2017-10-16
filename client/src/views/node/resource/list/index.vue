@@ -21,6 +21,10 @@
         label="resourceType">
       </el-table-column>
       <el-table-column
+        prop="policyId"
+        label="policyId">
+      </el-table-column>
+      <el-table-column
         label="resourceUrl">
         <template scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
