@@ -6,6 +6,20 @@
 
 <script>
   export default {
-    name: 'fl-container'
+    name: 'fl-container',
+    beforeRouteUpdate(to, from, next) {
+      var toPath = to.fullPath;
+      var params = this.$route.params;
+      var matched = false
+
+      Object.keys(params).forEach((key) => {
+        var match = ':' + key
+        if (toPath.indexOf(match) > -1) {
+          matched = true;
+          toPath = toPath.replace(match, params[key])
+        }
+      })
+      matched ? next({path: toPath}) : next();
+    }
   }
 </script>

@@ -9,6 +9,7 @@ import PolicyService from './policy'
 import ResourceService from './resource'
 import G_ResourcesService from './g_resources'
 import PresentablesService from './presentables'
+import NodesService from './nodes'
 
 export {
   TokenService,
@@ -16,5 +17,6 @@ export {
   PolicyService,
   ResourceService,
   G_ResourcesService,
-  PresentablesService
+  PresentablesService,
+  NodesService
 }
