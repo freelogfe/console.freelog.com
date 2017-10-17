@@ -8,15 +8,16 @@ export default {
   },
 
   mounted() {
-    if (this.$route.query.contractId) {
-      this.load(this.$route.query.contractId)
+    const presentableId = this.$route.query.presentableId
+    if (presentableId) {
+      this.load(presentableId)
     } else {
       this.$message.error('缺少参数contractId');
     }
   },
   methods: {
     load(param) {
-      return this.$services.contract.get(param || {})
+      return this.$services.presentables.get(param || {})
         .then((res) => {
           var data = res.data
           if (data.ret === 0) {
@@ -27,7 +28,7 @@ export default {
           }
         })
     },
-    updateNodeDetail(formName) {
+    updateDetail(formName) {
       const self = this;
     }
   }
