@@ -75,9 +75,16 @@ export default {
         policyId: this.$route.query.policyId,
         segmentId: id,
         serialNumber: sn,
-        partyTwo:'10004'
-      }).then(()=> {
-        this.$services.contract.get('59a3c612567e5c22a41d8f5c')
+        partyTwo: this.$route.params.nodeId
+      }).then((res)=> {
+        console.log(res)
+        var data = res.data;
+        if (data.ret === 0) {
+          this.$message.success('合同创建成功')
+          this.$services.contract.get('59a3c612567e5c22a41d8f5c')
+        } else {
+          this.$message.error(data.msg)
+        }
       })
     }
   }

@@ -12,6 +12,7 @@
       var params = this.$route.params;
       var matched = false
 
+      //适配多级嵌套参数解析
       Object.keys(params).forEach((key) => {
         var match = ':' + key
         if (toPath.indexOf(match) > -1) {

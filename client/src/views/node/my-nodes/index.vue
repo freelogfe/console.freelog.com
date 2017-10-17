@@ -14,7 +14,7 @@
         label="nodeId">
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             size="small"
             @click="gotoNodeHandler(scope.row)">进入节点

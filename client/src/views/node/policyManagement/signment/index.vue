@@ -2,7 +2,7 @@
   <section>
       <el-collapse v-model="activeNames" @change="handleChange">
 
-        <el-collapse-item :title=" 'policy'+ index" :name=" 'policy'+ index" v-for="(transition,index) in format" >
+        <el-collapse-item :title=" 'policy'+ index" :name=" 'policy'+ index" v-for="(transition,index) in format" key="">
           <b>{{transition.users}}</b>:
 
           <collapseState v-bind:stateMachine="transition"></collapseState>

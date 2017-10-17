@@ -17,7 +17,7 @@ export default {
     loader() {
       return () => {
         var param = {
-          nodeId: 1
+          nodeId: this.$route.params.nodeId
         };
         return this.$services.presentables.get({
           params: param

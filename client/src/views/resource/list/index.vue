@@ -11,12 +11,12 @@
       </el-table-column>
       <el-table-column
         label="resourceUrl">
-        <template scope="scope">
+        <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             size="small"
             @click="handleEdit(scope.row)">编辑</el-button>

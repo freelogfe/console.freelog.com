@@ -1,5 +1,5 @@
 import {UserService} from '../../services'
-import {storage} from '@/lib'
+import {storage} from '@/lib/index'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',

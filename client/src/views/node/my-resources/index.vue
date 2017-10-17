@@ -18,7 +18,7 @@
         label="contractId">
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             size="small"
             @click="handlePreview(scope.row)">查看详情</el-button>

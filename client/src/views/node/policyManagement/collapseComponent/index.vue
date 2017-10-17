@@ -1,7 +1,7 @@
 <template>
   <div class="">
 
-  <el-row :gutter="40"v-for="t in stateMachine.stateMachine" >
+  <el-row :gutter="40"v-for="t in stateMachine.stateMachine" key="">
     <hr>
       <el-col :span="8">
         <span :class=" t.cColor ">【{{t.currentState}}】</span>

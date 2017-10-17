@@ -24,7 +24,9 @@ export const nodePolicyManagement = resolve => require.ensure([], () => resolve(
 
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 export const nodeMyResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/my-resources/index.vue')), 'node')
-
+export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/index.vue')), 'node')
+export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
+export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 
 export default {
   layout,
@@ -42,5 +44,9 @@ export default {
   nodeDetail,
   nodeResourceList,
   nodePolicyManagement,
-  nodeMyResourceList
+  nodeMyResourceList,
+  nodeContracts,
+
+  createPresentable,
+  presentableDetail
 }

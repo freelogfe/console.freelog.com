@@ -7,6 +7,16 @@ import {nodeItemRoute} from '@/router/node'
 import node from "../../../router/node";
 
 
+function cloneArray(arr) {
+  return arr.map((item)=>{
+    if (typeof item === 'object') {
+      return Object.assign({}, item)
+    } else {
+      return item
+    }
+  })
+}
+
 export default {
   name: 'fl-sidebar',
   components: {
@@ -49,7 +59,7 @@ export default {
       }
 
       if (navList) {
-        navList = JSON.parse(JSON.stringify(navList)) //避免修改源数据
+        navList = cloneArray(navList) //避免修改源数据
         this.navList = navList.map((nav)=>{
           nav.path = [homePath, nav.path].join('/')
           return nav

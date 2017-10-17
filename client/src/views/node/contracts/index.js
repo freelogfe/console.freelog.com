@@ -1,7 +1,7 @@
 import TableView from '@/components/TableView/index.vue'
 
 export default {
-  name: 'node-resource-list',
+  name: 'node-contracts',
   data() {
     return {
       resourceList: [],
@@ -27,21 +27,25 @@ export default {
     loader() {
       return (param) => {
         if (typeof param === 'object') {
+          Object.assign(param, {
+            partyTwo: this.$route.params.nodeId
+          })
           param = {
             params: param
           }
         }
-        return this.$services.g_Resources.get(param || {})
+
+        return this.$services.contract.get(param || {})
       }
     },
-    handleContact(resource) {
-      if (!resource.policyId) {
-        this.$message.warning('该资源还没创建policy，无法进行创建合同');
+    handlePresentable(row) {
+      if (!row.contractId) {
+        this.$message.warning('无效合同，无法进行创建presentable');
       } else {
-        this.$router.push({path: `/node/${this.$route.params.nodeId}/policyManagement/sign`, query: {policyId: resource.policyId}})
+        this.$router.push({path: `/node/${this.$route.params.nodeId}/presentable/sign`, query: {contractId: row.contractId}})
       }
     },
-    previewResourceHandler(resource) {
+    previewHandler(resource) {
       this.$router.push({path: '/node/resources/detail', query: {resourceId: resource.resourceId}})
     }
   }

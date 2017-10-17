@@ -1,7 +1,6 @@
 <template>
   <div :class="['sidebar', sidebar.openSidebar?'': 'collapse']">
-    <fl-nav-menu :nav-list="navList" :should-show-title="sidebar.openSidebar">
-    </fl-nav-menu>
+    <fl-nav-menu :nav-list="navList" :should-show-title="sidebar.openSidebar"></fl-nav-menu>
   </div>
 </template>
 
