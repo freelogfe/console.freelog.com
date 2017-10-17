@@ -35,4 +35,4 @@ Fetch.prototype = {
   }
 };
 
-export {Fetch as default}
+export default Fetch

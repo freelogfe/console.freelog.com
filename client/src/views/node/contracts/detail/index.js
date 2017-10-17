@@ -1,6 +1,6 @@
 
 export default {
-  name: 'presentable-detail',
+  name: 'contract-detail',
   data() {
     return {
       detail: {}

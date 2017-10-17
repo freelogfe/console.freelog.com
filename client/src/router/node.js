@@ -11,11 +11,9 @@ import {
   nodeMyResourceList,
   nodeContracts,
   createPresentable,
-  presentableDetail
+  presentableDetail,
+  contractDetail
 } from '@/views'
-import presentables from "../services/presentables";
-
-
 
 export const nodeItemRoute = {
   path: ':nodeId',
@@ -52,11 +50,21 @@ export const nodeItemRoute = {
       component: nodeContracts
     },
     {
+      path: 'contract/detail',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '合同详情'
+      },
+      component: contractDetail
+    },
+    {
       path: 'presentable',
       meta: {
         requiresAuth: true,
-        title: 'contracts'
+        title: 'presentable'
       },
+      hidden: true,
       component: Container,
       children: [
         {
