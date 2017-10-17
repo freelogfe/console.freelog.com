@@ -1,61 +1,97 @@
-const validateNodeDomain = (rule, value, callback) => {
-  if (value) {
-    const DOMAIN_REG = /^[a-zA-Z\d\-]+$/
-    if (value.length < 4 || value.length > 20) {
-      callback(new Error('节点域名前缀长度应为4-20字符'));
-    } else if (!DOMAIN_REG.test(value)) {
-      callback(new Error('节点域名前缀应由数字字母和"-"组成'));
-    } else {
-      callback()
-    }
-  } else {
-    callback(new Error('节点域名前缀不能为空'));
-  }
-};
+import {mapGetters} from 'vuex'
+import compiler from 'presentable_policy_compiler'
 
-const formRules = {
-  nodeName: [{required: true, message: '节点描述不能为空', trigger: 'blur'},
-    {min: 4, max: 20, message: '节点描述长度应为4-20字符', trigger: 'blur'}],
-  nodeDomain: [{validator: validateNodeDomain, trigger: 'blur'}]
-}
-
-export const NodeCreationRule = formRules;
 export default {
   name: 'presentable-creator',
   data() {
-
     return {
-      dataForm: {
-        nodeName: '',
-        nodeDomain: ''
+      resourceType:'',
+      validateLoading:false,
+      submitLoading:false,
+      options: [
+        {value: 'widget', label: 'widget'},
+        {value: 'file', label: 'file'}
+      ],
+      headers: {},
+      formData: {
+              textarea: 'For userA, userB in the following states: '+
+           'in initial:proceed to activatetwo on accepting license licenseA, licenseB and on contract_guaranty of 5000 refund after 1 day '+
+           'in activatetwo: proceed to activate on date 2012-12-12  ' +
+           'in activate: proceed to activatetwo on the end of day ' +
+           'in activatetwo: proceed to activate on 10 day after contract creation '+
+        'I agree to authorize token in begining, activate',
+        presentableName: ''
       },
-      formRules: formRules
+      rules: {
+        presentableName: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
-  mounted() {
+  computed: mapGetters({
+    session: 'session'
+  }),
+  mounted(){
+    this.headers.Authorization =  `Bearer ${this.session.token}`
   },
   methods: {
-    submitForm(formName) {
-      const self = this;
-      self.$refs[formName].validate((valid) => {
+    errorHandler(err, file){
+      switch (err.status){
+        case 400:
+          this.$message.error('不支持的文件类型');break;
+        case 401:
+          this.$message.error('权限未经验证');break;
+      }
+    },
+    nextAction () {
+      console.log('successfully upload!');
+    },
+    validate (formName) {
+      console.log('validating');
+      console.log(this.$refs,formName);
+      this.formData.textarea =compiler.compile(this.formData.textarea, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g,'\n');
+      // this.validateLoading = true;
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          self.$services.nodes.post(self.dataForm)
-            .then((res) => {
-              var data = res.data;
-              if (data.ret === 0) {
-                self.$message.success('节点创建成功')
-                setTimeout(() => {
-                  self.$router.push({path: '/node/detail', query: {nodeId: data.data.nodeId}})
-                }, 1e3)
-              } else {
-                self.$message.error(data.msg)
-              }
-            })
+          alert('通过校验!');
         } else {
-          console.log('error submit!!');
+          console.log('未通过校验');
           return false;
         }
       });
+    },
+    successHandler(res, file) {
+      if (res.ret != 0) {
+        this.$message.error(res.msg+'资源Id为: '+res.data);
+      } else {
+        this.$message.success('资源创建成功');
+        // setTimeout(() => {
+        //   this.$router.push({path: '/resource/policy/create', query: {resourceId: res.data.contractId}})
+        // }, 5e2)
+      }
+    },
+    submitUpload() {
+      this.uploader.data.meta = JSON.stringify(this.uploader.data.meta)
+      this.$refs.upload.submit();
+    },
+    submit () {
+      console.log(this.$route.params.nodeId);
+      this.submitLoading = true;
+      if (!this.$route.query.contractId) {
+        this.$message.error('没有资源Id, 请重新选择');
+      };
+      this.$services.presentables.post({
+        name: this.formData.presentableName,
+        nodeId:this.$route.params.nodeId,
+        contractId: this.$route.query.contractId,
+        policyText: btoa(this.textarea),
+        languageType: 'freelog_policy_lang'
+      }).then(() => {
+        console.log('success');
+        this.submitLoading = false;
+      })
     }
   }
 }

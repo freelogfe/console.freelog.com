@@ -1,5 +1,5 @@
 /**
- * Policy service
+ * presentables service
  */
 
 import Fetch from './fetch'

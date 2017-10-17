@@ -1,18 +1,28 @@
 <template>
   <section>
-    <el-form :model="dataForm" :rules="formRules" ref="dataForm" label-width="100px" class="node-form">
-      <el-form-item label="节点描述" prop="nodeName" required>
-        <el-input v-model="dataForm.nodeName" placeholder="长度为4-20字符"></el-input>
-      </el-form-item>
-      <el-form-item label="节点域名" prop="nodeDomain" required>
-        <el-input v-model="dataForm.nodeDomain" placeholder="只能输入数字字母和-,长度为4-20字符">
-          <template slot="append"><span class="node-domain-postfix">.freelog.com</span></template>
-        </el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('dataForm')">创建</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row>
+      <el-form :model="formData" :rules="rules" label-width="200px" ref="ruleForm">
+        <el-form-item label="presentable名" prop="presentableName">
+          <el-input v-model="formData.presentableName" placeholder="请输入presentable名"></el-input>
+        </el-form-item>
+
+        <el-form-item label="presentable_policy" prop="presentable_policy">
+          <el-input class="gap"
+          spellcheck="false"
+            type="textarea"
+            :rows="8"
+            placeholder="请输入policy"
+            v-model="formData.textarea"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-on:click="validate('ruleForm')" v-bind:loading="validateLoading">校验</el-button>
+          <el-button type="primary" v-on:click="submit" v-bind:loading="submitLoading">提交</el-button>
+        </el-form-item>
+
+      </el-form>
+    </el-row>
   </section>
 </template>
 
@@ -22,12 +32,11 @@
 </script>
 
 <style lang="less" scoped>
-.node-form {
-  width: 600px;
-  margin: auto;
-  .node-domain-postfix {
-    color: #333333;
-    font-size: 16px;
+  .upload-container {
+    width: 20%;
+    margin: auto;
   }
-}
+  .gap {
+        margin-bottom: 12px;
+  }
 </style>

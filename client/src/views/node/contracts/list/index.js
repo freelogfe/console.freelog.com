@@ -5,7 +5,7 @@ export default {
   data() {
     return {
       resourceList: [],
-      query:''
+      query: ''
     }
   },
   components: {
@@ -15,13 +15,13 @@ export default {
   mounted() {
   },
   methods: {
-    querySearchAsync(){
+    querySearchAsync() {
 
     },
-    handleSelectSearchItem(){
+    handleSelectSearchItem() {
 
     },
-    queryHandler(){
+    queryHandler() {
       this.$message.warning('待开发')
     },
     loader() {
@@ -42,11 +42,17 @@ export default {
       if (!row.contractId) {
         this.$message.warning('无效合同，无法进行创建presentable');
       } else {
-        this.$router.push({path: `/node/${this.$route.params.nodeId}/presentable/sign`, query: {contractId: row.contractId}})
+        this.$router.push({
+          path: `/node/${this.$route.params.nodeId}/presentable/create`,
+          query: {contractId: row.contractId}
+        })
       }
     },
     previewHandler(resource) {
-      this.$router.push({path: '/node/resources/detail', query: {resourceId: resource.resourceId}})
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/contract/detail`,
+        query: {contractId: resource.contractId}
+      })
     }
   }
 }

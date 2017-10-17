@@ -17,6 +17,7 @@
     "fs": "0.0.1-security",
     "normalize.css": "^7.0.0",
     "nprogress": "^0.2.0",
+    "presentable_policy_compiler": "^1.0.1",
     "store": "^2.0.12",
     "vue": "^2.5.0",
     "vue-i18n": "^7.3.0",
