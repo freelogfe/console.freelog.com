@@ -6,7 +6,7 @@
           <b>{{transition.users}}</b>:
 
           <collapseState v-bind:stateMachine="transition"></collapseState>
-          <el-button class="child" v-on:click="sign(transition.segmentId, serialNumber)">签约</el-button>
+          <el-button class="child" v-on:click="sign(transition.segmentId, serialNumber)">创建</el-button>
 
         </el-collapse-item>
 
