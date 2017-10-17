@@ -12,8 +12,7 @@ import {
   nodeContracts,
   createPresentable,
   presentableDetail
-} from '@/views'
-import presentables from "../services/presentables";
+} from 'views'
 
 
 
