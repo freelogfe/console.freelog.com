@@ -1,5 +1,6 @@
 <template>
   <section>
+
     <el-form :model="dataForm" :rules="formRules" ref="dataForm" label-width="100px" class="node-form">
       <el-form-item label="节点描述" prop="nodeName" required>
         <el-input v-model="dataForm.nodeName" placeholder="长度为4-20字符"></el-input>

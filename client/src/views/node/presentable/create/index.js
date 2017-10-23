@@ -25,7 +25,7 @@ export default {
       rules: {
         presentableName: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 30, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       }
     }
@@ -55,42 +55,28 @@ export default {
       // this.validateLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('通过校验!');
+          this.$message.info('通过校验');
         } else {
-          console.log('未通过校验');
+          this.$message.info('未通过校验');
           return false;
         }
       });
     },
-    successHandler(res, file) {
-      if (res.ret != 0) {
-        this.$message.error(res.msg+'资源Id为: '+res.data);
-      } else {
-        this.$message.success('资源创建成功');
-        // setTimeout(() => {
-        //   this.$router.push({path: '/resource/policy/create', query: {resourceId: res.data.contractId}})
-        // }, 5e2)
-      }
-    },
-    submitUpload() {
-      this.uploader.data.meta = JSON.stringify(this.uploader.data.meta)
-      this.$refs.upload.submit();
-    },
     submit () {
-      console.log(this.$route.params.nodeId);
       this.submitLoading = true;
       if (!this.$route.query.contractId) {
         this.$message.error('没有资源Id, 请重新选择');
       };
       this.$services.presentables.post({
         name: this.formData.presentableName,
-        nodeId:this.$route.params.nodeId,
+        nodeId:Number(this.$route.params.nodeId),
         contractId: this.$route.query.contractId,
-        policyText: btoa(this.textarea),
+        policyText: btoa(this.formData.textarea),
         languageType: 'freelog_policy_lang'
       }).then(() => {
-        console.log('success');
         this.submitLoading = false;
+      }, ()=> {
+        this.$message.error('上传失败');
       })
     }
   }

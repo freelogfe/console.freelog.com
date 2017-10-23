@@ -35,10 +35,14 @@ export default {
       }
     },
     handleContact(resource) {
+      console.log('resource',resource);
       if (!resource.policyId) {
         this.$message.warning('该资源还没创建policy，无法进行创建合同');
       } else {
-        this.$router.push({path: `/node/${this.$route.params.nodeId}/policyManagement/sign`, query: {policyId: resource.policyId}})
+        this.$router.push({
+          path: `/node/${this.$route.params.nodeId}/policyManagement/sign`,
+          query: {policyId: resource.policyId, meta: resource.resourceName},
+        })
       }
     },
     previewResourceHandler(resource) {
