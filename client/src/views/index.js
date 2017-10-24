@@ -26,6 +26,7 @@ export const nodeResourceList = resolve => require.ensure([], () => resolve(requ
 export const nodeMyResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/my-resources/index.vue')), 'node')
 export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/list/index.vue')), 'node')
 export const contractDetail = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/detail/index.vue')), 'node')
+export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 
@@ -51,5 +52,6 @@ export default {
   createPresentable,
   presentableDetail,
 
-  contractDetail
+  contractDetail,
+  contractEventSignment
 }

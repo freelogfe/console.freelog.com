@@ -6,10 +6,11 @@
               <el-collapse-item :title=" 'policy'+ indexInner" :name=" 'policy'+ indexInner" v-for="(transition,indexInner) in formatData.formatData" key="">
                 <b>{{transition.users}}</b>:
                 <collapseState v-bind:stateMachine="transition"></collapseState>
-                <el-button :class="{'child': true, redColor:btnStates[indexOuter][indexInner]}" v-on:click="sign(transition.segmentId, transition.serialNumber, indexOuter, indexInner,$event)">选中</el-button>
+                <el-button :class="{'child': true, redColor:btnStates[indexOuter][indexInner]}" v-on:click="select(transition.segmentId, transition.serialNumber, indexOuter, indexInner,$event)">选中</el-button>
               </el-collapse-item>
             </el-collapse>
       </el-tab-pane>
+      <el-button class="child" @click="submit" >提交</el-button>
     </el-tabs>
 
 

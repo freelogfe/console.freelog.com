@@ -10,35 +10,24 @@
       </el-form-item>
 
       <el-form-item label="请选择事件" prop="contractId">
-        <el-select v-model="selectValue" placeholder="请选择">
+        <el-select v-model="selectValue" placeholder="请选择" @change="selectEvent">
           <el-option
             v-for="html in eventHtml"
-            v-html="html"
-            :key="html"
-            :label="html"
-            :value="html">
+            v-html="html.html"
+            :key="html.params"
+            :label="html.html"
+            :value="html.params"
+            >
           </el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item class="btns">
         <el-button type="primary" @click="updateNodeDetail('detail')">确定</el-button>
       </el-form-item>
     </el-form>
 
-    <el-steps :space="200" :active="1">
-      <el-step title="步骤 1" description="这是一段很长很长很长的描述性文字"></el-step>
-      <el-step title="步骤 2" description="这是一段很长很长很长的描述性文字"></el-step>
-      <el-step title="步骤 3" description="这是一段很长很长很长的描述性文字"></el-step>
-    </el-steps>
 
-    <el-steps :space="100" direction="vertical" :active="1">
-      <el-step title="步骤 1"></el-step>
-      <el-step title="步骤 2"></el-step>
-      <el-step title="步骤 3"></el-step>
-    </el-steps>
-    <!-- <div v-for="html in eventHtml" v-html="html">
-                  {{html}}
-    </div> -->
   </section>
 </template>
 

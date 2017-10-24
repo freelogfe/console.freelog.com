@@ -64,19 +64,34 @@ export default {
     },
     updateNodeDetail(formName) {
       const self = this;
+      //拿到事件类型
+      //拿到事件参数
+      //拿到合同id
+      //跳转到事件页面完成事件
     },
     showEvents(corresponseEvents) {
       corresponseEvents.forEach((transition) => {
         if (transition.event.type == 'compoundEvents') {
             transition.event.params.forEach((event)=> {
-            this.eventHtml.push(showEventMap[event.type](event.params))
+            this.eventHtml.push({
+              html: showEventMap[event.type](event.params),
+              type: event.type,
+              params: JSON.stringify(event.params)
+            })
           })
         } else {
-          this.eventHtml.push(showEventMap[transition.event.type](transition.event.params))
+          this.eventHtml.push({
+            html: showEventMap[event.type](event.params),
+            type: event.type,
+            params: JSON.stringify(event.params)
+          })
         }
 
         console.log(this.eventHtml);
       })
+    },
+    selectEvent (value) {
+      console.log('312312321',a,b,c);
     }
   }
 }

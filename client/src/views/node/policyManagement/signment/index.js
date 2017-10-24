@@ -21,7 +21,7 @@ export default {
     collapseState
   },
   created () {
-    // this.meta = this.$route.query.meta;
+    // this.meta = this.$route.query.meta.widgets;
     this.meta = [{name: '资源1', Id: '1'}, {name: '资源2', Id: '2'}, {name: '资源3', Id: '3'}, {name: '资源4', Id: '4'}]
 
 
@@ -29,12 +29,13 @@ export default {
       let Id = obj.Id
       this.tabData[index] =  {
         resourceName:"资源"+ Id,
+        policyId: Id,
         formatData : []
       }
       this.$services.policy.get(this.$route.query.policyId).then((res) => {
         this.genColor = this.genColorCache();
         //选中按钮的样式
-        let innerArr = Array.apply(null, Array(res.data.data.policy.length)).map(() => true)
+        let innerArr = Array.apply(null, Array(res.data.data.policy.length)).map(() => false)
         this.$set(this.btnStates,index,innerArr)
 
         res.data.data.policy.forEach((obj) => {
@@ -95,7 +96,7 @@ export default {
         return colorArr.pop();
       }
     },
-    sign (id, sn, indexOuter, indexInner, self) {
+    select (id, sn, indexOuter, indexInner, self) {
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach( (obj, index)=> {
         if (index == indexInner ) {
@@ -123,12 +124,14 @@ export default {
     handleClick(tab, event) {
       console.log('you click a tab',tab);
     },
-    savePolicies () {
+    submit () {
       let result = [];
       this.btnStates.forEach( (obj, index) => {
         obj.forEach((booleanObj, index2) => {
           if(booleanObj == true) {
-            result.push([idnex,index2])
+            let policyId = this.tabData[index].policyId
+            let segmentId = this.tabData[index].formatData[index2].segmentId
+            result.push([policyId,segmentId])
           }
         })
       })
@@ -136,7 +139,8 @@ export default {
         console.error('policy数量不对')
         return false
       }
-      return result
+      console.log(result);
+
     }
   }
 }
