@@ -1,0 +1,12 @@
+@import "../../../styles/mixin.less";
+
+.sidebar {
+  width: @sidebar-width;
+  background-color: @theme-color;
+  overflow: hidden;
+  transition: width .5s;
+  z-index: 9;
+  &.collapse {
+    width: 30px;
+  }
+}

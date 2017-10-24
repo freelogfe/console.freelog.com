@@ -1,0 +1,57 @@
+.page-builder .widget-item {
+  position: absolute;
+  &:hover {
+    .action-panel {
+      display: block;
+    }
+  }
+}
+
+.widget-style-editor {
+  width: 100%;
+}
+
+.action-panel {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  color: white;
+  z-index: 9;
+  .action-btns {
+    float: right;
+    padding-right: 12px;
+    i {
+      cursor: pointer;
+      margin-right: 6px;
+      font-size: 16px;
+    }
+  }
+}
+
+.query-wrapper {
+  margin-bottom: 15px;
+}
+
+.page-builder {
+  width: 990px;
+  height: 600px;
+  position: relative;
+  border: 1px solid #cccccc;
+}
+
+.widgets-panel {
+  .widget-resource {
+    margin-right: 10px;
+    margin-bottom: 3px;
+    height: 100px;
+    overflow: hidden;
+  }
+}
+.widget-resource {
+  cursor: pointer;
+  padding: 0;
+}

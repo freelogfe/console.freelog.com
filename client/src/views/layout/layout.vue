@@ -1,0 +1,67 @@
+<template>
+  <div :class="[sidebar.openSidebar?'': 'collapse-sidebar']">
+    <fl-header/>
+    <section class="main">
+      <fl-sidebar class="left-sidebar"/>
+      <main class="content">
+        <fl-breadcrumb></fl-breadcrumb>
+        <transition name="content">
+          <router-view class="main-view"></router-view>
+        </transition>
+      </main>
+    </section>
+    <fl-footer class="footer-wrap"/>
+  </div>
+</template>
+
+<script>
+  import {mapGetters} from 'vuex'
+  import Sidebar from './Sidebar/index.vue'
+  import Header from './Header/index.vue'
+  import Footer from './Footer/index.vue'
+  import Breadcrumb from './breadcrumb/index.vue'
+
+  export default {
+    name: 'fl-layout',
+    computed: mapGetters({
+      sidebar: 'sidebar'
+    }),
+    components: {
+      'fl-header': Header,
+      'fl-sidebar': Sidebar,
+      'fl-footer': Footer,
+      'fl-breadcrumb': Breadcrumb
+    }
+  }
+</script>
+
+<style scoped lang="less">
+  @import "../../styles/mixin.less";
+
+  .main-view {
+    padding: 15px;
+  }
+
+  .left-sidebar {
+    position: fixed;
+    top: @header-height;
+    left: 0;
+    bottom: 0;
+  }
+
+  .content {
+    margin-top: @header-height;
+  }
+
+  .content,
+  .footer-wrap {
+    margin-left: @sidebar-width;
+    transition: all .5s;
+  }
+
+  .collapse-sidebar {
+    .content,.footer-wrap {
+      margin-left: 30px;
+    }
+  }
+</style>
