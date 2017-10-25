@@ -4,6 +4,7 @@
       <el-form-item label="资源类型"  prop="resourceType" required>
         <el-select
           v-model="formData.resourceType"
+          style="width: 300px"
           allow-create
           filterable
           placeholder="只能包含大小写字母、_和-，长度4~40">

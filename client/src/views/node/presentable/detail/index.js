@@ -19,13 +19,9 @@ export default {
     load(param) {
       return this.$services.presentables.get(param || {})
         .then((res) => {
-          var data = res.data
-          if (data.ret === 0) {
-            this.detail = data.data
-            return data.data;
-          } else {
-            this.$message.error(data.msg);
-          }
+          return (this.detail = res.getData());
+        }).catch((err)=>{
+          this.$message.error(err.response.errorMsg || err)
         })
     },
     updateDetail(formName) {

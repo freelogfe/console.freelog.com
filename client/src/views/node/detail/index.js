@@ -22,13 +22,9 @@ export default {
     load(param) {
       return this.$services.nodes.get(param || {})
         .then((res) => {
-          var data = res.data
-          if (data.ret === 0) {
-            this.detail = data.data
-            return data.data;
-          } else {
-            this.$message.error(data.msg);
-          }
+          return (this.detail = res.getData());
+        }).catch((err) => {
+          this.$message.error(err.response.errorMsg || err)
         })
     },
     updateNodeDetail(formName) {
@@ -37,13 +33,10 @@ export default {
         if (valid) {
           self.$services.nodes.patch(self.detail.nodeId, self.detail)
             .then((res) => {
-              var data = res.data;
-              if (data.ret === 0) {
-                self.$message.success('节点修改成功')
-              } else {
-                self.$message.error(data.msg)
-              }
-            })
+              self.$message.success('节点修改成功')
+            }).catch((err) => {
+            self.$message.error(err.response.errorMsg || err)
+          })
         } else {
           console.log('error submit!!');
           return false;

@@ -1,7 +1,7 @@
 <template>
   <section>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane v-for="(formatData, indexOuter) in tabData"  :label="formatData.resourceName" :name="formatData.resourceName">
+      <el-tab-pane v-for="(formatData, indexOuter) in tabData" key=""  :label="formatData.resourceName" :name="formatData.resourceName">
         <el-collapse v-model="activeNames" @change="handleChange">
               <el-collapse-item :title=" 'policy'+ indexInner" :name=" 'policy'+ indexInner" v-for="(transition,indexInner) in formatData.formatData" key="">
                 <b>{{transition.users}}</b>:

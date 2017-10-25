@@ -36,10 +36,11 @@ export default {
         this.error = null
         this.loading = true
 
-        this.$services.other.resetPassword(this.model).then(token => {
+        this.$services.other.resetPassword(this.model).then(() => {
           this.$router.replace(this.$route.query.redirect || '/')
           this.loading = false
         }).catch(err => {
+          this.loading = false
           this.error = {title: '发生错误', message: '出现异常，请稍后再试！'}
           switch (err.response && err.response.status) {
             case 401:
@@ -49,7 +50,6 @@ export default {
               this.error.message = '服务器内部异常，请稍后再试！'
               break
           }
-          this.loading = false
         });
       })
     }

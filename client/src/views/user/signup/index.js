@@ -82,14 +82,9 @@ export default {
 
         this.$services.user.post(data)
           .then(res => {
-            var data = res.data;
-            if (data.ret === 0) {
-              debugger
-              this.$store.dispatch('changeSession', data.data)
-              this.$router.replace(this.$route.query.redirect || '/')
-            } else {
-              this.error = {title: '发生错误', message: data.msg}
-            }
+            var data = res.getData();
+            this.$store.dispatch('changeSession', data)
+            this.$router.replace(this.$route.query.redirect || '/')
             this.loading = false
           })
           .catch(err => {

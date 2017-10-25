@@ -12,7 +12,8 @@ export default {
       widgets: [],
       dialogVisible: false,
       widgetStyle: '',
-      currentEditWidget: null
+      currentEditWidget: null,
+      widgetData: {}
     }
   },
   mounted() {
@@ -22,6 +23,9 @@ export default {
       })
   },
   methods: {
+    setWidgetData(widget){
+      this.widgetData = widget
+    },
     hideDialog() {
       this.currentEditWidget = null
       this.dialogVisible = false
@@ -177,12 +181,13 @@ export default {
           resourceType: 'Widget'
         }
       }).then((res) => {
-        var data = res.data
-        if (data.ret === 0) {
-          this.widgets = this.widgets.concat(data.data.dataList)
-        } else {
-          this.$message.error(data.msg)
-        }
+        var data = res.getData()
+        let widgets = data.dataList.filter((w) => {
+          return !!(w && w.systemMeta && w.systemMeta.widgetName)
+        })
+        this.widgets = this.widgets.concat(widgets)
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
       })
     }
   }

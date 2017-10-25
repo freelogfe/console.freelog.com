@@ -10,17 +10,23 @@ export default {
 
   mounted() {
     console.log(this.$route.params)
+    var self = this;
     if (this.$route.query.resourceId) {
       this.load(this.$route.query.resourceId)
+        .then((detail) => {
+          Object.entries(detail.meta).forEach((entry) => {
+            self.addMetaHandler(entry[0], entry[1]);
+          })
+        })
     } else {
       this.$message.error('缺少参数resourceId');
     }
   },
   methods: {
-    addMetaHandler() {
+    addMetaHandler(key, value) {
       this.metas.push({
-        label: '',
-        value: ''
+        key: key || '',
+        value: value || ''
       })
     },
     deleteMetaHandler(index) {
@@ -29,17 +35,34 @@ export default {
     load(param) {
       return this.$services.resource.get(param || {})
         .then((res) => {
-          var data = res.data
-          if (data.ret === 0) {
-            this.detail = data.data
-            return data.data;
-          } else {
-            this.$message.error(data.msg);
-          }
+          return (this.detail = res.getData());
+        }).catch((err)=>{
+          this.$message.error(err.response.errorMsg || err)
         })
     },
-    saveHandler(form){
+    resolveMeta() {
+      var metas = this.metas;
+      this.detail.meta = {}
+      metas.forEach((meta) => {
+        this.detail.meta[meta.key] = meta.value
+      })
+    },
+    saveHandler(form) {
+      const mutableKeys = ['resourceName', 'meta'];
+      var data = {}
 
+      this.resolveMeta()
+      mutableKeys.forEach((k) => {
+        data[k] = this.detail[k]
+      })
+
+      // data.meta = JSON.stringify(data.meta)
+      this.$services.resource.put(this.detail.resourceId, data)
+        .then((res)=>{
+        this.$message.success('更新成功')
+        }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
+      })
     }
   }
 }

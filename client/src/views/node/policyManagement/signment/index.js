@@ -33,14 +33,15 @@ export default {
         formatData : []
       }
       this.$services.policy.get(this.$route.query.policyId).then((res) => {
+        var data = res.getData()
         this.genColor = this.genColorCache();
         //选中按钮的样式
-        let innerArr = Array.apply(null, Array(res.data.data.policy.length)).map(() => false)
+        let innerArr = Array.apply(null, Array(data.policy.length)).map(() => false)
         this.$set(this.btnStates,index,innerArr)
 
-        res.data.data.policy.forEach((obj) => {
+        data.policy.forEach((obj) => {
 
-          let tempTable = { users: '', stateMachine: [],segmentId: '', serialNumber: res.data.data.serialNumber };
+          let tempTable = { users: '', stateMachine: [],segmentId: '', serialNumber: data.serialNumber };
           //用户
           obj.users.forEach((obj) => {
             if( obj.userType == 'individuals') {
@@ -70,6 +71,8 @@ export default {
           })
           this.tabData[index].formatData.push(tempTable)
         });
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
       })
 
     })

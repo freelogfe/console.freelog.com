@@ -40,26 +40,24 @@ export default {
     load(param) {
       return this.$services.contract.get(param || {})
         .then((res) => {
-          var data = res.data
-          if (data.ret === 0) {
-            this.detail = data.data
+          var data = res.getData()
+          this.detail = data
 
-            //渲染状态机
-            //1.获取当前状态
-            //2.找到对应的events及对应的nextstate
-            //3.展示所有events，跳转至操作页面
-            let fsmState = data.data.fsmState;
-            let stateTransitionMap = data.data.policySegment.fsmDescription;
-            let corresponseEvents = [];
-            stateTransitionMap.forEach((transition)=> {
-              if (transition.currentState == fsmState) {
-                corresponseEvents.push(transition)
-              }
-            })
-            this.showEvents(corresponseEvents);
-          } else {
-            this.$message.error(data.msg);
-          }
+          //渲染状态机
+          //1.获取当前状态
+          //2.找到对应的events及对应的nextstate
+          //3.展示所有events，跳转至操作页面
+          let fsmState = data.fsmState;
+          let stateTransitionMap = data.policySegment.fsmDescription;
+          let corresponseEvents = [];
+          stateTransitionMap.forEach((transition)=> {
+            if (transition.currentState == fsmState) {
+              corresponseEvents.push(transition)
+            }
+          })
+          this.showEvents(corresponseEvents);
+        }).catch((err)=>{
+          this.$message.error(err.response.errorMsg || err)
         })
     },
     updateNodeDetail(formName) {
