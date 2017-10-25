@@ -5,6 +5,7 @@ export default {
   data() {
     return {
         format: [],
+        activeName:'',
         activeNames: ['policy0'],
         colorMap: {},
         genColor: function () {},
@@ -15,68 +16,87 @@ export default {
     }
   },
   mounted() {
-
+  // this.$el.querySelector('div.el-tabs__item').click();
+  this.$nextTick(function () {
+    // DOM 现在更新了
+    // `this` 绑定到当前实例
+    this.$el.querySelector('div.el-tabs__item').click();
+  })
   },
   components: {
     collapseState
   },
   created () {
-    // this.meta = this.$route.query.meta.widgets;
-    this.meta = [{name: '资源1', Id: '1'}, {name: '资源2', Id: '2'}, {name: '资源3', Id: '3'}, {name: '资源4', Id: '4'}]
-
-
+    //是否pagebuild资源
+    if( this.$route.query.meta.widgets ) {
+      this.meta = this.$route.query.meta.widgets;
+      this.meta.unshift({
+        resourceName: this.$route.query.resourceName,
+        policyId: this.$route.query.policyId
+      })
+    }else {
+      this.meta = [{
+        resourceName: this.$route.query.resourceName,
+        policyId: this.$route.query.policyId
+      }]
+    }
+    this.activeName = "资源: "+ this.$route.query.resourceName
     this.meta.forEach(( obj, index )=> {
-      let Id = obj.Id
       this.tabData[index] =  {
-        resourceName:"资源"+ Id,
-        policyId: Id,
+        resourceName:"资源: "+ obj.resourceName,
+        policyId: obj.policyId,
         formatData : []
       }
-      this.$services.policy.get(this.$route.query.policyId).then((res) => {
-        this.genColor = this.genColorCache();
-        //选中按钮的样式
-        let innerArr = Array.apply(null, Array(res.data.data.policy.length)).map(() => false)
-        this.$set(this.btnStates,index,innerArr)
-
-        res.data.data.policy.forEach((obj) => {
-
-          let tempTable = { users: '', stateMachine: [],segmentId: '', serialNumber: res.data.data.serialNumber };
-          //用户
-          obj.users.forEach((obj) => {
-            if( obj.userType == 'individuals') {
-              tempTable.users += '对用户';
-              obj.users.forEach ((name) => {
-                tempTable.users += name + ' ';
-              })
-            }
-          })
-          tempTable.segmentId = obj.segmentId;
-          //状态机合同
-          obj.fsmDescription.forEach((transition) => {
-            let temp= {};
-            if( !  this.colorMap[transition.currentState]  ) {
-              this.colorMap[transition.currentState] = this.genColor();
-            }
-            temp.cColor = this.colorMap[transition.currentState];
-
-            if( !  this.colorMap[transition.nextState]  ) {
-              this.colorMap[transition.nextState] = this.genColor();
-            }
-            temp.nColor = this.colorMap[transition.nextState];
-            stateNameMap[transition.currentState]?temp.currentState=stateNameMap[transition.currentState]: temp.currentState=transition.currentState;
-            stateNameMap[transition.nextState]?temp.nextState=stateNameMap[transition.nextState]: temp.nextState=transition.nextState;
-            temp.event = eventMap[transition.event.type](transition.event);
-            tempTable.stateMachine.push(temp)
-          })
-          this.tabData[index].formatData.push(tempTable)
-        });
-      })
-
     })
-    let formatData = {
-      resourceName: this.$route.query.policyId,
-      formatData : []
-    }
+    let policyArr = this.meta.map(( obj ) => {
+      return obj.policyId
+    })
+    this.$services.policy.get({
+      params: {policyIds:policyArr.join(',')}
+    }).then((res) => {
+      res.data.data.forEach((policy,index)=> {
+          this.genColor = this.genColorCache();
+          //选中按钮的样式
+          let innerArr = Array.apply(null, Array(policy.policy.length)).map(() => false)
+          this.$set(this.btnStates,index,innerArr)
+
+          policy.policy.forEach((obj) => {
+
+            let tempTable = { users: '', stateMachine: [],segmentId: '', serialNumber: policy.serialNumber };
+            //用户
+            obj.users.forEach((obj) => {
+              if( obj.userType == 'individuals') {
+                tempTable.users += '对用户';
+                obj.users.forEach ((name) => {
+                  tempTable.users += name + ' ';
+                })
+              }
+            })
+            tempTable.segmentId = obj.segmentId;
+            //状态机合同
+            obj.fsmDescription.forEach((transition) => {
+              let temp= {};
+              if( !  this.colorMap[transition.currentState]  ) {
+                this.colorMap[transition.currentState] = this.genColor();
+              }
+              temp.cColor = this.colorMap[transition.currentState];
+
+              if( !  this.colorMap[transition.nextState]  ) {
+                this.colorMap[transition.nextState] = this.genColor();
+              }
+              temp.nColor = this.colorMap[transition.nextState];
+              stateNameMap[transition.currentState]?temp.currentState=stateNameMap[transition.currentState]: temp.currentState=transition.currentState;
+              stateNameMap[transition.nextState]?temp.nextState=stateNameMap[transition.nextState]: temp.nextState=transition.nextState;
+              temp.event = eventMap[transition.event.type](transition.event);
+              tempTable.stateMachine.push(temp)
+            })
+            this.tabData[index].formatData.push(tempTable)
+          });
+      })
+    })
+
+
+
     if (!this.$route.query.policyId) {
       this.$message.error('没有资源Id, 请重新选择');
     }
@@ -89,6 +109,7 @@ export default {
   methods: {
     handleChange (e) {
       console.log('e',e);
+        console.log(this.$el.querySelector('.tabs__item '));
     },
     genColorCache () {
       let colorArr = ['red','purple','blue','green','pink'];
@@ -122,7 +143,7 @@ export default {
       // })
     },
     handleClick(tab, event) {
-      console.log('you click a tab',tab);
+        // this.$el.querySelector('div.el-tabs__item').click();
     },
     submit () {
       let result = [];
@@ -135,8 +156,8 @@ export default {
           }
         })
       })
-      if (result.length > this.btnStates.length ) {
-        console.error('policy数量不对')
+      if (result.length != this.btnStates.length) {
+        this.$message.warn('请选择policy')
         return false
       }
       console.log(result);
