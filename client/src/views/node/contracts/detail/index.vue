@@ -4,13 +4,30 @@
       <el-form-item label="contractId" prop="contractId">
         <el-input v-model="detail.contractId" disabled></el-input>
       </el-form-item>
-      <el-form-item label="status" prop="status">
-        <el-input v-model="detail.status" disabled></el-input>
+
+      <el-form-item label="current status" prop="status">
+        <el-input v-model="detail.fsmState" disabled></el-input>
       </el-form-item>
+
+      <el-form-item label="请选择事件" prop="contractId">
+        <el-select v-model="selectValue" placeholder="请选择" @change="selectEvent">
+          <el-option
+            v-for="html in eventHtml"
+            v-html="html.html"
+            :key="html.params"
+            :label="html.html"
+            :value="html.params"
+            >
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item class="btns">
-        <el-button type="primary" @click="updateNodeDetail('detail')">保存</el-button>
+        <el-button type="primary" @click="updateNodeDetail('detail')">确定</el-button>
       </el-form-item>
     </el-form>
+
+
   </section>
 </template>
 

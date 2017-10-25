@@ -53,6 +53,7 @@
           <!--</el-form-item>-->
         <!--</template>-->
       <!--</el-form-item>-->
+
       <el-form-item class="btns">
         <el-button type="primary" @click="saveHandler('detail')">保存</el-button>
       </el-form-item>

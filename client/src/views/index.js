@@ -12,6 +12,7 @@ export const resetPassword = resolve => require.ensure([], () => resolve(require
 
 //资源管理
 export const resourceCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/create/index.vue')), 'resource')
+
 export const resourceUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard');
 export const resourcePolicyCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
@@ -33,6 +34,7 @@ export const contractDetail = resolve => require.ensure([], () => resolve(requir
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 export const pagebuildList = resolve => require.ensure([], () => resolve(require('@/views/node/page-build/list/index.vue')), 'pagebuild')
+export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
 
 export default {
   layout,
@@ -59,5 +61,6 @@ export default {
   presentableDetail,
 
   contractDetail,
-  pagebuildList
+  pagebuildList,
+  contractEventSignment
 }

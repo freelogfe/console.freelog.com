@@ -8,25 +8,39 @@ export default {
         activeNames: ['policy0'],
         colorMap: {},
         genColor: function () {},
-        policy: {},
-        serialNumber: ''
+        serialNumber: '',
+        activeName: 'second',
+        tabData : [],
+        btnStates : []// 维护已选policy，是一个二维数组
     }
   },
   mounted() {
+
   },
   components: {
     collapseState
   },
   created () {
-    if (!this.$route.query.policyId) {
-      this.$message.error('没有资源Id, 请重新选择');
-    } else {
-      this.$services.policy.get(this.$route.query.policyId).then((res) => {
-        this.serialNumber = res.data.data.serialNumber
+    // this.meta = this.$route.query.meta.widgets;
+    this.meta = [{name: '资源1', Id: '1'}, {name: '资源2', Id: '2'}, {name: '资源3', Id: '3'}, {name: '资源4', Id: '4'}]
 
-        this.genColor = this.genColorCache()
+
+    this.meta.forEach(( obj, index )=> {
+      let Id = obj.Id
+      this.tabData[index] =  {
+        resourceName:"资源"+ Id,
+        policyId: Id,
+        formatData : []
+      }
+      this.$services.policy.get(this.$route.query.policyId).then((res) => {
+        this.genColor = this.genColorCache();
+        //选中按钮的样式
+        let innerArr = Array.apply(null, Array(res.data.data.policy.length)).map(() => false)
+        this.$set(this.btnStates,index,innerArr)
+
         res.data.data.policy.forEach((obj) => {
-          let tempTable = { users: '', stateMachine: [],segmentId: '' };
+
+          let tempTable = { users: '', stateMachine: [],segmentId: '', serialNumber: res.data.data.serialNumber };
           //用户
           obj.users.forEach((obj) => {
             if( obj.userType == 'individuals') {
@@ -54,9 +68,22 @@ export default {
             temp.event = eventMap[transition.event.type](transition.event);
             tempTable.stateMachine.push(temp)
           })
-          this.format.push(tempTable);
+          this.tabData[index].formatData.push(tempTable)
         });
       })
+
+    })
+    let formatData = {
+      resourceName: this.$route.query.policyId,
+      formatData : []
+    }
+    if (!this.$route.query.policyId) {
+      this.$message.error('没有资源Id, 请重新选择');
+    }
+  },
+  watch : {
+    tabData () {
+      deep: true
     }
   },
   methods: {
@@ -64,28 +91,56 @@ export default {
       console.log('e',e);
     },
     genColorCache () {
-      let arr = ['red','purple','blue','green','pink'];
+      let colorArr = ['red','purple','blue','green','pink'];
       return function () {
-        return arr.pop();
+        return colorArr.pop();
       }
     },
-    sign (id, sn) {
-      this.$services.contract.post({
-        contractType: '1',
-        policyId: this.$route.query.policyId,
-        segmentId: id,
-        serialNumber: sn,
-        partyTwo: this.$route.params.nodeId
-      }).then((res)=> {
-        console.log(res)
-        var data = res.data;
-        if (data.ret === 0) {
-          this.$message.success('合同创建成功')
-          this.$services.contract.get('59a3c612567e5c22a41d8f5c')
+    select (id, sn, indexOuter, indexInner, self) {
+      //每一个资源只能选中一个policy
+      this.btnStates[indexOuter].forEach( (obj, index)=> {
+        if (index == indexInner ) {
+          this.$set(this.btnStates[indexOuter], indexInner, true)
         } else {
-          this.$message.error(data.msg)
+            this.$set(this.btnStates[indexOuter], indexInner, false)
         }
       })
+      // this.$services.contract.post({
+      //   contractType: '1',
+      //   policyId: this.$route.query.policyId,
+      //   segmentId: id,
+      //   serialNumber: sn,
+      //   partyTwo: this.$route.params.nodeId
+      // }).then((res)=> {
+      //   var data = res.data;
+      //   if (data.ret === 0) {
+      //     this.$message.success('合同创建成功')
+      //     // this.$services.contract.get('59a3c612567e5c22a41d8f5c')
+      //   } else {
+      //     this.$message.error(data.msg)
+      //   }
+      // })
+    },
+    handleClick(tab, event) {
+      console.log('you click a tab',tab);
+    },
+    submit () {
+      let result = [];
+      this.btnStates.forEach( (obj, index) => {
+        obj.forEach((booleanObj, index2) => {
+          if(booleanObj == true) {
+            let policyId = this.tabData[index].policyId
+            let segmentId = this.tabData[index].formatData[index2].segmentId
+            result.push([policyId,segmentId])
+          }
+        })
+      })
+      if (result.length > this.btnStates.length ) {
+        console.error('policy数量不对')
+        return false
+      }
+      console.log(result);
+
     }
   }
 }

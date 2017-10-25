@@ -75,6 +75,7 @@ export default {
       if (navList) {
         navList = cloneArray(navList) //避免修改源数据
         this.navList = paddingPath(homePath, navList)
+
         this.$store.dispatch('openSidebar')
       } else {
         this.navList = [];
