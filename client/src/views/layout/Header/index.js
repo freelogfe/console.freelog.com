@@ -40,13 +40,10 @@ export default {
     },
     logout() {
       this.$services.other.logout().then((res) => {
-        var {ret, msg, data} = res.data
-        if (ret === 0) {
-          this.$store.dispatch('deleteToken')
-          this.$router.replace({path: '/user/login', query: {redirect: this.$route.fullPath}})
-        } else {
-          this.$message.error(msg)
-        }
+        this.$store.dispatch('deleteToken')
+        this.$router.replace({path: '/user/login', query: {redirect: this.$route.fullPath}})
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
       })
     }
   }

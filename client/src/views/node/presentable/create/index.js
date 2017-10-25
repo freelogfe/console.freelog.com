@@ -76,6 +76,7 @@ export default {
       }).then(() => {
         this.submitLoading = false;
       }, ()=> {
+        this.submitLoading = false;
         this.$message.error('上传失败');
       })
     }

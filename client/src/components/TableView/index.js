@@ -31,7 +31,7 @@ export default {
       type: Object,
       default() {
         return {
-          pageSize: 20,
+          pageSize: 10,
           page: 1 //页码
         }
       }

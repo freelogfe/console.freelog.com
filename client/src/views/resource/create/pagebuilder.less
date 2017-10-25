@@ -1,3 +1,5 @@
+@page-builder-height: 600px;
+
 .page-builder .widget-item {
   position: absolute;
   &:hover {
@@ -38,12 +40,15 @@
 
 .page-builder {
   width: 990px;
-  height: 600px;
+  height: @page-builder-height;
   position: relative;
   border: 1px solid #cccccc;
 }
 
 .widgets-panel {
+  max-height: @page-builder-height;
+  overflow: auto;
+
   .widget-resource {
     margin-right: 10px;
     margin-bottom: 3px;

@@ -5,7 +5,7 @@
 export const layout = resolve => require.ensure([], () => resolve(require('@/views/layout/layout.vue')), 'common')
 export const error = resolve => require.ensure([], () => resolve(require('@/views/error.vue')), 'common');
 
-
+//用户登录、注册、退出登录等
 export const login = resolve => require.ensure([], () => resolve(require('@/views/user/login/index.vue')), 'user');
 export const signup = resolve => require.ensure([], () => resolve(require('@/views/user/signup/index.vue')), 'user');
 export const resetPassword = resolve => require.ensure([], () => resolve(require('@/views/user/reset-password/index.vue')), 'user');
@@ -26,14 +26,15 @@ export const nodeUpdator = resolve => require.ensure([], () => resolve(require('
 export const nodeList = resolve => require.ensure([], () => resolve(require('@/views/node/my-nodes/index.vue')), 'node')
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('@/views/node/detail/index.vue')), 'node')
 export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
-
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 export const nodePresentbles = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/list/index.vue')), 'node')
 export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/list/index.vue')), 'node')
 export const contractDetail = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/detail/index.vue')), 'node')
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
+
 export const pagebuildList = resolve => require.ensure([], () => resolve(require('@/views/node/page-build/list/index.vue')), 'pagebuild')
+
 export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
 
 export default {
@@ -56,10 +57,8 @@ export default {
   nodePolicyManagement,
   nodePresentbles,
   nodeContracts,
-
   createPresentable,
   presentableDetail,
-
   contractDetail,
   pagebuildList,
   contractEventSignment

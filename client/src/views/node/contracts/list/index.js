@@ -27,24 +27,16 @@ export default {
     },
     loadContracts(param) {
       return this.$services.contract.get(param || {}).then((res) => {
-        var data = res.data;
-
-        if (data.ret === 0) {
-          return res
-        } else {
-          Promise.reject(new Error(data.msg))
-        }
+        return res
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
       })
     },
     loadPresentables(param) {
       return this.$services.presentables.get({params: param}).then((res) => {
-        var data = res.data;
-
-        if (data.ret === 0) {
-          return res
-        } else {
-          Promise.reject(new Error(data.msg))
-        }
+        return res
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg || err)
       })
     },
     mergeData(contracts, presentables) {

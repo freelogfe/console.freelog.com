@@ -93,6 +93,8 @@ export default {
             this.tabData[index].formatData.push(tempTable)
           });
       })
+    }).catch((err)=>{
+      this.$message.error(err.response.errorMsg || err)
     })
 
 

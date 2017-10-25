@@ -55,6 +55,7 @@ export default {
     },
     {
       path: 'policy',
+      hidden: true,
       meta: {
         requiresAuth: true,
         title: '资源策略管理'

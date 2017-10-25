@@ -51,7 +51,7 @@ export default {
 
       formData: {
         resourceType: 'PageBuild',
-        resourceName: 'my image pagebuild',
+        resourceName: '',
         widgetName: '',
         metas: [],
       },

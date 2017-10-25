@@ -24,7 +24,7 @@
         <el-submenu index="account">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
-            <span>{{session.user.displayName}}</span>
+            <span>{{session.user.nickname}}</span>
           </template>
           <el-menu-item index="setting">
             <a href="//freelog.com/account/settings" target="_blank">setting</a>

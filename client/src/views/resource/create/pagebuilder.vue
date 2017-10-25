@@ -21,19 +21,40 @@
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">
+
+
           <el-col :span="12" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item"
                   :data-index="index">
-            <div class="action-panel">
-              <div class="action-btns">
-                <i class="el-icon-delete" data-action="delete"></i>
-                <i class="el-icon-edit" data-action="edit"></i>
+            <el-popover
+              ref="widgetInfo"
+              placement="top"
+              width="400"
+              trigger="hover">
+              <div slot="reference">
+                <div>
+                  <div class="action-panel">
+                    <div class="action-btns">
+                      <i class="el-icon-delete" data-action="delete"></i>
+                      <i class="el-icon-edit" data-action="edit"></i>
+                    </div>
+                  </div>
+                  <el-card :body-style="{padding: 0}" class="js-widget widget-resource">
+                    <div style="padding: 14px;">
+                      <span>{{widget.resourceName}}</span>
+                    </div>
+                  </el-card>
+                </div>
               </div>
-            </div>
-            <el-card :body-style="{padding: 0}" class="js-widget widget-resource">
-              <div style="padding: 14px;">
-                <span>{{widget.resourceName}}</span>
-              </div>
-            </el-card>
+              <slot>
+                <div class="widget-meta-info">
+                  <ul>
+                    <li v-for="(val, key) in widget">
+                      {{key}}: {{val}}
+                    </li>
+                  </ul>
+                </div>
+              </slot>
+            </el-popover>
           </el-col>
         </el-row>
       </el-col>

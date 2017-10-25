@@ -41,15 +41,14 @@ export default {
         if (valid) {
           self.$services.nodes.post(self.dataForm)
             .then((res) => {
-              var data = res.data;
-              if (data.ret === 0) {
-                self.$message.success('节点创建成功')
-                setTimeout(() => {
-                  self.$router.push({path: '/node/detail', query: {nodeId: data.data.nodeId}})
-                }, 1e3)
-              } else {
-                self.$message.error(data.msg)
-              }
+              var data = res.getData();
+              self.$message.success('节点创建成功')
+              setTimeout(() => {
+                self.$router.push({path: '/node/detail', query: {nodeId: data.nodeId}})
+              }, 1e3)
+            })
+            .catch((err)=>{
+              this.$message.error(err.response.errorMsg || err)
             })
         } else {
           console.log('error submit!!');
