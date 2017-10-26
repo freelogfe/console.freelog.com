@@ -5,7 +5,7 @@ export default {
   data() {
     return {
       resourceList: [],
-      query:''
+      query: ''
     }
   },
   components: {
@@ -15,13 +15,13 @@ export default {
   mounted() {
   },
   methods: {
-    querySearchAsync(){
+    querySearchAsync() {
 
     },
-    handleSelectSearchItem(){
+    handleSelectSearchItem() {
 
     },
-    queryHandler(){
+    queryHandler() {
       this.$message.warning('待开发')
     },
     loader() {
@@ -35,15 +35,27 @@ export default {
       }
     },
     handleContact(resource) {
-      console.log(resource.systemMeta);
       if (!resource.policyId) {
         this.$message.warning('该资源还没创建policy，无法进行创建合同');
       } else {
-        this.$router.push({path: `/node/${this.$route.params.nodeId}/policyManagement/sign`, query: {resourceName: resource.resourceName,policyId: resource.policyId, meta: resource.systemMeta}})
+        var query = {
+          resourceName: resource.resourceName,
+          policyId: resource.policyId,
+        }
+        if (resource.systemMeta && resource.systemMeta.widgets) {
+          query.widgets = JSON.stringify(resource.systemMeta.widgets)
+        }
+        this.$router.push({
+          path: `/node/${this.$route.params.nodeId}/policyManagement/sign`,
+          query: query
+        })
       }
     },
     previewResourceHandler(resource) {
-      this.$router.push({path: `/node/${this.$route.params.nodeId}/resource/detail`, query: {resourceId: resource.resourceId}})
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/resource/detail`,
+        query: {resourceId: resource.resourceId}
+      })
     }
   }
 }
