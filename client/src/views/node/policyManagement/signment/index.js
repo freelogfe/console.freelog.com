@@ -159,10 +159,10 @@ export default {
         })
       })
       if (result.length != this.btnStates.length) {
-        this.$message.warn('请选择policy')
+        this.$message.warning('请选择policy')
         return false
       }
-      console.log(result);
+      //result是policyId  SegmentId
 
     }
   }
