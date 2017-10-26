@@ -85,7 +85,8 @@ export default {
       }
       widgets.unshift({
         resourceName: this.$route.query.resourceName,
-        policyId: this.$route.query.policyId
+        policyId: this.$route.query.policyId,
+        resourceId: this.$route.query.resourceId
       });
 
       this.activeName = "资源: " + this.$route.query.resourceName
@@ -94,16 +95,32 @@ export default {
         this.tabData.push({
           resourceName: "资源: " + obj.resourceName,
           policyId: obj.policyId,
+          resourceId: obj.resourceId,
           formatData: []
         })
       })
-      let policyArr = widgets.map((obj) => {
-        return obj.policyId
+      let requestArr = widgets.map((obj) => {
+        return obj.resourceId
       })
       return this.$services.policy.get({
-        params: {policyIds: policyArr.join(',')}
+        params: {resourceIds: requestArr.join(',')}
       }).then((res) => {
-        return res.getData()
+        let data =  res.getData();
+        requestArr.map((request)=> {
+          let target;
+          data.forEach((obj)=> {
+            if (obj.resourceId == request) {
+              target =  obj
+            }
+          })
+          return target
+        })
+        res.getData().forEach((obj)=> {
+          obj
+        })
+        return data
+
+
       }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
@@ -120,29 +137,16 @@ export default {
       }
     },
     select(id, sn, indexOuter, indexInner, self) {
+      console.log('select trigger',indexOuter,indexInner);
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach((obj, index) => {
         if (index == indexInner) {
-          this.$set(this.btnStates[indexOuter], indexInner, true)
+          this.$set(this.btnStates[indexOuter], index, true)
         } else {
-          this.$set(this.btnStates[indexOuter], indexInner, false)
+          this.$set(this.btnStates[indexOuter], index, false)
         }
       })
-      // this.$services.contract.post({
-      //   contractType: '1',
-      //   policyId: this.$route.query.policyId,
-      //   segmentId: id,
-      //   serialNumber: sn,
-      //   partyTwo: this.$route.params.nodeId
-      // }).then((res)=> {
-      //   var data = res.data;
-      //   if (data.ret === 0) {
-      //     this.$message.success('合同创建成功')
-      //     // this.$services.contract.get('59a3c612567e5c22a41d8f5c')
-      //   } else {
-      //     this.$message.error(data.msg)
-      //   }
-      // })
+      console.log('this.btnStates',this.btnStates);
     },
     handleClick(tab, event) {
       // this.$el.querySelector('div.el-tabs__item').click();
@@ -154,7 +158,8 @@ export default {
           if (booleanObj == true) {
             let policyId = this.tabData[index].policyId
             let segmentId = this.tabData[index].formatData[index2].segmentId
-            result.push([policyId, segmentId])
+            let serialNumber= this.tabData[index].formatData[index2].serialNumber
+            result.push([policyId, segmentId,serialNumber])
           }
         })
       })
@@ -162,7 +167,19 @@ export default {
         this.$message.warning('请选择policy')
         return false
       }
-      //result是policyId  SegmentId
+      let promiseArr = result.map((obj)=> {
+        return this.$services.contract.post({
+          contractType: '2',
+          policyId: obj[0],
+          segmentId: obj[1],
+          serialNumber: obj[2],
+          partyTwo: this.$route.params.nodeId
+        })
+      })
+      //result是policyId  SegmentId, serialNumber
+      Promise.all(promiseArr).then((values)=> {
+        console.log(values);
+      })
 
     }
   }

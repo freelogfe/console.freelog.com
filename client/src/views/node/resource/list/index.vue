@@ -21,8 +21,8 @@
         label="resourceType">
       </el-table-column>
       <el-table-column
-        prop="policyId"
-        label="policyId">
+        prop="resourceId"
+        label="resourceId">
       </el-table-column>
       <el-table-column
         label="resourceUrl">

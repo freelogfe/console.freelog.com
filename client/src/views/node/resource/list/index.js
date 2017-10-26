@@ -41,6 +41,7 @@ export default {
         var query = {
           resourceName: resource.resourceName,
           policyId: resource.policyId,
+          resourceId: resource.resourceId
         }
         if (resource.systemMeta && resource.systemMeta.widgets) {
           query.widgets = JSON.stringify(resource.systemMeta.widgets)
