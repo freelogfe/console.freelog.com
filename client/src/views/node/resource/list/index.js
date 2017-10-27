@@ -35,22 +35,17 @@ export default {
       }
     },
     handleContact(resource) {
-      if (!resource.policyId) {
-        this.$message.warning('该资源还没创建policy，无法进行创建合同');
-      } else {
-        var query = {
-          resourceName: resource.resourceName,
-          policyId: resource.policyId,
-          resourceId: resource.resourceId
-        }
-        if (resource.systemMeta && resource.systemMeta.widgets) {
-          query.widgets = JSON.stringify(resource.systemMeta.widgets)
-        }
-        this.$router.push({
-          path: `/node/${this.$route.params.nodeId}/policyManagement/sign`,
-          query: query
-        })
+      var query = {
+        resourceName: resource.resourceName,
+        resourceId: resource.resourceId
       }
+      if (resource.systemMeta && resource.systemMeta.widgets) {
+        query.widgets = JSON.stringify(resource.systemMeta.widgets)
+      }
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/policyManagement/sign`,
+        query: query
+      })
     },
     previewResourceHandler(resource) {
       this.$router.push({

@@ -18,7 +18,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.$route.query.policyId) {
+    if (!this.$route.query.resourceId) {
       this.$message.error('没有资源Id, 请重新选择');
     } else {
       this.loadPolicyDetail()
@@ -85,7 +85,6 @@ export default {
       }
       widgets.unshift({
         resourceName: this.$route.query.resourceName,
-        policyId: this.$route.query.policyId,
         resourceId: this.$route.query.resourceId
       });
 
@@ -94,7 +93,6 @@ export default {
       widgets.forEach((obj, index) => {
         this.tabData.push({
           resourceName: "资源: " + obj.resourceName,
-          policyId: obj.policyId,
           resourceId: obj.resourceId,
           formatData: []
         })
@@ -156,10 +154,10 @@ export default {
       this.btnStates.forEach((obj, index) => {
         obj.forEach((booleanObj, index2) => {
           if (booleanObj == true) {
-            let policyId = this.tabData[index].policyId
+            let targetId =  this.tabData[index].resourceId
             let segmentId = this.tabData[index].formatData[index2].segmentId
             let serialNumber= this.tabData[index].formatData[index2].serialNumber
-            result.push([policyId, segmentId,serialNumber])
+            result.push([targetId,segmentId,serialNumber])
           }
         })
       })
@@ -170,13 +168,13 @@ export default {
       let promiseArr = result.map((obj)=> {
         return this.$services.contract.post({
           contractType: '2',
-          policyId: obj[0],
+          targetId:obj[0] ,
           segmentId: obj[1],
           serialNumber: obj[2],
           partyTwo: this.$route.params.nodeId
         })
       })
-      //result是policyId  SegmentId, serialNumber
+      //result是 SegmentId, serialNumber
       Promise.all(promiseArr).then((values)=> {
         console.log(values);
       })

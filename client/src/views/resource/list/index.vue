@@ -23,7 +23,7 @@
           <el-button
             size="small"
             v-if="scope.row.status ==1"
-            @click="handlePolicy(scope.row)">policy</el-button>
+            @click="handlePolicy(scope.row)">创建policy</el-button>
         </template>
       </el-table-column>
     </table-view>
