@@ -22,9 +22,9 @@
           <el-button
             size="small"
             @click="handlePreview(scope.row)">查看详情</el-button>
-          <!--<el-button-->
-            <!--size="small"-->
-            <!--@click="handleEdit(scope.row)">编辑</el-button>-->
+          <el-button
+            size="small"
+            @click="handleEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </table-view>

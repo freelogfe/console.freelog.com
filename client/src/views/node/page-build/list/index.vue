@@ -6,8 +6,8 @@
         label="resourceName">
       </el-table-column>
       <el-table-column
-        prop="policyId"
-        label="policyId">
+        prop="status"
+        label="status">
       </el-table-column>
       <el-table-column
         prop="resourceId"

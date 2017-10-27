@@ -22,8 +22,12 @@
             @click="handleEdit(scope.row)">编辑</el-button>
           <el-button
             size="small"
-            v-if="scope.row.status ==1"
-            @click="handlePolicy(scope.row)">policy</el-button>
+            v-show="scope.row.status === 1"
+            @click="handlePolicy(scope.row)">创建policy</el-button>
+          <el-button
+            size="small"
+            v-show="scope.row.status === 2"
+            @click="handlePolicy(scope.row)">修改policy</el-button>
         </template>
       </el-table-column>
     </table-view>

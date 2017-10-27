@@ -34,7 +34,7 @@ export default {
         return this.$services.g_Resources.get(param || {})
       }
     },
-    gotoCreateContract(resource){
+    gotoCreateContract(resource) {
       var query = {
         resourceName: resource.resourceName,
         resourceId: resource.resourceId
