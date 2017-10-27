@@ -19,8 +19,8 @@ export default {
     var self = this
     var resId = this.$route.query.resourceId
     this.loadPolicyDetail(resId).then((policy) => {
-      self.policyDetail = policy
-      self.policyText = policy.policyText
+      self.policyDetail = policy || {}
+      self.policyText = self.policyDetail.policyText || ''
     })
   },
   methods: {

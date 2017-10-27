@@ -11,9 +11,9 @@ export default {
   components: {PageBuilder},
   data() {
     const validateResourceType = (rule, value, callback) => {
-      const NAME_REG = /[A-Za-z_-]{4,40}/
+      const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
       if (!NAME_REG.test(value)) {
-        callback(new Error('命名格式有误，只能包含大小写字母、_和-，长度4~40'));
+        callback(new Error('命名格式有误，需满足/^[a-z][0-9a-z_]{3,19}[^_]$/'));
       } else {
         callback()
       }

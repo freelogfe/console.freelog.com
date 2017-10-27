@@ -75,9 +75,10 @@ export default {
         languageType: 'freelog_policy_lang'
       }).then(() => {
         this.submitLoading = false;
-      }, ()=> {
+        this.$message.success('创建成功');
+      }).catch((err)=> {
         this.submitLoading = false;
-        this.$message.error('上传失败');
+        this.$message.error(err.response.errorMsg);
       })
     }
   }

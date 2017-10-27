@@ -24,6 +24,7 @@ export default new Router({
       component: layout,
       children: [resourceRoute, nodeRoute, {
         path: 'about',
+        hidden: true,
         meta: {
           requiresAuth: false,
           title: '关于freelog'
@@ -31,6 +32,7 @@ export default new Router({
         component: aboutView
       }, {
         path: 'help',
+        hidden: true,
         meta: {
           requiresAuth: false,
           title: '帮助中心'

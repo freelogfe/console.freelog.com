@@ -25,29 +25,46 @@ export default {
     queryHandler() {
       this.$message.warning('待开发')
     },
+    loadResourceData(resIds) {
+      var promiseList = resIds.map((resId) => {
+        return this.$services.resource.get(resId).then((res) => {
+          return res.getData()
+        })
+      })
+
+      return Promise.all(promiseList)
+    },
     loadContracts(param) {
       return this.$services.contract.get(param || {}).then((res) => {
         return res
-      }).catch((err)=>{
+      }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
     },
     loadPresentables(param) {
       return this.$services.presentables.get({params: param}).then((res) => {
-        return res
-      }).catch((err)=>{
+        return res.getData()
+      }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
     },
-    mergeData(contracts, presentables) {
-      var presentableMap = {}
-      presentables.forEach((p) => {
-        presentableMap[p.contractId] = p
+    mergeDataByResourceId(contracts, data) {
+      var dataMap = {}
+      data.forEach((p) => {
+        dataMap[p.resourceId] = p
       })
       contracts.forEach((contract) => {
-        Object.assign(contract, {
-          presentableDetail: presentableMap[contract.contractId] || null
-        })
+        var item = dataMap[contract.resourceId] || null;
+
+        if (item && item.presentableId) {
+          Object.assign(contract, {
+            presentableDetail: item
+          })
+        } else if (item) {
+          Object.assign(contract, {
+            resourceDetail: item
+          })
+        }
       })
     },
     loader() {
@@ -67,12 +84,20 @@ export default {
           var contractIds = contracts.map((c) => {
             return c.contractId
           })
-          return self.loadPresentables({
+
+          var resourceIds = contracts.map((c) => {
+            return c.resourceId
+          })
+
+          return Promise.all([this.loadResourceData(resourceIds), self.loadPresentables({
             contractIds: contractIds.join(','),
             nodeId: nodeId
-          }).then((res2) => {
-            var presentables = res2.data.data;
-            self.mergeData(contracts, presentables)
+          })]).then((responses) => {
+            var resourcesData = responses[0]
+            var presentables = responses[1]
+            self.mergeDataByResourceId(contracts, resourcesData)
+            self.mergeDataByResourceId(contracts, presentables)
+            console.log(contracts)
             return res
           })
         })

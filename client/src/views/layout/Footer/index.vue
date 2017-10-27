@@ -19,7 +19,6 @@
   .app-footer {
     margin-top: 30px;
     text-align: center;
-    width: 100%;
   }
  a {
    color: black;

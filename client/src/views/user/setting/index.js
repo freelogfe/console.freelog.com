@@ -1,6 +1,7 @@
 import {mapGetters} from 'vuex'
 import {storage} from '@/lib'
 import {validateLoginName} from '../validator'
+// import ImageCropUpload from 'vue-image-crop-upload';
 
 export default {
   name: 'user-setting',
@@ -26,6 +27,9 @@ export default {
       rememberUser: false
     }
   },
+  // components: {
+  //   'image-crop-upload': ImageCropUpload
+  // },
   computed: mapGetters({
     session: 'session'
   }),
