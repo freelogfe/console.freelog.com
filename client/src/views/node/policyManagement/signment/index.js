@@ -128,21 +128,6 @@ export default {
           this.$set(this.btnStates[indexOuter], indexInner, false)
         }
       })
-      // this.$services.contract.post({
-      //   contractType: '1',
-      //   policyId: this.$route.query.policyId,
-      //   segmentId: id,
-      //   serialNumber: sn,
-      //   partyTwo: this.$route.params.nodeId
-      // }).then((res)=> {
-      //   var data = res.data;
-      //   if (data.ret === 0) {
-      //     this.$message.success('合同创建成功')
-      //     // this.$services.contract.get('59a3c612567e5c22a41d8f5c')
-      //   } else {
-      //     this.$message.error(data.msg)
-      //   }
-      // })
     },
     handleClick(tab, event) {
       // this.$el.querySelector('div.el-tabs__item').click();
@@ -161,6 +146,22 @@ export default {
       if (result.length != this.btnStates.length) {
         this.$message.warn('请选择policy')
         return false
+      } else {
+        // this.$services.contract.post({
+        //   contractType: '1',
+        //   policyId: this.$route.query.policyId,
+        //   segmentId: id,
+        //   serialNumber: sn,
+        //   partyTwo: this.$route.params.nodeId
+        // }).then((res)=> {
+        //   var data = res.data;
+        //   if (data.ret === 0) {
+        //     this.$message.success('合同创建成功')
+        //     // this.$services.contract.get('59a3c612567e5c22a41d8f5c')
+        //   } else {
+        //     this.$message.error(data.msg)
+        //   }
+        // })
       }
       console.log(result);
 

@@ -24,7 +24,7 @@
             @click="handlePreview(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="defaultHandler(scope.row)">设为默认</el-button>
+            @click="setDefaultPageBuildHandler(scope.row)">设为默认</el-button>
         </template>
       </el-table-column>
     </table-view>

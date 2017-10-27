@@ -28,7 +28,7 @@ export default {
       }
     },
     handleEdit(nodeDetail) {
-      this.$router.push({path: '/node/edit', query: {nodeId: nodeDetail.nodeId}})
+      this.$router.push({path: '/node/detail', query: {nodeId: nodeDetail.nodeId}})
     },
     gotoNodeHandler(nodeDetail) {
       this.$router.push({path: `/node/${nodeDetail.nodeId}`})

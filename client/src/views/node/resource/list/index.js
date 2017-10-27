@@ -35,8 +35,19 @@ export default {
       }
     },
     handleContact(resource) {
-      if (!resource.policyId) {
-        this.$message.warning('该资源还没创建policy，无法进行创建合同');
+      if (resource.status === 2) {
+        switch (resource.status) {
+          case 1:
+            this.$message.warning('该资源还没创建policy，无法创建合同');
+            break;
+          case 2:
+            this.$message.warning('该资源还没创建policy，无法创建合同');
+            break;
+          case 3:
+            this.$message.warning('该资源已被冻结');
+            break;
+
+        }
       } else {
         var query = {
           resourceName: resource.resourceName,

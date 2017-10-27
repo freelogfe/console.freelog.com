@@ -11,7 +11,7 @@ import userRoute from './user'
 
 Vue.use(Router)
 
-import {layout, login, error}  from '@/views/index'
+import {layout, login, error, aboutView, helpView} from '@/views/index'
 
 export default new Router({
   mode: 'history',
@@ -22,7 +22,21 @@ export default new Router({
       path: '/',
       meta: {requiresAuth: true, title: '首页'},
       component: layout,
-      children: [resourceRoute, nodeRoute]
+      children: [resourceRoute, nodeRoute, {
+        path: 'about',
+        meta: {
+          requiresAuth: false,
+          title: '关于freelog'
+        },
+        component: aboutView
+      }, {
+        path: 'help',
+        meta: {
+          requiresAuth: false,
+          title: '帮助中心'
+        },
+        component: helpView
+      }]
     },
     {
       name: 'not-found',

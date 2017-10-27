@@ -24,11 +24,22 @@ export default {
         })
       }
     },
-    defaultHandler(presentable) {
-      this.$message.warning('待开发')
+    setDefaultPageBuildHandler(presentable) {
+      this.$services.pagebuild.post({
+        nodeId: this.$route.params.nodeId,
+        status: 1,
+        presentableId: presentableId
+      }).then((res) => {
+        this.$message.success('设置成功')
+      }).catch((res) => {
+        this.$message.error(res.response.errorMsg)
+      })
     },
     handlePreview(presentable) {
-      this.$router.push({path: `/node/${this.$route.params.nodeId}/resource/detail`, query: {presentableId: presentable.presentableId}})
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/resource/detail`,
+        query: {presentableId: presentable.presentableId}
+      })
     }
   }
 }

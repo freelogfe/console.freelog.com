@@ -14,20 +14,21 @@
       </el-menu>
 
       <el-menu theme="dark" default-active="-1" class="navbar-menu" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">
-          <div class="badge-item">
-            <el-badge :value="12" class="item">
-              <i class="fa fa-envelope-o"></i>
-            </el-badge>
-          </div>
-        </el-menu-item>
+        <!--<el-menu-item index="1">-->
+          <!--<div class="badge-item">-->
+            <!--<el-badge :value="12" class="item">-->
+              <!--<i class="fa fa-envelope-o"></i>-->
+            <!--</el-badge>-->
+          <!--</div>-->
+        <!--</el-menu-item>-->
         <el-submenu index="account">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
             <span>{{session.user.nickname}}</span>
           </template>
           <el-menu-item index="setting">
-            <a href="//freelog.com/account/settings" target="_blank">setting</a>
+            <router-link to="/account/settings">settings</router-link>
+            <!--<a href="/account/settings" target="_blank">setting</a>-->
           </el-menu-item>
           <el-menu-item index="payments">payments</el-menu-item>
           <el-menu-item index="logout" @click="logout">logout</el-menu-item>

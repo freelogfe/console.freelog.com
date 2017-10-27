@@ -9,6 +9,7 @@ export const error = resolve => require.ensure([], () => resolve(require('@/view
 export const login = resolve => require.ensure([], () => resolve(require('@/views/user/login/index.vue')), 'user');
 export const signup = resolve => require.ensure([], () => resolve(require('@/views/user/signup/index.vue')), 'user');
 export const resetPassword = resolve => require.ensure([], () => resolve(require('@/views/user/reset-password/index.vue')), 'user');
+export const userSetting = resolve => require.ensure([], () => resolve(require('@/views/user/setting/index.vue')), 'user');
 
 //资源管理
 export const resourceCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/create/index.vue')), 'resource')
@@ -37,11 +38,18 @@ export const pagebuildList = resolve => require.ensure([], () => resolve(require
 
 export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
 
+
+export const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')//signmentEvent
+export const helpView = resolve => require.ensure([], () => resolve(require('@/views/help/index.vue')), 'other')//signmentEvent
+
 export default {
   layout,
   login,
   signup,
   resetPassword,
+  userSetting,
+  aboutView,
+  helpView,
   error,
   resourceCreator,
   resourceUpdator,

@@ -21,7 +21,7 @@
           </el-button>
           <el-button
             size="small"
-            @click="handleEdit(scope.row)">编辑
+            @click="handleEdit(scope.row)">详情
           </el-button>
         </template>
       </el-table-column>

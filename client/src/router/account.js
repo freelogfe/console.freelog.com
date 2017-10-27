@@ -1,3 +1,5 @@
+import {layout, userSetting}  from '@/views/index'
+
 export default  {
   name: 'account',
   path: '/account',
@@ -5,7 +7,8 @@ export default  {
     requiresAuth: true,
     title: '账户'
   },
-  component: resolve => require.ensure([], () => resolve(require('@/views/layout/layout.vue')), 'common'),
+  component: layout,
+  redirect: '/account/settings',
   children: [
     {
       path: 'settings',
@@ -13,7 +16,7 @@ export default  {
         requiresAuth: true,
         title: '账户设置'
       },
-      component: resolve => require.ensure([], () => resolve(require('@/views/account/settings/index.vue')), 'account')
+      component: userSetting
     }
   ]
 }
