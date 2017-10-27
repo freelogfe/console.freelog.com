@@ -191,7 +191,10 @@ export default {
       })
       //result是 SegmentId, serialNumber
       Promise.all(promiseArr).then((values)=> {
+        this.$message.success('创建成功')
         console.log(values);
+      }).catch((err)=>{
+        this.$message.error(err.response.errorMsg)
       })
 
     }
