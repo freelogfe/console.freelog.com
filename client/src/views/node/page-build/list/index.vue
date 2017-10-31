@@ -2,7 +2,7 @@
   <section>
     <table-view class="resource-list" :loader="loader()" :showPagination="false">
       <el-table-column
-        prop="resourceName"
+        prop="resourceDetail.resourceName"
         label="resourceName">
       </el-table-column>
       <el-table-column
@@ -14,8 +14,10 @@
         label="resourceId">
       </el-table-column>
       <el-table-column
-        prop="resourceUrl"
         label="resourceUrl">
+        <template slot-scope="scope">
+          <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -25,6 +27,9 @@
           <el-button
             size="small"
             @click="setDefaultPageBuildHandler(scope.row)">设为默认</el-button>
+          <el-button
+            size="small"
+            @click="setDefaultPageBuildHandler(scope.row, 2)">设为隐藏</el-button>
         </template>
       </el-table-column>
     </table-view>
