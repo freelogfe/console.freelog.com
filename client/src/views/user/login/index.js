@@ -19,8 +19,8 @@ export default {
 
     return {
       model: {
-        loginName: storage.get('loginName') || '',
-        password: '',
+        loginName: storage.get('loginName') || '13530729630',
+        password: '123456',
       },
       rules: rules,
       error: null,
@@ -51,7 +51,7 @@ export default {
             this.loading = false
           })
           .catch(err => {
-            this.error = {title: '发生错误', message: err || '出现异常，请稍后再试！'}
+            this.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
             switch (err.response && err.response.status) {
               case 401:
                 this.error.message = '用户名或密码错误！'

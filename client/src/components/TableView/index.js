@@ -61,6 +61,9 @@ export default {
           } else {
             this.$message.error(data.msg);
           }
+        }).catch((res)=>{
+          this.$message.warning('加载失败')
+          this.loading = false
         })
       }
     },

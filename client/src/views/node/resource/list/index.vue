@@ -37,7 +37,7 @@
             @click="previewResourceHandler(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="handleContact(scope.row)">去创建合同</el-button>
+            @click="handleContact(scope.row)">去创建presentable</el-button>
         </template>
       </el-table-column>
     </table-view>

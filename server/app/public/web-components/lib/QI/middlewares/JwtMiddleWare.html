@@ -1,0 +1,32 @@
+<link rel="import" href="./Middleware.html">
+<script>
+    class JWTMiddleware extends Middleware {
+        constructor() {
+            super();
+        }
+
+        transform_request(target, req) {
+            var token = sessionStorage.getItem('Authorization');
+            req = req || {};
+            req.headers = req.headers || {};
+            if (token) {
+                Object.assign(req.headers, {
+                    Authorization: token
+                });
+            } else {
+                //to auth
+            }
+            return req;
+        }
+
+        transform_response(res) {
+            var token = res.headers.get('Authorization');
+            if (token) {
+                sessionStorage.setItem('Authorization', token);
+            }
+            return res;
+        }
+    }
+
+    window.customElements.define('middleware-jwt', JWTMiddleware);
+</script>

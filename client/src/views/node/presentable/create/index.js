@@ -1,4 +1,5 @@
 import {mapGetters} from 'vuex'
+import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import compiler from 'presentable_policy_compiler'
 
 export default {
@@ -12,6 +13,9 @@ export default {
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
       ],
+      step: {
+        active: 1
+      },
       headers: {},
       formData: {
               textarea: 'For userA, userB in the following states: '+
@@ -33,6 +37,7 @@ export default {
   computed: mapGetters({
     session: 'session'
   }),
+  components: {PresentableSteps},
   mounted(){
     this.headers.Authorization =  `Bearer ${this.session.token}`
   },
@@ -67,6 +72,7 @@ export default {
       if (!this.$route.query.contractId) {
         this.$message.error('没有资源Id, 请重新选择');
       };
+
       this.$services.presentables.post({
         name: this.formData.presentableName,
         nodeId:Number(this.$route.params.nodeId),
@@ -75,7 +81,10 @@ export default {
         languageType: 'freelog_policy_lang'
       }).then(() => {
         this.submitLoading = false;
-        this.$message.success('创建成功');
+        this.$message.success('presentable创建成功');
+        this.step = {
+          active: 3
+        }
       }).catch((err)=> {
         this.submitLoading = false;
         this.$message.error(err.response.errorMsg);

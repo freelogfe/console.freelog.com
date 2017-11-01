@@ -1,3 +1,4 @@
+import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import {stateNameMap, eventMap} from './util'
 import collapseState from '../collapseComponent'
 import policy from "../../../../services/policy";
@@ -38,7 +39,8 @@ export default {
     }
   },
   components: {
-    collapseState
+    collapseState,
+    PresentableSteps
   },
   methods: {
     translatePolicy(policy, policyDetail) {
@@ -103,17 +105,17 @@ export default {
       return this.$services.policy.get({
         params: {resourceIds: requestArr.join(',')}
       }).then((res) => {
-        let data =  res.getData();
-        requestArr.map((request)=> {
+        let data = res.getData();
+        requestArr.map((request) => {
           let target;
-          data.forEach((obj)=> {
+          data.forEach((obj) => {
             if (obj.resourceId == request) {
-              target =  obj
+              target = obj
             }
           })
           return target
         })
-        res.getData().forEach((obj)=> {
+        res.getData().forEach((obj) => {
           obj
         })
         return data
@@ -135,7 +137,7 @@ export default {
       }
     },
     select(id, sn, indexOuter, indexInner, self) {
-      console.log('select trigger',indexOuter,indexInner);
+      console.log('select trigger', indexOuter, indexInner);
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach((obj, index) => {
         if (index == indexInner) {
@@ -153,10 +155,10 @@ export default {
       this.btnStates.forEach((obj, index) => {
         obj.forEach((booleanObj, index2) => {
           if (booleanObj == true) {
-            let targetId =  this.tabData[index].resourceId
+            let targetId = this.tabData[index].resourceId
             let segmentId = this.tabData[index].formatData[index2].segmentId
-            let serialNumber= this.tabData[index].formatData[index2].serialNumber
-            result.push([targetId,segmentId,serialNumber])
+            let serialNumber = this.tabData[index].formatData[index2].serialNumber
+            result.push([targetId, segmentId, serialNumber])
           }
         })
       })
@@ -180,20 +182,25 @@ export default {
         //   }
         // })
       }
-      let promiseArr = result.map((obj)=> {
+      let promiseArr = result.map((obj) => {
         return this.$services.contract.post({
           contractType: '2',
-          targetId:obj[0] ,
+          targetId: obj[0],
           segmentId: obj[1],
           serialNumber: obj[2],
           partyTwo: this.$route.params.nodeId
         })
       })
       //result是 SegmentId, serialNumber
-      Promise.all(promiseArr).then((values)=> {
+      Promise.all(promiseArr).then((values) => {
+        var data = values[0].getData()
         this.$message.success('创建成功')
+        this.$router.push({
+          path: `/node/${this.$route.params.nodeId}/presentable/create`,
+          query: {contractId: data.contractId}
+        })
         console.log(values);
-      }).catch((err)=>{
+      }).catch((err) => {
         this.$message.error(err.response.errorMsg)
       })
 

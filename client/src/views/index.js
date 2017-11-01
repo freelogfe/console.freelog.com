@@ -29,14 +29,14 @@ export const nodeDetail = resolve => require.ensure([], () => resolve(require('@
 export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 export const nodePresentbles = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/list/index.vue')), 'node')
-export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/list/index.vue')), 'node')
-export const contractDetail = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/detail/index.vue')), 'node')
+export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contract/list/index.vue')), 'node')
+export const contractDetail = resolve => require.ensure([], () => resolve(require('@/views/node/contract/detail/index.vue')), 'node')
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 
 export const pagebuildList = resolve => require.ensure([], () => resolve(require('@/views/node/page-build/list/index.vue')), 'pagebuild')
 
-export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
+export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contract/event/signment/index.vue')), 'node')//signmentEvent
 
 
 export const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')//signmentEvent

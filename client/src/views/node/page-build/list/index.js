@@ -40,12 +40,15 @@ export default {
       }
     },
     setDefaultPageBuildHandler(presentable, status) {
-      this.$services.pagebuild.post({
-        nodeId: this.$route.params.nodeId,
-        status: status || 1,
-        presentableId: presentable.presentableId
+      this.$services.pagebuild.put(presentable.id,{
+        nodeId: parseInt(this.$route.params.nodeId),
+        status: status || 1
       }).then((res) => {
-        this.$message.success('设置成功')
+        if (res.data.errcode ===0) {
+          this.$message.success('设置成功')
+        } else {
+          this.$message.error(res.data.msg)
+        }
       }).catch((res) => {
         this.$message.error(res.response.errorMsg)
       })

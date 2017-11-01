@@ -17,8 +17,9 @@ export default {
 
     return {
       model: {
-        loginName: '',
-        verifyCode: ''
+        loginName: '13480125810',
+        // verifyCode: '',
+        password: ''
       },
       rules: rules,
       error: null,

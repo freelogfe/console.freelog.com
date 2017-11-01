@@ -1,0 +1,104 @@
+<template id="image-widget-tpl">
+    <div class="js-viewer"></div>
+</template>
+
+<script src="../lib/marked.js"></script>
+<script>
+    (function () {
+        var template = document.currentScript.parentNode.querySelector('template');
+
+        class MarkdownViewerWidget extends HTMLElement {
+            constructor() {
+                super()
+                let shadowRoot = this.attachShadow({mode: 'closed'});
+                const instance = template.content.cloneNode(true);
+                shadowRoot.appendChild(instance);
+                this.$viewer = shadowRoot.querySelector('.js-viewer')
+                this._init()
+            }
+
+            _init() {
+                var self = this;
+                window.QI.fetch('https://raw.githubusercontent.com/chjj/marked/master/README.md')
+                    .then(function (response) {
+                        var contentType = response.headers.get("content-type");
+                        var fn;
+                        var typeFns = [{
+                            match: 'multipart/form-data',
+                            fn: function (res) {
+                                return res.formData()
+                            }
+                        }, {
+                            match: ['application/octet-binary', 'image/'],
+                            fn: function (res) {
+                                return res.blob()
+                            }
+                        }, {
+                            match: 'buffer',
+                            fn: function (res) {
+                                return res.arrayBuffer()
+                            }
+                        }, {
+                            match: 'application/json',
+                            fn: function (res) {
+                                return res.json()
+                            }
+                        }, {
+                            match: 'text/',
+                            fn: function (res) {
+                                return res.text()
+                            }
+                        }];
+
+                        if (contentType) {
+                            for (var i in typeFns) {
+                                var typeFn = typeFns[i];
+                                var isInclude;
+                                if (Array.isArray(typeFn.match)) {
+                                    isInclude = typeFn.match.some(function (t) {
+                                        return contentType.includes(t)
+                                    })
+                                } else {
+                                    isInclude = contentType.includes(typeFn.match);
+                                }
+
+                                if (isInclude) {
+                                    fn = typeFn.fn(response)
+                                    break;
+                                }
+                            }
+                        }
+
+                        fn = fn || response.text()
+                        return fn
+                    })
+                    .then(function (data) {
+                        self.content = data
+                    })
+            }
+
+            static get observedAttributes() {
+                return ['content'];
+            }
+
+            //直接赋值
+            set content(value) {
+                this.$viewer.innerHTML = marked(value)
+            }
+
+            get content() {
+                return this.$img.src
+            }
+
+            //setAttribute or dom init
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                this[attrName] = newVal
+            }
+
+            connectedCallback() {
+            }
+        }
+
+        customElements.define('w-md-viewer', MarkdownViewerWidget);
+    })();
+</script>

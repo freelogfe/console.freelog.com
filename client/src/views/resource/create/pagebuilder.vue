@@ -25,18 +25,22 @@
                   :data-index="index">
             <el-popover
               ref="widgetInfo"
-              placement="top"
+              placement="bottom"
               width="400"
-              trigger="hover">
+              v-model="widget.showInfo"
+              trigger="manual">
               <div slot="reference">
-                <div>
+                <div class="js-widget-wrapper">
                   <div class="action-panel">
                     <div class="action-btns">
                       <i class="el-icon-delete" data-action="delete"></i>
                       <i class="el-icon-edit" data-action="edit"></i>
                     </div>
                   </div>
-                  <el-card :body-style="{padding: 0}" class="js-widget widget-resource">
+                  <el-card :body-style="{padding: 0}" class="js-widget widget-resource"
+                           :data-index="index"
+                           @mouseleave.native="hideInfoHandler(index)"
+                           @mouseenter.native="showInfoHandler(index)">
                     <div style="padding: 14px;">
                       <span>{{widget.resourceName}}</span>
                     </div>

@@ -162,39 +162,62 @@ export default {
         initDrag(el);
       }
 
+
       function initDrag(el, containment) {
         var _mirror = el.cloneNode(true);
         var offset = {x: 0, y: 0};
+
+        var revertStyles = () => {
+          var styles = window.getComputedStyle(_mirror);
+          ['top', 'left', 'position'].forEach((prop) => {
+            el.style[prop] = styles[prop]
+          })
+          _mirror.replaceWith(el)
+          _mirror.remove()
+        }
 
         el.draggie = new Draggabilly(el, {
           containment: containment || false
         }).on('dragEnd', (event) => {
           if (!event.toElement.contains(el) && event.toElement === $right) {
             var parentPos = $right.getBoundingClientRect()
-            el.style.left = (event.x - parentPos.x - offset.x) + 'px'
-            el.style.top = (event.y - parentPos.y - offset.y) + 'px'
-            event.toElement.appendChild(el);
-            el.draggie.disable()
-            initDrag(el, $right);
+            var _copy = el.cloneNode(true);
+            var elStyle = window.getComputedStyle(el)
+
+            Object.assign(_copy.style, {
+              width: elStyle.width,
+              height: elStyle.height,
+              left: (event.x - parentPos.x - offset.x) + 'px',
+              top: (event.y - parentPos.y - offset.y) + 'px'
+            })
+
+            event.toElement.appendChild(_copy);
+            _copy.widgetData = self.widgets[parseInt(el.dataset.index)]
+            revertStyles();
+            initDrag(_copy, $right);
           } else if ($left.contains(el)) {
-            el && el.remove()
+            revertStyles();
           }
         }).on('dragStart', (event) => {
           if (!containment) {
-            var _copy = el
             var elPos = el.getBoundingClientRect()
             setPosition($left, el)
             el.style.position = 'absolute'
             el.replaceWith(_mirror)
-            $left.appendChild(_copy)
+            $left.appendChild(el)
             offset = {
               x: event.x - elPos.x,
               y: event.y - elPos.y
             }
-            initDrag(_mirror)
           }
         });
       }
+    },
+    showInfoHandler(index) {
+      this.widgets[index].showInfo = true
+    },
+    hideInfoHandler(index) {
+      this.widgets[index].showInfo = false
     },
     queryHandler() {
       return this.$services.g_Resources.get({

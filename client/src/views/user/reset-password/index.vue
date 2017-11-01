@@ -11,9 +11,12 @@
       <el-form-item prop="loginName" label="账号">
         <el-input type="text" v-model="model.loginName" placeholder="手机号或邮箱"></el-input>
       </el-form-item>
-      <el-form-item prop="verifyCode" label="验证码">
-        <el-input type="text" v-model="model.verifyCode" placeholder=""></el-input>
+      <el-form-item prop="password" label="密码">
+        <el-input type="password" v-model="model.password" placeholder=""></el-input>
       </el-form-item>
+      <!--<el-form-item prop="verifyCode" label="验证码">-->
+        <!--<el-input type="text" v-model="model.verifyCode" placeholder=""></el-input>-->
+      <!--</el-form-item>-->
       <el-form-item class="login-btns">
         <el-button type="primary"
                    style="width: 100%;"

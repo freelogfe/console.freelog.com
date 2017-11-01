@@ -7,9 +7,11 @@ import axios from 'axios'
 import store from '@/store'
 import {Message} from 'element-ui';
 
+
 const instance = axios.create({
   baseURL: '//api.freelog.com/',
   timeout: 3000,
+  withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   }

@@ -10,6 +10,16 @@ module.exports = appInfo => {
         domainWhiteList: ['http://api.freelog.com']
     };
 
+    config.jwt = {
+        secret: '123456',
+
+        enable: false, // default is false
+        match: (ctx) => {
+            const reg = /token/i;
+            return !reg.test(ctx.path);
+        }
+    };
+
     config.mysql = {
         // 单数据库信息配置
         // client: {
