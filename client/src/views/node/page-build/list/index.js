@@ -15,20 +15,35 @@ export default {
   },
   methods: {
     loader() {
+      const self = this;
       return () => {
         var param = {
           nodeId: this.$route.params.nodeId
         };
         return this.$services.pagebuild.get({
           params: param
+        }).then((res) => {
+          var presentables = res.getData()
+          var promises = []
+          presentables.forEach((p) => {
+            var promise = self.$services.resource.get(p.resourceId).then((resourceRes) => {
+              p.resourceDetail = resourceRes.getData()
+              return resourceRes
+            })
+            promises.push(promise)
+          })
+
+          return Promise.all(promises).then((resources) => {
+            return res
+          })
         })
       }
     },
-    setDefaultPageBuildHandler(presentable) {
+    setDefaultPageBuildHandler(presentable, status) {
       this.$services.pagebuild.post({
         nodeId: this.$route.params.nodeId,
-        status: 1,
-        presentableId: presentableId
+        status: status || 1,
+        presentableId: presentable.presentableId
       }).then((res) => {
         this.$message.success('设置成功')
       }).catch((res) => {

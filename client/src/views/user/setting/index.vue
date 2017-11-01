@@ -1,17 +1,29 @@
 <template>
   <section class="login-section">
+    <!--<image-crop-upload field="file"-->
+                       <!--@crop-success="cropSuccess"-->
+                       <!--@crop-upload-success="cropUploadSuccess"-->
+                       <!--@crop-upload-fail="cropUploadFail"-->
+                       <!--v-model="showImageCropUploader"-->
+                       <!--:width="300"-->
+                       <!--:height="300"-->
+                       <!--url="/api/profile"-->
+                       <!--:params="params"-->
+                       <!--:headers="headers"-->
+                       <!--img-format="png"-->
+    <!--&gt;</image-crop-upload>-->
     <el-form class="user-form" auto-complete="off" :model="userInfo" :rules="rules" ref="loginForm" label-width="100px">
       <el-form-item prop="userName" label="用户姓名">
-        <el-input type="text" v-model="userInfo.userName" placeholder="请输入用户姓名"></el-input>
+        <el-input v-model="userInfo.userName" placeholder="请输入用户姓名"></el-input>
       </el-form-item>
       <el-form-item prop="nickname" label="用户昵称">
-        <el-input type="text" v-model="userInfo.nickname" placeholder="请输入用户昵称"></el-input>
+        <el-input v-model="userInfo.nickname" placeholder="请输入用户昵称"></el-input>
       </el-form-item>
       <el-form-item prop="email" label="email">
-        <el-input type="text" v-model="userInfo.email" placeholder="请输入email"></el-input>
+        <el-input v-model="userInfo.email" placeholder="请输入email"></el-input>
       </el-form-item>
       <el-form-item prop="mobile" label="手机号">
-        <el-input type="text" v-model="userInfo.mobile" placeholder="请输入手机号"></el-input>
+        <el-input v-model="userInfo.mobile" placeholder="请输入手机号"></el-input>
       </el-form-item>
       <el-form-item class="login-btns">
         <el-button type="primary"

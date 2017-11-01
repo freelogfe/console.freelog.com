@@ -19,7 +19,7 @@
       <el-form-item label="资源名称" prop="resourceName" required>
         <el-input v-model="formData.resourceName"></el-input>
       </el-form-item>
-      <el-form-item label="widgetName" prop="widgetName" v-show="formData.resourceType === 'Widget'">
+      <el-form-item label="widgetName" prop="widgetName" v-show="formData.resourceType === ResourceTypes.widget">
         <el-input v-model="formData.widgetName" placeholder="保持与web component中的自定义标签名一致"></el-input>
       </el-form-item>
 
@@ -39,7 +39,7 @@
         </template>
         <el-button @click="addMetaHandler">add meta</el-button>
       </el-form-item>
-      <el-form-item label="file" required v-show="formData.resourceType !== 'PageBuild'">
+      <el-form-item label="file" required v-show="formData.resourceType !== ResourceTypes.pageBuild">
         <div class="upload-wrapper">
           <el-upload
             class="upload-container"
@@ -57,7 +57,7 @@
           </el-upload>
         </div>
       </el-form-item>
-      <el-form-item label="" required v-show="formData.resourceType === 'PageBuild'">
+      <el-form-item label="" required v-show="formData.resourceType === ResourceTypes.pageBuild">
         <page-builder ref="pageBuilder"></page-builder>
       </el-form-item>
       <el-form-item>

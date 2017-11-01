@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="page-builder-wrapper">
     <h3>page builder</h3>
     <el-dialog
       :title="(currentEditWidget && currentEditWidget.widgetData.resourceName) + ' widget样式'"
@@ -13,7 +13,7 @@
     </el-dialog>
 
 
-    <el-row :gutter="20">
+    <el-row :gutter="20" class="js-page-builder">
       <el-col :span="4">
         <div class="query-wrapper">
           <el-input placeholder="请输入搜索内容" v-model="queryInput">
@@ -21,9 +21,7 @@
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">
-
-
-          <el-col :span="12" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item"
+          <el-col :span="12" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item js-draggable-widget"
                   :data-index="index">
             <el-popover
               ref="widgetInfo"

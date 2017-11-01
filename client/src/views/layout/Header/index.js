@@ -30,7 +30,7 @@ export default {
       for (var i = 0; i < routes.length; i++) {
         let route = routes[i];
         if (route.path === '/') {
-          this.navRoutes = route.children;
+          this.navRoutes = route.children.filter(r=>!r.hidden);
           break;
         }
       }

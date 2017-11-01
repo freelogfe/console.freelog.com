@@ -4,6 +4,7 @@ web component自定义标签名规则https://www.w3.org/TR/custom-elements/#vali
  */
 import {mapGetters} from 'vuex'
 import PageBuilder from './pagebuilder.vue'
+import ResourceTypes from '../resource-types'
 
 
 export default {
@@ -11,9 +12,9 @@ export default {
   components: {PageBuilder},
   data() {
     const validateResourceType = (rule, value, callback) => {
-      const NAME_REG = /[A-Za-z_-]{4,40}/
+      const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
       if (!NAME_REG.test(value)) {
-        callback(new Error('命名格式有误，只能包含大小写字母、_和-，长度4~40'));
+        callback(new Error('命名格式有误，需满足/^[a-z][0-9a-z_]{3,19}[^_]$/'));
       } else {
         callback()
       }
@@ -21,7 +22,7 @@ export default {
 
     const validateWidgetName = (rule, value, callback) => {
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
-      if (this.formData.resourceType === 'Widget' && !NAME_REG.test(value)) {
+      if (this.formData.resourceType === ResourceTypes.widget && !NAME_REG.test(value)) {
         callback(new Error('命名格式有误，必须以freelog-开头，如：freelog-demo-testWidget'));
       } else {
         callback()
@@ -29,6 +30,7 @@ export default {
     }
 
     return {
+      ResourceTypes: ResourceTypes,
       rules: {
         resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'},],
         widgetName: [
@@ -39,18 +41,12 @@ export default {
           {validator: validateResourceType, trigger: 'blur'}
         ]
       },
-      options: [
-        {value: 'RevealSlide', label: 'revealSlide'},
-        {value: 'MarkDown', label: 'markdown'},
-        {value: 'Image', label: 'image'},
-        {value: 'PageBuild', label: 'PageBuild'},
-        {value: 'Widget', label: 'widget'},
-        {value: 'Audio', label: 'audio'},
-        {value: 'Video', label: 'video'}
-      ],
+      options: Object.keys(ResourceTypes).map((k)=>{
+        return {label: k, value: ResourceTypes[k]}
+      }),
 
       formData: {
-        resourceType: 'PageBuild',
+        resourceType: ResourceTypes.pageBuild || '',
         resourceName: '',
         widgetName: '',
         metas: [],
@@ -101,11 +97,11 @@ export default {
         }, 5e2)
       }
     },
-    packDataForPageBuild($uploader) {
+    packDataForpage_build($uploader) {
       var pageBuilder = this.$refs.pageBuilder
       $uploader.handleStart(pageBuilder.getPageBuildFile());
     },
-    packDataForWidget($uploader) {
+    packDataForwidget($uploader) {
       $uploader.data.meta.widgetName = this.formData.widgetName;
     },
     packUploadData() {

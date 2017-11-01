@@ -14,6 +14,14 @@
         label="resourceId">
       </el-table-column>
       <el-table-column
+        prop="resourceDetail.resourceName"
+        label="resourceName">
+      </el-table-column>
+      <el-table-column
+        prop="resourceDetail.resourceType"
+        label="resourceType">
+      </el-table-column>
+      <el-table-column
         prop="partyOne"
         label="partyOne">
       </el-table-column>

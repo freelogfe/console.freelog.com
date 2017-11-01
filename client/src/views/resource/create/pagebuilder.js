@@ -1,8 +1,18 @@
-import dragula from 'dragula'
 import Draggabilly from 'draggabilly'
+import ResourceTypes from '../resource-types'
+
 /*
 freelog-(user namespace)-widgetname
  */
+function setPosition(container, el) {
+  var elPos = el.getBoundingClientRect()
+  var toPos = container.getBoundingClientRect()
+
+  el.style.left = (elPos.x - toPos.x) + 'px'
+  el.style.top = (elPos.y - toPos.y) + 'px'
+  return el
+}
+
 export default {
   name: 'page-builder',
   data() {
@@ -23,7 +33,7 @@ export default {
       })
   },
   methods: {
-    setWidgetData(widget){
+    setWidgetData(widget) {
       this.widgetData = widget
     },
     hideDialog() {
@@ -144,41 +154,52 @@ export default {
     initDraggable() {
       const $left = this.$refs.leftPanel.$el;
       const $right = this.$refs.rightPanel
-      var uid = 0;
       const self = this;
 
-      dragula([$left, $right], {
-        copy: function (el, source) {
-          return source === $left
-        },
-        moves: function (el, source, handle, sibling) {
-          return source === $left
-        },
-        accepts: function (el, target) {
-          return target !== $left
-        }
-      }).on('drop', function (el, target) {
-        if (target === $right) {
-          el.className += ` js-draggable-widget widget-${uid++}`;
-          el.widgetData = self.widgets[parseInt(el.dataset.index)]
-          el.draggie = new Draggabilly(el, {
-            containment: true
-          }).on('dragEnd', (event) => {
-            var pos = el.draggie.position;
-            // debugger
-            self.updateWidgetStyle(el, {
-              left: `${pos.x}px`,
-              top: `${pos.y}px`
-            })
-          });
-          self.updateWidgets();
-        }
-      });
+      var $els = $left.querySelectorAll('.js-draggable-widget')
+      for (let i = 0; i < $els.length; i++) {
+        let el = $els[i]
+        initDrag(el);
+      }
+
+      function initDrag(el, containment) {
+        var _mirror = el.cloneNode(true);
+        var offset = {x: 0, y: 0};
+
+        el.draggie = new Draggabilly(el, {
+          containment: containment || false
+        }).on('dragEnd', (event) => {
+          if (!event.toElement.contains(el) && event.toElement === $right) {
+            var parentPos = $right.getBoundingClientRect()
+            el.style.left = (event.x - parentPos.x - offset.x) + 'px'
+            el.style.top = (event.y - parentPos.y - offset.y) + 'px'
+            event.toElement.appendChild(el);
+            el.draggie.disable()
+            initDrag(el, $right);
+          } else if ($left.contains(el)) {
+            el && el.remove()
+          }
+        }).on('dragStart', (event) => {
+          if (!containment) {
+            var _copy = el
+            var elPos = el.getBoundingClientRect()
+            setPosition($left, el)
+            el.style.position = 'absolute'
+            el.replaceWith(_mirror)
+            $left.appendChild(_copy)
+            offset = {
+              x: event.x - elPos.x,
+              y: event.y - elPos.y
+            }
+            initDrag(_mirror)
+          }
+        });
+      }
     },
     queryHandler() {
       return this.$services.g_Resources.get({
         params: {
-          resourceType: 'Widget'
+          resourceType: ResourceTypes.widget
         }
       }).then((res) => {
         var data = res.getData()
@@ -186,7 +207,7 @@ export default {
           return !!(w && w.systemMeta && w.systemMeta.widgetName)
         })
         this.widgets = this.widgets.concat(widgets)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
     }
