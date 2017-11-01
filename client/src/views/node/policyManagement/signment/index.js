@@ -194,7 +194,10 @@ export default {
         this.$message.success('创建成功')
         console.log(values);
       }).catch((err)=>{
-        this.$message.error(err.response.errorMsg)
+        if (err.response.data.ret != 1) {
+          this.$message.error(err.response.errorMsg)
+        }
+
       })
 
     }

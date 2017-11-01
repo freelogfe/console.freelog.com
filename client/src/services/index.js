@@ -14,6 +14,8 @@ import NodesService from './nodes'
 import PagebuildService from './pagebuild'
 import OtherService from './other'
 
+import eventTest from './eventTest' //事件接口测试
+
 
 
 export {
@@ -25,5 +27,7 @@ export {
   NodesService,
   ContractService,
   PagebuildService,
-  OtherService
+  OtherService,
+
+  eventTest
 }

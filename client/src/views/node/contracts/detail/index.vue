@@ -16,14 +16,14 @@
             v-html="html.html"
             :key="html.params"
             :label="html.html"
-            :value="html.params"
+            :value=html.params
             >
           </el-option>
         </el-select>
       </el-form-item>
 
       <el-form-item class="btns">
-        <el-button type="primary" @click="updateNodeDetail('detail')">确定</el-button>
+        <el-button type="primary" @click="updateNodeDetail(detail)">确定</el-button>
       </el-form-item>
     </el-form>
 

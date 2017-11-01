@@ -8,6 +8,7 @@ import nodeRoute from './node'
 import accountRoute from './account'
 import resourceRoute from './resource'
 import userRoute from './user'
+import eventRoute from './event'
 
 Vue.use(Router)
 
@@ -18,6 +19,7 @@ export default new Router({
   routes: [
     accountRoute,
     userRoute,
+    eventRoute,
     {
       path: '/',
       meta: {requiresAuth: true, title: '首页'},

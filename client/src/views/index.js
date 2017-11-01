@@ -36,11 +36,16 @@ export const presentableDetail = resolve => require.ensure([], () => resolve(req
 
 export const pagebuildList = resolve => require.ensure([], () => resolve(require('@/views/node/page-build/list/index.vue')), 'pagebuild')
 
-export const contractEventSignment = resolve => require.ensure([], () => resolve(require('@/views/node/contracts/event/signment/index.vue')), 'node')//signmentEvent
 
 
-export const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')//signmentEvent
-export const helpView = resolve => require.ensure([], () => resolve(require('@/views/help/index.vue')), 'other')//signmentEvent
+export const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')
+export const helpView = resolve => require.ensure([], () => resolve(require('@/views/help/index.vue')), 'other')
+
+
+//合同事件触发
+export const signmentView = resolve => require.ensure([], () => resolve(require('@/views/event/signment/index.vue')), 'other')//signmentEvent
+export const contractGuarantyView = resolve => require.ensure([], () => resolve(require('@/views/event/contractGuaranty/index.vue')), 'other')//signmentEvent
+
 
 export default {
   layout,
@@ -69,5 +74,8 @@ export default {
   presentableDetail,
   contractDetail,
   pagebuildList,
-  contractEventSignment
+
+  // signmentView,
+  contractGuarantyView,
+  signmentView
 }

@@ -6,6 +6,12 @@ let showEventMap = {
   },
   contractGuaranty () {
     return '进入支付保证金'
+  },
+  period () {
+    return '周期性支付'
+  },
+  arrivalDate () {
+    return '到达日期'
   }
 
 }
@@ -19,7 +25,10 @@ export default {
       cuurentState: '',
       nextState: '',
       eventHtml: [],
-      selectValue: '请选择'
+      selectValue: '请选择',
+      selectedtEventType: '',
+      selectedtEventParams: [],
+      selectedId: null
     }
   },
 
@@ -38,58 +47,68 @@ export default {
   },
   methods: {
     load(param) {
+      this.eventHtml = [];
       return this.$services.contract.get(param || {})
         .then((res) => {
-          var data = res.getData()
+          let data = res.getData()
           this.detail = data
-
           //渲染状态机
           //1.获取当前状态
           //2.找到对应的events及对应的nextstate
           //3.展示所有events，跳转至操作页面
           let fsmState = data.fsmState;
           let stateTransitionMap = data.policySegment.fsmDescription;
+
           let corresponseEvents = [];
           stateTransitionMap.forEach((transition)=> {
             if (transition.currentState == fsmState) {
               corresponseEvents.push(transition)
             }
           })
+          console.log(corresponseEvents);
           this.showEvents(corresponseEvents);
         }).catch((err)=>{
+          console.log(err);
           this.$message.error(err.response.errorMsg || err)
         })
     },
     updateNodeDetail(formName) {
       const self = this;
-      //拿到事件类型
-      //拿到事件参数
+      //拿到事件id
       //拿到合同id
       //跳转到事件页面完成事件
+      console.log( this.selectedId);
+      this.$services.eventTest.post({
+        contractId:   this.$route.query.contractId,
+        eventId: this.selectedId
+      }).then(()=> {
+        this.load(this.$route.query.contractId)
+      })
     },
     showEvents(corresponseEvents) {
       corresponseEvents.forEach((transition) => {
+
         if (transition.event.type == 'compoundEvents') {
             transition.event.params.forEach((event)=> {
             this.eventHtml.push({
               html: showEventMap[event.type](event.params),
               type: event.type,
-              params: JSON.stringify(event.params)
+              params: event.eventId
             })
           })
         } else {
+          console.log(transition.event.eventId);
           this.eventHtml.push({
-            html: showEventMap[event.type](event.params),
+            html: showEventMap[transition.event.type](transition.event.params),
             type: event.type,
-            params: JSON.stringify(event.params)
+            params: transition.event.eventId
           })
         }
-
-        console.log(this.eventHtml);
       })
     },
-    selectEvent (value) {
-      console.log('312312321',a,b,c);
+    selectEvent (id) {
+      console.log(id);
+      this.selectedId = id;
     }
   }
 }

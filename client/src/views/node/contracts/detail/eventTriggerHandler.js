@@ -8,6 +8,9 @@ let eventTriggerHandlerMap = {
       promiseArr.push(temp)
     })
     return Promise.all(promiseArr)
+  },
+  period () {
+    
   }
 };
 
