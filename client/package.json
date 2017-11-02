@@ -15,7 +15,7 @@
     "dragula": "^3.7.2",
     "element-ui": "^1.4.6",
     "font-awesome": "^4.7.0",
-    "freelog_policy_compiler": "0.0.8",
+    "freelog_policy_compiler": "latest",
     "fs": "0.0.1-security",
     "normalize.css": "^7.0.0",
     "nprogress": "^0.2.0",

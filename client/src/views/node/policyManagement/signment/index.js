@@ -200,8 +200,10 @@ export default {
           query: {contractId: data.contractId}
         })
         console.log(values);
-      }).catch((err) => {
-        this.$message.error(err.response.errorMsg)
+      }).catch((err)=>{
+        if (err.response.data.ret != 1) {
+          this.$message.error(err.response.errorMsg)
+        }
       })
 
     }
