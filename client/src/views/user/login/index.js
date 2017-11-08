@@ -19,7 +19,7 @@ export default {
 
     return {
       model: {
-        loginName: storage.get('loginName') || '13530729630',
+        loginName: storage.get('loginName') || '',
         password: '123456',
       },
       rules: rules,
@@ -28,9 +28,12 @@ export default {
       rememberUser: false
     }
   },
+  mounted() {
+  },
 
   methods: {
     submit(ref) {
+      var self = this;
       this.$refs[ref].validate(valid => {
         if (!valid) {
           return false
@@ -47,20 +50,20 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            this.$router.replace(this.$route.query.redirect || '/')
-            this.loading = false
+            self.$router.replace(self.$route.query.redirect || '/')
+            self.loading = false
           })
           .catch(err => {
-            this.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
+            self.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
             switch (err.response && err.response.status) {
               case 401:
-                this.error.message = '用户名或密码错误！'
+                self.error.message = '用户名或密码错误！'
                 break
               case 500:
-                this.error.message = '服务器内部异常，请稍后再试！'
+                self.error.message = '服务器内部异常，请稍后再试！'
                 break
             }
-            this.loading = false
+            self.loading = false
           })
       })
     }

@@ -7,7 +7,7 @@ module.exports = appInfo => {
         csrf: {
             enable: false,
         },
-        domainWhiteList: ['http://api.freelog.com']
+        domainWhiteList: ['http://console.freelog.com']
     };
 
     config.jwt = {

@@ -2,16 +2,16 @@
  * https://github.com/axios/axios
  * https://github.com/superman66/vue-axios-github
  */
+//cors bug :https://github.com/axios/axios/issues/891
 
 import axios from 'axios'
 import store from '@/store'
 import {Message} from 'element-ui';
 
-
 const instance = axios.create({
-  baseURL: '//api.freelog.com/',
+  baseURL: '//console.freelog.com/',
   timeout: 3000,
-  withCredentials: true,
+  // crossdomain: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   }
@@ -58,6 +58,7 @@ instance.interceptors.response.use(response => {
     }
   },
   err => {
+    err.response = err.response || {}
     return Promise.reject(err);
   });
 

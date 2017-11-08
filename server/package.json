@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "egg": "^1.8.0",
+    "egg-cors": "^1.2.0",
     "egg-jwt": "^2.2.0",
     "egg-multipart": "^1.5.0",
     "egg-mysql": "^3.0.0",
