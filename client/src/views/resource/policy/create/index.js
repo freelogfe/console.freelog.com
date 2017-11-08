@@ -19,8 +19,8 @@ export default {
     var self = this
     var resId = this.$route.query.resourceId
     this.loadPolicyDetail(resId).then((policy) => {
-      self.policyDetail = policy;
-      self.policyText = (policy && policy.policyText) || ''
+      self.policyDetail = policy
+      self.policyText = policy.policyText
     })
   },
   methods: {
@@ -31,7 +31,7 @@ export default {
         })
     },
     validate() {
-      console.log('validating');
+      this.formData.textarea =compiler.compile(this.formData.textarea, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g,'\n');
       this.policyText = compiler.compile(this.policyText, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
     },
 
@@ -62,7 +62,6 @@ export default {
       if (!this.$route.query.resourceId) {
         this.$message.error('没有资源Id, 请重新选择');
       }
-      console.log(this.policyText);
       var data = {
         policyText: btoa(this.policyText),
         languageType: 'freelog_policy_lang'

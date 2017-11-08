@@ -117,16 +117,13 @@ export default {
           obj
         })
         return data
-
-
       }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
 
     },
     handleChange(e) {
-      console.log('e', e);
-      console.log(this.$el.querySelector('.tabs__item '));
+
     },
     genColorCache() {
       let colorArr = ['red', 'purple', 'blue', 'green', 'pink'];
@@ -164,21 +161,6 @@ export default {
         this.$message.warning('请选择policy')
         return false
       } else {
-        // this.$services.contract.post({
-        //   contractType: '1',
-        //   policyId: this.$route.query.policyId,
-        //   segmentId: id,
-        //   serialNumber: sn,
-        //   partyTwo: this.$route.params.nodeId
-        // }).then((res)=> {
-        //   var data = res.data;
-        //   if (data.ret === 0) {
-        //     this.$message.success('合同创建成功')
-        //     // this.$services.contract.get('59a3c612567e5c22a41d8f5c')
-        //   } else {
-        //     this.$message.error(data.msg)
-        //   }
-        // })
       }
       let promiseArr = result.map((obj)=> {
         return this.$services.contract.post({
@@ -192,7 +174,10 @@ export default {
       //result是 SegmentId, serialNumber
       Promise.all(promiseArr).then((values)=> {
         this.$message.success('创建成功')
-        console.log(values);
+        this.$router.push({
+          path : '/node/10013/contracts',
+        })
+
       }).catch((err)=>{
         if (err.response.data.ret != 1) {
           this.$message.error(err.response.errorMsg)

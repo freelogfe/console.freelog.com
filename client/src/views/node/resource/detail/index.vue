@@ -30,7 +30,7 @@
         </template>
       </el-form-item>
       <el-form-item class="btns">
-        <el-button type="primary" @click="signContactHandler('detail')">签约</el-button>
+        <el-button type="primary" @click="bakcToList()">返回</el-button>
       </el-form-item>
     </el-form>
   </section>

@@ -23,7 +23,7 @@
       </el-form-item>
 
       <el-form-item class="btns">
-        <el-button type="primary" @click="updateNodeDetail(detail)">确定</el-button>
+        <el-button type="primary" @click="updateNodeDetail(detail)">执行事件</el-button>
       </el-form-item>
     </el-form>
 

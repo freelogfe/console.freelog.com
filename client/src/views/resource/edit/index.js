@@ -9,7 +9,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.$route.params)
     var self = this;
     if (this.$route.query.resourceId) {
       this.load(this.$route.query.resourceId)
@@ -24,6 +23,7 @@ export default {
   },
   methods: {
     addMetaHandler(key, value) {
+      console.log(key);
       this.metas.push({
         key: key || '',
         value: value || ''
@@ -62,6 +62,11 @@ export default {
         this.$message.success('更新成功')
         }).catch((err)=>{
         this.$message.error(err.response.errorMsg || err)
+      })
+    },
+    backToList () {
+      this.$router.push({
+        path : '/resource/list',
       })
     }
   }
