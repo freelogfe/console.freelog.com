@@ -26,7 +26,7 @@
             @click="handlePreview(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row)">设为默认</el-button>
+            @click="setDefaultPageBuildHandler(scope.row)">设为默认显示</el-button>
           <el-button
             size="small"
             @click="setDefaultPageBuildHandler(scope.row, 2)">设为隐藏</el-button>

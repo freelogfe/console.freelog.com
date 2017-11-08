@@ -30,7 +30,8 @@ module.exports = {
     proxyTable: {
       '/v1': {
         changeOrigin: true,
-        target: 'http://192.168.0.3:80'
+        autoRewrite: true,
+        target: 'http://api.freelog.com'
       },
       freelog: {
         filter: '/api/**',

@@ -7,17 +7,23 @@ module.exports = app => {
         //check token
         *index() {
             const {ctx} = this;
-            const auths = ctx.headers.authorization.split(' ');
-            const types = ['Bearer', 'JWT']
-            var token = (types.includes(auths[0]))? auths[1]: ctx.request.query.token;
-
-            try {
-                var decoded = app.jwt.verify(token, app.config.jwt.secret); //验证token有效性
-                ctx.status = 200;
-            } catch (err){
-                console.log(err.message)
-                ctx.body = err.message;
-                ctx.status = 401;
+            // const auths = ctx.headers.authorization.split(' ');
+            // const types = ['Bearer', 'JWT']
+            // var token = (types.includes(auths[0]))? auths[1]: ctx.request.query.token;
+            //
+            // try {
+            //     var decoded = app.jwt.verify(token, app.config.jwt.secret); //验证token有效性
+            //     ctx.status = 200;
+            // } catch (err){
+            //     console.log(err.message)
+            //     ctx.body = err.message;
+            //     ctx.status = 401;
+            // }
+            ctx.set('author','daizch')
+            ctx.body = {
+                data: {
+                    ok: 1
+                }
             }
             ctx.status = 200;
 

@@ -6,6 +6,10 @@
         label="name">
       </el-table-column>
       <el-table-column
+        prop="status"
+        label="status">
+      </el-table-column>
+      <el-table-column
         prop="presentableId"
         label="presentableId">
       </el-table-column>

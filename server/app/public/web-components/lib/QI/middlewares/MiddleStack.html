@@ -1,0 +1,31 @@
+<link rel="import" href="./Middleware.html">
+<script>
+    class MiddlewareStack extends HTMLElement {
+        constructor() {
+            super();
+            this._queue = [];
+        }
+
+        use(middleware) {
+            var queue = this._queue;
+            var len = queue.length;
+
+            middleware.set_next(window);
+            if (len > 0) {
+                queue[len - 1].set_next(middleware);
+            }
+            this._queue.push(middleware);
+        }
+
+        fetch(target, req) {
+            var middlewares = this._queue;
+            if (middlewares.length) {
+                return middlewares[0].fetch(target, req);
+            } else {
+                return Promise.reject('no middlewares');
+            }
+        }
+    }
+
+    window.customElements.define('middleware-stack', MiddlewareStack);
+</script>

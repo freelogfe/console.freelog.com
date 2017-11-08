@@ -40,7 +40,7 @@ export default {
       path: 'list',
       meta: {
         requiresAuth: true,
-        title: '资源列表'
+        title: '我的资源'
       },
       component: resourceList
     },

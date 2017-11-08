@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>freelog.com</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <!--允许全屏模式浏览-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--safari顶端的状态条的样式 灰色半透明-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--告诉设备忽略将页面中的数字识别为电话号码-->
+    <meta name="format-detection" content="telephone=no, address=no">
+
+    <meta name="description" content="freelog.com节点页面">
+    <meta name="keywords" content="freelog.com,freelog,飞致,节点渲染,pagebuild">
+
+    <link rel="import" href="./lib/QI/index.html">
+    <link rel="stylesheet" href="./pagebuild.css">
+</head>
+<body>
+
+<freelog-lib-qi class="js-lib-qi"></freelog-lib-qi>
+<div class="page-container" id="js-page-container">
+
+    <!--page build content-->
+    <freelog-demo-image data-widget-src="./widgets/image.html"
+                        class="js-widget"
+                        style="width: 50%;left: 0;"></freelog-demo-image>
+    <w-md-viewer data-widget-src="./widgets/md-viewer.html"
+                 class="js-widget"
+                 style="width: 30%;left: 50%;height: 500px;overflow: auto"></w-md-viewer>
+</div>
+
+<script type="module">
+
+</script>
+
+<script src="app.js" type="module"></script>
+</body>
+</html>

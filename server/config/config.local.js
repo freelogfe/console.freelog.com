@@ -7,7 +7,17 @@ module.exports = appInfo => {
         csrf: {
             enable: false,
         },
-        domainWhiteList: ['http://api.freelog.com']
+        domainWhiteList: ['http://console.freelog.com']
+    };
+
+    config.jwt = {
+        secret: '123456',
+
+        enable: false, // default is false
+        match: (ctx) => {
+            const reg = /token/i;
+            return !reg.test(ctx.path);
+        }
     };
 
     config.mysql = {

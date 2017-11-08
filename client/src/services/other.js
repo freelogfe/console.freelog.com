@@ -10,6 +10,9 @@ const apis = {
   },
   logout: function (options) {
     return axios.get('/v1/passport/logout', options)
+  },
+  resetPassword: function (options) {
+    return axios.post('/v1/userinfos/resetPassword', options)
   }
 }
 export default apis

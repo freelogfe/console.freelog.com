@@ -36,7 +36,7 @@
             @click="previewHandler(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="handlePresentable(scope.row)">{{scope.row.presentableDetail?'查看presentable': '去创建presentable'}}</el-button>
+            @click="handlePresentable(scope.row)">{{scope.row.presentableDetail?'查看user policy': '去创建user policy'}}</el-button>
         </template>
       </el-table-column>
     </table-view>

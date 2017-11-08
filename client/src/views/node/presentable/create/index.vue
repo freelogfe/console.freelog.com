@@ -1,5 +1,8 @@
 <template>
   <section>
+    <presentable-steps
+      :active="step.active"></presentable-steps>
+
     <el-row>
       <el-form :model="formData" :rules="rules" label-width="200px" ref="ruleForm">
         <el-form-item label="presentable名" prop="presentableName">

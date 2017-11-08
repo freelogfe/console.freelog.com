@@ -1,6 +1,7 @@
 import {UserService, OtherService} from '../../services'
 import {storage} from '@/lib/index'
 
+
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
   CHANGE_SESSION: 'changeSession',

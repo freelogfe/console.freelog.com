@@ -1,0 +1,34 @@
+<link rel="import" href="./middlewares/MiddleStack.html">
+<link rel="import" href="./middlewares/JWTMiddleware.html">
+
+<template>
+    <middleware-stack id="js-mw-stack">
+        <middleware-jwt id="js-jwt"></middleware-jwt>
+    </middleware-stack>
+</template>
+
+<script>
+    ;(function () {
+        var template = document.currentScript.parentNode.querySelector('template');
+
+        class QI extends HTMLElement {
+            constructor() {
+                super()
+                let shadowRoot = this.attachShadow({mode: 'closed'});
+                const instance = template.content.cloneNode(true);
+                shadowRoot.appendChild(instance);
+                this.$QI = shadowRoot.querySelector('#js-mw-stack')
+            }
+
+            static get observedAttributes() {
+                return ['src'];
+            }
+
+            get QI() {
+                return this.$QI
+            }
+        }
+
+        customElements.define('freelog-lib-qi', QI);
+    })();
+</script>

@@ -1,5 +1,6 @@
 <template>
   <section>
+    <presentable-steps :active="0"></presentable-steps>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-for="(formatData, indexOuter) in tabData" key=""  :label="formatData.resourceName" :name="formatData.resourceName">
         <el-collapse v-model="activeNames" @change="handleChange">
@@ -12,9 +13,6 @@
       </el-tab-pane>
       <el-button class="child" @click="submit" >提交</el-button>
     </el-tabs>
-
-
-
   </section>
 </template>
 

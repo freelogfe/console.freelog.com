@@ -11,16 +11,6 @@ module.exports = appInfo => {
     // add your config here
     config.middleware = [];
 
-    config.jwt = {
-        secret: '123456',
-
-        enable: true, // default is false
-        match: (ctx) => {
-            const reg = /token/i;
-            return !reg.test(ctx.path);
-        }
-    };
-
     config.view = {
         defaultViewEngine: 'nunjucks',
         mapping: {
