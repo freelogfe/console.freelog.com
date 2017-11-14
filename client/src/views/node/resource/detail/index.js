@@ -23,8 +23,10 @@ export default {
           this.$message.error(err.response.errorMsg || err)
         })
     },
-    signContactHandler(form){
-
+    bakcToList(){
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/resources`,
+      })
     }
   }
 }

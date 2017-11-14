@@ -7,7 +7,7 @@
               placeholder="请输入policy"
               v-model="policyText">
     </el-input>
-    <el-button type="primary" v-on:click="validate" v-bind:loading="validateLoading">校验</el-button>
+    <el-button type="primary" v-on:click="validate" v-bind:loading="validateLoading">格式校验</el-button>
     <el-button type="primary" v-on:click="submit" v-bind:loading="submitLoading">提交</el-button>
   </div>
 </template>

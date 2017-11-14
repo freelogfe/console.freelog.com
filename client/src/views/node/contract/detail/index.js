@@ -10,8 +10,12 @@ let showEventMap = {
   period () {
     return '周期性支付'
   },
-  arrivalDate () {
-    return '到达日期'
+  arrivalDate (params) {
+    if(params[0] == 1) {
+      return '到达日期' + params[1]  +'进入下一个状态'
+    } else if (params[0] ==0 ) {
+      return params[1] + '天后进入下一个状态'
+    }
   }
 
 }
@@ -28,7 +32,8 @@ export default {
       selectValue: '请选择',
       selectedtEventType: '',
       selectedtEventParams: [],
-      selectedId: null
+      selectedId: null,
+      selectedType: ''
     }
   },
 
@@ -65,24 +70,26 @@ export default {
               corresponseEvents.push(transition)
             }
           })
-          console.log(corresponseEvents);
           this.showEvents(corresponseEvents);
         }).catch((err)=>{
-          console.log(err);
           this.$message.error(err.response.errorMsg || err)
         })
     },
     updateNodeDetail(formName) {
+      if( !this.submitFlag ) {
+        return this.$message.warning('等待时间事件执行')
+      }
       const self = this;
       //拿到事件id
       //拿到合同id
       //跳转到事件页面完成事件
-      console.log( this.selectedId);
       this.$services.eventTest.post({
         contractId:   this.$route.query.contractId,
         eventId: this.selectedId
       }).then(()=> {
         this.load(this.$route.query.contractId)
+        this.selectValue = ''
+        this.selectedId = null
       })
     },
     showEvents(corresponseEvents) {
@@ -90,25 +97,31 @@ export default {
 
         if (transition.event.type == 'compoundEvents') {
             transition.event.params.forEach((event)=> {
+
             this.eventHtml.push({
               html: showEventMap[event.type](event.params),
               type: event.type,
-              params: event.eventId
+              params: event.eventId+','+event.type
             })
           })
         } else {
-          console.log(transition.event.eventId);
           this.eventHtml.push({
             html: showEventMap[transition.event.type](transition.event.params),
-            type: event.type,
-            params: transition.event.eventId
+            type: transition.event.type,
+            params: transition.event.eventId+','+ transition.event.type
           })
         }
       })
     },
-    selectEvent (id) {
-      console.log(id);
-      this.selectedId = id;
+    selectEvent (params) {
+      this.selectedId = params.split(',')[0];
+      this.selectedType = params.split(',')[1];
+
+      if (  this.selectedType == 'arrivalDate' ) {
+        this.submitFlag = false;
+      } else {
+        this.submitFlag = true;
+      }
     }
   }
 }

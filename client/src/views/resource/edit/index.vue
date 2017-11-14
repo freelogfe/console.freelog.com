@@ -41,11 +41,12 @@
             </el-col>
           </el-row>
         </template>
-        <el-button @click="addMetaHandler">add meta</el-button>
+        <el-button @click="addMetaHandler()">add meta</el-button>
       </el-form-item>
 
       <el-form-item class="btns">
         <el-button type="primary" @click="saveHandler('detail')">保存</el-button>
+        <el-button type="primary" @click="backToList()">返回</el-button>
       </el-form-item>
     </el-form>
   </section>

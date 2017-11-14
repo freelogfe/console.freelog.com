@@ -97,13 +97,13 @@ export default {
             var presentables = responses[1]
             self.mergeDataByResourceId(contracts, resourcesData)
             self.mergeDataByResourceId(contracts, presentables)
-            console.log(contracts)
             return res
           })
         })
       }
     },
     handlePresentable(row) {
+      console.log('row',row);
       var nodeId = this.$route.params.nodeId
       if (!row.presentableDetail) {
         this.$router.push({
