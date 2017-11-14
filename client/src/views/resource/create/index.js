@@ -90,6 +90,8 @@ export default {
     successHandler(res, file) {
       if (res.ret != 0) {
         this.$message.error(res.msg + '资源Id为: ' + res.data);
+      } else if (res.errcode == 100 ) {
+        this.$message.error(res.msg );
       } else {
         this.$message.success('资源创建成功');
         setTimeout(() => {
@@ -140,12 +142,10 @@ export default {
           this.packUploadData();
           //检查是否有上传文件
           if ($uploader.uploadFiles.length > 0) {
-            $uploader.submit();
+            $uploader.submit()
           } else {
             this.$message.error('无上传文件')
           }
-          console.log($uploader.uploadFiles)
-          console.log(this.uploader)
         } else {
           this.$message.error('数据验证有误')
           return false;

@@ -37,6 +37,7 @@ export default {
     gotoCreateContract(resource) {
       var query = {
         resourceName: resource.resourceName,
+        resourceType : resource.resourceType,
         resourceId: resource.resourceId
       }
       if (resource.systemMeta && resource.systemMeta.widgets) {

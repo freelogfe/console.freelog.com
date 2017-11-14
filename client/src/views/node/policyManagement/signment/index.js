@@ -134,7 +134,23 @@ export default {
       }
     },
     select(id, sn, indexOuter, indexInner, self) {
-      console.log('select trigger', indexOuter, indexInner);
+      let resourceIds = this.tabData[indexOuter].resourceId
+      let segmentId = this.tabData[indexOuter].formatData[indexInner].segmentId
+      let serialNumber = this.tabData[indexOuter].formatData[indexInner].serialNumber
+
+      let partyTwo =  this.$route.params.nodeId
+      this.$services.contractRecords.get({
+        params: {
+          resourceIds: resourceIds,
+          partyTwo: partyTwo
+        }
+      }).then((val)=> {
+        if (val.data.data[0].segmentId == segmentId) {
+          this.$message.warning('您已使用此策略段创建了合同，提交将使用已创建的合同')
+        }
+      })
+
+
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach((obj, index) => {
         if (index == indexInner) {
@@ -162,31 +178,50 @@ export default {
       if (result.length != this.btnStates.length) {
         this.$message.warning('请选择policy')
         return false
-      } else {
       }
-      let promiseArr = result.map((obj) => {
-        return this.$services.contract.post({
-          contractType: '2',
-          targetId: obj[0],
-          segmentId: obj[1],
-          serialNumber: obj[2],
-          partyTwo: this.$route.params.nodeId
-        })
-      })
-      //result是 SegmentId, serialNumber
-      Promise.all(promiseArr).then((values) => {
-        var data = values[0].getData()
-        this.$message.success('创建成功')
-        this.$router.push({
-          path: `/node/${this.$route.params.nodeId}/presentable/create`,
-          query: {contractId: data.contractId}
-        })
-        console.log(values);
-      }).catch((err)=>{
-        if (err.response.data.ret != 1) {
-          this.$message.error(err.response.errorMsg)
-        }
-      })
+      //找到对应的数据
+      var contractsArr = result.map((obj) => {
+       return {
+         resourceId: obj[0],
+         segmentId: obj[1],
+         serialNumber: obj[2]
+       }
+     })
+     if (this.$route.query.resourceType == 'page_build') {
+       this.$services.pbContract.post({
+         nodeId: this.$route.params.nodeId,
+         contracts: contractsArr
+       }).then((value)=>{
+         if (value.data.errcode == 100) {
+           this.$message.warning(value.data.msg)
+         }
+       }).catch((err) => {
+         console.log('in err',err);
+       })
+     }else {
+       let promiseArr = result.map((obj) => {
+         return this.$services.contract.post({
+           contractType: '2',
+           targetId: obj[0],
+           segmentId: obj[1],
+           serialNumber: obj[2],
+           partyTwo: this.$route.params.nodeId
+         })
+       })
+       //result是 SegmentId, serialNumber
+       Promise.all(promiseArr).then((values) => {
+         var data = values[0].getData()
+         this.$message.success('创建成功')
+         this.$router.push({
+           path: `/node/${this.$route.params.nodeId}/presentable/create`,
+           query: {contractId: data.contractId}
+         })
+       }).catch((err)=>{
+         if (err.response.data.ret != 1) {
+           this.$message.error(err.response.errorMsg)
+         }
+       })
+     }
 
     }
   }

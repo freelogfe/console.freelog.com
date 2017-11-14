@@ -19,8 +19,10 @@ export default {
     var self = this
     var resId = this.$route.query.resourceId
     this.loadPolicyDetail(resId).then((policy) => {
-      self.policyDetail = policy
-      self.policyText = policy.policyText
+      if (policy) {
+        self.policyDetail = policy
+        self.policyText = policy.policyText
+      }
     })
   },
   methods: {
@@ -31,8 +33,12 @@ export default {
         })
     },
     validate() {
-      this.formData.textarea =compiler.compile(this.formData.textarea, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g,'\n');
-      this.policyText = compiler.compile(this.policyText, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+      var myBeautify = compiler.compile(this.policyText, 'beautify')
+      if(!myBeautify.errorMsg) {
+        this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+      }else {
+        this.$message.error(myBeautify.errorMsg)
+      }
     },
 
     createHandler(data) {
