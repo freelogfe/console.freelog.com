@@ -1,15 +1,29 @@
+import {mapGetters} from 'vuex'
+
+
 export default {
   name: 'resource-detail-edit',
   data() {
     return {
       detail: {},
       rules: {},
-      metas: []
+      metas: [],
+      uploader: {
+        headers: {
+          method: 'POST'
+        },
+        data: {}
+      }
     }
   },
-
+  computed: mapGetters({
+    session: 'session'
+  }),
   mounted() {
     var self = this;
+    this.uploader.headers.Authorization = this.session.token;
+
+
     if (this.$route.query.resourceId) {
       this.load(this.$route.query.resourceId)
         .then((detail) => {
@@ -36,7 +50,7 @@ export default {
       return this.$services.resource.get(param || {})
         .then((res) => {
           return (this.detail = res.getData());
-        }).catch((err)=>{
+        }).catch((err) => {
           this.$message.error(err.response.errorMsg || err)
         })
     },
@@ -46,6 +60,19 @@ export default {
       metas.forEach((meta) => {
         this.detail.meta[meta.key] = meta.value
       })
+    },
+    updatePageBuildHandler() {
+      var $uploader = this.$refs.upload;
+
+      $uploader.data.meta = '{}'
+      $uploader.submit()
+    },
+    successHandler(data){
+      if (data.ret == 0 && data.errcode === 0) {
+        this.$message.success('更新成功')
+      } else {
+        this.$message.error(data.msg)
+      }
     },
     saveHandler(form) {
       const mutableKeys = ['resourceName', 'meta'];
@@ -58,15 +85,15 @@ export default {
 
       // data.meta = JSON.stringify(data.meta)
       this.$services.resource.put(this.detail.resourceId, data)
-        .then((res)=>{
-        this.$message.success('更新成功')
-        }).catch((err)=>{
+        .then((res) => {
+          this.$message.success('更新成功')
+        }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
     },
-    backToList () {
+    backToList() {
       this.$router.push({
-        path : '/resource/list',
+        path: '/resource/list',
       })
     }
   }

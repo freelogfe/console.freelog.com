@@ -6,8 +6,10 @@
         label="resourceName">
       </el-table-column>
       <el-table-column
-        prop="status"
         label="status">
+        <template slot-scope="scope">
+          {{scope.row.status==1? '显示': '隐藏'}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="resourceId"
@@ -26,10 +28,10 @@
             @click="handlePreview(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row)">设为默认显示</el-button>
+            @click="setDefaultPageBuildHandler(scope.row)" v-show="scope.row.status==2">设为默认显示</el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row, 2)">设为隐藏</el-button>
+            @click="setDefaultPageBuildHandler(scope.row, 2)" v-show="scope.row.status==1">设为隐藏</el-button>
         </template>
       </el-table-column>
     </table-view>
