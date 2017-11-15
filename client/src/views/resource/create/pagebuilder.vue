@@ -21,7 +21,7 @@
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">
-          <el-col :span="12" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item js-draggable-widget"
+          <el-col :span="24" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item js-draggable-widget"
                   :data-index="index">
             <el-popover
               ref="widgetInfo"

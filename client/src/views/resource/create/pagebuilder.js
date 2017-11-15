@@ -96,8 +96,8 @@ export default {
         var style = this.object2style(widget.widgetStyle)
         html += `<${widgetName}
                 data-widget-src="${widget.widgetData.resourceId}"
-                data-widget-config="{}"          
-               class="js-wc-widget" 
+                data-widget-config="{}"
+               class="js-wc-widget"
                style="${style}"></${widgetName}>`
       })
 

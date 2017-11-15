@@ -15,15 +15,18 @@ export default {
       serialNumber: '',
       activeName: 'second',
       tabData: [],
+      dataReady:false,
       btnStates: []// 维护已选policy，是一个二维数组
     }
   },
   mounted() {
+    let self = this;
     if (!this.$route.query.resourceId) {
       this.$message.error('没有资源Id, 请重新选择');
     } else {
       this.loadPolicyDetail()
         .then((data) => {
+          this.dataReady = true;
           data.forEach((policy, index) => {
             this.genColor = this.genColorCache();
             //选中按钮的样式
@@ -31,8 +34,8 @@ export default {
             this.$set(this.btnStates, index, innerArr)
 
             policy.policy.forEach((policyDetail) => {
-              var tempTable = this.translatePolicy(policy, policyDetail)
-              this.tabData[index].formatData.push(tempTable)
+              var tempTable = self.translatePolicy(policy, policyDetail)
+              self.tabData[index].formatData.push(tempTable)
             });
           })
         })
@@ -85,11 +88,11 @@ export default {
           widgets = []
         }
       }
+      //加上当前pb
       widgets.unshift({
         resourceName: this.$route.query.resourceName,
         resourceId: this.$route.query.resourceId
       });
-
       this.activeName = "资源: " + this.$route.query.resourceName
 
       widgets.forEach((obj, index) => {
@@ -99,6 +102,7 @@ export default {
           formatData: []
         })
       })
+      console.log(widgets);
       let requestArr = widgets.map((obj) => {
         return obj.resourceId
       })
@@ -106,19 +110,16 @@ export default {
         params: {resourceIds: requestArr.join(',')}
       }).then((res) => {
         let data = res.getData();
-        requestArr.map((request) => {
+        return requestArr.map((request) => {
           let target;
           data.forEach((obj) => {
             if (obj.resourceId == request) {
-              target = obj
+              console.log(request);
+              return target = obj
             }
           })
           return target
         })
-        res.getData().forEach((obj) => {
-          obj
-        })
-        return data
       }).catch((err) => {
         this.$message.error(err.response.errorMsg || err)
       })
@@ -134,10 +135,12 @@ export default {
       }
     },
     select(id, sn, indexOuter, indexInner, self) {
+      console.log('indexOuter,',indexOuter,'indexInner',indexInner);
+      if (!this.dataReady) {
+        return
+      }
       let resourceIds = this.tabData[indexOuter].resourceId
       let segmentId = this.tabData[indexOuter].formatData[indexInner].segmentId
-      let serialNumber = this.tabData[indexOuter].formatData[indexInner].serialNumber
-
       let partyTwo =  this.$route.params.nodeId
       this.$services.contractRecords.get({
         params: {
@@ -145,11 +148,13 @@ export default {
           partyTwo: partyTwo
         }
       }).then((val)=> {
-        if (val.data.data[0].segmentId == segmentId) {
+        if( val.data.data.length == 0) {
+          return
+        }else if (val.data.data[0].segmentId == segmentId) {
           this.$message.warning('您已使用此策略段创建了合同，提交将使用已创建的合同')
         }
       })
-
+      console.log(resourceIds,segmentId);
 
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach((obj, index) => {
@@ -226,3 +231,9 @@ export default {
     }
   }
 }
+// resourceId
+// :
+// "cec7c54d645486f5833cd3a0105141ba83be514a"
+// serialNumber
+// :
+// "5a0aab5b89554a0020edd77c"
