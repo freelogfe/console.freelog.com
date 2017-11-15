@@ -40,11 +40,13 @@ export default {
       }
     },
     setDefaultPageBuildHandler(presentable, status) {
+      status = status || 1
       this.$services.pagebuild.put(presentable.id,{
         nodeId: parseInt(this.$route.params.nodeId),
-        status: status || 1
+        status: status
       }).then((res) => {
         if (res.data.errcode ===0) {
+          presentable.status = status
           this.$message.success('设置成功')
         } else {
           this.$message.error(res.data.msg)

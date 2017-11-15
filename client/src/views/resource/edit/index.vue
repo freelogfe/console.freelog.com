@@ -25,7 +25,7 @@
       <el-form-item label="meta信息" prop="meta">
         <template v-for="(val, key) in detail.systemMeta">
           <el-form-item :label="key" class="meta-detail-item">
-            <el-input :value="val" disabled></el-input>
+            <el-input :value="typeof val === 'string'?val:JSON.stringify(val)" disabled></el-input>
           </el-form-item>
         </template>
         <template v-for="(item, index) in metas">
@@ -44,8 +44,26 @@
         <el-button @click="addMetaHandler()">add meta</el-button>
       </el-form-item>
 
+      <el-form-item label="file" v-if="detail.resourceType=='page_build'">
+        <div class="upload-wrapper">
+          <el-upload
+            class="upload-container"
+            drag
+            :headers="uploader.headers"
+            ref="upload"
+            :data="uploader.data"
+            :action="'/v1/resources/updateResourceContext/'+detail.resourceId"
+            :on-success="successHandler"
+            :auto-upload="false">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">上传文件不超过256MB</div>
+          </el-upload>
+        </div>
+      </el-form-item>
       <el-form-item class="btns">
         <el-button type="primary" @click="saveHandler('detail')">保存</el-button>
+        <el-button type="primary" @click="updatePageBuildHandler('detail')" v-if="detail.resourceType=='page_build'">更新pb</el-button>
         <el-button type="primary" @click="backToList()">返回</el-button>
       </el-form-item>
     </el-form>

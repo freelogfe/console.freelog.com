@@ -21,6 +21,7 @@ export default {
     }
 
     const validateWidgetName = (rule, value, callback) => {
+      //格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
       if (this.formData.resourceType === ResourceTypes.widget && !NAME_REG.test(value)) {
         callback(new Error('命名格式有误，必须以freelog-开头，如：freelog-demo-testWidget'));

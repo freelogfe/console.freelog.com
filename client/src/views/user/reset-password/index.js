@@ -17,7 +17,7 @@ export default {
 
     return {
       model: {
-        loginName: '13480125810',
+        loginName: '',
         // verifyCode: '',
         password: ''
       },
