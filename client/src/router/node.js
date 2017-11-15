@@ -14,7 +14,7 @@ import {
   presentableDetail,
   contractDetail,
   pagebuildList,
-  contractEventSignment
+  
 } from '@/views'
 
 export const nodeItemRoute = {
@@ -67,15 +67,6 @@ export const nodeItemRoute = {
         title: '合同详情'
       },
       component: contractDetail
-    },
-    {
-      path: 'contract/event/signment',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '签署'
-      },
-      component: contractEventSignment
     },
     {
       path: 'presentable',
