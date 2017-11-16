@@ -38,10 +38,15 @@ export default {
             self.$message.error(err.response.errorMsg || err)
           })
         } else {
-          console.log('error submit!!');
+          console.error('error submit!!');
           return false;
         }
       });
+    },
+    backToList () {
+      this.$router.push({
+        path: `/node/list`,
+      })
     }
   }
 }

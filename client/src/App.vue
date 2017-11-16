@@ -13,3 +13,9 @@
     name: 'app'
   }
 </script>
+
+<style media="screen">
+  html {
+    height: 100%
+  }
+</style>

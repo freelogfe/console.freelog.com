@@ -2,24 +2,20 @@
   <section>
     <table-view class="resource-list" :loader="loader()" :showPagination="false">
       <el-table-column
-        prop="name"
-        label="name">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        label="status">
-      </el-table-column>
-      <el-table-column
         prop="presentableId"
-        label="presentableId">
+        label="presentableId（presentableId）">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="presentable 名称（name）">
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resourceId">
+        label="资源id（resourceId）">
       </el-table-column>
       <el-table-column
         prop="contractId"
-        label="contractId">
+        label="合同id（contractId）">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">

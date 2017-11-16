@@ -103,7 +103,6 @@ export default {
       }
     },
     handlePresentable(row) {
-      console.log('row',row);
       var nodeId = this.$route.params.nodeId
       if (!row.presentableDetail) {
         this.$router.push({

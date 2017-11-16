@@ -40,6 +40,7 @@
 
   .main-view {
     padding: 15px;
+    min-height: 100%;
   }
 
   .left-sidebar {
@@ -53,7 +54,10 @@
     margin-top: @header-height;
   }
 
-  .content,
+  .content {
+    margin-left: @sidebar-width;
+    transition: all .5s;
+  }
   .footer-wrap {
     margin-left: @sidebar-width;
     transition: all .5s;

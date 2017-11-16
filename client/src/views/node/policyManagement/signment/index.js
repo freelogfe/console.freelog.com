@@ -102,7 +102,6 @@ export default {
           formatData: []
         })
       })
-      console.log(widgets);
       let requestArr = widgets.map((obj) => {
         return obj.resourceId
       })
@@ -114,7 +113,6 @@ export default {
           let target;
           data.forEach((obj) => {
             if (obj.resourceId == request) {
-              console.log(request);
               return target = obj
             }
           })
@@ -135,7 +133,6 @@ export default {
       }
     },
     select(id, sn, indexOuter, indexInner, self) {
-      console.log('indexOuter,',indexOuter,'indexInner',indexInner);
       if (!this.dataReady) {
         return
       }
@@ -154,7 +151,6 @@ export default {
           this.$message.warning('您已使用此策略段创建了合同，提交将使用已创建的合同')
         }
       })
-      console.log(resourceIds,segmentId);
 
       //每一个资源只能选中一个policy
       this.btnStates[indexOuter].forEach((obj, index) => {
@@ -215,13 +211,19 @@ export default {
        })
        //result是 SegmentId, serialNumber
        Promise.all(promiseArr).then((values) => {
-         var data = values[0].getData()
-         this.$message.success('创建成功')
-         this.$router.push({
-           path: `/node/${this.$route.params.nodeId}/presentable/create`,
-           query: {contractId: data.contractId}
-         })
+
+         if (values[0].data.errcode == 105) {
+            this.$message.warn('该策略已有合同, 合同id为： '+values[0].data.data.contractId)
+         } else {
+           var data = values[0].getData()
+           this.$message.success('创建成功')
+           this.$router.push({
+             path: `/node/${this.$route.params.nodeId}/presentable/create`,
+             query: {contractId: data.contractId}
+           })
+         }
        }).catch((err)=>{
+         console.log(err);
          if (err.response.data.ret != 1) {
            this.$message.error(err.response.errorMsg)
          }

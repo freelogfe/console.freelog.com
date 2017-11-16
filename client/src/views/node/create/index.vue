@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="node-form-container">
     <el-form :model="dataForm" :rules="formRules" ref="dataForm" label-width="100px" class="node-form">
       <el-form-item label="节点描述" prop="nodeName" required>
         <el-input v-model="dataForm.nodeName" placeholder="长度为4-20字符"></el-input>
@@ -10,7 +10,7 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('dataForm')">创建</el-button>
+        <el-button  type="primary" @click="submitForm('dataForm')">创建节点</el-button>
       </el-form-item>
     </el-form>
   </section>
@@ -22,6 +22,9 @@
 </script>
 
 <style lang="less" scoped>
+.node-form-container {
+  padding-top: 10%;
+}
 .node-form {
   width: 600px;
   margin: auto;
