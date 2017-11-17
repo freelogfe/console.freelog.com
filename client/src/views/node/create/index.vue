@@ -22,9 +22,6 @@
 </script>
 
 <style lang="less" scoped>
-.node-form-container {
-  padding-top: 10%;
-}
 .node-form {
   width: 600px;
   margin: auto;

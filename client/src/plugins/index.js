@@ -7,6 +7,7 @@ import title from './title'
 import services from './services'
 import nprogress from './nprogress'
 import authorize from './authorize'
+import filters from './filters'
 
 export default {
   install (Vue) {
@@ -15,5 +16,6 @@ export default {
     services(Vue)
     nprogress(Vue)
     authorize(Vue)
+    filters(Vue)
   }
 }

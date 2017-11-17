@@ -3,19 +3,38 @@
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="resourceName"
-        label="resourceName">
+        label="resource name">
       </el-table-column>
       <el-table-column
         prop="resourceType"
-        label="resourceType">
+        align="center"
+        label="resource type">
       </el-table-column>
       <el-table-column
-        label="resourceUrl">
+        prop="resourceId"
+        label="resource ID"
+      width="350px">
+      </el-table-column>
+      <el-table-column
+        prop="resourceType"
+        label="resource status"
+        align="center"
+        width="150px">
+        <template slot-scope="scope">
+          {{RESOURCE_STATUS[scope.row.status]}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="resource URL">
         <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column
+        label=""
+        align="center"
+        width="200px">
         <template slot-scope="scope">
           <el-button
             size="small"

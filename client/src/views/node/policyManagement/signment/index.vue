@@ -4,14 +4,18 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-for="(formatData, indexOuter) in tabData" key=""  :label="formatData.resourceName" :name="formatData.resourceName">
         <el-collapse v-model="activeNames" @change="handleChange">
-              <el-collapse-item :title=" 'policy'+ indexInner" :name=" 'policy'+ indexInner" v-for="(transition,indexInner) in formatData.formatData" key="">
+              <el-collapse-item :title=" '合同方案'+ (indexInner + 1)" :name=" 'policy'+ indexInner" v-for="(transition,indexInner) in formatData.formatData" key="">
                 <b>{{transition.users}}</b>:
                 <collapseState v-bind:stateMachine="transition"></collapseState>
-                <el-button :class="{'child': true, redColor:btnStates[indexOuter][indexInner]}" v-on:click="select(transition.segmentId, transition.serialNumber, indexOuter, indexInner,$event)">选中</el-button>
+                <div class="btn-wrap">
+                  <el-button :class="{redColor:btnStates[indexOuter][indexInner]}" v-on:click="select(transition.segmentId, transition.serialNumber, indexOuter, indexInner,$event)">选中</el-button>
+                </div>
               </el-collapse-item>
             </el-collapse>
       </el-tab-pane>
-      <el-button class="child" @click="submit" >提交</el-button>
+      <div class="form-ft">
+        <el-button @click="submit" >提交</el-button>
+      </div>
     </el-tabs>
   </section>
 </template>
@@ -22,10 +26,12 @@
 </script>
 
 <style lang="less" scoped>
-.child {
-  display: table; /* 给一个自适应的宽度，本质还是占着一行，就像 block */
-  margin: 0 auto;
-}
+  .form-ft,
+  .btn-wrap{
+    text-align: center;
+    margin-top: 15px;
+  }
+
 .redColor {
   color: red
 }

@@ -3,15 +3,23 @@
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="nodeName"
-        label="nodeName">
+        label="node name">
       </el-table-column>
       <el-table-column
-        prop="nodeDomain"
-        label="nodeDomain">
+        label="node domain">
+        <template slot-scope="scope">
+          {{scope.row.nodeDomain}}.freelog.com
+        </template>
       </el-table-column>
       <el-table-column
         prop="nodeId"
-        label="nodeId">
+        label="node Id">
+      </el-table-column>
+      <el-table-column
+        label="status">
+        <template slot-scope="scope">
+          {{NODE_STATUS[scope.row.status]}}
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">

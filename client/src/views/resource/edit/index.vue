@@ -44,7 +44,7 @@
         <el-button @click="addMetaHandler()">add meta</el-button>
       </el-form-item>
 
-      <el-form-item label="file" v-if="detail.resourceType=='page_build'">
+      <el-form-item label="file">
         <div class="upload-wrapper">
           <el-upload
             class="upload-container"
@@ -63,7 +63,7 @@
       </el-form-item>
       <el-form-item class="btns">
         <el-button type="primary" @click="saveHandler('detail')">保存</el-button>
-        <el-button type="primary" @click="updatePageBuildHandler('detail')" v-if="detail.resourceType=='page_build'">更新pb</el-button>
+        <el-button type="primary" @click="updatePageBuildHandler('detail')">更新资源文件</el-button>
         <el-button type="primary" @click="backToList()">返回</el-button>
       </el-form-item>
     </el-form>

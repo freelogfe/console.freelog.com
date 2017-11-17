@@ -9,6 +9,7 @@ export default {
       validateLoading: false,
       submitLoading: false,
       policyDetail: null,
+      resource: null,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
@@ -18,6 +19,13 @@ export default {
   mounted() {
     var self = this
     var resId = this.$route.query.resourceId
+    if (resId) {
+      this.loadResourceData(resId)
+        .then((detail) => {
+        console.log(detail)
+          self.resource = detail
+        })
+    }
     this.loadPolicyDetail(resId).then((policy) => {
       if (policy) {
         self.policyDetail = policy
@@ -26,6 +34,14 @@ export default {
     })
   },
   methods: {
+    loadResourceData(param) {
+      return this.$services.resource.get(param || {})
+        .then((res) => {
+          return (this.detail = res.getData());
+        }).catch((err) => {
+          this.$message.error(err.response.errorMsg || err)
+        })
+    },
     loadPolicyDetail(resId) {
       return this.$services.policy.get(resId)
         .then((res) => {
@@ -34,9 +50,9 @@ export default {
     },
     validate() {
       var myBeautify = compiler.compile(this.policyText, 'beautify')
-      if(!myBeautify.errorMsg) {
+      if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
-      }else {
+      } else {
         this.$message.error(myBeautify.errorMsg)
       }
     },

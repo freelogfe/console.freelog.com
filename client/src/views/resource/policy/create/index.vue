@@ -1,5 +1,8 @@
 <template>
-  <div class="grid-content bg-purple">
+  <div>
+    <div class="resource-detail" v-if="resource">
+      <h3>{{resource.resourceName}}</h3>
+    </div>
     <el-input class="gap"
               spellcheck="false"
               type="textarea"
@@ -19,6 +22,10 @@
 </script>
 
 <style lang="less" scoped>
+  .resource-detail {
+    margin-bottom: 15px;
+    text-align: center;
+  }
   .gap {
     margin-bottom: 12px;
   }

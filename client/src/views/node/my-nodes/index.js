@@ -5,7 +5,8 @@ export default {
   name: 'my-nodes',
   data() {
     return {
-      resourceList: []
+      resourceList: [],
+      NODE_STATUS: ['正常','未审核','冻结']
     }
   },
   components: {

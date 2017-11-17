@@ -90,6 +90,5 @@ export default {
     this.changeRouteHandler();
   },
   mounted() {
-
   }
 }

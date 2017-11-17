@@ -1,7 +1,6 @@
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import {stateNameMap, eventMap} from './util'
 import collapseState from '../collapseComponent'
-import policy from "../../../../services/policy";
 
 export default {
   name: 'node-policy-signment',
@@ -211,7 +210,6 @@ export default {
        })
        //result是 SegmentId, serialNumber
        Promise.all(promiseArr).then((values) => {
-
          if (values[0].data.errcode == 105) {
             this.$message.warn('该策略已有合同, 合同id为： '+values[0].data.data.contractId)
          } else {
@@ -233,9 +231,4 @@ export default {
     }
   }
 }
-// resourceId
-// :
-// "cec7c54d645486f5833cd3a0105141ba83be514a"
-// serialNumber
-// :
-// "5a0aab5b89554a0020edd77c"
+

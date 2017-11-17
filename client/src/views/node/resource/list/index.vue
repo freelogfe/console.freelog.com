@@ -14,18 +14,29 @@
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="resourceName"
-        label="resourceName">
+        label="resource name">
       </el-table-column>
       <el-table-column
         prop="resourceType"
-        label="resourceType">
+        align="center"
+        label="resource type">
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resourceId">
+        label="resourceId"
+        align="center"
+        width="350px">
       </el-table-column>
       <el-table-column
-        label="resourceUrl">
+        align="center"
+        width="150px"
+        label="create date">
+        <template slot-scope="scope">
+          {{scope.row.createDate | fmtDate}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="resource URL">
         <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>

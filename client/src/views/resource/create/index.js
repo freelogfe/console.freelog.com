@@ -13,8 +13,9 @@ export default {
   data() {
     const validateResourceType = (rule, value, callback) => {
       const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
+      console.log(value)
       if (!NAME_REG.test(value)) {
-        callback(new Error('命名格式有误，需满足/^[a-z][0-9a-z_]{3,19}[^_]$/'));
+        callback(new Error('命名格式有误，需满足' + NAME_REG.toString()));
       } else {
         callback()
       }
@@ -42,7 +43,7 @@ export default {
           {validator: validateResourceType, trigger: 'blur'}
         ]
       },
-      options: Object.keys(ResourceTypes).map((k)=>{
+      options: Object.keys(ResourceTypes).map((k) => {
         return {label: k, value: ResourceTypes[k]}
       }),
 
@@ -91,8 +92,8 @@ export default {
     successHandler(res, file) {
       if (res.ret != 0) {
         this.$message.error(res.msg + '资源Id为: ' + res.data);
-      } else if (res.errcode == 100 ) {
-        this.$message.error(res.msg );
+      } else if (res.errcode == 100) {
+        this.$message.error(res.msg);
       } else {
         this.$message.success('资源创建成功');
         setTimeout(() => {

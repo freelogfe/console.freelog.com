@@ -4,7 +4,8 @@ export default {
   name: 'resource-list',
   data() {
     return {
-      resourceList: []
+      resourceList: [],
+      RESOURCE_STATUS: ['未知状态', '正常', '发布', '冻结']
     }
   },
   components: {
