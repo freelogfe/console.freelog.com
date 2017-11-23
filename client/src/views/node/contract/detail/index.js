@@ -90,6 +90,7 @@ export default {
         this.load(this.$route.query.contractId)
         this.selectValue = ''
         this.selectedId = null
+        this.$message.info('执行成功')
       })
     },
     showEvents(corresponseEvents) {
@@ -99,7 +100,7 @@ export default {
             transition.event.params.forEach((event)=> {
 
             this.eventHtml.push({
-              html: showEventMap[event.type](event.params),
+              html: showEventMap[event.type](event.params)+'复合事件',
               type: event.type,
               params: event.eventId+','+event.type
             })
@@ -118,11 +119,12 @@ export default {
       this.selectedId = params.split(',')[0];
       this.selectedType = params.split(',')[1];
 
-      if (  this.selectedType == 'arrivalDate' ) {
-        this.submitFlag = false;
-      } else {
-        this.submitFlag = true;
-      }
+      this.submitFlag = true;
+      // if (  this.selectedType == 'arrivalDate' ) {
+      //   this.submitFlag = false;
+      // } else {
+      //   this.submitFlag = true;
+      // }
     },
     backToList () {
       this.$router.push({
