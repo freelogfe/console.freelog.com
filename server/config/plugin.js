@@ -3,7 +3,7 @@
 exports.static = true;
 
 exports.jwt = {
-    enable: true,
+    enable: false,
     package: 'egg-jwt',
 };
 
@@ -16,12 +16,17 @@ exports.userrole = {
     package: 'egg-userrole',
 };
 
+exports.jsonp = {
+    enable: false,
+    package: 'egg-jsonp',
+};
+
 exports.mysql = {
     enable: true,
     package: 'egg-mysql',
 };
 
 exports.cors = {
-    enable: true,
+    enable: false,
     package: 'egg-cors',
 };

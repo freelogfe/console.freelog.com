@@ -10,10 +10,15 @@ module.exports = app => {
     app.get('/node', nodeRole, 'node.index');
     app.get('/resource', resourceRole, 'resource.index');
 
+    app.get('/test', 'home.testCross');
     app.get('/', 'home.index');
     app.get('/index', 'home.index');
     app.get('/login', 'login.index');
     app.get('/api/login', 'login.login');
+    app.get('/api/test', 'home.test');
+    app.get('/api/Atest', 'home.Atest');
+
+
     // app.get('/success', 'success.index'); // is setting in config.jwt.match
 
     app.resources('user', '/api/user', app.controller.user);

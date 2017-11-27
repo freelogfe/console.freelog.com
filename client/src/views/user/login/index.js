@@ -54,14 +54,18 @@ export default {
             self.loading = false
           })
           .catch(err => {
-            self.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
-            switch (err.response && err.response.status) {
-              case 401:
-                self.error.message = '用户名或密码错误！'
-                break
-              case 500:
-                self.error.message = '服务器内部异常，请稍后再试！'
-                break
+            if (typeof err === 'string') {
+              self.error = {title: '', message: err}
+            } else {
+              self.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
+              switch (err.response && err.response.status) {
+                case 401:
+                  self.error.message = '用户名或密码错误！'
+                  break
+                case 500:
+                  self.error.message = '服务器内部异常，请稍后再试！'
+                  break
+              }
             }
             self.loading = false
           })
