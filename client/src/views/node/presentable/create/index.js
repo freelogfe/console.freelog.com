@@ -54,8 +54,6 @@ export default {
       console.log('successfully upload!');
     },
     validate (formName) {
-      console.log('validating');
-      console.log(this.$refs,formName);
       this.formData.textarea =compiler.compile(this.formData.textarea, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g,'\n');
       // this.validateLoading = true;
       this.$refs[formName].validate((valid) => {
