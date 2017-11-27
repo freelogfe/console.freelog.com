@@ -77,7 +77,7 @@ export default {
     },
     updateNodeDetail(formName) {
       if( !this.submitFlag ) {
-        return this.$message.warning('等待时间事件执行')
+        return this.$message.warning('当前需要等待时间事件执行')
       }
       const self = this;
       //拿到事件id
@@ -90,6 +90,7 @@ export default {
         this.load(this.$route.query.contractId)
         this.selectValue = ''
         this.selectedId = null
+        this.$message.info('执行成功')
       })
     },
     showEvents(corresponseEvents) {
@@ -99,7 +100,7 @@ export default {
             transition.event.params.forEach((event)=> {
 
             this.eventHtml.push({
-              html: showEventMap[event.type](event.params),
+              html: showEventMap[event.type](event.params)+'复合事件',
               type: event.type,
               params: event.eventId+','+event.type
             })
@@ -114,14 +115,21 @@ export default {
       })
     },
     selectEvent (params) {
+      //select onchange的时候触发，如果是这种等待事件则不能进行提交，而是提示用户要等待
       this.selectedId = params.split(',')[0];
       this.selectedType = params.split(',')[1];
 
-      if (  this.selectedType == 'arrivalDate' ) {
-        this.submitFlag = false;
-      } else {
-        this.submitFlag = true;
-      }
+      this.submitFlag = true;
+      // if (  this.selectedType == 'arrivalDate' ) {
+      //   this.submitFlag = false;
+      // } else {
+      //   this.submitFlag = true;
+      // }
+    },
+    backToList () {
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/contracts`,
+      })
     }
   }
 }
