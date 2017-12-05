@@ -9,7 +9,7 @@ import store from '@/store'
 import {Message} from 'element-ui';
 
 const instance = axios.create({
-  baseURL: '//api.freelog.com/',
+  baseURL: '//console.freelog.com/',
   timeout: 3000,
   // crossdomain: true,
   // withCredentials: true,

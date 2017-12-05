@@ -33,11 +33,13 @@
               <el-input v-model="item.value" placeholder="value"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button @click="deleteMetaHandler(index)">delete</el-button>
+              <el-button @click="deleteMetaHandler(index)"><i class="el-icon-delete"></i></el-button>
             </el-col>
           </el-row>
         </template>
-        <el-button @click="addMetaHandler">add meta</el-button>
+        <el-button @click="addMetaHandler">
+          <i class="el-icon-plus"></i>
+        </el-button>
       </el-form-item>
       <el-form-item label="file" required v-show="formData.resourceType !== ResourceTypes.pageBuild">
         <div class="upload-wrapper">
@@ -61,7 +63,7 @@
         <page-builder ref="pageBuilder"></page-builder>
       </el-form-item>
       <el-form-item>
-        <el-button @click="submitUpload('createForm')">创建</el-button>
+        <el-button @click="submitResourceHandler('createForm')">创建</el-button>
       </el-form-item>
     </el-form>
   </section>

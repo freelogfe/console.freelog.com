@@ -10,8 +10,6 @@ import plugins from './plugins'
 
 import 'element-ui/lib/theme-default/index.css'
 
-
-document.domain = 'freelog.com'
 sync(store, router, { moduleName: 'route' })
 
 Vue.use(ElementUI);

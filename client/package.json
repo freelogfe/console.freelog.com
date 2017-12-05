@@ -12,7 +12,6 @@
   "dependencies": {
     "axios": "^0.16.2",
     "draggabilly": "^2.1.1",
-    "dragula": "^3.7.2",
     "element-ui": "^1.4.9",
     "font-awesome": "^4.7.0",
     "freelog_policy_compiler": "0.0.15",
@@ -22,6 +21,7 @@
     "presentable_policy_compiler": "0.0.4",
     "store": "^2.0.12",
     "vue": "^2.5.8",
+    "vue-codemirror": "^3.1.8",
     "vue-i18n": "^7.3.0",
     "vue-image-crop-upload": "^2.0.7",
     "vue-router": "^2.8.0",
@@ -40,6 +40,7 @@
     "chalk": "^2.0.1",
     "connect-history-api-fallback": "^1.5.0",
     "copy-webpack-plugin": "^4.2.1",
+    "cors": "^2.8.4",
     "css-loader": "^0.28.0",
     "cssnano": "^3.10.0",
     "eventsource-polyfill": "^0.9.6",

@@ -45,6 +45,8 @@ export const signmentView = resolve => require.ensure([], () => resolve(require(
 export const contractGuarantyView = resolve => require.ensure([], () => resolve(require('@/views/event/contractGuaranty/index.vue')), 'other')//signmentEvent
 
 
+export const pageBuildPreview = resolve => require.ensure([], () => resolve(require('@/views/resource/create/preview.vue')), 'resource')//signmentEvent
+
 export default {
   layout,
   login,
@@ -60,6 +62,7 @@ export default {
   resourcePolicyUpdator,
   resourceList,
   resourceDetail,
+  pageBuildPreview,
   nodeCreator,
   nodeUpdator,
   nodeList,

@@ -9,10 +9,11 @@ import accountRoute from './account'
 import resourceRoute from './resource'
 import userRoute from './user'
 import eventRoute from './event'
+import Container from 'views/layout/container.vue'
 
 Vue.use(Router)
 
-import {layout, login, error, aboutView, helpView} from '@/views/index'
+import {layout, login, error, aboutView, helpView, pageBuildPreview} from '@/views/index'
 
 export default new Router({
   mode: 'history',
@@ -20,6 +21,21 @@ export default new Router({
     accountRoute,
     userRoute,
     eventRoute,
+    {
+      path: '/resource/create/preview',
+      meta: {requiresAuth: true, title: 'page build预览'},
+      component: Container,
+      hidden: true,
+      children: [{
+        path: '/',
+        hidden: true,
+        meta: {
+          requiresAuth: false,
+          title: 'page build预览'
+        },
+        component: pageBuildPreview
+      }]
+    },
     {
       path: '/',
       meta: {requiresAuth: true, title: '首页'},

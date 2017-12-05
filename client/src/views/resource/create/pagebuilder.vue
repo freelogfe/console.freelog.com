@@ -1,18 +1,6 @@
 <template>
   <section class="page-builder-wrapper">
     <h3>page builder</h3>
-    <el-dialog
-      :title="(currentEditWidget && currentEditWidget.widgetData.resourceName) + ' widget样式'"
-      :visible.sync="dialogVisible"
-      size="tiny">
-      <textarea class="widget-style-editor" rows="10" v-model="widgetStyle"></textarea>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="hideDialog">取 消</el-button>
-        <el-button type="primary" @click="updateWidgetHandler">确 定</el-button>
-      </div>
-    </el-dialog>
-
-
     <el-row :gutter="20" class="js-page-builder">
       <el-col :span="4">
         <div class="query-wrapper">
@@ -21,7 +9,8 @@
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">
-          <el-col :span="24" v-for="(widget, index) in widgets" :key="'widget'+index" class="widget-item js-draggable-widget"
+          <el-col :span="24" v-for="(widget, index) in widgets" :key="'widget'+index"
+                  class="widget-item js-draggable-widget"
                   :data-index="index">
             <el-popover
               ref="widgetInfo"
@@ -30,22 +19,14 @@
               v-model="widget.showInfo"
               trigger="manual">
               <div slot="reference">
-                <div class="js-widget-wrapper">
-                  <div class="action-panel">
-                    <div class="action-btns">
-                      <i class="el-icon-delete" data-action="delete"></i>
-                      <i class="el-icon-edit" data-action="edit"></i>
-                    </div>
+                <el-card :body-style="{padding: 0}" class="js-widget widget-resource"
+                         :data-index="index"
+                         @mouseleave.native="hideInfoHandler(index)"
+                         @mouseenter.native="showInfoHandler(index)">
+                  <div style="padding: 14px;">
+                    <span>{{widget.resourceName}}</span>
                   </div>
-                  <el-card :body-style="{padding: 0}" class="js-widget widget-resource"
-                           :data-index="index"
-                           @mouseleave.native="hideInfoHandler(index)"
-                           @mouseenter.native="showInfoHandler(index)">
-                    <div style="padding: 14px;">
-                      <span>{{widget.resourceName}}</span>
-                    </div>
-                  </el-card>
-                </div>
+                </el-card>
               </div>
               <slot>
                 <div class="widget-meta-info">
@@ -60,8 +41,36 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="20">
-        <div class="page-builder" ref="rightPanel" @click="widgetActionHandler"></div>
+      <el-col :span="20" class="page-build-container" ref="editorWrapper">
+        <div class="page-build-mask" ref="mask"></div>
+
+        <div class="tool-bar">
+          <el-radio-group v-model="editMode" @change="switchEditMode" :border="false">
+            <el-radio-button :label="modes.code">
+              <el-tooltip class="item" effect="dark" content="源码模式" placement="top">
+                <i class="el-icon-fa-code" aria-hidden="true"></i>
+              </el-tooltip>
+            </el-radio-button>
+            <el-radio-button :label="modes.view">
+              <el-tooltip class="item" effect="dark" content="可视化模式" placement="top">
+                <i class="el-icon-fa-eye" aria-hidden="true" title="可视化模式"></i>
+              </el-tooltip>
+            </el-radio-button>
+          </el-radio-group>
+        </div>
+        <div class="page-builder">
+          <codemirror :code="code"
+                      :options="editorOptions"
+                      class="pb-edit-mode"
+                      ref="codeArea"
+                      @change="onEditorCodeChange">
+          </codemirror>
+          <iframe src="/resource/create/preview"
+                  frameborder="0"
+                  class="pb-view-mode"
+                  ref="rightPanel"
+                  v-show="editMode==modes.view"></iframe>
+        </div>
       </el-col>
     </el-row>
   </section>

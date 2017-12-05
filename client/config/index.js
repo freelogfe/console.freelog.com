@@ -27,6 +27,9 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
     proxyTable: {
       '/v1': {
         changeOrigin: true,

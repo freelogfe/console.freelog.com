@@ -101,20 +101,57 @@ export default {
         }, 5e2)
       }
     },
+    generatePageBuildFile(opt) {
+      var filename = opt.filename || 'page-build.html'
+      var mimetype = opt.mimetype || 'text/html'
+      var html = opt.code
+      var file = new File([html], filename, {
+        type: mimetype,
+      })
+
+      console.log(html)
+      return file
+    },
     packDataForpage_build($uploader) {
       var pageBuilder = this.$refs.pageBuilder
-      $uploader.handleStart(pageBuilder.getPageBuildFile());
+
+      return new Promise((resolve) => {
+        //获取pb代码变更结果
+        pageBuilder.$once('codeChange', (data) => {
+          if (data.code) {
+            $uploader.handleStart(this.generatePageBuildFile({code: data.code}));
+            resolve()
+          } else {
+            resolve()
+          }
+        });
+        //如果是view模式，需要从iframe中同步pb，获得最新的pb内容
+        pageBuilder.syncContent()
+      })
     },
     packDataForwidget($uploader) {
       $uploader.data.meta.widgetName = this.formData.widgetName;
     },
-    packUploadData() {
+    packUploadData(callback) {
       var $uploader = this.$refs.upload;
-      var uploadData = $uploader.data;
       var formData = this.formData;
       const resType = formData.resourceType
       const fnName = `packDataFor${resType}`
 
+      this.packMetaData()
+      var fn = this[fnName] && this[fnName]($uploader); //资源类型数据处理函数
+
+      if (fn instanceof Promise) {
+        fn.then(callback)
+      } else {
+        callback()
+      }
+    },
+    packMetaData() {
+      var $uploader = this.$refs.upload;
+      var uploadData = $uploader.data;
+      var formData = this.formData;
+      var metas = {}
 
       Object.keys(formData).forEach((key) => {
         if (/^resource/i.test(key)) {
@@ -122,32 +159,28 @@ export default {
         }
       });
 
-
-      uploadData.meta = this.packMetaData()
-      this[fnName] && this[fnName]($uploader);
-
-      uploadData.meta = JSON.stringify(uploadData.meta)
-    },
-    packMetaData() {
-      var metas = {}
       this.formData.metas.forEach((meta) => {
         (meta.key) && (metas[meta.key] = meta.value)
       })
 
+      uploadData.meta = JSON.stringify(metas)
       return metas;
     },
-    submitUpload(formName) {
+    submitResourceHandler(formName) {
       var $uploader = this.$refs.upload;
 
       this.$refs[formName].validate((valid, err) => {
         if (valid) {
-          this.packUploadData();
-          //检查是否有上传文件
-          if ($uploader.uploadFiles.length > 0) {
-            $uploader.submit()
-          } else {
-            this.$message.error('无上传文件')
-          }
+          this.packUploadData(() => {
+            //检查是否有上传文件
+            console.log($uploader.uploadFiles)
+            if ($uploader.uploadFiles.length > 0) {
+              return
+              $uploader.submit()
+            } else {
+              this.$message.error('无上传文件')
+            }
+          });
         } else {
           this.$message.error('数据验证有误')
           return false;
