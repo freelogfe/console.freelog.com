@@ -8,7 +8,7 @@
     <!--&gt;</el-autocomplete>-->
 
     <el-input placeholder="请输入搜索内容" v-model="query" class="query-input">
-      <el-button slot="append" icon="search" type="primary" @click="queryHandler"></el-button>
+      <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler"></el-button>
     </el-input>
 
     <table-view class="resource-list" :loader="loader()">

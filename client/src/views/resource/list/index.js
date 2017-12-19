@@ -5,7 +5,19 @@ export default {
   data() {
     return {
       resourceList: [],
-      RESOURCE_STATUS: ['未知状态', '正常', '发布', '冻结']
+      RESOURCE_STATUS: [{
+        text: '未知状态',
+        type: 'info'
+      }, {
+        text: '正常',
+        type: 'info'
+      }, {
+        text: '发布',
+        type: 'success'
+      }, {
+        text: '冻结',
+        type: 'danger'
+      }]
     }
   },
   components: {

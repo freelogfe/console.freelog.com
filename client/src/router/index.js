@@ -1,6 +1,8 @@
 /**
+ * meta 配置
  * hidden=true表示在导航上默认不展示
  * requiresAuth=true 表示需要身份验证即需要登录
+ * scrollTop=true 切换路由时，页面滚动到顶部，默认是true
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -15,8 +17,26 @@ Vue.use(Router)
 
 import {layout, login, error, aboutView, helpView, pageBuildPreview} from '@/views/index'
 
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    return savedPosition
+  } else {
+    const position = {}
+    if (to.hash) {
+      position.selector = to.hash
+    }
+
+    if (to.meta.scrollToTop !== false) {
+      position.x = 0
+      position.y = 0
+    }
+    return position
+  }
+}
+
 export default new Router({
   mode: 'history',
+  scrollBehavior,
   routes: [
     accountRoute,
     userRoute,

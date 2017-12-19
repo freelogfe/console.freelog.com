@@ -24,3 +24,9 @@
     }
   }
 </script>
+
+<style>
+  body, .app-wrapper, .wrapper {
+    height: 100%;
+  }
+</style>

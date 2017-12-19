@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :model="detail" :rules="rules" class="resource-detail" ref="detail" label-width="100px">
+    <el-form :model="detail" :rules="rules" class="resource-detail" ref="detail" label-width="120px">
       <el-form-item label="resourceId" prop="resourceId">
         <el-input v-model="detail.resourceId" disabled></el-input>
       </el-form-item>

@@ -33,5 +33,8 @@
 </script>
 
 <style lang="less">
+  .app-wrapper {
+    height: 100%;
+  }
   @import "preview.less";
 </style>

@@ -15,6 +15,8 @@
     "egg-userrole": "^1.1.2",
     "egg-view-nunjucks": "^2.1.4",
     "fs-extra": "^4.0.2",
+    "http-proxy-middleware": "^0.17.4",
+    "koa-connect": "^2.0.0",
     "md5": "^2.2.1"
   },
   "devDependencies": {

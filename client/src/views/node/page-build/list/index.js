@@ -57,7 +57,7 @@ export default {
     },
     handlePreview(presentable) {
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/resource/detail`,
+        path: `/node/${this.$route.params.nodeId}/presentable/detail`,
         query: {presentableId: presentable.presentableId}
       })
     }

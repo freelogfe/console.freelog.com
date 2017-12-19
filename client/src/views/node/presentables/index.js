@@ -1,12 +1,10 @@
 import TableView from '@/components/TableView/index.vue'
-import contract from "../../../../services/contract";
 
 export default {
-  name: 'node-contracts',
+  name: 'presentables',
   data() {
     return {
-      resourceList: [],
-      query: ''
+      resourceList: []
     }
   },
   components: {
@@ -16,37 +14,38 @@ export default {
   mounted() {
   },
   methods: {
-    querySearchAsync() {
-
-    },
-    handleSelectSearchItem() {
-
-    },
-    queryHandler() {
-      this.$message.warning('待开发')
-    },
-    loadResourceData(resIds) {
-      var promiseList = resIds.map((resId) => {
-        return this.$services.resource.get(resId).then((res) => {
-          return res.getData()
-        })
+    formatHandler(list) {
+      console.log(list)
+      const STATUS_TIPS = [
+        {
+          text: '测试状态',
+          type: 'info'
+        },
+        {
+          text: '未开始执行',
+          type: 'info'
+        },
+        {
+          text: '执行中',
+          type: ''
+        },
+        {
+          text: '生效中',
+          type: 'success'
+        },
+        {
+          text: '用户终止',
+          type: 'danger'
+        },
+        {
+          text: '系统终止',
+          type: 'danger'
+        }
+      ];
+      list.forEach((item) => {
+        item._statusInfo = STATUS_TIPS[item.status]
       })
-
-      return Promise.all(promiseList)
-    },
-    loadContracts(param) {
-      return this.$services.contract.get(param || {}).then((res) => {
-        return res
-      }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
-      })
-    },
-    loadPresentables(param) {
-      return this.$services.presentables.get({params: param}).then((res) => {
-        return res.getData()
-      }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
-      })
+      return list
     },
     mergeDataByResourceId(contracts, data) {
       var dataMap = {}
@@ -102,24 +101,44 @@ export default {
         })
       }
     },
-    handlePresentable(row) {
-      var nodeId = this.$route.params.nodeId
-      if (!row.presentableDetail) {
-        this.$router.push({
-          path: `/node/${nodeId}/presentable/create`,
-          query: {contractId: row.contractId}
+    loadResourceData(resIds) {
+      var promiseList = resIds.map((resId) => {
+        return this.$services.resource.get(resId).then((res) => {
+          return res.getData()
         })
-      } else {
-        this.$router.push({
-          path: `/node/${nodeId}/presentable/detail`,
-          query: {presentableId: row.presentableDetail.presentableId}
-        })
-      }
+      })
+
+      return Promise.all(promiseList)
     },
-    previewHandler(row) {
+    loadContracts(param) {
+      return this.$services.contract.get(param || {}).then((res) => {
+        return res
+      }).catch((err) => {
+        this.$message.error(err.response.errorMsg || err)
+      })
+    },
+    loadPresentables(param) {
+      return this.$services.presentables.get({params: param}).then((res) => {
+        return res.getData()
+      }).catch((err) => {
+        this.$message.error(err.response.errorMsg || err)
+      })
+    },
+    handlePresentable(row, type, hash) {
+      var query = {
+        presentableId: row.presentableDetail && row.presentableDetail.presentableId,
+        contractId: row.contractId
+      }
+      type = type || 'detail'
+      hash = (hash && (`#${hash}`)) || ''
+
+      if (!hash && !row.presentableDetail) {
+        hash = '#presentable'
+      }
+      var path = `/node/${this.$route.params.nodeId}/presentable/${type}${hash}`
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/contract/detail`,
-        query: {contractId: row.contractId}
+        path: path,
+        query: query
       })
     }
   }

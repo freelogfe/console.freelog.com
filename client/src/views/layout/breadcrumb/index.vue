@@ -1,7 +1,7 @@
 <template>
   <div class="breadcrumb-wrap" v-show="breadcrumbs.length>0">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: bread.path }" key="" v-for="bread in breadcrumbs">{{bread.title}}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: bread.path }" :key="bread.path" v-for="bread in breadcrumbs">{{bread.title}}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>

@@ -7,19 +7,22 @@
       <div class="sidebar-toggle" @click="toggleSidebarHandler" :class="{'sidebar-open': sidebar.openSidebar}">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
-      <el-menu theme="dark" default-active="-1" class="left-nav-bar" mode="horizontal" router>
+      <el-menu background-color="#324157" text-color="#fff"
+               active-text-color="#ffd04b" default-active="-1" class="left-nav-bar" mode="horizontal"
+               router>
         <el-menu-item :index="'/'+navItem.path" :key="index" v-for="(navItem, index) in navRoutes">
           {{navItem.meta.title}}
         </el-menu-item>
       </el-menu>
 
-      <el-menu theme="dark" default-active="-1" class="navbar-menu" mode="horizontal" @select="handleSelect">
+      <el-menu background-color="#324157" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
+               @select="handleSelect">
         <!--<el-menu-item index="1">-->
-          <!--<div class="badge-item">-->
-            <!--<el-badge :value="12" class="item">-->
-              <!--<i class="fa fa-envelope-o"></i>-->
-            <!--</el-badge>-->
-          <!--</div>-->
+        <!--<div class="badge-item">-->
+        <!--<el-badge :value="12" class="item">-->
+        <!--<i class="fa fa-envelope-o"></i>-->
+        <!--</el-badge>-->
+        <!--</div>-->
         <!--</el-menu-item>-->
         <el-submenu index="account">
           <template slot="title">

@@ -1,38 +1,29 @@
 <template>
-  <section>
-    <el-form :model="detail" :rules="rules" class="resource-detail" ref="detail" label-width="100px">
-      <el-form-item label="resourceId" prop="resourceId">
-        <el-input v-model="detail.resourceId" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="resourceType" prop="resourceType">
-        <el-input v-model="detail.resourceId" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="resourceUrl" prop="resourceUrl">
-        <el-input v-model="detail.resourceUrl" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="resourceType" prop="resourceType">
-        <el-input v-model="detail.resourceType" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="resourceName" prop="resourceName">
-        <el-input v-model="detail.resourceName" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="mimeType" prop="mimeType">
-        <el-input v-model="detail.mimeType" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="createDate" prop="createDate">
-        <el-input v-model="detail.createDate" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="meta" prop="meta">
-        <template v-for="(val, key) in detail.meta">
-          <el-form-item :label="key" class="meta-detail-item">
-            <el-input :value="val" disabled></el-input>
-          </el-form-item>
-        </template>
-      </el-form-item>
-      <el-form-item class="btns">
-        <el-button type="primary" @click="bakcToList()">返回</el-button>
-      </el-form-item>
-    </el-form>
+  <section class="resource-detail">
+    <ul>
+      <li class="detail-item">
+        <label class="detail-name">resourceId :</label><span>{{detail.resourceId}}</span>
+      </li>
+      <li class="detail-item">
+        <label class="detail-name">resource name :</label><span>{{detail.resourceName}}</span>
+      </li>
+      <li class="detail-item">
+        <label class="detail-name">resource url :</label><span>{{detail.resourceUrl}}</span>
+      </li>
+      <li class="detail-item">
+        <label class="detail-name">resource type :</label><span>{{detail.resourceType}}</span>
+      </li>
+      <li class="detail-item">
+        <label class="detail-name">resource mime type :</label><span>{{detail.mimeType}}</span>
+      </li>
+      <li class="detail-item">
+        <label class="detail-name">create date :</label><span>{{detail.createDate | fmtDate}}</span>
+      </li>
+    </ul>
+    <div class="btns">
+      <el-button @click="bakcToList()">返回</el-button>
+      <el-button type="primary" @click="gotoCreateContract(detail)">去创建presentable</el-button>
+    </div>
   </section>
 </template>
 
@@ -43,14 +34,23 @@
 </script>
 
 <style lang="less" scoped>
+  .detail-item {
+    line-height: 30px;
+  }
+
   .resource-detail {
     width: 80%;
     margin: auto;
-    .btns {
-      text-align: center;
-    }
   }
-.meta-detail-item {
-  margin-bottom: 9px;
-}
+
+  .btns {
+    text-align: center;
+  }
+
+  .detail-name {
+    width: 160px;
+    display: inline-block;
+    text-align: right;
+    margin-right: 15px;
+  }
 </style>

@@ -18,6 +18,10 @@ export default {
       type: Boolean,
       default: true
     },
+    formatHandler: {
+      type: Function,
+      default: null
+    },
     paginationOptions: {
       type: Object,
       default() {
@@ -48,20 +52,25 @@ export default {
       if (this.loader) {
         this.loading = true
         this.loader(this.pageMeta).then((res) => {
-          var data = res.data
+          var data = res.getData()
           this.loading = false
-          if (data.ret === 0) {
-            data = data.data
-            this.tableData = data.dataList || data;
+          if (data) {
+            var dataList = data.dataList || data;
+            if (this.formatHandler) {
+              dataList = this.formatHandler(dataList)
+            }
+            this.tableData = dataList;
             //分页数据
             if (data.dataList) {
               this.total = data.totalItem
               this.pageMeta.page = data.page || 1
+            } else {
+              this.total = dataList.length
             }
           } else {
             this.$message.error(data.msg);
           }
-        }).catch((res)=>{
+        }).catch((res) => {
           this.$message.warning('加载失败')
           this.loading = false
         })

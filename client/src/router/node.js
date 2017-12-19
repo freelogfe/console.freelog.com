@@ -8,22 +8,20 @@ import {
   nodeResourceList,
   resourceDetail,
   nodePolicyManagement,
-  nodePresentbles,
-  nodeContracts,
   createPresentable,
   presentableDetail,
-  contractDetail,
+  presentablesView,
   pagebuildList,
-  
+
 } from '@/views'
 
 export const nodeItemRoute = {
   path: ':nodeId',
-    component: Container,
-    hidden: true,
-    meta: {
+  component: Container,
+  hidden: true,
+  meta: {
     requiresAuth: true,
-      title: ':nodeId节点' //:key 可动态通过route.params上的k-v进行替换
+    title: ':nodeId节点' //:key 可动态通过route.params上的k-v进行替换
   },
   redirect: '/node/:nodeId/presentables',
   children: [
@@ -39,7 +37,7 @@ export const nodeItemRoute = {
       path: 'pagebuilds',
       meta: {
         requiresAuth: true,
-        title: 'pagebuild列表'
+        title: 'PageBuild管理列表'
       },
       component: pagebuildList
     },
@@ -49,24 +47,7 @@ export const nodeItemRoute = {
         requiresAuth: true,
         title: 'presentables'
       },
-      component: nodePresentbles
-    },
-    {
-      path: 'contracts',
-      meta: {
-        requiresAuth: true,
-        title: 'contracts'
-      },
-      component: nodeContracts
-    },
-    {
-      path: 'contract/detail',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '合同详情'
-      },
-      component: contractDetail
+      component: presentablesView
     },
     {
       path: 'presentable',

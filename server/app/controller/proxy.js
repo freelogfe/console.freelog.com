@@ -8,7 +8,17 @@ module.exports = app => {
     const RESOURCE_CONFIG = app.config.resource
 
     class FileController extends app.Controller {
+        //post
         *create() {
+
+        }
+
+        *index(){
+
+        }
+
+
+        *show() {
 
         }
     }

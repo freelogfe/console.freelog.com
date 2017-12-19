@@ -5,7 +5,7 @@
       <el-col :span="4">
         <div class="query-wrapper">
           <el-input placeholder="请输入搜索内容" v-model="queryInput">
-            <el-button slot="append" icon="search" @click="queryHandler"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="queryHandler"></el-button>
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">

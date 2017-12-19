@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="app-wrapper">
     <transition name="fade">
       <router-view class="wrapper"></router-view>
     </transition>
@@ -17,5 +17,9 @@
 <style media="screen">
   html {
     height: 100%
+  }
+
+  .wrapper {
+    position: relative;
   }
 </style>

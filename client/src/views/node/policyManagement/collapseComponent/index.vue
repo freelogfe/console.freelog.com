@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :gutter="40" v-for="t in stateMachine.stateMachine" class="state-item" key="">
+    <div :gutter="40" v-for="t in stateMachine.stateMachine" class="state-item" :key="Math.random()">
       <div :class=" t.cColor ">【{{t.currentState}}】状态</div>
       <div>
         <span class="event-name">【{{t.event}}】</span>

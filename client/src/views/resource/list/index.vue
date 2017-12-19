@@ -21,7 +21,7 @@
         align="center"
         width="150px">
         <template slot-scope="scope">
-          {{RESOURCE_STATUS[scope.row.status]}}
+          <el-tag :type="RESOURCE_STATUS[scope.row.status].type">{{RESOURCE_STATUS[scope.row.status].text}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column

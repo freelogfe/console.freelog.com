@@ -28,9 +28,6 @@ export const nodeList = resolve => require.ensure([], () => resolve(require('@/v
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('@/views/node/detail/index.vue')), 'node')
 export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
-export const nodePresentbles = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/list/index.vue')), 'node')
-export const nodeContracts = resolve => require.ensure([], () => resolve(require('@/views/node/contract/list/index.vue')), 'node')
-export const contractDetail = resolve => require.ensure([], () => resolve(require('@/views/node/contract/detail/index.vue')), 'node')
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 
@@ -46,6 +43,8 @@ export const contractGuarantyView = resolve => require.ensure([], () => resolve(
 
 
 export const pageBuildPreview = resolve => require.ensure([], () => resolve(require('@/views/resource/create/preview.vue')), 'resource')//signmentEvent
+
+export const presentablesView = resolve => require.ensure([], () => resolve(require('@/views/node/presentables/index.vue')), 'presentable')
 
 export default {
   layout,
@@ -69,13 +68,10 @@ export default {
   nodeDetail,
   nodeResourceList,
   nodePolicyManagement,
-  nodePresentbles,
-  nodeContracts,
   createPresentable,
   presentableDetail,
-  contractDetail,
   pagebuildList,
-
+  presentablesView,
   // signmentView,
   contractGuarantyView,
   signmentView

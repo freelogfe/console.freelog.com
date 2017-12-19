@@ -38,6 +38,10 @@
 <style scoped lang="less">
   @import "../../styles/mixin.less";
 
+  .main {
+    min-height: 100%;
+  }
+
   .main-view {
     padding: 15px;
     min-height: 100%;
@@ -58,14 +62,17 @@
     margin-left: @sidebar-width;
     transition: all .5s;
   }
+
   .footer-wrap {
     margin-left: @sidebar-width;
     transition: all .5s;
   }
 
   .collapse-sidebar {
-    .content,.footer-wrap {
-      margin-left: 30px;
-    }
+
+  .content, .footer-wrap {
+    margin-left: 30px;
+  }
+
   }
 </style>

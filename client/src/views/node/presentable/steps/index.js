@@ -15,7 +15,7 @@ export default {
     processStatus: {
       type: String,
       default(){
-        return 'process'
+        return 'finish'
       }
     },
     finishStatus: {

@@ -42,7 +42,7 @@
         </el-button>
       </el-form-item>
       <el-form-item label="file" required v-show="formData.resourceType !== ResourceTypes.pageBuild">
-        <div class="upload-wrapper">
+        <div class="upload-wrapper" style="width:400px">
           <el-upload
             class="upload-container"
             drag

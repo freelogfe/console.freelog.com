@@ -48,7 +48,7 @@ export default {
       }),
 
       formData: {
-        resourceType: ResourceTypes.pageBuild || '',
+        resourceType: ResourceTypes.image || '',
         resourceName: '',
         widgetName: '',
         metas: [],
@@ -173,9 +173,7 @@ export default {
         if (valid) {
           this.packUploadData(() => {
             //检查是否有上传文件
-            console.log($uploader.uploadFiles)
             if ($uploader.uploadFiles.length > 0) {
-              return
               $uploader.submit()
             } else {
               this.$message.error('无上传文件')

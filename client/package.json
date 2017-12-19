@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "draggabilly": "^2.1.1",
-    "element-ui": "^1.4.9",
+    "element-ui": "^2.0.0",
     "font-awesome": "^4.7.0",
     "freelog_policy_compiler": "0.0.15",
     "fs": "0.0.1-security",
