@@ -17,11 +17,10 @@ export default {
     } else {
       this.loadPolicyDetail()
         .then((data) => {
-          console.log(data)
           this.tabList = data
           return data
         })
-      // .then(this.queryContractsStatus.bind(this))
+        .then(this.queryContractsStatus.bind(this))
     }
   },
   components: {
@@ -102,9 +101,9 @@ export default {
             resourceName: obj.resourceName,
             resourceId: obj.resourceId,
             data: widgetsDataMap[obj.resourceId],
-            selected: false,
-            checked: false,
-            created: false
+            selected: false, //记录选择哪个策略
+            checked: false, //标记是否已选中策略
+            created: false  //标记是否已创建过合同
           })
         })
 

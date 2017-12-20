@@ -13,7 +13,7 @@ export default {
   data() {
     const validateResourceType = (rule, value, callback) => {
       const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
-      console.log(value)
+
       if (!NAME_REG.test(value)) {
         callback(new Error('命名格式有误，需满足' + NAME_REG.toString()));
       } else {
@@ -109,7 +109,6 @@ export default {
         type: mimetype,
       })
 
-      console.log(html)
       return file
     },
     packDataForpage_build($uploader) {
@@ -138,8 +137,9 @@ export default {
       const resType = formData.resourceType
       const fnName = `packDataFor${resType}`
 
-      this.packMetaData()
+      $uploader.data.meta = {}
       var fn = this[fnName] && this[fnName]($uploader); //资源类型数据处理函数
+      this.packMetaData()
 
       if (fn instanceof Promise) {
         fn.then(callback)
@@ -163,6 +163,10 @@ export default {
         (meta.key) && (metas[meta.key] = meta.value)
       })
 
+      Object.keys(uploadData.meta).forEach((key) => {
+        metas[key] = uploadData.meta[key]
+      })
+
       uploadData.meta = JSON.stringify(metas)
       return metas;
     },
@@ -180,7 +184,7 @@ export default {
             }
           });
         } else {
-          this.$message.error('数据验证有误')
+          this.$message.error('数据验证不通过')
           return false;
         }
       });

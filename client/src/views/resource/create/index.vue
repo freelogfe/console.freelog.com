@@ -1,10 +1,13 @@
 <template>
   <section class="create-resource-wrapper">
     <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
+      <el-form-item label="资源名称" prop="resourceName" required>
+        <el-input v-model="formData.resourceName" style="width: 400px"></el-input>
+      </el-form-item>
       <el-form-item label="资源类型"  prop="resourceType" required>
         <el-select
           v-model="formData.resourceType"
-          style="width: 300px"
+          style="width: 200px"
           allow-create
           filterable
           placeholder="只能包含大小写字母、_和-，长度4~40">
@@ -16,10 +19,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="资源名称" prop="resourceName" required>
-        <el-input v-model="formData.resourceName"></el-input>
-      </el-form-item>
-      <el-form-item label="widgetName" prop="widgetName" v-show="formData.resourceType === ResourceTypes.widget">
+      <el-form-item label="widgetName" prop="widgetName" :required="formData.resourceType === ResourceTypes.widget" v-show="formData.resourceType === ResourceTypes.widget">
         <el-input v-model="formData.widgetName" placeholder="保持与web component中的自定义标签名一致"></el-input>
       </el-form-item>
 
@@ -55,7 +55,7 @@
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">上传文件不超过256MB</div>
+            <div class="el-upload__tip" slot="tip">上传文件不超过50MB</div>
           </el-upload>
         </div>
       </el-form-item>

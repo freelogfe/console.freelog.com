@@ -37,7 +37,6 @@ export default {
   },
   methods: {
     addMetaHandler(key, value) {
-      console.log(key);
       this.metas.push({
         key: key || '',
         value: value || ''

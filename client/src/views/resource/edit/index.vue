@@ -37,11 +37,13 @@
               <el-input v-model="item.value" placeholder="value"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button @click="deleteMetaHandler(index)">delete</el-button>
+              <el-button @click="deleteMetaHandler(index)"><i class="el-icon-delete"></i></el-button>
             </el-col>
           </el-row>
         </template>
-        <el-button @click="addMetaHandler()">add meta</el-button>
+        <el-button @click="addMetaHandler()">
+          <i class="el-icon-plus"></i>
+        </el-button>
       </el-form-item>
 
       <el-form-item label="file">
@@ -57,7 +59,7 @@
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">上传文件不超过256MB</div>
+            <div class="el-upload__tip" slot="tip">上传文件不超过50MB</div>
           </el-upload>
         </div>
       </el-form-item>
