@@ -18,3 +18,12 @@ export const CONTRACT_STATUS_TIPS = {
     5: '系统终止',
     6: '合同已终止'
 }
+
+export const RESOURCE_TYPES = {
+  widget: 'widget',
+  image: 'image',
+  audio: 'audio',
+  markdown: 'markdown',
+  pageBuild: 'page_build',
+  revealSlide: 'reveal_slide'
+};

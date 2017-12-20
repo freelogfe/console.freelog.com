@@ -7,7 +7,7 @@ import {
   nodeDetail,
   nodeResourceList,
   resourceDetail,
-  nodePolicyManagement,
+  nodeContractCreator,
   createPresentable,
   presentableDetail,
   presentablesView,
@@ -94,7 +94,7 @@ export const nodeItemRoute = {
       component: resourceDetail
     },
     {
-      path: 'policyManagement',
+      path: 'contract',
       hidden: true,
       meta: {
         requiresAuth: true,
@@ -103,12 +103,12 @@ export const nodeItemRoute = {
       component: Container,
       children: [
         {
-          path: 'sign',
+          path: 'create',
           meta: {
             requiresAuth: true,
             title: '创建合同'
           },
-          component: nodePolicyManagement
+          component: nodeContractCreator
         },
       ]
     }

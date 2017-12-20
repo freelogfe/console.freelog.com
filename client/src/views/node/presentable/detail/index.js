@@ -1,4 +1,4 @@
-import {CONTRACT_STATUS_TIPS} from '@/views/node/config'
+import {CONTRACT_STATUS_TIPS} from '@/config/view-config'
 import compiler from 'presentable_policy_compiler'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 

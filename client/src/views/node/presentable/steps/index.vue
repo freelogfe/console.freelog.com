@@ -19,6 +19,10 @@
 
 <style lang="less" scoped>
  .presentable-steps {
+   position: relative;
+   left: 50%;
+   transform: translate(-25%,0);
+
    text-align: center;
    margin-bottom: 15px;
  }

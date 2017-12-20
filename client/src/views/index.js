@@ -26,7 +26,7 @@ export const nodeCreator = resolve => require.ensure([], () => resolve(require('
 export const nodeUpdator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')
 export const nodeList = resolve => require.ensure([], () => resolve(require('@/views/node/my-nodes/index.vue')), 'node')
 export const nodeDetail = resolve => require.ensure([], () => resolve(require('@/views/node/detail/index.vue')), 'node')
-export const nodePolicyManagement = resolve => require.ensure([], () => resolve(require('@/views/node/policyManagement/signment/index.vue')), 'node')
+export const nodeContractCreator = resolve => require.ensure([], () => resolve(require('@/views/node/contract/create/index.vue')), 'node')
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
@@ -67,12 +67,11 @@ export default {
   nodeList,
   nodeDetail,
   nodeResourceList,
-  nodePolicyManagement,
+  nodeContractCreator,
   createPresentable,
   presentableDetail,
   pagebuildList,
   presentablesView,
-  // signmentView,
   contractGuarantyView,
   signmentView
 }

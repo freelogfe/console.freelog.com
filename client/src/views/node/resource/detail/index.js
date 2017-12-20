@@ -37,7 +37,7 @@ export default {
         query.widgets = JSON.stringify(resource.systemMeta.widgets)
       }
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/policyManagement/sign`,
+        path: `/node/${this.$route.params.nodeId}/contract/create`,
         query: query
       })
     },

@@ -1,5 +1,5 @@
 import Draggabilly from 'draggabilly'
-import ResourceTypes from '../resource-types'
+import {RESOURCE_TYPES} from '@/config/view-config'
 import {codemirror} from 'vue-codemirror'
 
 require('codemirror/theme/dracula.css')
@@ -184,7 +184,7 @@ export default {
       var self = this;
       return this.$services.g_Resources.get({
         params: {
-          resourceType: ResourceTypes.widget
+          resourceType: RESOURCE_TYPES.widget
         }
       }).then((res) => {
         var data = res.getData()

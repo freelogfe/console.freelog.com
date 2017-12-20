@@ -4,7 +4,7 @@ web component自定义标签名规则https://www.w3.org/TR/custom-elements/#vali
  */
 import {mapGetters} from 'vuex'
 import PageBuilder from './pagebuilder.vue'
-import ResourceTypes from '../resource-types'
+import {RESOURCE_TYPES} from '@/config/view-config'
 
 
 export default {
@@ -24,7 +24,7 @@ export default {
     const validateWidgetName = (rule, value, callback) => {
       //格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
-      if (this.formData.resourceType === ResourceTypes.widget && !NAME_REG.test(value)) {
+      if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
         callback(new Error('命名格式有误，必须以freelog-开头，如：freelog-demo-testWidget'));
       } else {
         callback()
@@ -32,7 +32,7 @@ export default {
     }
 
     return {
-      ResourceTypes: ResourceTypes,
+      ResourceTypes: RESOURCE_TYPES,
       rules: {
         resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'},],
         widgetName: [
@@ -43,12 +43,12 @@ export default {
           {validator: validateResourceType, trigger: 'blur'}
         ]
       },
-      options: Object.keys(ResourceTypes).map((k) => {
-        return {label: k, value: ResourceTypes[k]}
+      options: Object.keys(RESOURCE_TYPES).map((k) => {
+        return {label: k, value: RESOURCE_TYPES[k]}
       }),
 
       formData: {
-        resourceType: ResourceTypes.image || '',
+        resourceType: RESOURCE_TYPES.image || '',
         resourceName: '',
         widgetName: '',
         metas: [],
