@@ -49,6 +49,8 @@ export default {
         })
     },
     validate() {
+      console.log('123');
+      console.log(compiler.compile);
       var myBeautify = compiler.compile(this.policyText, 'beautify')
       if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
