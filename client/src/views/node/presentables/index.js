@@ -4,7 +4,8 @@ export default {
   name: 'presentables',
   data() {
     return {
-      resourceList: []
+      resourceList: [],
+      query: ''
     }
   },
   components: {
@@ -14,8 +15,10 @@ export default {
   mounted() {
   },
   methods: {
+    queryHandler() {
+      this.$message.warning('待开发')
+    },
     formatHandler(list) {
-      console.log(list)
       const STATUS_TIPS = [
         {
           text: '测试状态',

@@ -194,7 +194,9 @@ export default {
       this.$refs.page.innerHTML = detail.html
       this.initWidgetsEvent()
     },
+    //将可视模式下的源码同步到编辑模式
     syncCodeModeContent() {
+      console.log('this.$refs.page.innerHTML',this.$refs.page.innerHTML)
       this.postMessage({
         action: 'setCodeModeContent',
         detail: {

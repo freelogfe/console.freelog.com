@@ -5,7 +5,7 @@ export default {
     activeClass: Boolean,
     shouldShowTitle: {
       type: Boolean,
-      default(){
+      default() {
         return true
       }
     }

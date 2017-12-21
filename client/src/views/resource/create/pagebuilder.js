@@ -78,9 +78,35 @@ export default {
       .then(() => {
         this.initDraggable()
         this.initMessageListener()
+        this.bindEvent()
       })
   },
   methods: {
+    bindEvent() {
+      var types = [
+        {
+          name: 'webkitfullscreenchange',
+          support: 'webkitFullscreenEnabled'
+        },
+        {
+          name: 'mozfullscreenchange',
+          support: 'mozFullscreenEnabled'
+        },
+        {
+          name: 'fullscreenchange',
+          support: 'fullscreenEnabled'
+        },
+        {
+          name: 'MSFullscreenChange',
+          support: 'MSFullscreenEnabled'
+        }]
+      for (var i = 0; i < types.length; i++) {
+        if (document[types[i].support] === true) {
+          document.addEventListener(types[i].name, this.screenChangeHandler.bind(this), false);
+          break;
+        }
+      }
+    },
     initCodeMirror() {
       this.codeEditor = this.$el.querySelector('.CodeMirror')
       this.codeEditor.hidden = (this.editMode !== CODE_MODE)
@@ -199,15 +225,38 @@ export default {
     queryHandler() {
       this.$message.warning('待开发')
     },
+    enterFullscreen() {
+      var element = document.documentElement;
+
+      // Check which implementation is available
+      var requestMethod = element.requestFullscreen ||
+        element.webkitRequestFullscreen ||
+        element.webkitRequestFullScreen ||
+        element.mozRequestFullScreen ||
+        element.msRequestFullscreen;
+
+      if (requestMethod) {
+        requestMethod.apply(this.$el);
+      }
+    },
+    screenChangeHandler() {
+      if (document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== undefined) {
+        this.$el.classList.add('fullscreen')
+      } else {
+        this.$el.classList.remove('fullscreen')
+      }
+    },
     setCodeModeContent(detail) {
-      this.code = detail.content
+      this.code = '' //触发codemirror内容更新展示
+      this.$nextTick(() => {
+        this.code = detail.content
+      })
       this.codeEditor.hidden = this.editMode !== CODE_MODE
     },
     switchEditMode(mode) {
       this.editMode = mode;
       switch (mode) {
         case CODE_MODE:
-          this.code = '' //触发codemirror内容更新展示
           this.postMessage({
             action: 'syncCodeModeContent'
           });
@@ -218,6 +267,7 @@ export default {
           break;
       }
     },
+    //将编辑模式下的源码同步到可视模式
     syncViewModeContent() {
       this.postMessage({
         action: 'setViewModeContent',

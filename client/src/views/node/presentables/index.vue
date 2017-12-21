@@ -1,5 +1,8 @@
 <template>
   <section>
+    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input">
+      <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler"></el-button>
+    </el-input>
     <table-view class="resource-list" :loader="loader()" :formatHandler="formatHandler">
       <el-table-column
         prop="resourceDetail.resourceName"
@@ -74,6 +77,11 @@
 </script>
 
 <style lang="less" scoped>
+  .query-input {
+    margin-bottom: 15px;
+    width: 50%;
+  }
+
   .presentable-detail-expand {
     font-size: 0;
   }

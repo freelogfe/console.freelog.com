@@ -116,6 +116,7 @@ export default {
         }
       })
 
+      console.log(events)
       detail._contractDetail.events = events
     },
     loadResourceDetail(resId) {

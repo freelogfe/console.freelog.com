@@ -70,7 +70,7 @@
                   v-html="event.desc"
                   :key="Math.random()"
                   :label="event.desc"
-                  :value="event"
+                  :value="index"
                 >
                 </el-option>
               </el-select>

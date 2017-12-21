@@ -1,19 +1,41 @@
 <template>
   <section>
-    <table-view class="resource-list" :loader="loader()" :showPagination="false">
+    <el-table
+      class="resource-list"
+      :data="pagebuildList"
+      stripe
+      border>
+      <el-table-column
+        prop="presentableName"
+        label="presentableName">
+      </el-table-column>
       <el-table-column
         prop="resourceDetail.resourceName"
         label="resourceName">
       </el-table-column>
       <el-table-column
+        width="80px"
         label="status">
         <template slot-scope="scope">
-          {{scope.row.status==1? '显示': '隐藏'}}
+          {{scope.row.status==PAGE_BUILD_STATUS.show? '显示': '隐藏'}}
         </template>
       </el-table-column>
       <el-table-column
+        prop="presentableId"
+        width="220px"
+        label="presentableId(for test)">
+      </el-table-column>
+      <el-table-column
         prop="resourceId"
-        label="resourceId">
+        width="350px"
+        label="resourceId(for test)">
+      </el-table-column>
+      <el-table-column
+        width="120px"
+        label="create date">
+        <template slot-scope="scope">
+          {{scope.row.createDate|fmtDate}}
+        </template>
       </el-table-column>
       <el-table-column
         label="resourceUrl">
@@ -21,20 +43,23 @@
           <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="200px">
         <template slot-scope="scope">
           <el-button
             size="small"
-            @click="handlePreview(scope.row)">查看详情</el-button>
+            @click="handlePreview(scope.row)">查看详情
+          </el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row)" v-show="scope.row.status==2">设为默认显示</el-button>
+            @click="setDefaultPageBuildHandler(scope.row)" v-show="scope.row.status==2">设为显示
+          </el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row, 2)" v-show="scope.row.status==1">设为隐藏</el-button>
+            @click="setDefaultPageBuildHandler(scope.row, 2)" v-show="scope.row.status==1">设为隐藏
+          </el-button>
         </template>
       </el-table-column>
-    </table-view>
+    </el-table>
   </section>
 </template>
 
@@ -45,8 +70,8 @@
 </script>
 
 <style lang="less" scoped>
-.resource-list {
-  width: 100%;
-  min-height: 600px;
-}
+  .resource-list {
+    width: 100%;
+    min-height: 600px;
+  }
 </style>

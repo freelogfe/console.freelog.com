@@ -4,7 +4,7 @@
       <el-form-item label="资源名称" prop="resourceName" required>
         <el-input v-model="formData.resourceName" style="width: 400px"></el-input>
       </el-form-item>
-      <el-form-item label="资源类型"  prop="resourceType" required>
+      <el-form-item label="资源类型" prop="resourceType" required>
         <el-select
           v-model="formData.resourceType"
           style="width: 200px"
@@ -19,27 +19,36 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="widgetName" prop="widgetName" :required="formData.resourceType === ResourceTypes.widget" v-show="formData.resourceType === ResourceTypes.widget">
-        <el-input v-model="formData.widgetName" placeholder="保持与web component中的自定义标签名一致"></el-input>
+      <el-form-item label="widgetName" prop="widgetName"
+                    style="width: 500px"
+                    :required="formData.resourceType === ResourceTypes.widget"
+                    v-show="formData.resourceType === ResourceTypes.widget">
+        <el-input v-model="formData.widgetName" placeholder="保持与web component中自定义标签名一致"></el-input>
       </el-form-item>
 
       <el-form-item label="meta信息" prop="metas">
         <template v-for="(item, index) in formData.metas">
-          <el-row class="meta-item" :gutter="5">
-            <el-col :span="10">
-              <el-input v-model="item.key" placeholder="key只能由字母和_组成"></el-input>
+          <el-row class="meta-item" :gutter="3">
+            <el-col :span="12">
+              <el-input v-model="item.key" placeholder="key只能由字母和下划线组成"></el-input>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="8">
               <el-input v-model="item.value" placeholder="value"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button @click="deleteMetaHandler(index)"><i class="el-icon-delete"></i></el-button>
+              <el-tooltip class="item" effect="dark" content="删除当前这一行meta配置" placement="top">
+                <el-button @click="deleteMetaHandler(index)">
+                  <i class="el-icon-delete"></i>
+                </el-button>
+              </el-tooltip>
             </el-col>
           </el-row>
         </template>
-        <el-button @click="addMetaHandler">
-          <i class="el-icon-plus"></i>
-        </el-button>
+        <el-tooltip class="item" effect="dark" content="添加一行meta配置" placement="top">
+          <el-button @click="addMetaHandler">
+            <i class="el-icon-plus"></i>
+          </el-button>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="file" required v-show="formData.resourceType !== ResourceTypes.pageBuild">
         <div class="upload-wrapper" style="width:400px">

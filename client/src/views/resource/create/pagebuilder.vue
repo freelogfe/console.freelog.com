@@ -1,7 +1,7 @@
 <template>
   <section class="page-builder-wrapper">
-    <h3>page builder</h3>
-    <el-row :gutter="20" class="js-page-builder">
+    <h3 class="wrap-title">page builder</h3>
+    <el-row :gutter="20" class="js-page-builder" style="height: 100%;display: inline-block">
       <el-col :span="4">
         <div class="query-wrapper">
           <el-input placeholder="请输入搜索内容" v-model="queryInput">
@@ -44,6 +44,7 @@
       <el-col :span="20" class="page-build-container" ref="editorWrapper">
         <div class="page-build-mask" ref="mask"></div>
 
+        <!--#409EFF-->
         <div class="tool-bar">
           <el-radio-group v-model="editMode" @change="switchEditMode" :border="false">
             <el-radio-button :label="modes.code">
@@ -57,6 +58,11 @@
               </el-tooltip>
             </el-radio-button>
           </el-radio-group>
+          <el-tooltip class="item" effect="dark" content="全屏模式" placement="top">
+            <el-button @click="enterFullscreen">
+              <i class="el-icon-fa-arrows-alt" aria-hidden="true"></i>
+            </el-button>
+          </el-tooltip>
         </div>
         <div class="page-builder">
           <codemirror :code="code"

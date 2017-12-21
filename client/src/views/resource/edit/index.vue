@@ -31,19 +31,25 @@
         <template v-for="(item, index) in metas">
           <el-row class="meta-item" :gutter="5">
             <el-col :span="5">
-              <el-input v-model="item.key" placeholder="key只能由字母和_组成"></el-input>
+              <el-input v-model="item.key" placeholder="key只能由字母和下划线组成"></el-input>
             </el-col>
             <el-col :span="15">
               <el-input v-model="item.value" placeholder="value"></el-input>
             </el-col>
             <el-col :span="2">
-              <el-button @click="deleteMetaHandler(index)"><i class="el-icon-delete"></i></el-button>
+              <el-tooltip class="item" effect="dark" content="删除当前这一行meta配置" placement="top">
+                <el-button @click="deleteMetaHandler(index)">
+                  <i class="el-icon-delete"></i>
+                </el-button>
+              </el-tooltip>
             </el-col>
           </el-row>
         </template>
-        <el-button @click="addMetaHandler()">
-          <i class="el-icon-plus"></i>
-        </el-button>
+        <el-tooltip class="item" effect="dark" content="添加一行meta配置" placement="top">
+          <el-button @click="addMetaHandler()">
+            <i class="el-icon-plus"></i>
+          </el-button>
+        </el-tooltip>
       </el-form-item>
 
       <el-form-item label="file">

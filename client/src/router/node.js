@@ -57,6 +57,7 @@ export const nodeItemRoute = {
       },
       hidden: true,
       component: Container,
+      redirect: '/node/:nodeId/presentables',
       children: [
         {
           path: 'detail',

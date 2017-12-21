@@ -26,7 +26,7 @@
 </script>
 
 <style>
-  body, .app-wrapper, .wrapper {
+  body, .app-wrapper {
     height: 100%;
   }
 </style>

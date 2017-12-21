@@ -60,6 +60,7 @@ export default {
         this.detail.meta[meta.key] = meta.value
       })
     },
+    //todo 测试阶段使用
     updatePageBuildHandler() {
       var $uploader = this.$refs.upload;
 

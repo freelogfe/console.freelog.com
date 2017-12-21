@@ -1,9 +1,28 @@
 @page-builder-height: 600px;
 
+.page-builder-wrapper.fullscreen {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+  padding: 15px;
+  text-align: center;
+  .page-build-container {
+    height: 90%;
+    max-height: 800px;
+  }
+}
+
+
 .page-build-container {
   position: relative;
+  width: 990px;
+  height: @page-builder-height;
 
-
+  .wrap-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
   &.dragging {
     .page-builder {
       z-index: -1;
@@ -15,10 +34,10 @@
   }
 
   .tool-bar {
-    width: 990px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
+    width: 100%;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .117647), 0 1px 4px rgba(0, 0, 0, .117647);
     border-radius: 2px;
-    color: rgba(0,0,0,.87);
+    color: rgba(0, 0, 0, .87);
     background-color: #fff;
     text-align: center;
 
@@ -75,8 +94,8 @@
 
 .page-build-mask,
 .page-builder {
-  width: 990px;
-  height: @page-builder-height;
+  width: 100%;
+  height: 100%;
 }
 
 .page-builder {
@@ -91,7 +110,7 @@
 }
 
 .widgets-panel {
-  max-height: @page-builder-height;
+  max-height: 100%;
   //overflow: auto;
 
   .widget-resource {

@@ -48,7 +48,7 @@ export default {
       }),
 
       formData: {
-        resourceType: RESOURCE_TYPES.image || '',
+        resourceType: RESOURCE_TYPES.pageBuild || '',
         resourceName: '',
         widgetName: '',
         metas: [],
