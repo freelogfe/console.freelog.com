@@ -43,7 +43,7 @@ export default {
         this.loading = true
 
         var data = Object.assign(this.model, {
-          // jwtType: 'header',
+          jwtType: 'header',
           isRememer: this.rememberUser ? 1 : 0
         })
 
