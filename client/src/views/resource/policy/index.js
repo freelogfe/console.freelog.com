@@ -48,7 +48,11 @@ export default {
     },
     updatePolicy() {
       if (this.resourceId) {
-        this.submit(this.resourceId)
+        this.submit(this.resourceId).then(() => {
+          this.$message.success('更新成功')
+        }).catch((errorMsg)=>{
+          this.$message.error(errorMsg)
+        })
       } else {
         this.$message.error('缺乏参数resourceId')
       }
@@ -64,7 +68,7 @@ export default {
       this.submitLoading = true;
 
       var data = {
-        policy: btoa(this.policyText),
+        policyText: btoa(this.policyText),
         languageType: 'freelog_policy_lang'
       };
 

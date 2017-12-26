@@ -83,8 +83,9 @@ export default {
         this.$services.user.post(data)
           .then(res => {
             var data = res.getData();
-            this.$store.dispatch('changeSession', data)
-            this.$router.replace(this.$route.query.redirect || '/')
+            // this.$store.dispatch('changeSession', data)
+            // this.$router.replace(this.$route.query.redirect || '/')
+            this.$message.success('注册成功！请重新登录')
             this.loading = false
           })
           .catch(err => {
