@@ -9,26 +9,45 @@ export default {
       viewportMargin: Infinity
     })
     return {
+      errorMsg: '',
       editorOptions: cmOpts,
+      data: this.value
     }
   },
   components: {
     codemirror
   },
   props: {
-    data: {
-      type: Object,
+    value: {
+      type: String,
       default() {
-        return {}
+        return ''
       }
     }
   },
 
+  watch: {
+    value: function () {
+      this.data = this.value
+    }
+  },
   mounted() {
   },
   methods: {
-    onCodeChange() {
-
+    onCodeChange(val) {
+      this.data = val
+      this.$emit('input', this.data)
+    },
+    validateJSON() {
+      try {
+        JSON.parse(this.data)
+        this.$message.success('格式校验通过')
+      } catch (err) {
+        this.errorMsg = 'JSON格式有误！' + err
+      }
+    },
+    clearErrorMsg() {
+      this.errorMsg = ''
     }
   }
 }

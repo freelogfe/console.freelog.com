@@ -1,6 +1,6 @@
 <template>
   <section class="create-resource-wrapper">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性">
         <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
           <el-form-item label="资源名称" prop="resourceName" required class="input-item">
@@ -55,21 +55,20 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="资源meta信息">
-        <resource-meta-info :data="formData.meta"></resource-meta-info>
+      <el-tab-pane label="资源meta信息" name="metaInfo">
+        <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="resource policy">
-        <policy-editor></policy-editor>
+        <policy-editor ref="policyEditor" v-model="formData.policyText"></policy-editor>
       </el-tab-pane>
       <el-tab-pane
         :key="item.name"
         v-for="(item, index) in tabs"
         :label="item.title"
         :name="item.name">
-        <component :is="item.content" :tab-name="item.name" :data="item.data"></component>
+        <component :is="item.content" :ref="item.ref" :tab-name="item.name" :data="item.data"></component>
       </el-tab-pane>
     </el-tabs>
-
   </section>
 </template>
 

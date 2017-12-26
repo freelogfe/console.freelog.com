@@ -15,7 +15,6 @@ export const userSetting = resolve => require.ensure([], () => resolve(require('
 export const resourceCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/create/index.vue')), 'resource')
 
 export const resourceUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard');
-export const resourcePolicyCreator = resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
 export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
 export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/node/resource/detail/index.vue')), 'node')
@@ -57,7 +56,6 @@ export default {
   error,
   resourceCreator,
   resourceUpdator,
-  resourcePolicyCreator,
   resourcePolicyUpdator,
   resourceList,
   resourceDetail,

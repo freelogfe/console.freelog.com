@@ -4,10 +4,13 @@ export default {
   name: 'policy-editor',
   data() {
     return {
-      validateLoading: false,
       submitLoading: false,
-      policyDetail: null,
-      resource: null,
+      policyText: this.value || `For testUser@test.com and users in LoginUser in the following states:
+  in initial :
+    proceed to signing on accepting transaction of 100 to feth1026f01634a
+  in signing:
+    proceed to activate on accepting license license_A
+  I agree to authorize token in activate`,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
@@ -15,49 +18,19 @@ export default {
     }
   },
   props: {
-    policyText: {
+    value: {
       type: String,
-      default(){
-        return `For testUser@test.com and users in LoginUser in the following states:
-  in initial :
-    proceed to signing on accepting transaction of 100 to feth1026f01634a
-  in signing:
-    proceed to activate on accepting license license_A
-  I agree to authorize token in activate`
+      default() {
+        return ''
       }
-    }
+    },
+    updatable: Boolean,
+    resourceId: String
   },
   mounted() {
-    var self = this
-    var resId = this.$route.query.resourceId
-    if (resId) {
-      this.loadResourceData(resId)
-        .then((detail) => {
-          self.resource = detail
-        })
-    }
-    this.loadPolicyDetail(resId).then((policy) => {
-      if (policy) {
-        self.policyDetail = policy
-        self.policyText = policy.policyText
-      }
-    })
+    this.$on('submit', this.submit.bind(this))
   },
   methods: {
-    loadResourceData(param) {
-      return this.$services.resource.get(param || {})
-        .then((res) => {
-          return (this.detail = res.getData());
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
-    },
-    loadPolicyDetail(resId) {
-      return this.$services.policy.get(resId)
-        .then((res) => {
-          return res.getData()
-        })
-    },
     validate() {
       var myBeautify = compiler.compile(this.policyText, 'beautify')
       if (!myBeautify.errorMsg) {
@@ -68,54 +41,49 @@ export default {
     },
 
     createHandler(data) {
-      var resId = this.$route.query.resourceId
-      return this.$services.policy.post(Object.assign({
-        resourceId: resId,
-      }, data)).then((res) => {
-        this.submitLoading = false;
-        if (res.data.errcode === 0) {
-          this.$message.success('创建成功')
-          setTimeout(() => {
-            this.$router.push({path: '/resource/detail/edit', query: {resourceId: resId}})
-          }, 5e2)
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch((err) => {
-        this.submitLoading = false;
-        this.$message.error(err.response.errorMsg || err)
-      })
+      return this.$services.policy.post(data)
     },
-    updateHandler(data) {
-      return this.$services.policy.put(this.policyDetail.resourceId, data)
-        .then((res) => {
-          this.submitLoading = false;
-          if (res.data.errcode === 0) {
-            this.$message.success('更新成功')
-          } else {
-            this.$message.error(res.data.msg)
-          }
-        })
-        .catch((err) => {
-          this.submitLoading = false;
-          this.$message.error(err.response.errorMsg || err)
-        })
+    updateHandler(resourceId, data) {
+      return this.$services.policy.put(resourceId, data)
     },
-    submit() {
-      this.submitLoading = true;
-      if (!this.$route.query.resourceId) {
-        this.$message.error('没有资源Id, 请重新选择');
+    updatePolicy() {
+      if (this.resourceId) {
+        this.submit(this.resourceId)
+      } else {
+        this.$message.error('缺乏参数resourceId')
       }
+    },
+    submit(resourceId) {
+      if (!this.policyText) {
+        return Promise.resolve(true)
+      }
+
+      if (this.submitLoading) {
+        return
+      }
+      this.submitLoading = true;
+
       var data = {
-        policyText: btoa(this.policyText),
+        policy: btoa(this.policyText),
         languageType: 'freelog_policy_lang'
       };
 
-      if (this.policyDetail) {
-        this.updateHandler(data)
-      } else {
-        this.createHandler(data)
-      }
+      return new Promise((resolve, reject) => {
+        var promise
+        if (this.policyDetail) {
+          promise = this.updateHandler(resourceId, data)
+        } else {
+          data.resourceId = resourceId
+          promise = this.createHandler(data)
+        }
+        promise.then((res) => {
+          this.submitLoading = false;
+          (res.data.errcode === 0) ? resolve(true) : reject(res.data.msg)
+        }).catch((err) => {
+          this.submitLoading = false;
+          reject(err.response.errorMsg || err)
+        })
+      })
     }
   }
 }

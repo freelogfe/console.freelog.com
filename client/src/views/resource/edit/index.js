@@ -2,13 +2,18 @@
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
 import {mapGetters} from 'vuex'
-
+import ResourceMetaInfo from '../meta/index.vue'
+import PolicyEditor from '../policy/index.vue'
 
 export default {
   name: 'resource-detail-edit',
   data() {
     return {
       detail: {},
+      activeTabName: '',
+      submitLoading: false,
+      showKeys: ['resourceId', 'resourceType', 'resourceUrl', 'mimeType', 'createDate'],
+      policyText: '',
       rules: {},
       metas: [],
       uploader: {
@@ -22,38 +27,43 @@ export default {
   computed: mapGetters({
     session: 'session'
   }),
+  components: {
+    ResourceMetaInfo,
+    PolicyEditor
+  },
   mounted() {
     var self = this;
+    var resourceId = this.$route.query.resourceId
+
     this.uploader.headers.Authorization = this.session.token;
-
-
-    if (this.$route.query.resourceId) {
-      this.load(this.$route.query.resourceId)
-        .then((detail) => {
-          Object.entries(detail.meta).forEach((entry) => {
-            self.addMetaHandler(entry[0], entry[1]);
-          })
+    if (resourceId) {
+      this.loadResourceDetail(resourceId)
+      this.loadPolicyDetail(resourceId)
+        .then((policy) => {
+          if (policy) {
+            self.policyText = policy.policyText
+          }
         })
+      this.activeTabName = this.$route.hash.slice(1)
     } else {
       this.$message.error('缺少参数resourceId');
     }
   },
   methods: {
-    addMetaHandler(key, value) {
-      this.metas.push({
-        key: key || '',
-        value: value || ''
-      })
-    },
-    deleteMetaHandler(index) {
-      this.metas.splice(index, 1)
-    },
-    load(param) {
-      return this.$services.resource.get(param || {})
+    loadResourceDetail(resourceId) {
+      return this.$services.resource.get(resourceId)
         .then((res) => {
-          return (this.detail = res.getData());
+          var detail = res.getData()
+          detail.meta = JSON.stringify(detail.meta)
+          return (this.detail = detail);
         }).catch((err) => {
           this.$message.error(err.response.errorMsg || err)
+        })
+    },
+    loadPolicyDetail(resId) {
+      return this.$services.policy.get(resId)
+        .then((res) => {
+          return res.getData()
         })
     },
     resolveMeta() {
@@ -123,6 +133,20 @@ export default {
       this.$router.push({
         path: '/resource/list',
       })
+    },
+    fixCodeMirrorRender() {
+      let meta = this.detail.meta
+      this.detail.meta = ''
+      this.$nextTick(() => {
+        this.detail.meta = meta
+      })
+    },
+    tabChange(tab, event) {
+      switch (tab.name) {
+        case 'metaInfo':
+          this.fixCodeMirrorRender()
+          break;
+      }
     }
   }
 }

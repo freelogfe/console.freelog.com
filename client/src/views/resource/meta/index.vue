@@ -1,18 +1,21 @@
 <template>
   <section>
     <el-alert
-      title="错误提示的文案"
+      :title="errorMsg"
       show-icon
+      v-show="errorMsg"
+      @close="clearErrorMsg"
+      style="margin-bottom: 15px"
       type="error">
     </el-alert>
     <codemirror :code="data"
                 :options="editorOptions"
                 ref="codeMirror"
                 placeholder="描述资源meta信息的JSON数据"
-                style="height: 500px"
                 @change="onCodeChange">
     </codemirror>
 
+    <el-button type="primary" @click="validateJSON" style="margin-top:12px">格式校验</el-button>
   </section>
 </template>
 

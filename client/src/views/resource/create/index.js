@@ -71,6 +71,7 @@ export default {
     }
   },
   mounted() {
+    this.resourceTypeChange(this.formData.resourceType)
   },
   methods: {
     resourceTypeChange(type) {
@@ -80,12 +81,13 @@ export default {
           content: 'page-builder',
           title: 'page builder',
           data: {},
+          ref: 'pageBuilder'
         })
       } else {
         this.tabs = this.tabs.filter((tab) => tab.name !== RESOURCE_TYPES.pageBuild)
       }
     },
-    errorHandler(err, file) {
+    errorHandler(err) {
       switch (err.status) {
         case 400:
           this.$message.error('不支持的文件类型');
@@ -94,17 +96,24 @@ export default {
           this.$message.error('权限未经验证');
           break;
       }
+
+      this.$refs.upload.fileList = [] //reset
     },
-    successHandler(res, file) {
-      if (res.ret != 0) {
-        this.$message.error(res.msg + '资源Id为: ' + res.data);
-      } else if (res.errcode == 100) {
-        this.$message.error(res.msg);
+    successHandler(res) {
+      var self = this;
+      if (res.ret !== 0 || res.errcode !== 0) {
+        self.$message.error(res.msg);
       } else {
-        this.$message.success('资源创建成功');
-        setTimeout(() => {
-          this.$router.push({path: '/resource/policy/create', query: {resourceId: res.data.resourceId}})
-        }, 5e2)
+        self.$refs.policyEditor.submit(res.data.resourceId)
+          .then(() => {
+            self.$message.success('资源创建成功');
+            setTimeout(() => {
+              self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
+            }, 5e2)
+          })
+          .catch((errMsg) => {
+            self.$message.error(`资源策略创建失败，${errMsg}`);
+          })
       }
     },
     generatePageBuildFile(opt) {
@@ -118,16 +127,16 @@ export default {
       return file
     },
     packDataForpage_build($uploader) {
-      var pageBuilder = this.$refs.pageBuilder
+      var pageBuilder = this.$refs.pageBuilder[0]
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         //获取pb代码变更结果
         pageBuilder.$once('codeChange', (data) => {
           if (data.code) {
             $uploader.handleStart(this.generatePageBuildFile({code: data.code}));
             resolve()
           } else {
-            resolve()
+            reject('page build内容为空')
           }
         });
         //如果是view模式，需要从iframe中同步pb，获得最新的pb内容
@@ -153,7 +162,9 @@ export default {
       this.packMetaData()
 
       if (fn instanceof Promise) {
-        fn.then(callback)
+        fn.then(callback).catch((errMsg) => {
+          this.$message.error(errMsg)
+        })
       } else {
         callback()
       }
@@ -194,6 +205,20 @@ export default {
           return false;
         }
       });
+    },
+    fixCodeMirrorRender() {
+      let meta = this.formData.meta
+      this.formData.meta = Math.random().toString()
+      this.$nextTick(() => {
+        this.formData.meta = meta
+      })
+    },
+    tabChange(tab) {
+      switch (tab.name) {
+        case 'metaInfo':
+          this.fixCodeMirrorRender()
+          break;
+      }
     }
   }
 }
