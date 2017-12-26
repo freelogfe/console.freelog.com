@@ -42,10 +42,14 @@ export default {
           self.$services.nodes.post(self.dataForm)
             .then((res) => {
               var data = res.getData();
-              self.$message.success('节点创建成功')
-              setTimeout(() => {
-                self.$router.push({path: '/node/detail', query: {nodeId: data.nodeId}})
-              }, 1e3)
+              if (!data) {
+                this.$message.error(res.data.msg)
+              } else {
+                self.$message.success('节点创建成功')
+                setTimeout(() => {
+                  self.$router.push({path: '/node/detail', query: {nodeId: data.nodeId}})
+                }, 1e3)
+              }
             })
             .catch((err)=>{
               this.$message.error(err.response.errorMsg || err)

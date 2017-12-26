@@ -1,5 +1,7 @@
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
-import {RESOURCE_TYPES} from '@/config/view-config'
+import CONFIG from '@/config/index'
+
+const {RESOURCE_TYPES} = CONFIG
 
 export default {
   name: 'node-contract-creator',
@@ -57,7 +59,7 @@ export default {
               let policies = data[i].data.policy
               for (let j = 0; j < policies.length; j++) {
                 if (policies[j].segmentId === item.segmentId) {
-                  data[i].selected = j
+                  policies[j].created = true
                   break;
                 }
               }
@@ -66,7 +68,7 @@ export default {
           }
         })
       }).then(() => {
-        this.done = data.every((item) => item.created)
+        // this.done = data.every((item) => item.created)
       })
     },
     loadResourceDetail(resId) {
@@ -163,6 +165,7 @@ export default {
       })
     },
     createContract(param) {
+      var nodeId = this.$route.params.nodeId
       return this.$services.contract.post(param)
         .then((res) => {
           var data = res.getData()
@@ -176,7 +179,7 @@ export default {
             })
           }
         }).catch((err) => {
-          this.$message.error(err.response.errorMsg)
+          this.$message.error(err.response && err.response.errorMsg)
         })
     },
     submit() {
@@ -219,14 +222,13 @@ export default {
             (err !== 'cancel') && this.$message.error(err)
           })
       } else {
-        selectedContracts.forEach((param) => {
-          this.createContract({
-            contractType: '2',
-            targetId: param.resourceId,
-            segmentId: param.segmentId,
-            serialNumber: param.serialNumber,
-            partyTwo: nodeId
-          })
+        let param = selectedContracts[0]
+        this.createContract({
+          contractType: '2',
+          targetId: param.resourceId,
+          segmentId: param.segmentId,
+          serialNumber: param.serialNumber,
+          partyTwo: nodeId
         })
       }
     }

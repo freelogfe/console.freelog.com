@@ -11,6 +11,7 @@ module.exports = app => {
 
     app.get('/node', nodeRole, 'node.index');
     app.get('/resource', resourceRole, 'resource.index');
+    app.post('/v2/login', 'login.testLogin');
 
     app.get('/test', 'home.testCross');
     app.get('/', 'home.index');

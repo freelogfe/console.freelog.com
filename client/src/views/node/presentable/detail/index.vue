@@ -74,7 +74,7 @@
                 >
                 </el-option>
               </el-select>
-              <el-button :disabled="!selectedContractEvent" @click="executeContractHandler">trigger</el-button>
+              <el-button :disabled="selectedContractEvent === ''" @click="executeContractHandler">trigger</el-button>
             </li>
           </ul>
         </div>

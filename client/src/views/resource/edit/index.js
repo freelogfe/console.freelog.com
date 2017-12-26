@@ -1,3 +1,6 @@
+/*
+policy更新后，后续签订的policy按新的来，已签约过的按更新前的
+ */
 import {mapGetters} from 'vuex'
 
 
@@ -62,12 +65,31 @@ export default {
     },
     //todo 测试阶段使用
     updatePageBuildHandler() {
-      var $uploader = this.$refs.upload;
-
-      $uploader.data.meta = '{}'
-      $uploader.submit()
+      this.validate()
+        .then((valid) => {
+          if (valid) {
+            var $uploader = this.$refs.upload;
+            $uploader.data.meta = '{}'
+            $uploader.submit()
+          } else {
+            this.$message.error('数据验证不通过')
+          }
+        })
     },
-    successHandler(data){
+    fileLimitHandler(file, fileList) {
+      if (fileList.length > 1) {
+        fileList.shift()
+      }
+    },
+    validate() {
+      return new Promise((resolve) => {
+        this.$refs['detail'].validate((valid, err) => {
+          console.log(err)
+          resolve(valid)
+        });
+      })
+    },
+    successHandler(data) {
       if (data.ret == 0 && data.errcode === 0) {
         this.$message.success('更新成功')
       } else {
@@ -75,6 +97,7 @@ export default {
       }
     },
     saveHandler(form) {
+
       const mutableKeys = ['resourceName', 'meta'];
       var data = {}
 
@@ -86,10 +109,15 @@ export default {
       // data.meta = JSON.stringify(data.meta)
       this.$services.resource.put(this.detail.resourceId, data)
         .then((res) => {
-          this.$message.success('更新成功')
-        }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
-      })
+          if (res.data.errcode === 0) {
+            this.$message.success('更新成功')
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.response.errorMsg || err)
+        })
     },
     backToList() {
       this.$router.push({

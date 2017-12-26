@@ -1,6 +1,8 @@
 import Draggabilly from 'draggabilly'
-import {RESOURCE_TYPES} from '@/config/view-config'
+import CONFIG from '@/config/index'
 import {codemirror} from 'vue-codemirror'
+
+const {RESOURCE_TYPES} = CONFIG
 
 require('codemirror/theme/dracula.css')
 require('codemirror/addon/fold/foldgutter.css')

@@ -53,7 +53,7 @@
       </el-form-item>
 
       <el-form-item label="file">
-        <div class="upload-wrapper">
+        <div class="upload-wrapper" style="width:400px">
           <el-upload
             class="upload-container"
             drag
@@ -62,10 +62,11 @@
             :data="uploader.data"
             :action="'/v1/resources/updateResourceContext/'+detail.resourceId"
             :on-success="successHandler"
+            :on-change="fileLimitHandler"
             :auto-upload="false">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">上传文件不超过50MB</div>
+            <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
           </el-upload>
         </div>
       </el-form-item>

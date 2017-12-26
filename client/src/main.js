@@ -7,7 +7,6 @@ import router from './router'
 import store from './store'
 import plugins from './plugins'
 
-
 import 'element-ui/lib/theme-chalk/index.css'
 
 sync(store, router, { moduleName: 'route' })

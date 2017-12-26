@@ -1,5 +1,7 @@
 import TableView from '@/components/TableView/index.vue'
+import CONFIG from '@/config/index'
 
+const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
 export default {
   name: 'presentables',
   data() {
@@ -19,32 +21,6 @@ export default {
       this.$message.warning('待开发')
     },
     formatHandler(list) {
-      const STATUS_TIPS = [
-        {
-          text: '测试状态',
-          type: 'info'
-        },
-        {
-          text: '未开始执行',
-          type: 'info'
-        },
-        {
-          text: '执行中',
-          type: ''
-        },
-        {
-          text: '生效中',
-          type: 'success'
-        },
-        {
-          text: '用户终止',
-          type: 'danger'
-        },
-        {
-          text: '系统终止',
-          type: 'danger'
-        }
-      ];
       list.forEach((item) => {
         item._statusInfo = STATUS_TIPS[item.status]
       })
@@ -86,6 +62,10 @@ export default {
           var contractIds = contracts.map((c) => {
             return c.contractId
           })
+
+          if (!contracts.length) {
+            return res
+          }
 
           var resourceIds = contracts.map((c) => {
             return c.resourceId

@@ -1,23 +1,14 @@
 import TableView from '@/components/TableView/index.vue'
+import CONFIG from '@/config/index'
+
+const {RESOURCE_STATUS} = CONFIG
 
 export default {
   name: 'resource-list',
   data() {
     return {
       resourceList: [],
-      RESOURCE_STATUS: [{
-        text: '未知状态',
-        type: 'info'
-      }, {
-        text: '正常',
-        type: 'info'
-      }, {
-        text: '发布',
-        type: 'success'
-      }, {
-        text: '冻结',
-        type: 'danger'
-      }]
+      RESOURCE_STATUS: RESOURCE_STATUS
     }
   },
   components: {

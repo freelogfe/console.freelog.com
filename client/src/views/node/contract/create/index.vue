@@ -15,11 +15,11 @@
           {{tabData.resourceName}}
 
           <el-tooltip class="item" effect="dark" content="已选中合同" placement="top" v-show="tabData.checked">
-            <i class="el-icon-circle-check icon-tip"></i>
+            <i class="el-icon-circle-check-outline icon-tip"></i>
           </el-tooltip>
 
           <el-tooltip class="item" effect="dark" content="已创建过合同" placement="top" v-show="tabData.created">
-            <i class="el-icon-circle-check-outline icon-tip"></i>
+            <i class="el-icon-circle-check icon-tip"></i>
           </el-tooltip>
 
         </span>
@@ -38,11 +38,14 @@
             label="">
             <template slot-scope="props">
               <el-radio v-model="tabData.selected"
-                        :disabled="tabData.created"
                         :label="props.$index"
                         @change="segmentChangeHandler(tabData)">
                 <span title="placeholder"></span>
               </el-radio>
+              <el-tooltip class="item" effect="dark" content="该策略已经创建过合同" placement="top"
+                          v-show="props.row.created">
+                <i class="el-icon-info"></i>
+              </el-tooltip>
               <el-tooltip class="item" effect="dark" content="取消选择" placement="top"
                           v-show="tabData.selected===props.$index&&tabData.created===false">
                 <i class="el-icon-circle-close-outline"
