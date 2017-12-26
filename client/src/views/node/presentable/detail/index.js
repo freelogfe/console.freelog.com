@@ -1,6 +1,8 @@
-import {CONTRACT_STATUS_TIPS} from '@/config/view-config'
+import CONFIG from '@/config/index'
 import compiler from 'presentable_policy_compiler'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
+
+const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
   signing(params) {
@@ -101,8 +103,9 @@ export default {
       })
 
       var pushEvent = (event) => {
+        var eventFn = contractEventsMap[event.type] || (() => 'no event handler')
         events.push({
-          desc: contractEventsMap[event.type](event.params),
+          desc: eventFn(event.params),
           type: event.type,
           params: event
         })
@@ -149,11 +152,13 @@ export default {
         }
       })
     },
-    updateContractDetail(formName) {
-      const self = this;
+    updateContractDetail() {
+      this.loadContractDetail(this.detail._contractDetail.contractId).then((contract) => {
+        Object.assign(this.detail._contractDetail, contract)
+      })
     },
     executeContractHandler() {
-      var selectedContractEvent = this.selectedContractEvent
+      var selectedContractEvent = this.detail._contractDetail.events[this.selectedContractEvent]
       console.log(selectedContractEvent)
       //test
       this.$services.eventTest.post({
@@ -161,6 +166,7 @@ export default {
         eventId: selectedContractEvent.params.eventId
       }).then(() => {
         this.selectedContractEvent = ''
+        this.updateContractDetail()
         this.$message.info('执行成功')
       })
 

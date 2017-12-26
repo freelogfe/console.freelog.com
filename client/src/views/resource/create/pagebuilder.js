@@ -1,20 +1,8 @@
 import Draggabilly from 'draggabilly'
-import {RESOURCE_TYPES} from '@/config/view-config'
-import {codemirror} from 'vue-codemirror'
+import CONFIG from '@/config/index'
+import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
 
-require('codemirror/theme/dracula.css')
-require('codemirror/addon/fold/foldgutter.css')
-require('codemirror/addon/fold/foldgutter')
-require('codemirror/addon/fold/foldcode')
-require('codemirror/addon/fold/xml-fold')
-require('codemirror/addon/fold/brace-fold')
-require('codemirror/addon/fold/indent-fold')
-require('codemirror/addon/edit/matchbrackets')
-require('codemirror/addon/selection/selection-pointer')
-
-require('codemirror/keymap/sublime')
-require('codemirror/addon/search/match-highlighter')
-require('codemirror/addon/search/searchcursor')
+const {RESOURCE_TYPES} = CONFIG
 
 /*
 freelog-(user namespace)-widgetname
@@ -38,6 +26,10 @@ const modes = {
 export default {
   name: 'page-builder',
   data() {
+    var cmOpts = Object.assign({}, codeMirrorOptions)
+    Object.assign(cmOpts, {
+      mode: 'text/html'
+    })
     return {
       queryInput: '',
       widgets: [],
@@ -45,27 +37,7 @@ export default {
       editMode: VIEW_MODE,
       modes: modes,
       code: '',
-      editorOptions: {
-        // codemirror options
-        tabSize: 4,
-        mode: 'text/html',
-        theme: 'dracula',
-        lineNumbers: true,
-        line: true,
-
-        // 高级配置（需要引入对应的插件包）,codemirror advanced options(You need to manually introduce the corresponding codemirror function script code)
-        // sublime、emacs、vim三种键位模式，支持你的不同操作习惯
-        keyMap: "sublime",
-        // 按键映射，比如Ctrl键映射autocomplete，autocomplete是hint代码提示事件
-        extraKeys: {"Ctrl": "autocomplete"},
-        lineWrapping: true,
-        // 代码折叠
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        // 选中文本自动高亮，及高亮方式
-        styleSelectedText: true,
-        highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
-      },
+      editorOptions: cmOpts,
       codeEditor: null
     }
   },
@@ -115,6 +87,7 @@ export default {
     initMessageListener() {
       window.addEventListener('message', (event) => {
         var origin = event.origin || event.originalEvent.origin;
+
         if (origin !== "http://console.freelog.com")
           return;
 
@@ -219,7 +192,8 @@ export default {
         })
         self.widgets = self.widgets.concat(widgets)
       }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
+        var errorMsg = (typeof err === 'string') ? err : err.response.errorMsg
+        this.$message.error(errorMsg)
       })
     },
     queryHandler() {
@@ -250,6 +224,7 @@ export default {
       this.code = '' //触发codemirror内容更新展示
       this.$nextTick(() => {
         this.code = detail.content
+        this.$emit('codeChange', {code: this.code})
       })
       this.codeEditor.hidden = this.editMode !== CODE_MODE
     },
@@ -276,6 +251,7 @@ export default {
         }
       })
     },
+    //用于生成pb文件
     syncContent() {
       if (this.editMode === CODE_MODE) {
         this.$emit('codeChange', {code: this.code})
@@ -287,7 +263,6 @@ export default {
     },
     onEditorCodeChange(newCode) {
       this.code = newCode
-      this.$emit('codeChange', {code: this.code})
     }
   }
 }

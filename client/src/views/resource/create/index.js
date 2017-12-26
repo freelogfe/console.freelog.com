@@ -2,14 +2,20 @@
 web component自定义标签名规则https://www.w3.org/TR/custom-elements/#valid-custom-element-name
 创建资源接口：http://doc.freelog.com/resource/%E5%88%9B%E5%BB%BA%E8%B5%84%E6%BA%90.html
  */
-import {mapGetters} from 'vuex'
 import PageBuilder from './pagebuilder.vue'
-import {RESOURCE_TYPES} from '@/config/view-config'
+import ResourceMetaInfo from '../meta/index.vue'
+import PolicyEditor from '../policy/index.vue'
+import CONFIG from '@/config/index'
 
+const {RESOURCE_TYPES} = CONFIG
 
 export default {
   name: 'resource-creator',
-  components: {PageBuilder},
+  components: {
+    PageBuilder,
+    ResourceMetaInfo,
+    PolicyEditor
+  },
   data() {
     const validateResourceType = (rule, value, callback) => {
       const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
@@ -47,11 +53,13 @@ export default {
         return {label: k, value: RESOURCE_TYPES[k]}
       }),
 
+      tabs: [],
+
       formData: {
-        resourceType: RESOURCE_TYPES.pageBuild || '',
+        resourceType: RESOURCE_TYPES.widget || '',
         resourceName: '',
         widgetName: '',
-        metas: [],
+        meta: '',
       },
       //上传到服务器的数据
       uploader: {
@@ -62,24 +70,24 @@ export default {
       }
     }
   },
-  computed: mapGetters({
-    session: 'session'
-  }),
   mounted() {
-    this.uploader.headers.Authorization = this.session.token;
-    this.addMetaHandler()
+    this.resourceTypeChange(this.formData.resourceType)
   },
   methods: {
-    addMetaHandler() {
-      this.formData.metas.push({
-        key: '',
-        value: ''
-      })
+    resourceTypeChange(type) {
+      if (type === RESOURCE_TYPES.pageBuild) {
+        this.tabs.push({
+          name: RESOURCE_TYPES.pageBuild,
+          content: 'page-builder',
+          title: 'page builder',
+          data: {},
+          ref: 'pageBuilder'
+        })
+      } else {
+        this.tabs = this.tabs.filter((tab) => tab.name !== RESOURCE_TYPES.pageBuild)
+      }
     },
-    deleteMetaHandler(index) {
-      this.formData.metas.splice(index, 1)
-    },
-    errorHandler(err, file) {
+    errorHandler(err) {
       switch (err.status) {
         case 400:
           this.$message.error('不支持的文件类型');
@@ -88,17 +96,24 @@ export default {
           this.$message.error('权限未经验证');
           break;
       }
+
+      this.$refs.upload.fileList = [] //reset
     },
-    successHandler(res, file) {
-      if (res.ret != 0) {
-        this.$message.error(res.msg + '资源Id为: ' + res.data);
-      } else if (res.errcode == 100) {
-        this.$message.error(res.msg);
+    successHandler(res) {
+      var self = this;
+      if (res.ret !== 0 || res.errcode !== 0) {
+        self.$message.error(res.msg);
       } else {
-        this.$message.success('资源创建成功');
-        setTimeout(() => {
-          this.$router.push({path: '/resource/policy/create', query: {resourceId: res.data.resourceId}})
-        }, 5e2)
+        self.$refs.policyEditor.submit(res.data.resourceId)
+          .then(() => {
+            self.$message.success('资源创建成功');
+            setTimeout(() => {
+              self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
+            }, 5e2)
+          })
+          .catch((errMsg) => {
+            self.$message.error(`资源策略创建失败，${errMsg}`);
+          })
       }
     },
     generatePageBuildFile(opt) {
@@ -112,16 +127,16 @@ export default {
       return file
     },
     packDataForpage_build($uploader) {
-      var pageBuilder = this.$refs.pageBuilder
+      var pageBuilder = this.$refs.pageBuilder[0]
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         //获取pb代码变更结果
         pageBuilder.$once('codeChange', (data) => {
           if (data.code) {
             $uploader.handleStart(this.generatePageBuildFile({code: data.code}));
             resolve()
           } else {
-            resolve()
+            reject('page build内容为空')
           }
         });
         //如果是view模式，需要从iframe中同步pb，获得最新的pb内容
@@ -137,12 +152,19 @@ export default {
       const resType = formData.resourceType
       const fnName = `packDataFor${resType}`
 
-      $uploader.data.meta = {}
+      try {
+        $uploader.data.meta = JSON.parse(formData.meta)
+      } catch (err) {
+        console.error(err)
+        $uploader.data.meta = {}
+      }
       var fn = this[fnName] && this[fnName]($uploader); //资源类型数据处理函数
       this.packMetaData()
 
       if (fn instanceof Promise) {
-        fn.then(callback)
+        fn.then(callback).catch((errMsg) => {
+          this.$message.error(errMsg)
+        })
       } else {
         callback()
       }
@@ -151,7 +173,6 @@ export default {
       var $uploader = this.$refs.upload;
       var uploadData = $uploader.data;
       var formData = this.formData;
-      var metas = {}
 
       Object.keys(formData).forEach((key) => {
         if (/^resource/i.test(key)) {
@@ -159,16 +180,12 @@ export default {
         }
       });
 
-      this.formData.metas.forEach((meta) => {
-        (meta.key) && (metas[meta.key] = meta.value)
-      })
-
-      Object.keys(uploadData.meta).forEach((key) => {
-        metas[key] = uploadData.meta[key]
-      })
-
-      uploadData.meta = JSON.stringify(metas)
-      return metas;
+      uploadData.meta = JSON.stringify(uploadData.meta)
+    },
+    fileLimitHandler(file, fileList) {
+      if (fileList.length > 1) {
+        fileList.shift()
+      }
     },
     submitResourceHandler(formName) {
       var $uploader = this.$refs.upload;
@@ -188,6 +205,20 @@ export default {
           return false;
         }
       });
+    },
+    fixCodeMirrorRender() {
+      let meta = this.formData.meta
+      this.formData.meta = Math.random().toString()
+      this.$nextTick(() => {
+        this.formData.meta = meta
+      })
+    },
+    tabChange(tab) {
+      switch (tab.name) {
+        case 'metaInfo':
+          this.fixCodeMirrorRender()
+          break;
+      }
     }
   }
 }

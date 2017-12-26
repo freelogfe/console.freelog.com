@@ -11,7 +11,7 @@ import {Message} from 'element-ui';
 const instance = axios.create({
   baseURL: '//console.freelog.com/',
   timeout: 3000,
-  crossdomain: true,
+  // crossdomain: true,
   withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest'

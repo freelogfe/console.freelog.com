@@ -3,7 +3,6 @@ import Container from 'views/layout/container.vue'
 import {
   resourceCreator,
   resourceUpdator,
-  resourcePolicyCreator,
   resourcePolicyUpdator,
   resourceList,
   resourceDetailEditor
@@ -45,34 +44,13 @@ export default {
       component: resourceList
     },
     {
-      path: 'detail/edit',
+      path: 'detail',
       hidden: true,
       meta: {
         requiresAuth: true,
         title: '编辑资源详情'
       },
       component: resourceDetailEditor
-    },
-    {
-      path: 'policy',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '资源策略管理'
-      },
-      component: Container,
-      children: [
-        {
-          path: 'create',
-          hidden: true,
-          meta: {
-            requiresAuth: true,
-            title: '创建策略'
-          },
-          component: resolve => require.ensure([], () => resolve(require('@/views/resource/policy/create/index.vue')), 'resource')
-        },
-
-      ]
-    },
+    }
   ]
 }

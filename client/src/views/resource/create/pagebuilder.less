@@ -1,28 +1,31 @@
 @page-builder-height: 600px;
 
-.page-builder-wrapper.fullscreen {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: white;
-  padding: 15px;
+.page-builder-wrapper {
   text-align: center;
-  .page-build-container {
-    height: 90%;
-    max-height: 800px;
+  &.fullscreen {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    .page-build-container {
+      height: 90%;
+      max-height: 800px;
+    }
   }
 }
 
+.wrap-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
 
 .page-build-container {
   position: relative;
   width: 990px;
   height: @page-builder-height;
 
-  .wrap-title {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
   &.dragging {
     .page-builder {
       z-index: -1;
@@ -101,7 +104,7 @@
 .page-builder {
   position: relative;
   border: 1px solid #cccccc;
-
+  text-align: left;
   .pb-edit-mode,
   .pb-view-mode {
     width: 100%;

@@ -21,5 +21,6 @@
 
   .wrapper {
     position: relative;
+    height: 100%;
   }
 </style>

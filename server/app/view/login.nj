@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="import" href="/public/JWTMiddleware.html">
+    <!--<link rel="import" href="/public/JWTMiddleware.html">-->
 </head>
 <body>
-<middleware-jwt id="js-jwt"></middleware-jwt>
+<!--<middleware-jwt id="js-jwt"></middleware-jwt>-->
 <div id="js-output"></div>
 <input type="text" class="js-username" placeholder="username" name="username" value="daizch">
 <button class="js-login">login</button>
 <script>
-    var $jwt = document.querySelector('#js-jwt');
     var $output = document.querySelector('#js-output');
-    $jwt.set_next(window);
 
-    document.querySelector('.js-login').addEventListener('click',function () {
-        fetch('/api/login?username='+document.querySelector('.js-username').value, {
-            method: 'get'
+    document.querySelector('.js-login').addEventListener('click', function () {
+        fetch('/v2/login', {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({"loginName": "13480125810", "password": "123456", "isRememer": 1})
         }).then(function (res) {
             console.log(res)
             res.json().then(function (data) {

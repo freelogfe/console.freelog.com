@@ -26,7 +26,7 @@
         <el-input v-model="model.verifyCode" placeholder="请输入验证码"></el-input>
       </el-form-item>
       <el-form-item>
-        <a class="user-op" href="/user/login" style="float: right; color: #1f2d3d">去登录</a>
+        <a class="user-op" href="/user/login">去登录<i class="el-icon-d-arrow-right"></i></a>
       </el-form-item>
       <el-form-item class="login-btns">
         <el-button type="primary"
@@ -70,6 +70,13 @@
   .login-btns {
     text-align: center;
   }
+  }
 
+  .user-op {
+    float: right;
+    color: #1f2d3d;
+  &:hover {
+     color: #409EFF;
+   }
   }
 </style>

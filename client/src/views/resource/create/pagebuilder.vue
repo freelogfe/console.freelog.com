@@ -1,8 +1,8 @@
 <template>
   <section class="page-builder-wrapper">
-    <h3 class="wrap-title">page builder</h3>
-    <el-row :gutter="20" class="js-page-builder" style="height: 100%;display: inline-block">
-      <el-col :span="4">
+    <h3 class="wrap-title">- PAGE BUILDER -</h3>
+    <el-row :gutter="20" class="js-page-builder" style="height: 100%;width:100%; display: inline-block">
+      <el-col :span="8">
         <div class="query-wrapper">
           <el-input placeholder="请输入搜索内容" v-model="queryInput">
             <el-button slot="append" icon="el-icon-search" @click="queryHandler"></el-button>
@@ -41,7 +41,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="20" class="page-build-container" ref="editorWrapper">
+      <el-col :span="16" class="page-build-container" ref="editorWrapper">
         <div class="page-build-mask" ref="mask"></div>
 
         <!--#409EFF-->
