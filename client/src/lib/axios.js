@@ -12,7 +12,7 @@ const instance = axios.create({
   baseURL: '//console.freelog.com/',
   timeout: 6e3,
   // crossdomain: true,
-  withCredentials: true,
+  // withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   }

@@ -5,6 +5,8 @@ web component自定义标签名规则https://www.w3.org/TR/custom-elements/#vali
 import PageBuilder from './pagebuilder.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import PolicyEditor from '../policy/index.vue'
+import {mapGetters} from 'vuex'
+
 import CONFIG from '@/config/index'
 
 const {RESOURCE_TYPES} = CONFIG
@@ -16,6 +18,9 @@ export default {
     ResourceMetaInfo,
     PolicyEditor
   },
+  computed: mapGetters({
+    session: 'session'
+  }),
   data() {
     const validateResourceType = (rule, value, callback) => {
       const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
@@ -73,6 +78,10 @@ export default {
     }
   },
   mounted() {
+    if (this.session.token) {
+      this.uploader.headers.authorization = this.session.token
+    }
+
     this.resourceTypeChange(this.formData.resourceType)
     this.$watch('formData', () => {
       this.$refs.createForm.validate((valid, err) => {
@@ -161,18 +170,28 @@ export default {
     packDataForwidget($uploader) {
       $uploader.data.meta.widgetName = this.formData.widgetName;
     },
+    parseMeta() {
+      var $uploader = this.$refs.upload;
+      var formData = this.formData;
+      if (formData.meta) {
+        try {
+          $uploader.data.meta = JSON.parse(formData.meta)
+        } catch (err) {
+          console.error(err)
+          $uploader.data.meta = {}
+        }
+      } else {
+        $uploader.data.meta = {}
+      }
+    },
     packUploadData(callback) {
       var $uploader = this.$refs.upload;
       var formData = this.formData;
       const resType = formData.resourceType
       const fnName = `packDataFor${resType}`
 
-      try {
-        $uploader.data.meta = JSON.parse(formData.meta)
-      } catch (err) {
-        console.error(err)
-        $uploader.data.meta = {}
-      }
+      this.parseMeta()
+
       var fn = this[fnName] && this[fnName]($uploader); //资源类型数据处理函数
       this.packMetaData()
 
