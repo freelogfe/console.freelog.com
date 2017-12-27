@@ -1,8 +1,8 @@
 <template>
-  <section>
+  <section class="resource-detail">
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性">
-        <el-form :model="detail" :rules="rules" class="resource-detail" ref="detail" label-width="120px">
+        <el-form :model="detail" :rules="rules" ref="detail" label-width="120px">
           <el-form-item label="resourceName"
                         class="input-item"
                         prop="resourceName" required>
@@ -32,13 +32,6 @@
               <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
             </el-upload>
           </el-form-item>
-          <el-form-item>
-            <el-form-item class="btns">
-              <el-button type="primary" @click="saveHandler('detail')">保存</el-button>
-              <el-button type="primary" @click="updatePageBuildHandler('detail')">更新资源文件</el-button>
-              <el-button @click="backToList()">返回</el-button>
-            </el-form-item>
-          </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="资源meta信息" name="metaInfo">
@@ -47,10 +40,14 @@
       <el-tab-pane label="resource policy" name="policy">
         <policy-editor ref="policyEditor"
                        v-model="policyText"
-                       :resourceId="detail.resourceId"
-                       updatable></policy-editor>
+                       :resourceId="detail.resourceId"></policy-editor>
       </el-tab-pane>
     </el-tabs>
+    <div class="btns">
+      <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading">保存</el-button>
+      <el-button type="primary" @click="updatePageBuildHandler('detail')">更新资源文件</el-button>
+      <el-button @click="backToList()">返回</el-button>
+    </div>
   </section>
 </template>
 
@@ -65,14 +62,9 @@
     width: 500px;
   }
 
-  .resource-detail {
-    width: 80%;
-    margin: auto;
-
   .btns {
     text-align: center;
-  }
-
+    margin-top: 15px;
   }
 
 </style>

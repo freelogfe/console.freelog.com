@@ -6,7 +6,16 @@ export default {
   data() {
     return {
       resourceList: [],
-      NODE_STATUS: ['正常','未审核','冻结']
+      NODE_STATUS: [{
+        text: '正常',
+        type: 'success'
+      }, {
+        text: '未审核',
+        type: 'warning'
+      }, {
+        text: '冻结',
+        type: 'danger'
+      }]
     }
   },
   components: {

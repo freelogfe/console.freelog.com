@@ -16,6 +16,7 @@
     "font-awesome": "^4.7.0",
     "freelog_policy_compiler": "0.0.17",
     "fs": "0.0.1-security",
+    "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "nprogress": "^0.2.0",
     "presentable_policy_compiler": "0.0.4",
