@@ -18,7 +18,7 @@
       <el-table-column
         label="status">
         <template slot-scope="scope">
-          {{NODE_STATUS[scope.row.status]}}
+          <el-tag :type="NODE_STATUS[scope.row.status].type">{{NODE_STATUS[scope.row.status].text}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作">

@@ -31,7 +31,7 @@ export default {
       //格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('命名格式有误，必须以freelog-开头，如：freelog-demo-testWidget'));
+        callback(new Error('必须以freelog-开头，仅支持小写，如：freelog-demo-testwidget'));
       } else {
         callback()
       }
@@ -54,6 +54,8 @@ export default {
       }),
 
       tabs: [],
+      valid: false,
+      loading: false,
 
       formData: {
         resourceType: RESOURCE_TYPES.widget || '',
@@ -72,6 +74,16 @@ export default {
   },
   mounted() {
     this.resourceTypeChange(this.formData.resourceType)
+    this.$watch('formData', () => {
+      this.$refs.createForm.validate((valid, err) => {
+        this.valid = valid
+      });
+    }, {deep: true})
+  },
+  watch: {
+    formData: function () {
+
+    }
   },
   methods: {
     resourceTypeChange(type) {
@@ -103,15 +115,18 @@ export default {
       var self = this;
       if (res.ret !== 0 || res.errcode !== 0) {
         self.$message.error(res.msg);
+        this.loading = false
       } else {
         self.$refs.policyEditor.submit(res.data.resourceId)
           .then(() => {
             self.$message.success('资源创建成功');
+            this.loading = false
             setTimeout(() => {
               self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
             }, 5e2)
           })
           .catch((errMsg) => {
+            this.loading = false
             self.$message.error(`资源策略创建失败，${errMsg}`);
           })
       }
@@ -195,6 +210,7 @@ export default {
           this.packUploadData(() => {
             //检查是否有上传文件
             if ($uploader.uploadFiles.length > 0) {
+              this.loading = true
               $uploader.submit()
             } else {
               this.$message.error('无上传文件')

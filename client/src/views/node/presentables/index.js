@@ -26,21 +26,31 @@ export default {
       })
       return list
     },
-    mergeDataByResourceId(contracts, data) {
+    mergeResourceData(contracts, data) {
       var dataMap = {}
       data.forEach((p) => {
         dataMap[p.resourceId] = p
       })
+
       contracts.forEach((contract) => {
         var item = dataMap[contract.resourceId] || null;
-
+        if (item) {
+          Object.assign(contract, {
+            resourceDetail: item
+          })
+        }
+      })
+    },
+    mergePersentableData(contracts, data) {
+      var dataMap = {}
+      data.forEach((p) => {
+        dataMap[p.contractId] = p
+      })
+      contracts.forEach((contract) => {
+        var item = dataMap[contract.contractId] || null;
         if (item && item.presentableId) {
           Object.assign(contract, {
             presentableDetail: item
-          })
-        } else if (item) {
-          Object.assign(contract, {
-            resourceDetail: item
           })
         }
       })
@@ -77,8 +87,8 @@ export default {
           })]).then((responses) => {
             var resourcesData = responses[0]
             var presentables = responses[1]
-            self.mergeDataByResourceId(contracts, resourcesData)
-            self.mergeDataByResourceId(contracts, presentables)
+            self.mergeResourceData(contracts, resourcesData)
+            self.mergePersentableData(contracts, presentables)
             return res
           })
         })

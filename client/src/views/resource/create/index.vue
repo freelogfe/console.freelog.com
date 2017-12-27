@@ -27,9 +27,14 @@
                         class="input-item"
                         :required="formData.resourceType === ResourceTypes.widget"
                         v-show="formData.resourceType === ResourceTypes.widget">
-            <el-input v-model="formData.widgetName" placeholder="保持与web component中自定义标签名一致"></el-input>
+            <el-input v-model="formData.widgetName"
+                      style="width: 95%"
+                      placeholder="保持与web component中自定义标签名一致">
+            </el-input>
+            <el-tooltip class="item" effect="dark" content="必须以freelog-开头，仅支持[a-z0-9._-]" placement="top">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
           </el-form-item>
-
           <el-form-item label="file"
                         class="input-item"
                         required
@@ -50,9 +55,6 @@
               <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
             </el-upload>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitResourceHandler('createForm')">创建</el-button>
-          </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="资源meta信息" name="metaInfo">
@@ -69,6 +71,11 @@
         <component :is="item.content" :ref="item.ref" :tab-name="item.name" :data="item.data"></component>
       </el-tab-pane>
     </el-tabs>
+    <div style="text-align: center;margin-top: 15px">
+      <el-button type="primary"
+                 :loading="loading"
+                 @click="submitResourceHandler('createForm')" :disabled="!valid">创建</el-button>
+    </div>
   </section>
 </template>
 

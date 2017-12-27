@@ -1,5 +1,7 @@
 import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
 
+var throttle = require('lodash/throttle');
+
 export default {
   name: 'resource-meta-info',
   data() {
@@ -32,16 +34,31 @@ export default {
     }
   },
   mounted() {
+
   },
   methods: {
     onCodeChange(val) {
       this.data = val
+
+      if (!this.validator) {
+
+        this.validator = throttle(() => {
+          var et = +new Date()
+          if (this.st) {
+            console.log(et - this.st)
+          }
+          this.st = et
+          this.validateJSON()
+        }, 3e3)
+      } else {
+        this.validator()
+      }
       this.$emit('input', this.data)
     },
     validateJSON() {
       try {
         JSON.parse(this.data)
-        this.$message.success('格式校验通过')
+        this.clearErrorMsg()
       } catch (err) {
         this.errorMsg = 'JSON格式有误！' + err
       }

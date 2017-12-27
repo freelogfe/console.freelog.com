@@ -15,7 +15,6 @@ export default {
       showKeys: ['resourceId', 'resourceType', 'resourceUrl', 'mimeType', 'createDate'],
       policyText: '',
       rules: {},
-      metas: [],
       uploader: {
         headers: {
           method: 'POST'
@@ -66,13 +65,6 @@ export default {
           return res.getData()
         })
     },
-    resolveMeta() {
-      var metas = this.metas;
-      this.detail.meta = {}
-      metas.forEach((meta) => {
-        this.detail.meta[meta.key] = meta.value
-      })
-    },
     //todo 测试阶段使用
     updatePageBuildHandler() {
       this.validate()
@@ -106,19 +98,36 @@ export default {
         this.$message.error(data.msg)
       }
     },
-    saveHandler(form) {
+    updatePolicy(resourceId) {
+      return this.$refs.policyEditor.submit(resourceId)
+    },
+    saveHandler() {
+      if (this.submitLoading) {
+        return
+      }
 
       const mutableKeys = ['resourceName', 'meta'];
       var data = {}
+      var resId = this.detail.resourceId
 
-      this.resolveMeta()
       mutableKeys.forEach((k) => {
         data[k] = this.detail[k]
       })
 
-      // data.meta = JSON.stringify(data.meta)
-      this.$services.resource.put(this.detail.resourceId, data)
-        .then((res) => {
+      try {
+        data.meta = JSON.parse(data.meta)
+      } catch (err) {
+        return this.$message.error(err)
+      }
+      this.submitLoading = true
+
+      var promises = []
+      promises.push(this.$services.resource.put(resId, data))
+      promises.push(this.updatePolicy(resId))
+      Promise.all(promises)
+        .then((resList) => {
+          this.submitLoading = false
+          let res = resList[0] //资源更新结果
           if (res.data.errcode === 0) {
             this.$message.success('更新成功')
           } else {
@@ -126,7 +135,9 @@ export default {
           }
         })
         .catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
+          this.submitLoading = false
+          var msg = (typeof err === 'string') ? err : err
+          this.$message.error(msg)
         })
     },
     backToList() {
@@ -136,7 +147,7 @@ export default {
     },
     fixCodeMirrorRender() {
       let meta = this.detail.meta
-      this.detail.meta = ''
+      this.detail.meta = '{}'
       this.$nextTick(() => {
         this.detail.meta = meta
       })

@@ -14,8 +14,6 @@
                 placeholder="描述资源meta信息的JSON数据"
                 @change="onCodeChange">
     </codemirror>
-
-    <el-button type="primary" @click="validateJSON" style="margin-top:12px">格式校验</el-button>
   </section>
 </template>
 

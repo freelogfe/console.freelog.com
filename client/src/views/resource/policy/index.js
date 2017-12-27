@@ -18,14 +18,12 @@ export default {
     }
   },
   props: {
-    value: {
-      type: String,
-      default() {
-        return ''
-      }
-    },
-    updatable: Boolean,
-    resourceId: String
+    value: String
+  },
+  watch: {
+    value: function () {
+      this.policyText = this.value
+    }
   },
   mounted() {
     this.$on('submit', this.submit.bind(this))
@@ -39,26 +37,14 @@ export default {
         this.$message.error(myBeautify.errorMsg)
       }
     },
-
     createHandler(data) {
       return this.$services.policy.post(data)
     },
     updateHandler(resourceId, data) {
       return this.$services.policy.put(resourceId, data)
     },
-    updatePolicy() {
-      if (this.resourceId) {
-        this.submit(this.resourceId).then(() => {
-          this.$message.success('更新成功')
-        }).catch((errorMsg)=>{
-          this.$message.error(errorMsg)
-        })
-      } else {
-        this.$message.error('缺乏参数resourceId')
-      }
-    },
     submit(resourceId) {
-      if (!this.policyText) {
+      if (!this.policyText || this.value === this.policyText) {
         return Promise.resolve(true)
       }
 
