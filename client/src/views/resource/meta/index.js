@@ -43,11 +43,6 @@ export default {
       if (!this.validator) {
 
         this.validator = throttle(() => {
-          var et = +new Date()
-          if (this.st) {
-            console.log(et - this.st)
-          }
-          this.st = et
           this.validateJSON()
         }, 3e3)
       } else {
@@ -57,7 +52,9 @@ export default {
     },
     validateJSON() {
       try {
-        JSON.parse(this.data)
+        if (this.data) {
+          JSON.parse(this.data)
+        }
         this.clearErrorMsg()
       } catch (err) {
         this.errorMsg = 'JSON格式有误！' + err

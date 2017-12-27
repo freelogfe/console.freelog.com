@@ -36,7 +36,6 @@
       </el-table-column>
       <!--for test-->
 
-
       <el-table-column
         prop="status"
         align="center"

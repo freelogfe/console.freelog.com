@@ -69,14 +69,13 @@ export default {
         }
         return self.loadContracts(param).then((res) => {
           var contracts = res.data.data.dataList
-          var contractIds = contracts.map((c) => {
-            return c.contractId
-          })
-
           if (!contracts.length) {
             return res
           }
 
+          var contractIds = contracts.map((c) => {
+            return c.contractId
+          })
           var resourceIds = contracts.map((c) => {
             return c.resourceId
           })

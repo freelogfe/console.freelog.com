@@ -79,7 +79,6 @@ export default new Router({
       }]
     },
     {
-      name: 'not-found',
       path: '*',
       meta: {
         requiresAuth: false,

@@ -55,15 +55,13 @@ export default {
           var detail = res.getData()
           detail.meta = JSON.stringify(detail.meta)
           return (this.detail = detail);
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+        }).catch(this.$error.showErrorMessage)
     },
     loadPolicyDetail(resId) {
       return this.$services.policy.get(resId)
         .then((res) => {
           return res.getData()
-        })
+        }).catch(this.$error.showErrorMessage)
     },
     //todo 测试阶段使用
     updatePageBuildHandler() {
@@ -136,8 +134,7 @@ export default {
         })
         .catch((err) => {
           this.submitLoading = false
-          var msg = (typeof err === 'string') ? err : err
-          this.$message.error(msg)
+          this.$error.showErrorMessage(err)
         })
     },
     backToList() {
