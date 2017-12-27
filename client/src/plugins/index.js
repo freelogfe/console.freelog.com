@@ -8,6 +8,7 @@ import services from './services'
 import nprogress from './nprogress'
 import authorize from './authorize'
 import filters from './filters'
+import error from './error'
 
 export default {
   install (Vue) {
@@ -17,5 +18,6 @@ export default {
     nprogress(Vue)
     authorize(Vue)
     filters(Vue)
+    error(Vue)
   }
 }

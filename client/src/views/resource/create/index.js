@@ -224,7 +224,7 @@ export default {
     },
     fixCodeMirrorRender() {
       let meta = this.formData.meta
-      this.formData.meta = Math.random().toString()
+      this.formData.meta = '{}'
       this.$nextTick(() => {
         this.formData.meta = meta
       })
