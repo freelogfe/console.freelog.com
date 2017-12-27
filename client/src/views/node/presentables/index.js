@@ -73,21 +73,25 @@ export default {
             return res
           }
 
-          var contractIds = contracts.map((c) => {
-            return c.contractId
-          })
-          var resourceIds = contracts.map((c) => {
-            return c.resourceId
+          var contractIds = []
+          var resourceIds = []
+          contracts.forEach((c) => {
+            contractIds.push(c.contractId)
+            resourceIds.push(c.resourceId)
           })
 
-          return Promise.all([this.loadResourceData(resourceIds), self.loadPresentables({
-            contractIds: contractIds.join(','),
-            nodeId: nodeId
-          })]).then((responses) => {
+          return Promise.all([
+            this.loadResourceData(resourceIds),
+            self.loadPresentables({
+              contractIds: contractIds.join(','),
+              nodeId: nodeId
+            })
+          ]).then((responses) => {
             var resourcesData = responses[0]
             var presentables = responses[1]
             self.mergeResourceData(contracts, resourcesData)
             self.mergePersentableData(contracts, presentables)
+            console.log(contracts)
             return res
           })
         })

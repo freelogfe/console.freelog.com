@@ -34,7 +34,9 @@ export default {
     var self = this;
     var resourceId = this.$route.query.resourceId
 
-    this.uploader.headers.Authorization = this.session.token;
+    if (this.session.token) {
+      this.uploader.headers.Authorization = this.session.token;
+    }
     if (resourceId) {
       this.loadResourceDetail(resourceId)
       this.loadPolicyDetail(resourceId)
