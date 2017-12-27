@@ -60,6 +60,7 @@ export default {
       debugger
     },
     loadDetail(detail) {
+      console.log('first detail', detail);
       return this.loadContractDetail(detail.contractId).then((contract) => {
         return this.loadResourceDetail(contract.resourceId).then((resource) => {
           detail._contractDetail = contract
@@ -88,14 +89,13 @@ export default {
 
       this.resolveContractEvents(detail)
       this.detail = detail
-      console.log('detail', detail)
     },
     resolveContractEvents(detail) {
       let events = []
       let fsmState = detail._contractDetail.fsmState;
       let stateTransitionMap = detail._contractDetail.policySegment.fsmDescription;
       let corresponseEvents = [];
-
+      console.log('stateTransitionMap',stateTransitionMap);
       stateTransitionMap.forEach((transition) => {
         if (transition.currentState === fsmState) {
           corresponseEvents.push(transition)
