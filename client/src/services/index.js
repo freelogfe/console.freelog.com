@@ -15,6 +15,8 @@ import PagebuildService from './pagebuild'
 import OtherService from './other'
 import PbContract from './pbcontract'
 import ContractRecords from './contractRecords'
+import Accounts from './accounts'
+import Pay from './pay'
 // import TokenService from './tokens'
 
 import eventTest from './eventTest' //事件接口测试
@@ -33,6 +35,8 @@ export {
   OtherService,
   PbContract,
   ContractRecords,
+  Accounts,
+  Pay,
   // TokenService,
   eventTest
 }
