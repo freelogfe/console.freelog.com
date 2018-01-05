@@ -7,7 +7,7 @@
       v-show="done"
       show-icon>
     </el-alert>
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane v-for="(tabData, indexOuter) in tabList"
                    :key="indexOuter"
                    :name="tabData.resourceId">
@@ -27,7 +27,7 @@
           :data="tabData.data.policy">
           <el-table-column type="expand">
             <template slot-scope="scope">
-              <pre>{{scope.row.segmentText}}</pre>
+              <pre>{{scope.row._formatSegmentText}}</pre>
             </template>
           </el-table-column>
           <el-table-column
@@ -47,7 +47,7 @@
                 <i class="el-icon-info"></i>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="取消选择" placement="top"
-                          v-show="tabData.selected===props.$index&&tabData.created===false">
+                          v-show="tabData.selected===props.$index">
                 <i class="el-icon-circle-close-outline"
                    @click="segmentChangeHandler(tabData, false)"></i>
               </el-tooltip>
@@ -56,7 +56,7 @@
         </el-table>
       </el-tab-pane>
       <div class="form-ft">
-        <el-button @click="submit" :disabled="!selected">提交</el-button>
+        <el-button @click="submit" :disabled="!selected" :loading="submitting">提交</el-button>
       </div>
     </el-tabs>
   </section>
@@ -69,7 +69,6 @@
 </script>
 
 <style lang="less" scoped>
-
   .el-icon-circle-close-outline {
     padding: 5px;
     cursor: pointer;

@@ -146,7 +146,7 @@ export default {
     },
     fixCodeMirrorRender() {
       let meta = this.detail.meta
-      this.detail.meta = '{}'
+      this.detail.meta = ''
       this.$nextTick(() => {
         this.detail.meta = meta
       })

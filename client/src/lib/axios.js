@@ -10,7 +10,7 @@ import {Message} from 'element-ui';
 
 const instance = axios.create({
   baseURL: '//console.freelog.com/',
-  timeout: 6e3,
+  timeout: 10e3,
   // crossdomain: true,
   // withCredentials: true,
   headers: {

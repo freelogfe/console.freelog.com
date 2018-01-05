@@ -1,8 +1,4 @@
-/**
- * 创建合同和user policy合一方案
- */
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
-import PresentablePolicy from '../policy/index.vue'
 import CONFIG from '@/config/index'
 import compiler from 'freelog_policy_compiler'
 
@@ -22,22 +18,18 @@ export default {
     if (!this.$route.query.resourceId) {
       this.$message.error('没有资源Id, 请重新选择');
     } else {
-      this.init()
-    }
-  },
-  components: {
-    PresentableSteps,
-    PresentablePolicy
-  },
-  methods: {
-    init() {
       this.loadPolicyDetail()
         .then((data) => {
           this.tabList = data
           return data
         })
         .then(this.queryContractsStatus.bind(this))
-    },
+    }
+  },
+  components: {
+    PresentableSteps
+  },
+  methods: {
     segmentChangeHandler(tabData, select) {
       if (select !== undefined) {
         tabData.selected = select
@@ -116,7 +108,6 @@ export default {
             resourceId: obj.resourceId,
             data: widgetsDataMap[obj.resourceId],
             userPolicy: '',
-            presentableName: '',
             selected: false, //记录选择哪个策略
             checked: false, //标记是否已选中策略
             created: false  //标记是否已创建过合同
@@ -173,12 +164,16 @@ export default {
       //创建pb合同必须一次性选中签约的widget，否则不能补签（后端有绑定逻辑），后续可提供补签功能
       return this.$services.pbContract.post(param).then((res) => {
         if (res.data.errcode !== 0) {
-          throw new Error(res.data.msg)
+          this.$message.error(res.data.msg)
         } else {
+          this.$message.success('操作成功')
           let data = res.getData()
-          return data.newContracts.concat(data.oldContracts)
+          let pbResId = this.$route.query.resourceId
+          let contracts = data.newContracts.concat(data.oldContracts)
+          let pbContract = contracts.filter((item) => item.resourceId === pbResId)[0]
+          this.gotoCreateUserPolicy(pbContract.contractId)
         }
-      })
+      }).catch(this.$error.showErrorMessage)
     },
     gotoCreateUserPolicy(contractId) {
       var nodeId = this.$route.params.nodeId
@@ -187,51 +182,61 @@ export default {
         query: {contractId: contractId}
       })
     },
-    createResourceContract(param) {
+    createContract(param) {
+      var nodeId = this.$route.params.nodeId
       return this.$services.contract.post(param)
         .then((res) => {
           var data = res.getData()
           if (res.data.errcode !== 0) {
-            throw new Error(res.data.msg)
+            this.$message.error(res.data.msg)
           } else {
-            return [{
-              contractId: data.contractId,
-              resourceId: data.resourceId
-            }]
+            this.$message.success('创建成功')
+            this.gotoCreateUserPolicy(data.contractId)
           }
-        })
+        }).catch(this.$error.showErrorMessage)
     },
-    showConfirmDialog(msg) {
-      return new Promise((resolve, reject) => {
-        this.$confirm(`${msg}，后续不能补签合同，确认继续执行？`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          resolve()
-        }).catch(() => {
-          reject(null)
-        })
-      })
-    },
-    createContract(selectedContracts) {
+    submit() {
+      let selectedContracts = [];
       var nodeId = this.$route.params.nodeId
+
+      this.tabList.forEach((tabData) => {
+        if (tabData.checked) {
+          var policy = tabData.data.policy[tabData.selected]
+          selectedContracts.push({
+            resourceId: tabData.resourceId,
+            segmentId: policy.segmentId,
+            serialNumber: tabData.data.serialNumber
+          })
+        }
+      })
+
+      if (!selectedContracts.length) {
+        return this.$message.warning('请选择policy')
+      }
+
       if (this.$route.query.resourceType === RESOURCE_TYPES.pageBuild) {
-        return this.validatePageBuildParam()
+        this.validatePageBuildParam()
           .then((msg) => {
             if (msg) {
-              return this.showConfirmDialog(msg)
+              return this.$confirm(`${msg}，后续不能补签合同，确认继续执行？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              })
             }
           })
           .then(() => {
-            return this.createPageBuildContract({
+            this.createPageBuildContract({
               nodeId: nodeId,
               contracts: selectedContracts
             })
           })
+          .catch((err) => {
+            (err !== 'cancel') && this.$message.error(err)
+          })
       } else {
         let param = selectedContracts[0]
-        return this.createResourceContract({
+        this.createContract({
           contractType: '2',
           targetId: param.resourceId,
           segmentId: param.segmentId,
@@ -239,85 +244,6 @@ export default {
           partyTwo: nodeId
         })
       }
-    },
-    createPresentablePolicy(policies) {
-      var nodeId = parseInt(this.$route.params.nodeId)
-      var promises = []
-
-      policies.forEach((policy) => {
-        var params = {
-          name: policy.name,
-          nodeId: nodeId,
-          contractId: policy.contractId,
-          policyText: btoa(policy.policyText),
-          languageType: 'freelog_policy_lang'
-        }
-        promises.push(this.$services.presentables.post(params))
-      })
-
-      return Promise.all(promises)
-        .then((responseList) => {
-          var res = responseList[0]
-          var data = res.getData()
-          return data
-        })
-    },
-    paddingContractIds(policies, contractIds) {
-      var contractIdMap = {}
-      contractIds.forEach((item) => {
-        contractIdMap[item.resourceId] = item.contractId
-      })
-
-      policies.forEach((p) => {
-        p.contractId = contractIdMap[p.resourceId]
-      })
-    },
-    extractSubmitData() {
-      let contracts = [];
-      let policies = []
-      this.tabList.forEach((tabData) => {
-        if (tabData.checked) {
-          var policy = tabData.data.policy[tabData.selected]
-          contracts.push({
-            resourceId: tabData.resourceId,
-            segmentId: policy.segmentId,
-            serialNumber: tabData.data.serialNumber
-          });
-          policies.push({
-            name: tabData.presentableName,
-            resourceId: tabData.resourceId,
-            policyText: tabData.userPolicy
-          })
-        }
-      })
-
-      return {
-        contracts,
-        policies
-      }
-    },
-    submit() {
-      var nodeId = parseInt(this.$route.params.nodeId)
-      var data = this.extractSubmitData()
-
-      if (!data.contracts.length) {
-        return this.$message.warning('请选择合同')
-      }
-
-      this.createContract(data.contracts)
-        .then((contractIds) => {
-          this.paddingContractIds(data.policies, contractIds)
-        })
-        .then(() => {
-          return this.createPresentablePolicy(data.policies)
-        })
-        .then((data) => {
-          this.$message.success('presentable创建成功');
-          this.$router.push({
-            path: `/node/${nodeId}/presentable/detail#presentable`,
-            query: {presentableId: data.presentableId}
-          })
-        }).catch(this.$error.showErrorMessage)
     }
   }
 }

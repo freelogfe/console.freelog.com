@@ -9,6 +9,7 @@ import {
   resourceDetail,
   nodeContractCreator,
   createPresentable,
+  editPresentable,
   presentableDetail,
   presentablesView,
   pagebuildList,
@@ -71,9 +72,9 @@ export const nodeItemRoute = {
           path: 'edit',
           meta: {
             requiresAuth: true,
-            title: 'presentable详情'
+            title: '编辑presentable'
           },
-          component: presentableDetail
+          component: editPresentable
         },
         {
           path: 'create',

@@ -1,32 +1,8 @@
-import CONFIG from '@/config/index'
 import compiler from 'presentable_policy_compiler'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
-
-const {CONTRACT_STATUS_TIPS} = CONFIG
-
-let contractEventsMap = {
-  transaction () {
-    return '进入支付事件'
-  },
-  signing(params) {
-    return '进入协议签署页面'
-  },
-  contractGuaranty() {
-    return '进入支付保证金'
-  },
-  period() {
-    return '周期性支付'
-  },
-  arrivalDate(params) {
-    if (params[0] == 1) {
-      return '到达日期' + params[1] + '进入下一个状态'
-    } else if (params[0] == 0) {
-      return params[1] + '天后进入下一个状态'
-    }
-  }
-
-}
-
+import PresentableContractDetail from '../contract/detail/index.vue'
+import PresentablePolicy from '../policy/index.vue'
+import PresentableTags from '../tags/index.vue'
 
 export default {
   name: 'presentable-detail',
@@ -35,10 +11,17 @@ export default {
       tabPosition: 'left',
       detail: {},
       activeTabName: 'resource',
-      selectedContractEvent: ''
+      userPolicy: '',
+      inputValue: '',
+      tags: []
     }
   },
-  components: {PresentableSteps},
+  components: {
+    PresentableSteps,
+    PresentableContractDetail,
+    PresentablePolicy,
+    PresentableTags
+  },
 
   mounted() {
     const query = this.$route.query
@@ -52,16 +35,14 @@ export default {
         .then(this.loadDetail.bind(this))
         .then(this.formatData.bind(this))
     } else if (query.contractId) {
-      this.loadDetail(query)
+      let param = Object.assign({}, query)
+      this.loadDetail(param)
         .then(this.formatData.bind(this))
     } else {
       this.$message.error('缺少参数');
     }
   },
   methods: {
-    debugHandler() {
-      debugger
-    },
     loadDetail(detail) {
       console.log('first detail', detail);
       return this.loadContractDetail(detail.contractId).then((contract) => {
@@ -70,7 +51,7 @@ export default {
           detail._resourceDetail = resource
           return detail
         })
-      })
+      }).catch(this.$error.showErrorMessage)
     },
     beautifySegmentText(text) {
       if (text) {
@@ -80,75 +61,51 @@ export default {
       }
     },
     formatData(detail) {
-      detail._contractDetail.statusTip = CONTRACT_STATUS_TIPS[detail._contractDetail.status]
-
       if (detail.presentableId) {
         detail.policy.forEach((segment) => {
-          segment._formatSegmentText = this.beautifySegmentText(segment.segmentText, 'beautify')
+          segment._formatSegmentText = this.beautifySegmentText(segment.segmentText)
         })
+        detail._formatSegmentText = this.beautifySegmentText(detail.policyText)
+        this.originPresentable = {
+          name: detail.name,
+          policyText: detail.policyText,
+          userDefinedTags: detail.tagInfo.userDefined.join(',')
+        }
       }
 
-      detail._contractDetail.policySegment._formatSegmentText = this.beautifySegmentText(detail._contractDetail.policySegment.segmentText)
-
-      this.resolveContractEvents(detail)
       this.detail = detail
-    },
-    resolveContractEvents(detail) {
-      let events = []
-      let fsmState = detail._contractDetail.fsmState;
-      let stateTransitionMap = detail._contractDetail.policySegment.fsmDescription;
-      let corresponseEvents = [];
-      console.log('stateTransitionMap',stateTransitionMap);
-      stateTransitionMap.forEach((transition) => {
-        if (transition.currentState === fsmState) {
-          corresponseEvents.push(transition)
-        }
-      })
-
-      var pushEvent = (event) => {
-        var eventFn = contractEventsMap[event.type] || (() => 'no event handler')
-        events.push({
-          desc: eventFn(event.params),
-          type: event.type,
-          params: event
-        })
-      }
-
-      corresponseEvents.forEach((transition) => {
-        console.log('transition', transition);
-        if (transition.event.type === 'compoundEvents') {
-          transition.event.params.forEach(pushEvent)
-        } else {
-          pushEvent(transition.event)
-        }
-      })
-
-      console.log(events)
-      detail._contractDetail.events = events
     },
     loadResourceDetail(resId) {
       return this.$services.resource.get(resId).then((res) => {
-        return res.getData()
+        if (res.data.errcode === 0) {
+          return res.getData();
+        } else {
+          throw new Error(res.data.msg)
+        }
       })
     },
     loadPresentableDetail(param) {
       return this.$services.presentables.get(param || {})
         .then((res) => {
-          return res.getData();
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+          if (res.data.errcode === 0) {
+            return res.getData();
+          } else {
+            throw new Error(res.data.msg)
+          }
+        }).catch(this.$error.showErrorMessage)
     },
     loadContractDetail(param) {
       return this.$services.contract.get(param || {})
         .then((res) => {
-          return res.getData();
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+          if (res.data.errcode === 0) {
+            return res.getData();
+          } else {
+            throw new Error(res.data.msg)
+          }
+        }).catch(this.$error.showErrorMessage)
     },
     createUserPolicyHandler() {
-      var path = `/node/${this.$route.params.nodeId}/presentable/create`
+      var path = `/node/${this.$route.params.nodeId}/presentable/edit`
       this.$router.push({
         path: path,
         query: {
@@ -156,34 +113,34 @@ export default {
         }
       })
     },
+    updatePresentableHandler() {
+      var data = {
+        name: this.detail.name,
+        policyText: this.detail._formatSegmentText,
+        userDefinedTags: this.detail.tagInfo.userDefined.join(',')
+      };
+      var param = {}
+      Object.keys(this.originPresentable).forEach((key) => {
+        if (data[key] !== this.originPresentable[key]) {
+          param[key] = data[key]
+        }
+      });
+
+      this.originPresentable = data
+      this.$services.presentables.put(this.detail.presentableId, param)
+        .then((res) => {
+          if (res.data.errcode === 0) {
+            var data = res.getData()
+            Object.assign(this.detail, data)
+          } else {
+            this.$message.error(res.data.msg || '更新失败')
+          }
+        }).catch(this.$error.showErrorMessage)
+    },
     updateContractDetail() {
       this.loadContractDetail(this.detail._contractDetail.contractId).then((contract) => {
         Object.assign(this.detail._contractDetail, contract)
       })
-    },
-    executeContractHandler() {
-      var selectedContractEvent = this.detail._contractDetail.events[this.selectedContractEvent]
-      console.log(selectedContractEvent)
-      //test
-      this.$services.eventTest.post({
-        contractId: this.detail._contractDetail.contractId,
-        eventId: selectedContractEvent.params.eventId
-      }).then(() => {
-        this.selectedContractEvent = ''
-        this.updateContractDetail()
-        this.$message.info('执行成功')
-      })
-
-      //todo
-      // this.$axios.post('//api.freelog.com/v1/contracts/test', {
-      //   contractId: this.detail._contractDetail.contractId,
-      //   eventId: selectedContractEvent.params.eventId
-      // }).then((res) => {
-      //   console.log(res.getData())
-      //    this.updateContractDetail()
-      // }).catch((err) => {
-      //   this.$message.error((err.response && err.response.errorMsg) || err)
-      // });
     }
   }
 }

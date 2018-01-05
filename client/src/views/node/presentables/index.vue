@@ -5,6 +5,14 @@
     </el-input>
     <table-view class="resource-list" :loader="loader()" :formatHandler="formatHandler">
       <el-table-column
+        align="center"
+        label="presentable name">
+        <template slot-scope="scope">
+          <span v-if="scope.row.presentableDetail">{{ scope.row.presentableDetail.name}}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="resourceDetail.resourceName"
         label="resource name">
       </el-table-column>
@@ -51,13 +59,10 @@
             size="small"
             @click="handlePresentable(scope.row,'detail')">查看详情
           </el-button>
-          <!--<el-button-->
-          <!--size="small"-->
-          <!--@click="handlePresentable(scope.row, 'edit')" v-show="scope.row.presentableDetail">查看user policy-->
-          <!--</el-button>-->
           <el-button
             size="small"
-            @click="handlePresentable(scope.row, 'create')" v-if="!scope.row.presentableDetail">去创建user policy
+            @click="handlePresentable(scope.row, 'edit')" v-if="!scope.row.presentableDetail">去创建user
+            policy
           </el-button>
           <el-button
             size="small"
