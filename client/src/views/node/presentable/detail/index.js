@@ -5,6 +5,9 @@ import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
+  transaction () {
+    return '进入支付事件'
+  },
   signing(params) {
     return '进入协议签署页面'
   },
@@ -112,6 +115,7 @@ export default {
       }
 
       corresponseEvents.forEach((transition) => {
+        console.log('transition', transition);
         if (transition.event.type === 'compoundEvents') {
           transition.event.params.forEach(pushEvent)
         } else {
