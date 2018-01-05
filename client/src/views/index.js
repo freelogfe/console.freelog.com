@@ -28,6 +28,8 @@ export const nodeDetail = resolve => require.ensure([], () => resolve(require('@
 export const nodeContractCreator = resolve => require.ensure([], () => resolve(require('@/views/node/contract/create/index.vue')), 'node')
 export const nodeResourceList = resolve => require.ensure([], () => resolve(require('@/views/node/resource/list/index.vue')), 'node')
 export const createPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/create/index.vue')), 'presentable')
+export const editPresentable = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/edit/index.vue')), 'presentable')
+
 export const presentableDetail = resolve => require.ensure([], () => resolve(require('@/views/node/presentable/detail/index.vue')), 'presentable')
 
 export const pagebuildList = resolve => require.ensure([], () => resolve(require('@/views/node/page-build/list/index.vue')), 'pagebuild')
@@ -67,6 +69,7 @@ export default {
   nodeResourceList,
   nodeContractCreator,
   createPresentable,
+  editPresentable,
   presentableDetail,
   pagebuildList,
   presentablesView,
