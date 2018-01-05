@@ -43,7 +43,7 @@
               class="upload-container"
               drag
               ref="upload"
-              action="/v1/resources"
+              action="/api/v1/resources"
               :data="uploader.data"
               :headers="uploader.headers"
               :on-error="errorHandler"

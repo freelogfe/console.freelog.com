@@ -60,6 +60,8 @@
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
+    max-height: 100%;
+    height: auto;
 
   .heading {
     margin: 0px auto 40px auto;
