@@ -85,7 +85,11 @@ export default {
             var data = res.getData();
             // this.$store.dispatch('changeSession', data)
             // this.$router.replace(this.$route.query.redirect || '/')
-            this.$message.success('注册成功！请重新登录')
+            if (res.data.errcode === 0) {
+              this.$message.success('注册成功！请重新登录')
+            } else {
+              this.$message.error(res.data.msg)
+            }
             this.loading = false
           })
           .catch(err => {

@@ -23,7 +23,7 @@
               :headers="uploader.headers"
               ref="upload"
               :data="uploader.data"
-              :action="'/v1/resources/updateResourceContext/'+detail.resourceId"
+              :action="'/api/v1/resources/updateResourceContext/'+detail.resourceId"
               :on-success="successHandler"
               :on-change="fileLimitHandler"
               :auto-upload="false">

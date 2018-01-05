@@ -9,7 +9,7 @@ import store from '@/store'
 import {Message} from 'element-ui';
 
 const instance = axios.create({
-  baseURL: '//console.freelog.com/',
+  baseURL: '//console.freelog.com/api/',
   timeout: 10e3,
   // crossdomain: true,
   // withCredentials: true,
@@ -19,7 +19,6 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(config => {
-
     if (store.getters.session.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
       config.headers.Authorization = store.getters.session.token;
     }
@@ -33,7 +32,7 @@ instance.interceptors.request.use(config => {
 
 instance.interceptors.response.use(response => {
     var errorMsg
-    var data = response.data
+    var data = response.data;
 
     if (response.status === 200 && data.ret === 0) {
       response.getData = () => {
