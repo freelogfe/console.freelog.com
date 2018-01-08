@@ -44,6 +44,7 @@ export default {
   },
   methods: {
     loadDetail(detail) {
+      console.log('first detail', detail);
       return this.loadContractDetail(detail.contractId).then((contract) => {
         return this.loadResourceDetail(contract.resourceId).then((resource) => {
           detail._contractDetail = contract
@@ -65,6 +66,7 @@ export default {
           segment._formatSegmentText = this.beautifySegmentText(segment.segmentText)
         })
         detail._formatSegmentText = this.beautifySegmentText(detail.policyText)
+        console.log(detail._formatSegmentText);
         this.originPresentable = {
           name: detail.name,
           policyText: detail.policyText,
@@ -73,7 +75,6 @@ export default {
       }
 
       this.detail = detail
-      console.log('detail', detail)
     },
     loadResourceDetail(resId) {
       return this.$services.resource.get(resId).then((res) => {

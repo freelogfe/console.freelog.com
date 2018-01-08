@@ -1,5 +1,7 @@
 <template>
   <section>
+
+    <component :is="component" :ok="ok" :contractDetail="contractDetail" :params="selectedContractEvent"></component>
     <div v-if="contractDetail">
       <ul class="p-detail">
         <li>
@@ -53,6 +55,9 @@
       </ul>
     </div>
   </section>
+
+
+
 </template>
 
 <script>

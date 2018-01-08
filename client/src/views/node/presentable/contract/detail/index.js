@@ -1,8 +1,13 @@
 import CONFIG from '@/config/index'
+import TransactionEvent from '@/components/events/transaction/index.vue'
+import LicenseEvent from '@/components/events/license/index.vue'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
+  transaction() {
+    return '支付事件'
+  },
   signing(params) {
     return '进入协议签署页面'
   },
@@ -19,7 +24,11 @@ let contractEventsMap = {
       return params[1] + '天后进入下一个状态'
     }
   }
+}
 
+let eventComponentMap = {
+  transaction : 'transaction-event',
+  license: 'license-event'
 }
 
 
@@ -27,9 +36,19 @@ export default {
   name: 'presentable-contract-detail',
   data() {
     return {
+      component:'',
+      ok: false,
+      dialogVisible:false,
+      account:'',
+      options:[],
+      password: '',
       selectedContractEvent: '',
       formatContractDetail: null
     }
+  },
+  components: {
+    TransactionEvent,
+    LicenseEvent
   },
   props: {
     contractDetail: Object
@@ -44,6 +63,7 @@ export default {
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
+      console.log(formatContractDetail)
       this.formatContractDetail = formatContractDetail
     },
     resolveContractEvents(detail) {
@@ -51,7 +71,7 @@ export default {
       let fsmState = detail.fsmState;
       let stateTransitionMap = detail.policySegment.fsmDescription;
       let corresponseEvents = [];
-
+debugger
       stateTransitionMap.forEach((transition) => {
         if (transition.currentState === fsmState) {
           corresponseEvents.push(transition)
@@ -62,8 +82,9 @@ export default {
         var eventFn = contractEventsMap[event.type] || (() => 'no event handler')
         events.push({
           desc: eventFn(event.type),
+          eventId: event.eventId, //用于test，实际要删除
           type: event.type,
-          params: event
+          params: event.params
         })
       }
 
@@ -75,7 +96,6 @@ export default {
         }
       })
 
-      console.log(events)
       return events
     },
     loadContractDetail(param) {
@@ -92,18 +112,45 @@ export default {
         this.formatData()
       })
     },
+    // pay() {
+    //     var self = this;
+    //     var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+    //
+    //     this.$services.pay.post({
+    //       "targetId": self.contractDetail.contractId,
+    //       "orderType": 1,
+    //       "fromAccountId": self.account,
+    //       "toAccountId": selectedContractEvent.params[0],
+    //       "amount": selectedContractEvent.params[1],
+    //       "password": self.password
+    //     })
+    // },
     executeContractHandler() {
-      var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent]
-      console.log(selectedContractEvent)
+      var self = this;
+
+      var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+      this.selectedContractEvent = selectedContractEvent
+      console.log('selectedContractEvent',selectedContractEvent.type);
+      this.component = eventComponentMap[selectedContractEvent.type];
+      console.log(this.ok)
+      this.ok = false;
+
+      setTimeout(function() {
+        this.ok = true;
+      }.bind(this), 10)
+
+
+
+
       //test
-      this.$services.eventTest.post({
-        contractId: this.contractDetail.contractId,
-        eventId: selectedContractEvent.params.eventId
-      }).then(() => {
-        this.selectedContractEvent = ''
-        this.updateContractDetail()
-        this.$message.success('执行成功')
-      })
+      // this.$services.eventTest.post({
+      //   contractId: this.contractDetail.contractId,
+      //   eventId: selectedContractEvent.params.eventId
+      // }).then(() => {
+      //   this.selectedContractEvent = ''
+      //   this.updateContractDetail()
+      //   this.$message.success('执行成功')
+      // })
 
       //todo
       // this.$axios.post('//api.freelog.com/v1/contracts/test', {

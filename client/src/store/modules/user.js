@@ -35,6 +35,7 @@ const user = {
 
       return OtherService.login(data).then(res => {
         if (res.data.ret === 0 && res.data.errcode == 0) {
+          debugger
           const token = res.headers.authorization;
 
           commit(types.CHANGE_SESSION, {user: res.data.data, token: token});
