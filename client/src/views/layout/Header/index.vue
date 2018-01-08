@@ -27,7 +27,7 @@
         <el-submenu index="account">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
-            <span>{{session.user.nickname}}</span>
+            <span style="color: #909399">{{session.user.nickname}}</span>
           </template>
           <el-menu-item index="setting">
             <router-link to="/account/settings">settings</router-link>

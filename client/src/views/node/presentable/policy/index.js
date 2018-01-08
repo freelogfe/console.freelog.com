@@ -6,23 +6,14 @@ export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: `For userAuserB in the following states:
-    in initial :
-      proceed to activate on accepting license licenseA
-    in activate :
-      proceed to suspend on visit of 20000
-        I agree to authorize token in activate`
+      policyText: ''
     }
   },
   props: {
     value: String
   },
-  watch: {
-    value: function () {
-      this.policyText = this.value
-    }
-  },
   mounted() {
+    this.policyText = this.value
   },
   methods: {
     textChange() {

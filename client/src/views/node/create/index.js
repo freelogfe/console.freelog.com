@@ -15,7 +15,7 @@ const validateNodeDomain = (rule, value, callback) => {
 
 const formRules = {
   nodeName: [{required: true, message: '节点描述不能为空', trigger: 'blur'},
-    {min: 4, max: 20, message: '节点描述长度应为4-20字符', trigger: 'blur'}],
+    {min: 4, max: 20, message: '节点描述长度应为4-20字符，不区分大小写', trigger: 'blur'}],
   nodeDomain: [{validator: validateNodeDomain, trigger: 'blur'}]
 }
 
@@ -35,10 +35,15 @@ export default {
   mounted() {
   },
   methods: {
+    goBackHandler(){
+      history.back()
+    },
     submitForm(formName) {
       const self = this;
       self.$refs[formName].validate((valid) => {
         if (valid) {
+          var data = Object.assign({}, self.dataForm)
+          data.nodeDomain = data.nodeDomain.toLowerCase()
           self.$services.nodes.post(self.dataForm)
             .then((res) => {
               var data = res.getData();
@@ -47,11 +52,11 @@ export default {
               } else {
                 self.$message.success('节点创建成功')
                 setTimeout(() => {
-                  self.$router.push({path: '/node/detail', query: {nodeId: data.nodeId}})
+                  self.$router.push({path: '/node/list'})
                 }, 1e3)
               }
             })
-            .catch((err)=>{
+            .catch((err) => {
               this.$message.error(err.response.errorMsg || err)
             })
         } else {

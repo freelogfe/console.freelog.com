@@ -116,6 +116,8 @@ export default {
         case 401:
           this.$message.error('权限未经验证');
           break;
+        default:
+          this.$message.error(err.message);
       }
 
       this.$refs.upload.fileList = [] //reset
