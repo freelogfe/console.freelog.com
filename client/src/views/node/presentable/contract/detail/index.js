@@ -1,4 +1,6 @@
 import CONFIG from '@/config/index'
+import TransactionEvent from '@/components/events/transaction/index.vue'
+import LicenseEvent from '@/components/events/license/index.vue'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
@@ -22,7 +24,11 @@ let contractEventsMap = {
       return params[1] + '天后进入下一个状态'
     }
   }
+}
 
+let eventComponentMap = {
+  transaction : 'transaction-event',
+  license: 'license-event'
 }
 
 
@@ -30,6 +36,8 @@ export default {
   name: 'presentable-contract-detail',
   data() {
     return {
+      component:'',
+      ok: false,
       dialogVisible:false,
       account:'',
       options:[],
@@ -37,6 +45,10 @@ export default {
       selectedContractEvent: '',
       formatContractDetail: null
     }
+  },
+  components: {
+    TransactionEvent,
+    LicenseEvent
   },
   props: {
     contractDetail: Object
@@ -69,6 +81,7 @@ export default {
         var eventFn = contractEventsMap[event.type] || (() => 'no event handler')
         events.push({
           desc: eventFn(event.type),
+          eventId: event.eventId, //用于test，实际要删除
           type: event.type,
           params: event.params
         })
@@ -98,51 +111,36 @@ export default {
         this.formatData()
       })
     },
-    pay() {
-        var self = this;
-        var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
-
-        this.$services.pay.post({
-          "targetId": self.contractDetail.contractId,
-          "orderType": 1,
-          "fromAccountId": self.account,
-          "toAccountId": selectedContractEvent.params[0],
-          "amount": selectedContractEvent.params[1],
-          "password": self.password
-        })
-    },
+    // pay() {
+    //     var self = this;
+    //     var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+    //
+    //     this.$services.pay.post({
+    //       "targetId": self.contractDetail.contractId,
+    //       "orderType": 1,
+    //       "fromAccountId": self.account,
+    //       "toAccountId": selectedContractEvent.params[0],
+    //       "amount": selectedContractEvent.params[1],
+    //       "password": self.password
+    //     })
+    // },
     executeContractHandler() {
       var self = this;
-      this.dialogVisible = true
-      var accounts = this.$services.accounts.get().then(function(res) {
-        var accounts = res.data.data;
-        self.options = accounts;
-      })
+
+      var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+      this.selectedContractEvent = selectedContractEvent
+      console.log('selectedContractEvent',selectedContractEvent.type);
+      this.component = eventComponentMap[selectedContractEvent.type];
+      console.log(this.ok)
+      this.ok = false;
+
+      setTimeout(function() {
+        this.ok = true;
+      }.bind(this), 10)
 
 
 
 
-//       this.$prompt.bind(this)('<div>你将向账户'+selectedContractEvent.params[0]+'转账'+selectedContractEvent.params[1]+'</div><div>请选择支付账户</div>' + `
-//       <select v-model="selected" @change="selectchanged()">
-//         <option disabled value="">Please select one</option>
-//         <option>A</option>
-//         <option>B</option>
-//         <option>C</option>
-//       </select>
-// <div>
-//       请输入密码支付密码：`,
-//        '提示',
-//         {
-//           confirmButtonText: '确定',
-//           inputType: 'password',
-//           dangerouslyUseHTMLString:true,
-//           cancelButtonText: '取消',
-//       }).then(function(value) {
-//         console.log('queding',value.value);
-//         console.log(self.selected);
-//       }).catch(function(value) {
-//         console.log('cancel');
-//       })
       //test
       // this.$services.eventTest.post({
       //   contractId: this.contractDetail.contractId,

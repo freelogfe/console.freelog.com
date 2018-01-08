@@ -66,6 +66,7 @@ export default {
           segment._formatSegmentText = this.beautifySegmentText(segment.segmentText)
         })
         detail._formatSegmentText = this.beautifySegmentText(detail.policyText)
+        console.log(detail._formatSegmentText);
         this.originPresentable = {
           name: detail.name,
           policyText: detail.policyText,

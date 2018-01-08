@@ -56,7 +56,7 @@
               </div>
             </li>
             <li>
-              <label class="item-title">use policy</label>
+              <label class="item-title">user policy</label>
               <div class="item-detail" style="width: 500px;">
                 <presentable-policy v-model="detail._formatSegmentText"></presentable-policy>
               </div>
