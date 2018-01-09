@@ -43,12 +43,14 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="small"
-            @click="previewResourceHandler(scope.row)">查看详情</el-button>
-          <el-button
-            size="small"
-            @click="handleContact(scope.row)">去创建presentable</el-button>
+          <el-dropdown size="small" split-button type="primary"
+                       @command="handleCommand"
+                       @click="handleContact(scope.row)">
+            创建presentable
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :command="{fn:'viewSrcDetail',data: scope.row}">查看详情</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </table-view>

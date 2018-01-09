@@ -59,13 +59,41 @@ export default {
       model: model,
       rules: rules,
       error: null,
-      loading: false
+      loading: false,
+      logining: false,
     }
   },
 
   methods: {
+    login() {
+      var self = this;
+      var isNewPage = /^(https?)?\/\//.test(self.$route.query.redirect)
+      var data = {
+        loginName: this.model.loginName,
+        password: this.model.password,
+        jwtType: isNewPage ? 'cookie' : 'header'
+      }
+
+      self.logining = true
+      this.$store.dispatch('userLogin', data)
+        .then(() => {
+          storage.set('loginName', data.loginName)
+          if (isNewPage) {
+            location.replace(self.$route.query.redirect)
+          } else {
+            self.$router.replace(self.$route.query.redirect || '/node/list')
+          }
+        })
+        .catch(_ => {
+          self.logining = false
+        })
+    },
     submit(ref) {
       storage.set('signupForm', this.model)
+      if (this.loading) {
+        return
+      }
+
       this.$refs[ref].validate(valid => {
         if (!valid) {
           return false
@@ -82,11 +110,9 @@ export default {
 
         this.$services.user.post(data)
           .then(res => {
-            var data = res.getData();
-            // this.$store.dispatch('changeSession', data)
-            // this.$router.replace(this.$route.query.redirect || '/')
             if (res.data.errcode === 0) {
-              this.$message.success('注册成功！请重新登录')
+              this.$message.success('注册成功')
+              this.login()
             } else {
               this.$message.error(res.data.msg)
             }

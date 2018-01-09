@@ -15,6 +15,17 @@ export default {
   mounted() {
   },
   methods: {
+    handleCommand(cmd) {
+      if (this[cmd.fn]) {
+        this[cmd.fn](cmd.data)
+      }
+    },
+    viewSrcDetail(resource) {
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/resource/detail`,
+        query: {resourceId: resource.resourceId}
+      })
+    },
     querySearchAsync() {
 
     },
@@ -37,7 +48,7 @@ export default {
     gotoCreateContract(resource) {
       var query = {
         resourceName: resource.resourceName,
-        resourceType : resource.resourceType,
+        resourceType: resource.resourceType,
         resourceId: resource.resourceId
       }
 
@@ -60,12 +71,6 @@ export default {
         default:
           this.$message.warning('未知资源状态');
       }
-    },
-    previewResourceHandler(resource) {
-      this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/resource/detail`,
-        query: {resourceId: resource.resourceId}
-      })
     }
   }
 }
