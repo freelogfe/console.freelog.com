@@ -19,6 +19,6 @@ export default (Vue, options) => {
     var account = ACCOUNT_MAP[abbr || 'feth']
     var values = (value / account.unit).toString().split('.', 2)
     //123456789->12,3456,789
-    return values[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + '.' + values[1]
+    return values[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') +(values[1] === undefined ? '' : `.${values[1]}`)
   })
 }

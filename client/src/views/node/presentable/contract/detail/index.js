@@ -31,7 +31,7 @@ let eventComponentMap = {
     type: 'transaction-event',
     title: '支付'
   },
-  license: {
+  signing: {
     type: 'license-event',
     title: '签约license'
   }

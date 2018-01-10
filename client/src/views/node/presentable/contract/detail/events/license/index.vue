@@ -1,32 +1,25 @@
 <template>
-<div class="">
-  <el-dialog
-    title="提示"
-    :visible.sync="dialogVisible"
-    width="30%">
-    <p>请选择转出账号: </p>
-    <el-select v-model="account" placeholder="请选择">
-      <el-option
-        v-for="item in options"
-        :key="item.accountId"
-        :label="item.accountId"
-        :value="item.accountId">
-      </el-option>
-    </el-select>
-    <p>请输入支付密码: </p>
-    <el-input type="password" v-model="password" placeholder="请输入支付密码"></el-input>
-    <span slot="footer" class="dialog-footer">
-
-
-
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="pay()">确 定</el-button>
-    </span>
-  </el-dialog>
-</div>
+  <div class="license-event-wrap">
+    <el-form label-position="left" label-width="80px" :model="contractDetail">
+      <el-form-item label="contractId">
+        {{contractDetail.contractId}}
+      </el-form-item>
+      <el-form-item label="甲方">
+        {{contractDetail.partyOne}}
+      </el-form-item>
+      <el-form-item label="乙方">
+        {{contractDetail.partyTwo}}
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="doneHandler">取 消</el-button>
+        <el-button type="primary" @click="signHandler">确 定</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script type="text/javascript">
-  import TransactionEvent from './index.js'
-  export default TransactionEvent
+  import LicenseEvent from './index.js'
+
+  export default LicenseEvent
 </script>

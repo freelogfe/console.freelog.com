@@ -63,6 +63,7 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.payResultHandler(res.data.data)
+          this.$emit('update')
           this.doneHandler()
         } else {
           this.$message.error(res.data.msg)
