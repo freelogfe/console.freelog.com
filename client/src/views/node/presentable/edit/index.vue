@@ -1,15 +1,19 @@
 <template>
   <section>
     <presentable-steps :active="step.active"></presentable-steps>
-
-    <h3>{{presentableDetail.resource.resourceName}}</h3>
     <el-row>
       <el-form :model="formData" :rules="rules" label-width="200px" ref="ruleForm">
+        <el-form-item label="资源名称">
+          {{presentableDetail.resource.resourceName}}
+        </el-form-item>
+        <el-form-item label="资源类型">
+          {{presentableDetail.resource.resourceType}}
+        </el-form-item>
         <el-form-item label="presentable名" required prop="presentableName">
           <el-input v-model="formData.presentableName" placeholder="请输入presentable名"></el-input>
         </el-form-item>
         <el-form-item label="presentable tags" prop="presentableTags">
-          <presentable-tags v-model="formData.presentableTags"></presentable-tags>
+          <freelog-tags v-model="formData.presentableTags"></freelog-tags>
         </el-form-item>
 
         <el-form-item label="presentable_policy" required prop="userPolicy">

@@ -1,7 +1,7 @@
 import {mapGetters} from 'vuex'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import compiler from 'presentable_policy_compiler'
-import PresentableTags from '../tags/index.vue'
+import FreelogTags from '@/components/Tags/index.vue'
 
 export default {
   name: 'presentable-editor',
@@ -45,7 +45,7 @@ export default {
   }),
   components: {
     PresentableSteps,
-    PresentableTags
+    FreelogTags
   },
   mounted() {
     var qs = this.$route.query
@@ -72,6 +72,7 @@ export default {
               contract: contract,
               resource: resource
             }
+            console.log(this.presentableDetail)
           })
         })
     },

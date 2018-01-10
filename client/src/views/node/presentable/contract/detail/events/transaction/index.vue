@@ -44,9 +44,6 @@
   export default TransactionEvent
 </script>
 
-<style scoped>
-  .transaction-wrap {
-    width: 400px;
-    margin: auto;
-  }
+<style lang="less">
+  @import "index.less";
 </style>

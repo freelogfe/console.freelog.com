@@ -2,7 +2,7 @@
   <div>
     <el-tag
       :key="tag"
-      v-for="tag in presentableTags"
+      v-for="tag in tags"
       closable
       :disable-transitions="false"
       @close="handleClose(tag)">
@@ -22,9 +22,9 @@
 </template>
 
 <script>
-  import PresentableTags from './index'
+  import FreelogTags from './index'
 
-  export default PresentableTags
+  export default FreelogTags
 </script>
 
 <style lang="less" scoped>

@@ -52,7 +52,7 @@
             <li>
               <label class="item-title">tags</label>
               <div class="item-detail">
-                <presentable-tags v-model="detail.tagInfo.userDefined"></presentable-tags>
+                <freelog-tags v-model="detail.tagInfo.userDefined"></freelog-tags>
               </div>
             </li>
             <li>
