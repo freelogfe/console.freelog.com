@@ -1,7 +1,17 @@
 <template>
   <section>
+    <el-dialog
+      :title="dialogTitle"
+      ref="eventDialog"
+      :visible.sync="showEventExecDialog"
+      :before-close="handleCloseDialog"
+      width="40%">
+      <component :is="eventComponent"
+                 :contractDetail="contractDetail"
+                 @close="closeDialogHandler"
+                 :params="selectedContractEvent"></component>
+    </el-dialog>
 
-    <component :is="component" :showTransaction="showTransaction" :contractDetail="contractDetail" :params="selectedContractEvent"></component>
     <div v-if="contractDetail">
       <ul class="p-detail">
         <li>
@@ -55,9 +65,6 @@
       </ul>
     </div>
   </section>
-
-
-
 </template>
 
 <script>

@@ -2,6 +2,7 @@
   <section>
     <presentable-steps :active="step.active"></presentable-steps>
 
+    <h3>{{presentableDetail.resource.resourceName}}</h3>
     <el-row>
       <el-form :model="formData" :rules="rules" label-width="200px" ref="ruleForm">
         <el-form-item label="presentable名" required prop="presentableName">

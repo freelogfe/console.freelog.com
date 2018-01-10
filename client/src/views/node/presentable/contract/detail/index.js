@@ -18,17 +18,23 @@ let contractEventsMap = {
     return '周期性支付'
   },
   arrivalDate(params) {
-    if (params[0] == 1) {
+    if (params[0] === 1) {
       return '到达日期' + params[1] + '进入下一个状态'
-    } else if (params[0] == 0) {
+    } else if (params[0] === 0) {
       return params[1] + '天后进入下一个状态'
     }
   }
 }
 
 let eventComponentMap = {
-  transaction: 'transaction-event',
-  license: 'license-event'
+  transaction: {
+    type: 'transaction-event',
+    title: '支付'
+  },
+  license: {
+    type: 'license-event',
+    title: '签约license'
+  }
 }
 
 
@@ -36,9 +42,10 @@ export default {
   name: 'presentable-contract-detail',
   data() {
     return {
-      component: '',
-      showTransaction: false,
-      dialogVisible: false,
+      eventComponent: '',
+      dialogTitle: '',
+      showEventExecDialog: false,
+
       account: '',
       options: [],
       password: '',
@@ -57,13 +64,21 @@ export default {
     contractDetail: 'formatData'
   },
   methods: {
+    handleCloseDialog(done) {
+      this.closeDialogHandler()
+      done()
+    },
+    closeDialogHandler() {
+      this.eventComponent = ''
+      this.dialogTitle = ''
+      this.$refs.eventDialog.hide()
+    },
     formatData() {
       var detail = this.contractDetail
       var formatContractDetail = {}
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
-      console.log(formatContractDetail)
       this.formatContractDetail = formatContractDetail
     },
     resolveContractEvents(detail) {
@@ -112,31 +127,15 @@ export default {
         this.formatData()
       })
     },
-    // pay() {
-    //     var self = this;
-    //     var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
-    //
-    //     this.$services.pay.post({
-    //       "targetId": self.contractDetail.contractId,
-    //       "orderType": 1,
-    //       "fromAccountId": self.account,
-    //       "toAccountId": selectedContractEvent.params[0],
-    //       "amount": selectedContractEvent.params[1],
-    //       "password": self.password
-    //     })
-    // },
     executeContractHandler() {
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+      var eventComConfig = eventComponentMap[selectedContractEvent.type]
       this.selectedContractEvent = selectedContractEvent
-      console.log('selectedContractEvent', selectedContractEvent.type);
-      this.component = eventComponentMap[selectedContractEvent.type];
-      this.showTransaction = false;
+      console.log(this.contractDetail, selectedContractEvent)
+      this.eventComponent = eventComConfig.type;
+      this.dialogTitle = eventComConfig.title
 
-      setTimeout(() => {
-        this.showTransaction = true;
-      }, 10)
-
-
+      this.showEventExecDialog = true;
       //test
       // this.$services.eventTest.post({
       //   contractId: this.contractDetail.contractId,

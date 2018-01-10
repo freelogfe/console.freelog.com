@@ -1,27 +1,36 @@
+import ACCOUNT_CONFIG from '@/config/account'
+
 export default {
   name: 'transaction-event',
   data() {
     return {
-      dialogVisible: true,
       options: [],
-      account: '',
+      fromAccountId: '',
       password: ''
     }
   },
   mounted() {
     var self = this;
     this.$services.accounts.get().then(function (res) {
-      var accounts = res.data.data;
-      self.options = accounts;
+      self.options = res.data.data;
     })
   },
-  computed: {},
-  watch: {
-    showTransaction: function () {
-      this.dialogVisible = this.showTransaction
+  computed: {
+    unitType() {
+      // 可视化转换
+      // var types = Object.values(ACCOUNT_CONFIG)
+      // var accountType = this.fromAccountId.substr(0, 4)
+      // var result = {}
+      // for (let i = 0, len = types.length; i < len; i++) {
+      //   if (types[i].abbr === accountType) {
+      //     result = types[i]
+      //     break;
+      //   }
+      // }
+      return this.params.params[0].substr(0, 4)
     }
   },
-  props: ['showTransaction', 'contractDetail', 'params'],
+  props: ['contractDetail', 'params'],
   methods: {
     payResultHandler(result) {
       switch (result.status) {
@@ -38,19 +47,23 @@ export default {
           this.$message.info('未知的支付状态')
       }
     },
+    doneHandler() {
+      this.$emit('close')
+    },
     pay() {
       console.log('params', this.params);
       var self = this;
       this.$services.pay.post({
         "targetId": self.contractDetail.contractId,
         "orderType": 1,
-        "fromAccountId": self.account,
+        "fromAccountId": self.fromAccountId,
         "toAccountId": self.params.params[0],
         "amount": self.params.params[1],
         "password": self.password
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.payResultHandler(res.data.data)
+          this.doneHandler()
         } else {
           this.$message.error(res.data.msg)
         }
