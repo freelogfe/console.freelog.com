@@ -1,7 +1,7 @@
 import {mapGetters} from 'vuex'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import compiler from 'presentable_policy_compiler'
-import PresentableTags from '../tags/index.vue'
+import FreelogTags from '@/components/Tags/index.vue'
 
 export default {
   name: 'presentable-editor',
@@ -16,6 +16,10 @@ export default {
       ],
       step: {
         active: 1
+      },
+      presentableDetail: {
+        contract: {},
+        resource: {}
       },
       headers: {},
       formData: {
@@ -41,10 +45,13 @@ export default {
   }),
   components: {
     PresentableSteps,
-    PresentableTags
+    FreelogTags
   },
   mounted() {
+    var qs = this.$route.query
     this.headers.Authorization = `Bearer ${this.session.token}`
+    this.loadDetail(qs)
+      .catch(this.$error.showErrorMessage)
   },
   methods: {
     errorHandler(err, file) {
@@ -56,6 +63,33 @@ export default {
           this.$message.error('权限未经验证');
           break;
       }
+    },
+    loadDetail(param) {
+      return this.loadContractDetail(param.contractId)
+        .then((contract) => {
+          this.loadResourceDetail(contract.resourceId).then((resource) => {
+            this.presentableDetail = {
+              contract: contract,
+              resource: resource
+            }
+            console.log(this.presentableDetail)
+          })
+        })
+    },
+    loadContractDetail(contractId) {
+      return this.$services.contract.get(contractId)
+        .then((res) => {
+          if (res.data.errcode === 0) {
+            return res.getData();
+          } else {
+            throw new Error(res.data.msg)
+          }
+        }).catch(this.$error.showErrorMessage)
+    },
+    loadResourceDetail(resId) {
+      return this.$services.resource.get(resId).then((res) => {
+        return res.getData()
+      })
     },
     nextAction() {
       console.log('successfully upload!');

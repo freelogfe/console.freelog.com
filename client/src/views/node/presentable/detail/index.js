@@ -2,7 +2,8 @@ import compiler from 'presentable_policy_compiler'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import PresentableContractDetail from '../contract/detail/index.vue'
 import PresentablePolicy from '../policy/index.vue'
-import PresentableTags from '../tags/index.vue'
+import FreelogTags from '@/components/Tags/index.vue'
+
 
 export default {
   name: 'presentable-detail',
@@ -20,7 +21,7 @@ export default {
     PresentableSteps,
     PresentableContractDetail,
     PresentablePolicy,
-    PresentableTags
+    FreelogTags
   },
 
   mounted() {

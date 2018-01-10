@@ -1,7 +1,18 @@
 <template>
   <section>
+    <el-dialog
+      :title="dialogTitle"
+      ref="eventDialog"
+      :visible.sync="showEventExecDialog"
+      :before-close="handleCloseDialog"
+      width="40%">
+      <component :is="eventComponent"
+                 :contractDetail="contractDetail"
+                 @update="updateContractDetail"
+                 @close="closeDialogHandler"
+                 :params="selectedContractEvent"></component>
+    </el-dialog>
 
-    <component :is="component" :ok="ok" :contractDetail="contractDetail" :params="selectedContractEvent"></component>
     <div v-if="contractDetail">
       <ul class="p-detail">
         <li>
@@ -50,14 +61,11 @@
             >
             </el-option>
           </el-select>
-          <el-button :disabled="selectedContractEvent === ''" @click="executeContractHandler">trigger</el-button>
+          <el-button :disabled="selectedContractEvent === ''" @click="executeContractHandler">执行</el-button>
         </li>
       </ul>
     </div>
   </section>
-
-
-
 </template>
 
 <script>

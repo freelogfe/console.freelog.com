@@ -18,17 +18,23 @@ let contractEventsMap = {
     return '周期性支付'
   },
   arrivalDate(params) {
-    if (params[0] == 1) {
+    if (params[0] === 1) {
       return '到达日期' + params[1] + '进入下一个状态'
-    } else if (params[0] == 0) {
+    } else if (params[0] === 0) {
       return params[1] + '天后进入下一个状态'
     }
   }
 }
 
 let eventComponentMap = {
-  transaction : 'transaction-event',
-  signing: 'license-event'
+  transaction: {
+    type: 'transaction-event',
+    title: '支付'
+  },
+  signing: {
+    type: 'license-event',
+    title: '签约license'
+  }
 }
 
 
@@ -36,11 +42,12 @@ export default {
   name: 'presentable-contract-detail',
   data() {
     return {
-      component:'',
-      ok: false,
-      dialogVisible:false,
-      account:'',
-      options:[],
+      eventComponent: '',
+      dialogTitle: '',
+      showEventExecDialog: false,
+
+      account: '',
+      options: [],
       password: '',
       selectedContractEvent: '',
       formatContractDetail: null
@@ -57,13 +64,21 @@ export default {
     contractDetail: 'formatData'
   },
   methods: {
+    handleCloseDialog(done) {
+      this.closeDialogHandler()
+      done()
+    },
+    closeDialogHandler() {
+      this.eventComponent = ''
+      this.dialogTitle = ''
+      this.$refs.eventDialog.hide()
+    },
     formatData() {
       var detail = this.contractDetail
       var formatContractDetail = {}
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
-      console.log(formatContractDetail)
       this.formatContractDetail = formatContractDetail
     },
     resolveContractEvents(detail) {
@@ -113,22 +128,14 @@ export default {
       })
     },
     executeContractHandler() {
-      var self = this;
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
-      if(!selectedContractEvent) {
-        return;
-      }
+      var eventComConfig = eventComponentMap[selectedContractEvent.type]
       this.selectedContractEvent = selectedContractEvent
-      console.log('selectedContractEvent',selectedContractEvent.type);
-      this.component = eventComponentMap[selectedContractEvent.type];
-      //传入给子组件是否显示dialog toggle一下
-      this.ok = false;
+      console.log(this.contractDetail, selectedContractEvent)
+      this.eventComponent = eventComConfig.type;
+      this.dialogTitle = eventComConfig.title
 
-      setTimeout(function() {
-        this.ok = true;
-      }.bind(this), 10)
-
-
+      this.showEventExecDialog = true;
       //test
       // this.$services.eventTest.post({
       //   contractId: this.contractDetail.contractId,
@@ -138,17 +145,6 @@ export default {
       //   this.updateContractDetail()
       //   this.$message.success('执行成功')
       // })
-
-      //todo
-      // this.$axios.post('//api.freelog.com/v1/contracts/test', {
-      //   contractId: this.contractDetail.contractId,
-      //   eventId: selectedContractEvent.params.eventId
-      // }).then((res) => {
-      //   console.log(res.getData())
-      //    this.updateContractDetail()
-      // }).catch((err) => {
-      //   this.$message.error((err.response && err.response.errorMsg) || err)
-      // });
     }
   }
 }

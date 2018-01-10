@@ -1,8 +1,8 @@
 export default {
-  name: 'presentable-tags',
+  name: 'freelog-tags',
   data() {
     return {
-      presentableTags: [],
+      tags: [],
       inputVisible: false,
       inputValue: ''
     }
@@ -25,11 +25,11 @@ export default {
   },
   methods: {
     setCurrentValue(value) {
-      this.presentableTags = value;
+      this.tags = value;
     },
     handleClose(tag) {
-      this.presentableTags.splice(this.presentableTags.indexOf(tag), 1);
-      this.$emit('input', this.presentableTags);
+      this.tags.splice(this.tags.indexOf(tag), 1);
+      this.$emit('input', this.tags);
     },
     showInput() {
       this.inputVisible = true;
@@ -40,8 +40,8 @@ export default {
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
-        this.presentableTags.push(inputValue);
-        this.$emit('input', this.presentableTags);
+        this.tags.push(inputValue);
+        this.$emit('input', this.tags);
       }
       this.inputVisible = false;
       this.inputValue = '';

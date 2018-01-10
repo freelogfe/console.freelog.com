@@ -52,7 +52,7 @@
             <li>
               <label class="item-title">tags</label>
               <div class="item-detail">
-                <presentable-tags v-model="detail.tagInfo.userDefined"></presentable-tags>
+                <freelog-tags v-model="detail.tagInfo.userDefined"></freelog-tags>
               </div>
             </li>
             <li>
@@ -66,7 +66,7 @@
         </div>
         <div class="uncreated-policy-tip" v-else>
           还未创建user policy
-          <el-button @click="updatePresentableHandler">创建</el-button>
+          <el-button @click="createUserPolicyHandler">创建</el-button>
         </div>
       </el-tab-pane>
       <el-tab-pane label="合同详情" name="contract">
