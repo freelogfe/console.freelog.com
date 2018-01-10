@@ -10,22 +10,35 @@ export default {
   },
   mounted() {
     var self = this;
-    var accounts = this.$services.accounts.get().then(function (res) {
+    this.$services.accounts.get().then(function (res) {
       var accounts = res.data.data;
       self.options = accounts;
     })
   },
   computed: {},
   watch: {
-    ok: function (val) {
-      console.log('in ok');
-      this.dialogVisible = this.ok
+    showTransaction: function () {
+      this.dialogVisible = this.showTransaction
     }
   },
-  props: ['ok', 'contractDetail', 'params'],
+  props: ['showTransaction', 'contractDetail', 'params'],
   methods: {
+    payResultHandler(result) {
+      switch (result.status) {
+        case 1:
+          this.$message.success('支付进行中，稍后查询支付结果')
+          break;
+        case 2:
+          this.$message.success('支付成功')
+          break;
+        case 3:
+          this.$message.success('支付失败')
+          break;
+        default:
+          this.$message.info('未知的支付状态')
+      }
+    },
     pay() {
-      console.log('contractDetail', this.contractDetail.contractId);
       console.log('params', this.params);
       var self = this;
       this.$services.pay.post({
@@ -35,12 +48,13 @@ export default {
         "toAccountId": self.params.params[0],
         "amount": self.params.params[1],
         "password": self.password
-      })
-      // this.$services.eventTest.post({
-      //   contractId:self.contractDetail.contractId,
-      //   eventId:self.params.eventId
-      // })
-      //改变状态测试用
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.payResultHandler(res.data.data)
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(this.$error.showErrorMessage)
     }
   }
 }

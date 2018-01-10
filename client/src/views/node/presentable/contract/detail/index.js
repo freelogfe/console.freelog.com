@@ -27,7 +27,7 @@ let contractEventsMap = {
 }
 
 let eventComponentMap = {
-  transaction : 'transaction-event',
+  transaction: 'transaction-event',
   license: 'license-event'
 }
 
@@ -36,11 +36,11 @@ export default {
   name: 'presentable-contract-detail',
   data() {
     return {
-      component:'',
-      ok: false,
-      dialogVisible:false,
-      account:'',
-      options:[],
+      component: '',
+      showTransaction: false,
+      dialogVisible: false,
+      account: '',
+      options: [],
       password: '',
       selectedContractEvent: '',
       formatContractDetail: null
@@ -126,18 +126,15 @@ export default {
     //     })
     // },
     executeContractHandler() {
-      var self = this;
-      //
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
       this.selectedContractEvent = selectedContractEvent
-      console.log('selectedContractEvent',selectedContractEvent.type);
+      console.log('selectedContractEvent', selectedContractEvent.type);
       this.component = eventComponentMap[selectedContractEvent.type];
-      console.log(this.ok)
-      this.ok = false;
+      this.showTransaction = false;
 
-      setTimeout(function() {
-        this.ok = true;
-      }.bind(this), 10)
+      setTimeout(() => {
+        this.showTransaction = true;
+      }, 10)
 
 
       //test
@@ -149,17 +146,6 @@ export default {
       //   this.updateContractDetail()
       //   this.$message.success('执行成功')
       // })
-
-      //todo
-      // this.$axios.post('//api.freelog.com/v1/contracts/test', {
-      //   contractId: this.contractDetail.contractId,
-      //   eventId: selectedContractEvent.params.eventId
-      // }).then((res) => {
-      //   console.log(res.getData())
-      //    this.updateContractDetail()
-      // }).catch((err) => {
-      //   this.$message.error((err.response && err.response.errorMsg) || err)
-      // });
     }
   }
 }

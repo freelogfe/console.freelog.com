@@ -130,8 +130,8 @@ export default {
       } else {
         self.$refs.policyEditor.submit(res.data.resourceId)
           .then(() => {
-            self.$message.success('资源创建成功');
             this.loading = false
+            self.$message.success('资源创建成功');
             setTimeout(() => {
               self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
             }, 5e2)

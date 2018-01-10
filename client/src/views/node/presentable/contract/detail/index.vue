@@ -1,7 +1,7 @@
 <template>
   <section>
 
-    <component :is="component" :ok="ok" :contractDetail="contractDetail" :params="selectedContractEvent"></component>
+    <component :is="component" :showTransaction="showTransaction" :contractDetail="contractDetail" :params="selectedContractEvent"></component>
     <div v-if="contractDetail">
       <ul class="p-detail">
         <li>
@@ -50,7 +50,7 @@
             >
             </el-option>
           </el-select>
-          <el-button :disabled="selectedContractEvent === ''" @click="executeContractHandler">trigger</el-button>
+          <el-button :disabled="selectedContractEvent === ''" @click="executeContractHandler">执行</el-button>
         </li>
       </ul>
     </div>
