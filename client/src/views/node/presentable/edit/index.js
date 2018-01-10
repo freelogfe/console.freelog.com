@@ -20,12 +20,12 @@ export default {
       headers: {},
       formData: {
         presentableTags: [],
-        userPolicy: `For userAuserB in the following states:
-    in initial :
-      proceed to activate on accepting license licenseA
-    in activate :
-      proceed to suspend on visit of 20000
-        I agree to authorize token in activate`,
+        userPolicy: `For userA@userB :
+        in initial :
+        proceed to activate on accepting transaction of 100 to feth1026f01634a
+        in activate :
+        proceed to suspend on accepting license LicenseA
+          I agree to authorize token in activate`,
         presentableName: ''
       },
       rules: {
@@ -61,7 +61,9 @@ export default {
       console.log('successfully upload!');
     },
     validate(formName) {
-      this.formData.userPolicy = compiler.compile(this.formData.userPolicy, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+      var self = this;
+      var myBeautify = compiler.compile(this.formData.userPolicy, 'beautify')
+      this.formData.userPolicy = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n')
       // this.validateLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
