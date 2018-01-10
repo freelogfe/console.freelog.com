@@ -28,7 +28,7 @@ let contractEventsMap = {
 
 let eventComponentMap = {
   transaction : 'transaction-event',
-  license: 'license-event'
+  signing: 'license-event'
 }
 
 
@@ -87,7 +87,7 @@ export default {
           params: event.params
         })
       }
-
+      console.log('corresponseEvents',corresponseEvents);
       corresponseEvents.forEach((transition) => {
         if (transition.event.type === 'compoundEvents') {
           transition.event.params.forEach(pushEvent)
@@ -112,27 +112,16 @@ export default {
         this.formatData()
       })
     },
-    // pay() {
-    //     var self = this;
-    //     var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
-    //
-    //     this.$services.pay.post({
-    //       "targetId": self.contractDetail.contractId,
-    //       "orderType": 1,
-    //       "fromAccountId": self.account,
-    //       "toAccountId": selectedContractEvent.params[0],
-    //       "amount": selectedContractEvent.params[1],
-    //       "password": self.password
-    //     })
-    // },
     executeContractHandler() {
       var self = this;
-      //
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
+      if(!selectedContractEvent) {
+        return;
+      }
       this.selectedContractEvent = selectedContractEvent
       console.log('selectedContractEvent',selectedContractEvent.type);
       this.component = eventComponentMap[selectedContractEvent.type];
-      console.log(this.ok)
+      //传入给子组件是否显示dialog toggle一下
       this.ok = false;
 
       setTimeout(function() {

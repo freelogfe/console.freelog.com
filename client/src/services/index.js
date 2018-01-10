@@ -16,7 +16,9 @@ import OtherService from './other'
 import PbContract from './pbcontract'
 import ContractRecords from './contractRecords'
 import Accounts from './accounts'
-import Pay from './pay'
+import Pay from './pay' //支付接口
+import SigningLicenses from './signingLicenses'
+
 // import TokenService from './tokens'
 
 import eventTest from './eventTest' //事件接口测试

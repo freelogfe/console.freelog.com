@@ -4,23 +4,14 @@
     title="提示"
     :visible.sync="dialogVisible"
     width="30%">
-    <p>请选择转出账号: </p>
-    <el-select v-model="account" placeholder="请选择">
-      <el-option
-        v-for="item in options"
-        :key="item.accountId"
-        :label="item.accountId"
-        :value="item.accountId">
-      </el-option>
-    </el-select>
-    <p>请输入支付密码: </p>
-    <el-input type="password" v-model="password" placeholder="请输入支付密码"></el-input>
+    <p>您将签署协议号为: </p>
+
     <span slot="footer" class="dialog-footer">
 
 
 
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="pay()">确 定</el-button>
+      <el-button type="primary" @click="confirm()">确 定</el-button>
     </span>
   </el-dialog>
 </div>
