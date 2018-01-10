@@ -10,7 +10,8 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button  type="primary" @click="submitForm('dataForm')">创建节点</el-button>
+        <el-button type="primary" @click="submitForm('dataForm')">创建节点</el-button>
+        <el-button @click="goBackHandler">取消</el-button>
       </el-form-item>
     </el-form>
   </section>
@@ -18,16 +19,19 @@
 
 <script>
   import NodeCreator from './index'
+
   export default NodeCreator
 </script>
 
 <style lang="less" scoped>
-.node-form {
-  width: 600px;
-  margin: auto;
+  .node-form {
+    width: 600px;
+    margin: auto;
+
   .node-domain-postfix {
     color: #333333;
     font-size: 16px;
   }
-}
+
+  }
 </style>

@@ -50,7 +50,8 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            self.$router.replace(self.$route.query.redirect || '/')
+            //self.$route.query.redirect
+            self.$router.replace('/node/list')
             self.loading = false
           })
           .catch(err => {

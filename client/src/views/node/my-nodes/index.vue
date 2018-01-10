@@ -1,6 +1,9 @@
 <template>
   <section>
-    <table-view class="resource-list" :loader="loader()">
+    <div class="node-top-sec">
+      <el-button type="primary"><router-link class="route-link" to="/node/create">创建新节点</router-link></el-button>
+    </div>
+    <table-view class="node-list" :loader="loader()">
       <el-table-column
         prop="nodeName"
         label="node name">
@@ -44,7 +47,15 @@
 </script>
 
 <style lang="less" scoped>
-  .resource-list {
+  .node-top-sec {
+    margin-bottom: 15px;
+  }
+
+  .route-link {
+    color: white
+  }
+
+  .node-list {
     width: 100%;
     min-height: 600px;
   }

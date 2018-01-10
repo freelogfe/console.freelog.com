@@ -128,6 +128,7 @@ export default {
   children: [
     {
       path: 'create',
+      hidden: true,
       meta: {
         requiresAuth: true,
         title: '创建节点'

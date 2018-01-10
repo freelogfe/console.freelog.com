@@ -6,7 +6,7 @@ export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: ``
+      policyText: ''
     }
   },
   props: {

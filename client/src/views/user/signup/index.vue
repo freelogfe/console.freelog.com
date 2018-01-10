@@ -1,5 +1,7 @@
 <template>
-  <section class="login-section">
+  <section class="login-section"
+           v-loading="logining"
+           element-loading-text="正在登录中...">
     <header class="login-header">
       <!--<h1 class="brand">-->
       <!--<router-link to="/" tabindex="-1">freelog.com</router-link>-->
@@ -43,42 +45,11 @@
 </template>
 
 <script>
-  import LoginView from './index'
+  import SignupView from './index'
 
-  export default LoginView
+  export default SignupView
 </script>
 
 <style lang="less" scoped>
-  .login-section {
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-    max-height: 100%;
-    height: auto;
-
-  .heading {
-    margin: 0px auto 40px auto;
-    text-align: center;
-    color: #505458;
-  }
-
-  .login-btns {
-    text-align: center;
-  }
-  }
-
-  .user-op {
-    float: right;
-    color: #1f2d3d;
-  &:hover {
-     color: #409EFF;
-   }
-  }
+  @import "index.less";
 </style>

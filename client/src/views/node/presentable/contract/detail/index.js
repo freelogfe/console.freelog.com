@@ -1,6 +1,6 @@
 import CONFIG from '@/config/index'
-import TransactionEvent from '@/components/events/transaction/index.vue'
-import LicenseEvent from '@/components/events/license/index.vue'
+import TransactionEvent from './events/transaction/index.vue'
+import LicenseEvent from './events/license/index.vue'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
@@ -63,6 +63,7 @@ export default {
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
+      console.log(formatContractDetail)
       this.formatContractDetail = formatContractDetail
     },
     resolveContractEvents(detail) {
@@ -126,7 +127,7 @@ export default {
     // },
     executeContractHandler() {
       var self = this;
-
+      //
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
       this.selectedContractEvent = selectedContractEvent
       console.log('selectedContractEvent',selectedContractEvent.type);
@@ -139,12 +140,10 @@ export default {
       }.bind(this), 10)
 
 
-
-
       //test
       // this.$services.eventTest.post({
       //   contractId: this.contractDetail.contractId,
-      //   eventId: selectedContractEvent.params.eventId
+      //   eventId: selectedContractEvent.eventId
       // }).then(() => {
       //   this.selectedContractEvent = ''
       //   this.updateContractDetail()

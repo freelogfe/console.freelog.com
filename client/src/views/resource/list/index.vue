@@ -1,5 +1,10 @@
 <template>
   <section>
+    <div class="resource-top-sec">
+      <el-button type="primary">
+        <router-link class="route-link" to="/resource/create">创建新资源</router-link>
+      </el-button>
+    </div>
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="resourceName"
@@ -13,7 +18,7 @@
       <el-table-column
         prop="resourceId"
         label="resource ID"
-      width="350px">
+        width="350px">
       </el-table-column>
       <el-table-column
         prop="resourceType"
@@ -38,15 +43,18 @@
         <template slot-scope="scope">
           <el-button
             size="small"
-            @click="handleEdit(scope.row)">详情</el-button>
+            @click="handleEdit(scope.row)">详情
+          </el-button>
           <el-button
             size="small"
             v-show="scope.row.status === 1"
-            @click="handlePolicy(scope.row)">创建policy</el-button>
+            @click="handlePolicy(scope.row)">创建policy
+          </el-button>
           <el-button
             size="small"
             v-show="scope.row.status === 2"
-            @click="handlePolicy(scope.row)">修改policy</el-button>
+            @click="handlePolicy(scope.row)">修改policy
+          </el-button>
         </template>
       </el-table-column>
     </table-view>
@@ -60,8 +68,16 @@
 </script>
 
 <style lang="less" scoped>
-.resource-list {
-  width: 100%;
-  min-height: 600px;
-}
+  .resource-top-sec {
+    margin-bottom: 15px;
+  }
+
+  .route-link {
+    color: white;
+  }
+
+  .resource-list {
+    width: 100%;
+    min-height: 600px;
+  }
 </style>
