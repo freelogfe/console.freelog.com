@@ -8,7 +8,6 @@
       width="40%">
       <component :is="eventComponent"
                  :contractDetail="contractDetail"
-                 @update="updateContractDetail"
                  @close="closeDialogHandler"
                  :params="selectedContractEvent"></component>
     </el-dialog>

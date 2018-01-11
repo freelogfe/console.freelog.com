@@ -2,10 +2,11 @@ export default {
   name: 'license-event',
   data() {
     return {
+      accepted: false
     }
   },
   mounted() {
-
+    console.log(this.contractDetail, this.params)
   },
   props: ['contractDetail', 'params'],
 
@@ -16,12 +17,11 @@ export default {
         eventId: this.params.eventId
       }).then(() => {
         this.$message.success('执行成功')
-        this.$emit('update')
-        this.doneHandler()
+        this.doneHandler(true)
       })
     },
-    doneHandler() {
-      this.$emit('close')
+    doneHandler(shouldUpdate) {
+      this.$emit('close', {shouldUpdate})
     }
   }
 }

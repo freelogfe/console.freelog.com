@@ -68,7 +68,12 @@ export default {
       this.closeDialogHandler()
       done()
     },
-    closeDialogHandler() {
+    closeDialogHandler(detail) {
+      if (detail && detail.shouldUpdate) {
+        setTimeout(() => {
+          this.updateContractDetail() //由于后端支付存在延迟，临时延迟update，后续根据订单支付状态进行优化展示
+        }, 5e2)
+      }
       this.eventComponent = ''
       this.dialogTitle = ''
       this.$refs.eventDialog.hide()
@@ -131,20 +136,9 @@ export default {
       var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
       var eventComConfig = eventComponentMap[selectedContractEvent.type]
       this.selectedContractEvent = selectedContractEvent
-      console.log(this.contractDetail, selectedContractEvent)
       this.eventComponent = eventComConfig.type;
       this.dialogTitle = eventComConfig.title
-
       this.showEventExecDialog = true;
-      //test
-      // this.$services.eventTest.post({
-      //   contractId: this.contractDetail.contractId,
-      //   eventId: selectedContractEvent.eventId
-      // }).then(() => {
-      //   this.selectedContractEvent = ''
-      //   this.updateContractDetail()
-      //   this.$message.success('执行成功')
-      // })
     }
   }
 }

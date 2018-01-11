@@ -1,18 +1,15 @@
 <template>
   <div class="license-event-wrap">
-    <el-form label-position="left" label-width="80px" :model="contractDetail">
-      <el-form-item label="contractId">
-        {{contractDetail.contractId}}
+    <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
+      <el-form-item label="协议编号">
+        {{params.params.join(',')}}
       </el-form-item>
-      <el-form-item label="甲方">
-        {{contractDetail.partyOne}}
-      </el-form-item>
-      <el-form-item label="乙方">
-        {{contractDetail.partyTwo}}
+      <el-form-item>
+        <el-checkbox v-model="accepted">接受协议</el-checkbox>
       </el-form-item>
       <el-form-item>
         <el-button @click="doneHandler">取 消</el-button>
-        <el-button type="primary" @click="signHandler">确 定</el-button>
+        <el-button type="primary" :disabled="!accepted" @click="signHandler">确 定</el-button>
       </el-form-item>
     </el-form>
   </div>

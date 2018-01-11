@@ -1,6 +1,6 @@
 <template>
   <div class="transaction-wrap">
-    <el-form label-position="left" label-width="80px" :model="contractDetail">
+    <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="contractId">
         {{contractDetail.contractId}}
       </el-form-item>
