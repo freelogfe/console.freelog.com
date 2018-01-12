@@ -47,11 +47,10 @@ export default {
           this.$message.info('未知的支付状态')
       }
     },
-    doneHandler() {
-      this.$emit('close')
+    doneHandler(data) {
+      this.$emit('close', data)
     },
     pay() {
-      console.log('params', this.params);
       var self = this;
       this.$services.pay.post({
         "targetId": self.contractDetail.contractId,
@@ -63,8 +62,7 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.payResultHandler(res.data.data)
-          this.$emit('update')
-          this.doneHandler()
+          this.doneHandler({shouldUpdate: true, data: res.data.data})
         } else {
           this.$message.error(res.data.msg)
         }
