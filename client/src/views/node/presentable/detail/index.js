@@ -118,7 +118,7 @@ export default {
     updatePresentableHandler() {
       var data = {
         name: this.detail.name,
-        policyText: this.detail._formatSegmentText,
+        policyText: btoa(this.detail._formatSegmentText),
         userDefinedTags: this.detail.tagInfo.userDefined.join(',')
       };
       var param = {}
@@ -134,6 +134,7 @@ export default {
           if (res.data.errcode === 0) {
             var data = res.getData()
             Object.assign(this.detail, data)
+            this.$message.success('更新成功')
           } else {
             this.$message.error(res.data.msg || '更新失败')
           }

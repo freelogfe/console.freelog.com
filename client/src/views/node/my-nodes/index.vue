@@ -1,7 +1,9 @@
 <template>
   <section>
     <div class="node-top-sec">
-      <el-button type="primary"><router-link class="route-link" to="/node/create">创建新节点</router-link></el-button>
+      <el-button type="primary">
+        <router-link class="route-link" to="/node/create">创建新节点</router-link>
+      </el-button>
     </div>
     <table-view class="node-list" :loader="loader()">
       <el-table-column
@@ -12,6 +14,14 @@
         label="node domain">
         <template slot-scope="scope">
           {{scope.row.nodeDomain}}.freelog.com
+          <clip-board
+            style="display: inline-block"
+            @copyDone="copyDoneHandler"
+            :value="'http://api.freelog.com/node/home/'+scope.row.nodeDomain">
+            <a href="javascript:;">
+              <i class="el-icon-fa-clipboard"></i>
+            </a>
+          </clip-board>
         </template>
       </el-table-column>
       <el-table-column

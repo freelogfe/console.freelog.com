@@ -34,15 +34,21 @@ export default {
 
       var nodeId = parseInt(this.$route.params.nodeId)
 
-      Object.assign({
+      // Object.assign({
+      //   name: this.formData.presentableName,
+      //   nodeId: nodeId,
+      //   contractId: this.$route.query.contractId,
+      //   policyText: btoa(this.policyText),
+      //   languageType: 'freelog_policy_lang'
+      // }, data)
+
+      this.$services.presentables.post({
         name: this.formData.presentableName,
         nodeId: nodeId,
         contractId: this.$route.query.contractId,
         policyText: btoa(this.policyText),
         languageType: 'freelog_policy_lang'
-      }, data)
-
-      this.$services.presentables.post(data).then((res) => {
+      }).then((res) => {
         var data = res.getData()
         if (!data) {
           this.$message.error(res.data.msg)

@@ -1,4 +1,6 @@
 import TableView from '@/components/TableView/index.vue'
+import ClipBoard from '@/components/clipboard/index.vue'
+
 import {mapGetters} from 'vuex'
 
 export default {
@@ -19,7 +21,8 @@ export default {
     }
   },
   components: {
-    TableView
+    TableView,
+    ClipBoard
   },
   computed: mapGetters({
     session: 'session'
@@ -36,6 +39,9 @@ export default {
           }
         })
       }
+    },
+    copyDoneHandler(){
+      this.$message.success('已复制pagebuild地址')
     },
     handleEdit(nodeDetail) {
       this.$router.push({path: '/node/detail', query: {nodeId: nodeDetail.nodeId}})

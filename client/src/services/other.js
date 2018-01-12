@@ -13,6 +13,9 @@ const apis = {
   },
   resetPassword: function (options) {
     return axios.post('/v1/userinfos/resetPassword', options)
+  },
+  register: function (options) {
+    return axios.post('/v1/userinfos/register', options)
   }
 }
 export default apis

@@ -20,7 +20,7 @@
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "nprogress": "^0.2.0",
-    "presentable_policy_compiler": "^0.0.9",
+    "presentable_policy_compiler": "^0.0.10",
     "presentable_policy_lang": "^1.0.3",
     "store": "^2.0.12",
     "vue": "^2.5.13",

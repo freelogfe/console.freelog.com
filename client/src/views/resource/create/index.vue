@@ -60,7 +60,7 @@
       <el-tab-pane label="资源meta信息" name="metaInfo">
         <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
-      <el-tab-pane label="resource policy">
+      <el-tab-pane label="资源策略">
         <policy-editor ref="policyEditor" v-model="formData.policyText"></policy-editor>
       </el-tab-pane>
       <el-tab-pane
