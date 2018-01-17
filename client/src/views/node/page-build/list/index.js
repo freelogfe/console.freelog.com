@@ -14,6 +14,7 @@ export default {
   },
   mounted() {
     this.loader()
+      .then(this.format.bind(this))
       .then((data) => {
         console.log(data)
         this.pagebuildList = data
@@ -43,6 +44,18 @@ export default {
         })
       })
     },
+    format(pagebuildList) {
+      pagebuildList.forEach((item) => {
+        item.statusInfo = (item.status === PAGE_BUILD_STATUS.show) ? {
+          desc: '默认展示',
+          type: 'success'
+        } : {
+          desc: '不展示',
+          type: 'info'
+        }
+      })
+      return pagebuildList
+    },
     updateStatus() {
       this.pagebuildList.forEach((item) => {
         item.status = PAGE_BUILD_STATUS.hide
@@ -50,22 +63,25 @@ export default {
     },
     setDefaultPageBuildHandler(presentable, status) {
       status = status || PAGE_BUILD_STATUS.show
-      this.$services.pagebuild.put(presentable.id, {
+      var param = {
         nodeId: parseInt(this.$route.params.nodeId),
         status: status
-      }).then((res) => {
-        if (res.data.errcode === 0) {
-          if (status === PAGE_BUILD_STATUS.show) {
-            this.updateStatus()
+      }
+      this.changePageBuildShowStatus(presentable, param)
+    },
+    changePageBuildShowStatus(presentable, param) {
+      this.$services.pagebuild.put(presentable.id, param)
+        .then((res) => {
+          if (res.data.errcode === 0) {
+            if (param.status === PAGE_BUILD_STATUS.show) {
+              this.updateStatus()
+            }
+            presentable.status = param.status
+            this.$message.success('设置成功')
+          } else {
+            throw new Error(res.data.msg)
           }
-          presentable.status = status
-          this.$message.success('设置成功')
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch((res) => {
-        this.$message.error(res.response.errorMsg)
-      })
+        }).catch(this.$error.showErrorMessage)
     },
     handlePreview(presentable) {
       this.$router.push({

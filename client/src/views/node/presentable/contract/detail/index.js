@@ -1,6 +1,7 @@
 import CONFIG from '@/config/index'
 import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
+import ContractDetailInfo from '@/components/detail-info/contract.vue'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
@@ -55,7 +56,8 @@ export default {
   },
   components: {
     TransactionEvent,
-    LicenseEvent
+    LicenseEvent,
+    ContractDetailInfo
   },
   props: {
     contractDetail: Object

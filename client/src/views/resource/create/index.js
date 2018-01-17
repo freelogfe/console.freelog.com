@@ -36,7 +36,7 @@ export default {
       //格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('必须以freelog-开头，仅支持小写，如：freelog-demo-testwidget'));
+        callback(new Error('规则/^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/，如：freelog-demo-testwidget'));
       } else {
         callback()
       }

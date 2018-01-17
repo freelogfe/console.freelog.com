@@ -14,13 +14,6 @@
         label="资源名称">
       </el-table-column>
       <el-table-column
-        width="80px"
-        label="status">
-        <template slot-scope="scope">
-          {{scope.row.status==PAGE_BUILD_STATUS.show? '显示': '隐藏'}}
-        </template>
-      </el-table-column>
-      <el-table-column
         prop="presentableId"
         width="220px"
         label="presentableId(for test)">
@@ -43,6 +36,13 @@
           <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
+      <el-table-column
+        width="100px"
+        label="status">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.statusInfo.type">{{scope.row.statusInfo.desc}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="200px">
         <template slot-scope="scope">
           <el-button
@@ -51,11 +51,11 @@
           </el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row)" v-show="scope.row.status==2">设为显示
+            @click="setDefaultPageBuildHandler(scope.row)" type="primary" v-show="scope.row.status==2">设为展示
           </el-button>
           <el-button
             size="small"
-            @click="setDefaultPageBuildHandler(scope.row, 2)" v-show="scope.row.status==1">设为隐藏
+            @click="setDefaultPageBuildHandler(scope.row, 2)" type="warning" v-show="scope.row.status==1">设为隐藏
           </el-button>
         </template>
       </el-table-column>

@@ -128,15 +128,14 @@ export default {
         presentableId: row.presentableDetail && row.presentableDetail.presentableId,
         contractId: row.contractId
       };
-      var type;
+      var type = 'detail';
       var hash = '';
 
       switch (action) {
         case 'edit':
-          type = 'edit';
+          hash = '#presentable'
           break;
         case 'execContract':
-          type = 'detail';
           hash = '#contract'
           break;
         case 'detail':

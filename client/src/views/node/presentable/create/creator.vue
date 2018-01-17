@@ -58,18 +58,7 @@
         <div class="step-circle">2</div>
         <div class="step-title">创建用户消费策略</div>
       </div>
-      <el-form class="step-body policy-edit-wrap" label-position="right" label-width="100px">
-        <el-form-item label="资源合同名称">
-          <el-input v-model="formData.presentableName"
-                    placeholder="请输入presentable name"></el-input>
-        </el-form-item>
-        <el-form-item label="资源标签" prop="presentableTags">
-          <freelog-tags v-model="formData.presentableTags"></freelog-tags>
-        </el-form-item>
-        <el-form-item label="用户消费策略">
-          <presentable-policy v-model="formData.userPolicy"></presentable-policy>
-        </el-form-item>
-      </el-form>
+      <presentable-editor :data="formData.presentableInput"></presentable-editor>
     </div>
 
     <div class="step-3 op-step" v-if="formData.widgets && formData.widgets.length > 0">
@@ -101,6 +90,7 @@
   import PresentablePolicy from '../policy/index.vue'
   import CONFIG from '@/config/index'
   import compiler from 'freelog_policy_compiler'
+  import PresentableEditor from '../editor/index.vue'
 
   export default {
     name: 'presentable-creator',
@@ -116,6 +106,7 @@
     },
     components: {
       FreelogTags,
+      PresentableEditor,
       PresentablePolicy
     },
     methods: {

@@ -7,9 +7,7 @@ import {
   nodeDetail,
   nodeResourceList,
   resourceDetail,
-  nodeContractCreator,
   createPresentable,
-  editPresentable,
   presentableDetail,
   presentablesView,
   pagebuildList,
@@ -53,14 +51,6 @@ export const nodeItemRoute = {
           component: presentableDetail
         },
         {
-          path: 'edit',
-          meta: {
-            requiresAuth: true,
-            title: '编辑presentable'
-          },
-          component: editPresentable
-        },
-        {
           path: 'create',
           meta: {
             requiresAuth: true,
@@ -86,25 +76,6 @@ export const nodeItemRoute = {
         title: 'PageBuild管理列表'
       },
       component: pagebuildList
-    },
-    {
-      path: 'contract',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '节点策略操作'
-      },
-      component: Container,
-      children: [
-        {
-          path: 'create',
-          meta: {
-            requiresAuth: true,
-            title: '创建合同'
-          },
-          component: nodeContractCreator
-        },
-      ]
     },
     {
       path: 'resources',
