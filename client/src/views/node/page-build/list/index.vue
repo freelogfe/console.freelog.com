@@ -7,11 +7,11 @@
       border>
       <el-table-column
         prop="presentableName"
-        label="presentableName">
+        label="presentable名称">
       </el-table-column>
       <el-table-column
         prop="resourceDetail.resourceName"
-        label="resourceName">
+        label="资源名称">
       </el-table-column>
       <el-table-column
         width="80px"
@@ -28,7 +28,7 @@
       <el-table-column
         prop="resourceId"
         width="350px"
-        label="resourceId(for test)">
+        label="资源id(for test)">
       </el-table-column>
       <el-table-column
         width="120px"
@@ -38,7 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="resourceUrl">
+        label="资源Url">
         <template slot-scope="scope">
           <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
         </template>

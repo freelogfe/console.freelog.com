@@ -22,7 +22,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="widgetName"
+          <el-form-item label="widget名称"
                         prop="widgetName"
                         class="input-item"
                         :required="formData.resourceType === ResourceTypes.widget"
@@ -35,7 +35,7 @@
               <i class="el-icon-info"></i>
             </el-tooltip>
           </el-form-item>
-          <el-form-item label="file"
+          <el-form-item label="文件"
                         class="input-item"
                         required
                         v-show="formData.resourceType !== ResourceTypes.pageBuild">

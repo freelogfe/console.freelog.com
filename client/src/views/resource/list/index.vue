@@ -8,21 +8,21 @@
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="resourceName"
-        label="resource name">
+        label="资源名称">
       </el-table-column>
       <el-table-column
         prop="resourceType"
         align="center"
-        label="resource type">
+        label="资源类型">
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resource ID"
+        label="资源 ID"
         width="350px">
       </el-table-column>
       <el-table-column
         prop="resourceType"
-        label="resource status"
+        label="资源状态"
         align="center"
         width="150px">
         <template slot-scope="scope">
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="resource URL">
+        label="资源 URL">
         <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>
