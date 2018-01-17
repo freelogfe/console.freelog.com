@@ -28,9 +28,9 @@
 
   &.dragging {
     .page-builder {
-      z-index: -1;
+      //z-index: -9;
+      //position: relative;
     }
-
     .page-build-mask {
       z-index: 9;
     }
@@ -47,9 +47,15 @@
   }
 }
 
+.widget-item {
+  &.is-dragging {
+  }
+}
+
 .page-builder .widget-item {
   position: absolute !important;
   width: 130px;
+
   &:hover {
     .action-panel {
       display: block;
@@ -87,6 +93,7 @@
 }
 
 .page-build-mask {
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 11px;
@@ -114,6 +121,7 @@
 
 .widgets-panel {
   max-height: 100%;
+  height: @page-builder-height;
   //overflow: auto;
 
   .widget-resource {
@@ -122,6 +130,9 @@
     height: 100px;
     overflow: hidden;
   }
+}
+.widget-meta-info {
+  word-break: break-all;
 }
 
 .widget-resource {

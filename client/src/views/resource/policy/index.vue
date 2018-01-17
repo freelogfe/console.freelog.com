@@ -4,7 +4,7 @@
               spellcheck="false"
               type="textarea"
               :rows="15"
-              placeholder="请输入policy"
+              placeholder="请输入策略"
               v-model="policyText">
     </el-input>
     <el-button type="primary"

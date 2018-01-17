@@ -2,6 +2,7 @@ import {mapGetters} from 'vuex'
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import compiler from 'presentable_policy_compiler'
 import FreelogTags from '@/components/Tags/index.vue'
+import {RESOURCE_TYPES} from "@/config/resource";
 
 export default {
   name: 'presentable-editor',
@@ -135,7 +136,10 @@ export default {
           }
           this.$router.push({
             path: `/node/${nodeId}/presentable/detail#presentable`,
-            query: {presentableId: data.presentableId}
+            query: {
+              presentableId: data.presentableId,
+              ispb: data.tagInfo.resourceInfo.resourceType === RESOURCE_TYPES.pageBuild
+            }
           })
         }
       }).catch((err) => {

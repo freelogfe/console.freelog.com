@@ -158,6 +158,7 @@ export default {
             //复制节点
             setPosition($left, el)
             el.style.position = 'absolute'
+            el.style.zIndex = 1
             el.replaceWith(_mirror)
             $left.appendChild(el)
             $editorWrapper.classList.add('dragging')

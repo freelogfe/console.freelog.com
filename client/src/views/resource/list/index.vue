@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="资源 ID"
+        label="资源ID"
         width="350px">
       </el-table-column>
       <el-table-column
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="资源 URL">
+        label="资源链接">
         <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>

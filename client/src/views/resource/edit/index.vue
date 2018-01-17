@@ -2,7 +2,7 @@
   <section class="resource-detail">
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性">
-        <el-form :model="detail" :rules="rules" ref="detail" label-width="120px">
+        <el-form :model="detail" class="small-el-form" :rules="rules" ref="detail" label-width="120px">
           <el-form-item label="resourceName"
                         class="input-item"
                         prop="resourceName" required>
@@ -11,8 +11,9 @@
           <el-form-item :label="key"
                         class="input-item"
                         :key="key"
+                        style="width: 100%"
                         v-for="key in showKeys">
-            <el-input v-model="detail[key]" disabled></el-input>
+            {{detail[key]}}
           </el-form-item>
           <el-form-item label="file"
                         class="input-item"

@@ -1,47 +1,41 @@
 <template>
   <section>
-    <!--<el-autocomplete-->
-      <!--v-model="query"-->
-      <!--:fetch-suggestions="querySearchAsync"-->
-      <!--placeholder="请输入内容"-->
-      <!--@select="handleSelectSearchItem"-->
-    <!--&gt;</el-autocomplete>-->
-
-    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input">
+    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input" @keyup.enterk="queryHandler">
       <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler"></el-button>
     </el-input>
 
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
         prop="resourceName"
-        label="resource name">
+        label="资源名称">
       </el-table-column>
       <el-table-column
         prop="resourceType"
         align="center"
-        label="resource type">
+        label="资源类型">
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resourceId"
+        label="资源ID"
         align="center"
         width="350px">
       </el-table-column>
       <el-table-column
         align="center"
         width="150px"
-        label="create date">
+        label="创建日期">
         <template slot-scope="scope">
           {{scope.row.createDate | fmtDate}}
         </template>
       </el-table-column>
       <el-table-column
-        label="resource URL">
+        align="center"
+        label="资源链接">
         <template slot-scope="scope">
           <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column align="center">
         <template slot-scope="scope">
           <el-dropdown size="small" split-button type="primary"
                        @command="handleCommand"
@@ -69,8 +63,8 @@
     width: 50%;
   }
 
-.resource-list {
-  width: 100%;
-  min-height: 600px;
-}
+  .resource-list {
+    width: 100%;
+    min-height: 600px;
+  }
 </style>

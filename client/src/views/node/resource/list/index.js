@@ -53,7 +53,7 @@ export default {
       }
 
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/contract/create`,
+        path: `/node/${this.$route.params.nodeId}/presentable/create`,
         query: query
       })
     },

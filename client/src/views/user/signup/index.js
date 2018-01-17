@@ -108,7 +108,7 @@ export default {
           (key !== 'checkPassword') && (data[key] = this.model[key])
         })
 
-        this.$services.user.post(data)
+        this.$services.other.register(data)
           .then(res => {
             if (res.data.errcode === 0) {
               this.$message.success('注册成功')
