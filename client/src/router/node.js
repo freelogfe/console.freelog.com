@@ -27,22 +27,6 @@ export const nodeItemRoute = {
   redirect: '/node/:nodeId/presentables',
   children: [
     {
-      path: 'resources',
-      meta: {
-        requiresAuth: true,
-        title: '资源市场'
-      },
-      component: nodeResourceList
-    },
-    {
-      path: 'pagebuilds',
-      meta: {
-        requiresAuth: true,
-        title: 'PageBuild管理列表'
-      },
-      component: pagebuildList
-    },
-    {
       path: 'presentables',
       meta: {
         requiresAuth: true,
@@ -96,6 +80,14 @@ export const nodeItemRoute = {
       component: resourceDetail
     },
     {
+      path: 'pagebuilds',
+      meta: {
+        requiresAuth: true,
+        title: 'PageBuild管理列表'
+      },
+      component: pagebuildList
+    },
+    {
       path: 'contract',
       hidden: true,
       meta: {
@@ -113,6 +105,14 @@ export const nodeItemRoute = {
           component: nodeContractCreator
         },
       ]
+    },
+    {
+      path: 'resources',
+      meta: {
+        requiresAuth: true,
+        title: '资源市场'
+      },
+      component: nodeResourceList
     }
   ]
 };

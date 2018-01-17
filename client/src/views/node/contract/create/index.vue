@@ -13,15 +13,12 @@
                    :name="tabData.resourceId">
         <span slot="label">
           {{tabData.resourceName}}
-
           <el-tooltip class="item" effect="dark" content="已选中合同" placement="top" v-show="tabData.checked">
             <i class="el-icon-circle-check-outline icon-tip"></i>
           </el-tooltip>
-
           <el-tooltip class="item" effect="dark" content="已创建过合同" placement="top" v-show="tabData.created">
             <i class="el-icon-circle-check icon-tip"></i>
           </el-tooltip>
-
         </span>
         <el-table
           :data="tabData.data.policy">

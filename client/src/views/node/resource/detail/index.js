@@ -33,11 +33,9 @@ export default {
         resourceType : resource.resourceType,
         resourceId: resource.resourceId
       }
-      if (resource.systemMeta && resource.systemMeta.widgets) {
-        query.widgets = JSON.stringify(resource.systemMeta.widgets)
-      }
+
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/contract/create`,
+        path: `/node/${this.$route.params.nodeId}/presentable/create`,
         query: query
       })
     },

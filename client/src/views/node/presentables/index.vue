@@ -14,17 +14,17 @@
       </el-table-column>
       <el-table-column
         prop="resourceDetail.resourceName"
-        label="resource name">
+        label="资源名称">
       </el-table-column>
       <el-table-column
         prop="resourceDetail.resourceType"
-        label="resource type"
+        label="资源类型"
         align="center"
         width="150px">
       </el-table-column>
       <el-table-column
         align="center"
-        label="create date">
+        label="presentable创建日期">
         <template slot-scope="scope">
           <span>{{ scope.row.createDate | fmtDate}}</span>
         </template>
@@ -57,17 +57,20 @@
         <template slot-scope="scope">
           <el-button
             size="small"
+            class="action-btn"
             @click="handlePresentable(scope.row,'detail')">查看详情
           </el-button>
           <el-button
             size="small"
+            class="action-btn"
             @click="handlePresentable(scope.row, 'edit')" v-if="!scope.row.presentableDetail">去创建user
             policy
           </el-button>
           <el-button
             size="small"
-            @click="handlePresentable(scope.row, 'detail', 'contract')"
-            v-else-if="scope.row.status===1 || scope.row.status===2">去执行合同
+            class="action-btn"
+            @click="handlePresentable(scope.row, 'execContract')"
+            v-if="scope.row.status===1 || scope.row.status===2">去执行合同
           </el-button>
         </template>
       </el-table-column>
@@ -82,6 +85,10 @@
 </script>
 
 <style lang="less" scoped>
+  .action-btn {
+    margin-bottom: 6px;
+    margin-left: 0;
+  }
   .query-input {
     margin-bottom: 15px;
     width: 50%;

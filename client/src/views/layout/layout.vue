@@ -56,6 +56,7 @@
 
   .content {
     margin-top: @header-height;
+    overflow: hidden;
   }
 
   .content {

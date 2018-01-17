@@ -63,7 +63,7 @@ export default {
       loading: false,
 
       formData: {
-        resourceType: RESOURCE_TYPES.widget || '',
+        resourceType: RESOURCE_TYPES.pageBuild || '',
         resourceName: '',
         widgetName: '',
         meta: '',

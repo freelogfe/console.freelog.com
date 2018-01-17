@@ -8,8 +8,7 @@
               @change="textChange"
               v-model="policyText">
     </el-input>
-    <el-button type="primary"
-               @click="validate">格式校验</el-button>
+    <el-button v-show="showValidateButton" @click="validate">格式校验</el-button>
   </div>
 </template>
 

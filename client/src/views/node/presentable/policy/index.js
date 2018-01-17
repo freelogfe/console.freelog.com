@@ -1,19 +1,35 @@
-import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import compiler from 'presentable_policy_compiler'
-
+import {RESOURCE_TYPES} from "@/config/resource";
 
 export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: ''
+      policyText: `For testUser1 :
+  in initial :
+    proceed to signing on accepting transaction of 200 to feth209fa4da1a4
+  in signing:
+    proceed to activate on accepting license license_A
+  I agree to authorize token in activate`
     }
   },
   props: {
-    value: String
+    value: String,
+    showValidateButton: {
+      type: Boolean,
+      default() {
+        return true
+      }
+    }
   },
   mounted() {
-    this.policyText = this.value
+    if (this.value) {
+      this.policyText = this.value
+    }
+
+    setTimeout(() => {
+      this.textChange() //test
+    }, 1e3)
   },
   methods: {
     textChange() {
@@ -56,7 +72,10 @@ export default {
           this.$message.success('presentable创建成功');
           this.$router.push({
             path: `/node/${nodeId}/presentable/detail#presentable`,
-            query: {presentableId: data.presentableId}
+            query: {
+              presentableId: data.presentableId,
+              ispb: data.tagInfo.resourceInfo.resourceType === RESOURCE_TYPES.pageBuild
+            }
           })
         }
       }).catch(this.$error.showErrorMessage)

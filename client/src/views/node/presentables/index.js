@@ -120,17 +120,34 @@ export default {
         this.$message.error(err.response.errorMsg || err)
       })
     },
-    handlePresentable(row, type, hash) {
+    handleCommand(cmd) {
+      console.log(cmd)
+    },
+    handlePresentable(row, action) {
       var query = {
         presentableId: row.presentableDetail && row.presentableDetail.presentableId,
         contractId: row.contractId
+      };
+      var type;
+      var hash = '';
+
+      switch (action) {
+        case 'edit':
+          type = 'edit';
+          break;
+        case 'execContract':
+          type = 'detail';
+          hash = '#contract'
+          break;
+        case 'detail':
+        default:
+          type = 'detail';
       }
-      type = type || 'detail'
-      hash = (hash && (`#${hash}`)) || ''
 
       if (!hash && !row.presentableDetail) {
         hash = '#presentable'
       }
+
       var path = `/node/${this.$route.params.nodeId}/presentable/${type}${hash}`
       this.$router.push({
         path: path,

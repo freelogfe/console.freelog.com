@@ -5,11 +5,11 @@ export const PRESENTABLE_STATUS_TIPS = [
   },
   {
     text: '未开始执行',
-    type: 'info'
+    type: 'danger'
   },
   {
     text: '执行中',
-    type: ''
+    type: 'danger'
   },
   {
     text: '生效中',
@@ -17,10 +17,10 @@ export const PRESENTABLE_STATUS_TIPS = [
   },
   {
     text: '用户终止',
-    type: 'danger'
+    type: 'info'
   },
   {
     text: '系统终止',
-    type: 'danger'
+    type: 'info'
   }
 ];
