@@ -1,33 +1,57 @@
 import compiler from 'presentable_policy_compiler'
-import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import PresentableContractDetail from '../contract/detail/index.vue'
 import PresentablePolicy from '../policy/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from '@/config/resource'
 import PresentableBindWidget from './bind.vue'
-import ContractDetailInfo from './contract.vue'
-import ResourceDetailInfo from './resource.vue'
+import ContractDetailInfo from '@/components/detail-info/contract.vue'
+import ResourceDetailInfo from '@/components/detail-info/resource.vue'
+import PresentableEditor from '../editor/index.vue'
 
 export default {
   name: 'presentable-detail',
   data() {
     return {
       showBindWidgetDialog: false,
+      loading: false,
       bindWidget: {},
       detail: {},
       activeTabName: 'resource',
       nodeId: this.$route.params.nodeId,
-      showSteps: false
+      editPresentable: {
+        name: '',
+        policyText: '',
+        userDefinedTags: []
+      }
     }
   },
   components: {
-    PresentableSteps,
     PresentableContractDetail,
     PresentablePolicy,
     FreelogTags,
     PresentableBindWidget,
     ContractDetailInfo,
-    ResourceDetailInfo
+    ResourceDetailInfo,
+    PresentableEditor
+  },
+
+  computed: {
+    shouldShowResourceWarning: function () {
+      var widgets = this.detail.widgets
+      if (widgets && widgets.length) {
+        return widgets.some((w) => {
+          return !w.contractId
+        })
+      } else {
+        return false
+      }
+    },
+    shouldShowPresentableWarning() {
+      return this.detail.presentableInfo === null
+    },
+    shouldShowContractWarning() {
+      return this.detail.contractInfo && ([1, 2].includes(this.detail.contractInfo.status))
+    }
   },
 
   mounted() {
@@ -36,8 +60,17 @@ export default {
     if (this.$route.hash) {
       this.activeTabName = this.$route.hash.slice(1)
     }
+
+    this.loading = true
     this.loadDetailData(query)
       .then(this.formatData.bind(this))
+      .then(() => {
+        this.loading = false
+      })
+      .catch((err) => {
+        this.loading = false
+        this.$error.showErrorMessage(err)
+      })
   },
   methods: {
     isPageBuild(data) {
@@ -141,16 +174,13 @@ export default {
           return widget
         })
 
-        //用于对比presentable是否有修改
-        this.originPresentable = {
+        Object.assign(this.editPresentable, {
           name: detail.presentableInfo.name,
           policyText: detail.presentableInfo.policyText,
-          userDefinedTags: detail.presentableInfo.tagInfo.userDefined.join(',')
-        }
+          userDefinedTags: detail.presentableInfo.tagInfo.userDefined
+        })
       }
-      console.log(detail)
       this.detail = detail
-      this.showSteps = !presentableId
     },
     loadResourceDetail(resId) {
       return this.$services.resource.get(resId).then((res) => {
@@ -182,29 +212,46 @@ export default {
         }).catch(this.$error.showErrorMessage)
     },
     createUserPolicyHandler() {
-      var path = `/node/${this.nodeId}/presentable/edit`
-      this.$router.push({
-        path: path,
-        query: {
-          contractId: this.detail.contractInfo.contractId
+      var contractId = this.$route.query.contractId
+      if (!contractId) {
+        this.$message.error('没有资源Id, 请重新选择');
+      }
+
+      if (this.submitLoading) {
+        return
+      }
+      var nodeId = parseInt(this.$route.params.nodeId)
+      var param = {
+        name: this.editPresentable.name,
+        nodeId: nodeId,
+        contractId: contractId,
+        policyText: btoa(this.editPresentable.policyText),
+        languageType: 'freelog_policy_lang',
+        userDefinedTags: this.editPresentable.userDefinedTags.join(',')
+      };
+      this.submitLoading = true;
+      this.$services.presentables.post(param).then((res) => {
+        var data = res.getData()
+        this.submitLoading = false;
+        if (!data) {
+          this.$message.error(res.data.msg)
+        } else {
+          this.$message.success('创建成功');
+          this.$set(this.detail, 'presentableInfo', data)
         }
+      }).catch((err) => {
+        this.submitLoading = false;
+        this.$message.error(err.response.errorMsg);
       })
     },
     updatePresentableHandler() {
-      var data = {
-        name: this.detail.name,
-        policyText: btoa(this.detail._formatSegmentText),
-        userDefinedTags: this.detail.tagInfo.userDefined.join(',')
+      var param = {
+        name: this.editPresentable.name,
+        policyText: btoa(this.editPresentable.policyText),
+        userDefinedTags: this.editPresentable.userDefinedTags.join(',')
       };
-      var param = {}
-      Object.keys(this.originPresentable).forEach((key) => {
-        if (data[key] !== this.originPresentable[key]) {
-          param[key] = data[key]
-        }
-      });
 
-      this.originPresentable = data
-      this.$services.presentables.put(this.detail.presentableId.presentableId, param)
+      this.$services.presentables.put(this.detail.presentableInfo.presentableId, param)
         .then((res) => {
           if (res.data.errcode === 0) {
             var data = res.getData()
@@ -224,53 +271,63 @@ export default {
       var widgets = this.detail.widgets;
       activeArr.forEach((index) => {
         let widget = widgets[index]
-        let promises = []
-        if (!widget.resourceInfo) {
-          let p1 = this.loadResourceDetail(widget.resourceId).then((resourceDetail) => {
-            widget.resourceInfo = resourceDetail
-          })
-          let p2 = this.$services.policy.get(widget.resourceId).then((res) => {
-            let policyData = res.getData();
-            policyData.policy.forEach((p) => {
-              p.created = false; //是否已经创建过合同
-              p._formatSegmentText = this.beautifySegmentText(p.segmentText)
-              p.forUsers = p.users.map((u) => {
-                return {
-                  type: u.userType,
-                  users: u.users.join(',')
-                }
-              })
-            })
-            widget.policyData = policyData
-          })
-          promises.push(p1)
-          promises.push(p2)
-        }
-
-        if (widget.contractId && (!widget.contractInfo || widget.contractInfo.contractId !== widget.contractId)) {
-          let p = this.loadContractDetail(widget.contractId).then((detail) => {
-            widget.contractInfo = detail
-          })
-          promises.push(p)
-        }
-
-        if (promises.length) {
-          widget.loading = true
-          Promise.all(promises)
-            .then(() => {
-              this.$set(widgets, index, widget)
-              console.log(widget)
-              widgets[index].loading = false
-            }).catch(this.$error.showErrorMessage)
-        }
+        this.loadWidgetDetail(widget, index)
       })
+    },
+    loadWidgetDetail(widget, index) {
+      var widgets = this.detail.widgets;
+      let promises = []
+      if (!widget.resourceInfo) {
+        let p1 = this.loadResourceDetail(widget.resourceId).then((resourceDetail) => {
+          widget.resourceInfo = resourceDetail
+        })
+        let p2 = this.$services.policy.get(widget.resourceId).then((res) => {
+          let policyData = res.getData();
+          policyData.policy.forEach((p) => {
+            p.created = false; //是否已经创建过合同
+            p._formatSegmentText = this.beautifySegmentText(p.segmentText)
+            p.forUsers = p.users.map((u) => {
+              return {
+                type: u.userType,
+                users: u.users.join(',')
+              }
+            })
+          })
+          widget.policyData = policyData
+        })
+        promises.push(p1)
+        promises.push(p2)
+      }
+
+      if (widget.contractId && (!widget.contractInfo || widget.contractInfo.contractId !== widget.contractId)) {
+        let p = this.loadContractDetail(widget.contractId).then((detail) => {
+          widget.contractInfo = detail
+        })
+        promises.push(p)
+      }
+
+      if (index === undefined) {
+        for (let [i, w] of widgets.entries()) {
+          if (widget.contractId === w.contractId) {
+            index = i
+            break;
+          }
+        }
+      }
+      if (promises.length) {
+        widget.loading = true
+        Promise.all(promises)
+          .then(() => {
+            this.$set(widgets, index, widget)
+            widgets[index].loading = false
+          }).catch(this.$error.showErrorMessage)
+      }
     },
     showBindWidgetDialogHandler(widget) {
       this.bindWidget = widget
       this.showBindWidgetDialog = true
     },
     bindDoneHandler(data) {
-      console.log(data)
       this.showBindWidgetDialog = false
       if (data.selected) {
         this.bindPageBuildWidgetContract(data.detail)
@@ -285,6 +342,7 @@ export default {
         if (res.data.errcode === 0) {
           this.bindWidget.contractId = params.contractId
           //refresh contract info
+          this.loadWidgetDetail(this.bindWidget)
           this.$message.success('执行成功')
         } else {
           throw new Error(res.data.msg)

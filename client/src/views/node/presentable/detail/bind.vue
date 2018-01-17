@@ -61,7 +61,7 @@
             <el-radio v-model="selectedContractId" :disabled="!props.row.contractId" :label="props.row.contractId"><span
               title="placeholder"></span></el-radio>
 
-            <el-tooltip placement="top" v-if="props.row.selected">
+            <el-tooltip placement="top" v-if="isCurrentSelected(props.row)">
               <div slot="content">
                 当前已选择的合同
               </div>
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import ContractDetailInfo from './contract.vue'
+  import ContractDetailInfo from '@/components/detail-info/contract.vue'
   import {CONTRACT_STATUS_COLORS} from '@/config/contract'
 
   export default {
@@ -102,7 +102,6 @@
     },
     components: {ContractDetailInfo},
     mounted() {
-      console.log(this.widget)
       this.render()
       this.listenWindowVisibility()
 
@@ -165,6 +164,9 @@
           }
         })
       },
+      isCurrentSelected(row) {
+        return this.widget.contractId === row.contractId
+      },
       render() {
         this.contracts = []
         this.selectedContractId = this.widget.contractId
@@ -223,7 +225,6 @@
           })
         }).then(this.formatContracts.bind(this))
           .then((contracts) => {
-            console.log('contracts', contracts)
             this.contracts = contracts
           })
       },
@@ -233,7 +234,6 @@
 
         contracts.forEach((contract) => {
           ContractDetailInfo.methods.format(contract)
-          contract.selected = this.selectedContractId === contract.contractId
           contract.execUrl = `/node/${this.$route.params.nodeId}/presentable/detail?contractId=${contract.contractId}#contract`
           segmengIdCreatedMap[contract.segmentId] = true
         })
@@ -247,7 +247,6 @@
             }
           })
         }
-        console.log(this.widget)
 
         return contracts
       }
@@ -259,6 +258,7 @@
   .warning-color {
     color: #E6A23C
   }
+
   .footer {
     text-align: center;
     margin-top: 20px;

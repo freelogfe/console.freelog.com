@@ -8,7 +8,7 @@ export default {
   name: 'node-presentable-creator',
   data() {
     return {
-      formData: {},
+      formData: {}
     }
   },
   mounted() {
@@ -73,9 +73,11 @@ export default {
         var formData = {
           resource: resource,
           data: {},
-          presentableTags: [],
-          userPolicy: '',
-          presentableName: '',
+          presentableInput: {
+            name: '',
+            policyText: '',
+            userDefinedTags: []
+          },
           selectedPolicy: null //记录选择哪个策略
         };
 
@@ -137,11 +139,11 @@ export default {
 
       let policy = {
         nodeId: nodeId,
-        name: formData.presentableName,
+        name: formData.presentableInput.name,
         resourceId: formData.resource.resourceId,
-        policyText: btoa(formData.userPolicy),
+        policyText: btoa(formData.presentableInput.policyText),
         languageType: 'freelog_policy_lang',
-        userDefinedTags: formData.presentableTags.join(',')
+        userDefinedTags: formData.presentableInput.userDefinedTags.join(',')
       }
 
       return {
