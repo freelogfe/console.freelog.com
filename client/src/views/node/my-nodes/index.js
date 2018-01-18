@@ -30,6 +30,9 @@ export default {
   mounted() {
   },
   methods: {
+    resolveDomain(row){
+      return `${location.protocol}//${row.nodeDomain}.freelog.com`
+    },
     loader() {
       var self = this;
       return () => {

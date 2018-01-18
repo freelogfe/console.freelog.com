@@ -10,16 +10,16 @@ export const RESOURCE_TYPES = {
 
 export const RESOURCE_STATUS = [
   {
-    text: '未知状态',
+    desc: '未知状态',
     type: 'danger'
   }, {
-    text: '未发布',
+    desc: '未发布',
     type: 'warning'
   }, {
-    text: '已发布',
+    desc: '已发布',
     type: 'success'
   }, {
-    text: '冻结',
+    desc: '冻结',
     type: 'danger'
   }
 ]

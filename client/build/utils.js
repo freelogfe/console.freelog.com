@@ -13,11 +13,7 @@ exports.cssLoaders = function (options) {
   options = options || {}
 
   var cssLoader = {
-    loader: 'css-loader',
-    options: {
-      minimize: process.env.NODE_ENV === 'production',
-      sourceMap: options.sourceMap
-    }
+    loader: 'happypack/loader?id=css',
   }
 
   // generate loader string to be used with extract text plugin
@@ -25,10 +21,7 @@ exports.cssLoaders = function (options) {
     var loaders = [cssLoader]
     if (loader) {
       loaders.push({
-        loader: loader + '-loader',
-        options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
-        })
+        loader: 'happypack/loader?id='+loader
       })
     }
 

@@ -27,6 +27,7 @@
       </el-form-item>
       <el-form-item class="login-btns">
         <el-button type="primary"
+                   :disabled="true"
                    style="width: 100%;"
                    :loading="loading"
                    @click="submit('loginForm')">{{ loading ? '保存中...' : '保存' }}

@@ -43,7 +43,7 @@
                   </div>
                   <i class="el-icon-info"></i>
                 </el-tooltip>
-                <el-tooltip placement="top" v-else>
+                <el-tooltip placement="top" v-else-if="!props.row.contractId">
                   <div slot="content" style="line-height: 16px">
                     该策略还未创建合同，需创建合同后方可选择绑定<br/>
                     <a :href="widget.createLink" target="_blank" class="warning-color">
@@ -231,7 +231,6 @@
       formatContracts(contracts) {
         var policyData = this.widget.policyData
         var segmengIdCreatedMap = {}
-
         contracts.forEach((contract) => {
           ContractDetailInfo.methods.format(contract)
           contract.execUrl = `/node/${this.$route.params.nodeId}/presentable/detail?contractId=${contract.contractId}#contract`

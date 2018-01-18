@@ -17,7 +17,7 @@
           <clip-board
             style="display: inline-block"
             @copyDone="copyDoneHandler"
-            :value="'http://api.freelog.com/node/home/'+scope.row.nodeDomain">
+            :value="resolveDomain(scope.row)">
             <a href="javascript:;">
               <i class="el-icon-fa-clipboard"></i>
             </a>

@@ -23,7 +23,7 @@ const token = {
       })
     },
     [types.DELETE_TOKEN]({commit, getters}) {
-      commit(mutationTypes.CHANGE_SESSION, {token: null})
+      commit(mutationTypes.CHANGE_SESSION, {token: null, user: null})
     },
     //去登录
     [types.CREATE_TOKEN]({commit}, data) {

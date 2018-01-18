@@ -33,7 +33,6 @@
             <router-link to="/account/settings">settings</router-link>
             <!--<a href="/account/settings" target="_blank">setting</a>-->
           </el-menu-item>
-          <el-menu-item index="payments">payments</el-menu-item>
           <el-menu-item index="logout" @click="logout">logout</el-menu-item>
         </el-submenu>
       </el-menu>

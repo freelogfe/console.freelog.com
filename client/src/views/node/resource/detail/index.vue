@@ -1,32 +1,18 @@
 <template>
   <section class="resource-detail">
-    <el-form label-position="right" class="small-el-form" label-width="100px">
-      <el-form-item label="资源ID">
-        {{detail.resourceId}}
+    <resource-detail-info :data="detail">
+      <el-form-item label="依赖widgets" v-if="detail.systemMeta && detail.systemMeta.widgets">
+        <a :href="widget.detailUrl" class="link"
+           target="_blank"
+           v-for="widget in detail.systemMeta.widgets" :key="widget.resourceId">
+          <el-tag>{{widget.resourceName}}</el-tag>
+        </a>
       </el-form-item>
-      <el-form-item label="资源名称">
-        {{detail.resourceName}}
-      </el-form-item>
-      <el-form-item label="资源类型">
-        {{detail.resourceType}}
-      </el-form-item>
-      <el-form-item label="资源链接">
-        {{detail.resourceUrl}}
-      </el-form-item>
-      <el-form-item label="资源状态">
-        {{detail.status}}
-      </el-form-item>
-      <el-form-item label="资源作者">
-        {{detail.userId}}
-      </el-form-item>
-      <el-form-item label="创建时间">
-        {{detail.createDate|fmtDate}}
-      </el-form-item>
-      <el-form-item>
+      <el-form-item style="margin-top: 20px">
         <el-button @click="bakcToList()">返回</el-button>
         <el-button type="primary" @click="gotoCreateContract(detail)">去创建presentable</el-button>
       </el-form-item>
-    </el-form>
+    </resource-detail-info>
   </section>
 </template>
 
@@ -37,5 +23,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  .link {
+    margin-right: 9px;
+  }
 </style>
