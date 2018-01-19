@@ -61,6 +61,7 @@ export default {
       tabs: [],
       valid: false,
       loading: false,
+      activeTabName: 'resourceInfo',
 
       formData: {
         resourceType: RESOURCE_TYPES.pageBuild || '',
@@ -82,17 +83,17 @@ export default {
       this.uploader.headers.authorization = this.session.token
     }
 
+    var tabName = this.$route.hash.slice(1)
+    if (tabName) {
+      this.activeTabName = tabName
+    }
+
     this.resourceTypeChange(this.formData.resourceType)
     this.$watch('formData', () => {
       this.$refs.createForm.validate((valid, err) => {
         this.valid = valid
       });
     }, {deep: true})
-  },
-  watch: {
-    formData: function () {
-
-    }
   },
   methods: {
     resourceTypeChange(type) {

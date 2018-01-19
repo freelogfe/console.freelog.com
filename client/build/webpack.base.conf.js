@@ -63,12 +63,16 @@ module.exports = {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
         // loader: 'url-loader',
         loader: 'happypack/loader?id=media',
-        exclude: /node_modules/
+        // exclude: /node_modules/
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        // loader: 'url-loader',
-        loader: 'happypack/loader?id=fonts',
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        }
+        // loader: 'happypack/loader?id=fonts',
       }
     ]
   },
@@ -109,18 +113,21 @@ module.exports = {
       threadPool: happyThreadPool,
       verbose: false
     }),
-    new HappyPack({
-      id: 'fonts',
-      loaders: [{
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
-      }],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
+    /**
+    * 会出现自定义字体无法decode的情况
+    * */
+    // new HappyPack({
+    //   id: 'fonts',
+    //   loaders: [{
+    //     loader: 'url-loader',
+    //     options: {
+    //       limit: 10000,
+    //       name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+    //     }
+    //   }],
+    //   threadPool: happyThreadPool,
+    //   verbose: false
+    // }),
     new HappyPack({
       id: 'css',
       loaders: [{
