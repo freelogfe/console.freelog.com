@@ -53,6 +53,7 @@ export default {
           return res.getData()
         })
     },
+    //暂时不支持修改
     submit(ref) {
       this.$refs[ref].validate(valid => {
         if (!valid) {
@@ -61,8 +62,7 @@ export default {
 
         this.error = null
         this.loading = true
-
-        var data = Object.assign(this.model, {
+        var data = Object.assign(this.userInfo, {
           jwtType: 'header',
           isRememer: this.rememberUser ? 1 : 0
         })

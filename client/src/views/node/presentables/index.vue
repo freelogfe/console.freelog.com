@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="presentable创建日期">
+        label="创建时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createDate | fmtDate}}</span>
         </template>
@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resourceId"
+        label="资源ID"
         align="center"
         width="350px">
       </el-table-column>
@@ -63,6 +63,7 @@
           <el-button
             size="small"
             class="action-btn"
+            type="warning"
             @click="handlePresentable(scope.row, 'edit')" v-if="!scope.row.presentableDetail">去创建user
             policy
           </el-button>

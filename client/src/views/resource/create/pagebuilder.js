@@ -88,7 +88,7 @@ export default {
       window.addEventListener('message', (event) => {
         var origin = event.origin || event.originalEvent.origin;
 
-        if (origin !== "http://console.freelog.com")
+        if (origin !== location.origin)
           return;
 
         var data = event.data
@@ -111,7 +111,6 @@ export default {
         let el = $els[i]
         initDrag(el);
       }
-
 
       function initDrag(el, containment) {
         var _mirror = el.cloneNode(true);
@@ -173,12 +172,6 @@ export default {
     },
     postMessage(data) {
       this.$refs.rightPanel.contentWindow.postMessage(data, '*')
-    },
-    showInfoHandler(index) {
-      this.widgets[index].showInfo = true
-    },
-    hideInfoHandler(index) {
-      this.widgets[index].showInfo = false
     },
     loadWidgets() {
       var self = this;

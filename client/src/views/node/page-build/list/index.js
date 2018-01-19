@@ -77,6 +77,7 @@ export default {
               this.updateStatus()
             }
             presentable.status = param.status
+            this.format(this.pagebuildList)
             this.$message.success('设置成功')
           } else {
             throw new Error(res.data.msg)

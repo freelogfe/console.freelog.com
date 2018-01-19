@@ -9,35 +9,32 @@
           </el-input>
         </div>
         <el-row :gutter="5" ref="leftPanel" class="widgets-panel">
-          <el-col :span="24" v-for="(widget, index) in widgets" :key="'widget'+index"
+          <el-col :span="12" v-for="(widget, index) in widgets" :key="'widget'+index"
                   class="widget-item js-draggable-widget"
                   :data-index="index">
-            <el-popover
-              ref="widgetInfo"
-              placement="bottom"
-              width="400"
-              v-model="widget.showInfo"
-              trigger="manual">
-              <div slot="reference">
-                <el-card :body-style="{padding: 0}" class="js-widget widget-resource"
-                         :data-index="index"
-                         @mouseleave.native="hideInfoHandler(index)"
-                         @mouseenter.native="showInfoHandler(index)">
-                  <div style="padding: 14px;">
-                    <span>{{widget.resourceName}}</span>
-                  </div>
-                </el-card>
+            <el-card :body-style="{padding: 3}" class="js-widget widget-resource"
+                     :data-index="index">
+              <div>
+                <span>{{widget.resourceName}}</span>
+                <el-popover
+                  ref="widgetInfo"
+                  placement="bottom"
+                  width="400"
+                  v-model="widget.showInfo"
+                  trigger="hover">
+                  <i class="el-icon-info" slot="reference"></i>
+                  <slot>
+                    <div class="widget-meta-info">
+                      <ul>
+                        <li v-for="(val, key) in widget">
+                          {{key}}: {{val}}
+                        </li>
+                      </ul>
+                    </div>
+                  </slot>
+                </el-popover>
               </div>
-              <slot>
-                <div class="widget-meta-info">
-                  <ul>
-                    <li v-for="(val, key) in widget">
-                      {{key}}: {{val}}
-                    </li>
-                  </ul>
-                </div>
-              </slot>
-            </el-popover>
+            </el-card>
           </el-col>
         </el-row>
       </el-col>
@@ -59,7 +56,7 @@
             </el-radio-button>
           </el-radio-group>
           <el-tooltip class="item" effect="dark" content="全屏模式" placement="top">
-            <el-button @click="enterFullscreen">
+            <el-button @click="enterFullscreen" style="float:right;">
               <i class="el-icon-fa-arrows-alt" aria-hidden="true"></i>
             </el-button>
           </el-tooltip>

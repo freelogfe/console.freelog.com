@@ -14,14 +14,16 @@
       </el-tag>
     </el-form-item>
     <el-form-item label="甲方">
-      <span>{{ detail.partyOne }}</span>
+      <span v-if="detail.partyOneInfo">{{ detail.partyOneInfo.nickname }}</span>
+      <span v-else>{{ detail.partyOne }}</span>
     </el-form-item>
     <el-form-item label="乙方">
-      <span>{{ detail.partyTwo }}</span>
+      <span v-if="detail.partyTwoInfo">{{ detail.partyTwoInfo.nodeName }}</span>
+      <span v-else>{{ detail.partyTwo }}</span>
     </el-form-item>
     <el-form-item label="合同详情" v-if="detail.policySegment">
       <br>
-      <pre>{{ detail.policySegment.segmentText }}</pre>
+      <pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>
     </el-form-item>
     <slot></slot>
   </el-form>
@@ -64,6 +66,16 @@
       render() {
         this.detail = this.format(this.data)
       },
+      loadUserInfo(userId) {
+        return this.$services.user.get(userId).then((res) => {
+          return res.getData()
+        })
+      },
+      loadNodeInfo(nodeId) {
+        return this.$services.nodes.get(nodeId).then((res) => {
+          return res.getData()
+        })
+      },
       format(contract) {
         if (!contract) return
 
@@ -74,6 +86,18 @@
             type: user.userType
           }
         })
+
+        if (contract.partyOne) {
+          this.loadUserInfo(contract.partyOne).then((userInfo) => {
+            this.$set(contract, 'partyOneInfo', userInfo)
+          })
+        }
+
+        if (contract.partyTwo) {
+          this.loadNodeInfo(contract.partyTwo).then((nodeInfo) => {
+            this.$set(contract, 'partyTwoInfo', nodeInfo)
+          })
+        }
         return contract
       }
     }

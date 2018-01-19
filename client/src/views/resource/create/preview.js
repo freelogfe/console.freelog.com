@@ -1,5 +1,7 @@
+/**
+ * pagebuild的可视化模式预览页面
+ */
 import Draggabilly from 'draggabilly'
-// import Draggable from "gsap/Draggable";
 /*
 freelog-(user namespace)-widgetname
  */
@@ -191,12 +193,13 @@ export default {
       }
     },
     setViewModeContent(detail) {
+      debugger
       this.$refs.page.innerHTML = detail.html
       this.initWidgetsEvent()
     },
     //将可视模式下的源码同步到编辑模式
     syncCodeModeContent() {
-      console.log('this.$refs.page.innerHTML',this.$refs.page.innerHTML)
+      console.log('this.$refs.page.innerHTML', this.$refs.page.innerHTML)
       this.postMessage({
         action: 'setCodeModeContent',
         detail: {

@@ -25,20 +25,20 @@
       </el-table-column>
       <el-table-column
         width="120px"
-        label="create date">
+        label="创建时间">
         <template slot-scope="scope">
           {{scope.row.createDate|fmtDate}}
         </template>
       </el-table-column>
       <el-table-column
-        label="资源Url">
+        label="资源链接（for test）">
         <template slot-scope="scope">
           <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
         </template>
       </el-table-column>
       <el-table-column
         width="100px"
-        label="status">
+        label="展示状态">
         <template slot-scope="scope">
           <el-tag :type="scope.row.statusInfo.type">{{scope.row.statusInfo.desc}}</el-tag>
         </template>
