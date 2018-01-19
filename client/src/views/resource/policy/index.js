@@ -5,14 +5,13 @@ export default {
   data() {
     return {
       submitLoading: false,
-      policyText: this.value || `For user0A:     
-    in initial : 
-      proceed to signing on accepting transaction of 100 to feth1090d4667ab
-    in signing : 
-      proceed to activate on accepting license license_A 
-    in activate : 
-      proceed to suspend on visit of 20000 
-    I agree to authorize token in activate`,
+      policyText: this.value || `For users in NODES :
+    in initial :
+      proceed to signing on transaction of 100 to feth1090d4667ab
+    in signing :
+      proceed to ^activate^ on license license_A
+    in activate :
+      proceed to suspend on visit of 20000 `,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
