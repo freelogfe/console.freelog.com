@@ -24,7 +24,7 @@
         <!--</el-badge>-->
         <!--</div>-->
         <!--</el-menu-item>-->
-        <el-submenu index="account">
+        <el-submenu index="account" v-if="session.user">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
             <span style="color: #909399">{{session.user.nickname}}</span>

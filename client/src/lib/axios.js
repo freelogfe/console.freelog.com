@@ -19,8 +19,8 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(config => {
-    if (store.getters.session.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-      config.headers.Authorization = store.getters.session.token;
+    if (store.getters.session.user) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+      // config.headers.Authorization = store.getters.session.token;
     }
 
     return config;

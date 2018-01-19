@@ -38,7 +38,6 @@ let eventComponentMap = {
   }
 }
 
-
 export default {
   name: 'presentable-contract-detail',
   data() {
@@ -86,7 +85,18 @@ export default {
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
+      this.parseContract(detail)
       this.formatContractDetail = formatContractDetail
+    },
+    parseContract(detail) {
+      var text = detail.policySegment.segmentText.replace(/\n/g, '<br/>')
+
+      detail.policySegment.fsmDescription.forEach((fms) => {
+        var match = `in ${fms.currentState}`
+        text = text.replace(match, `<span class="state-tag">${match}</span>`)
+      })
+      detail._segmentDetail = text
+      console.log(text)
     },
     resolveContractEvents(detail) {
       let events = []
@@ -109,7 +119,7 @@ export default {
           params: event.params
         })
       }
-      console.log('corresponseEvents',corresponseEvents);
+
       corresponseEvents.forEach((transition) => {
         if (transition.event.type === 'compoundEvents') {
           transition.event.params.forEach(pushEvent)
