@@ -33,9 +33,7 @@ exports.cssLoaders = function (options) {
         fallback: 'vue-style-loader'
       })
     } else {
-      return [{
-        loader: 'happypack/loader?id=style'
-      }].concat(loaders)
+      return ['vue-style-loader'].concat(loaders)
     }
   }
 
