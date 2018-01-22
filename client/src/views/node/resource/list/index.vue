@@ -39,10 +39,10 @@
         <template slot-scope="scope">
           <el-dropdown size="small" split-button type="primary"
                        @command="handleCommand"
-                       @click="handleContact(scope.row)">
-            创建presentable
+                       @click="viewSrcDetail(scope.row)">
+            查看详情
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="{fn:'viewSrcDetail',data: scope.row}">查看详情</el-dropdown-item>
+              <el-dropdown-item :command="{fn:'handleContact',data: scope.row}">创建presentable</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>

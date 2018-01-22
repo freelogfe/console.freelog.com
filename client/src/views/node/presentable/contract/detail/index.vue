@@ -14,7 +14,10 @@
 
     <div v-if="contractDetail">
       <contract-detail-info :data="contractDetail" :labelWidth="120">
-        <el-form-item label="合同事件" v-if="formatContractDetail.events.length" class=" flex-grid">
+        <el-form-item label="合同详情">
+          <contract-content :data="contractDetail"></contract-content>
+        </el-form-item>
+        <el-form-item label="合同事件" v-if="formatContractDetail.events.length" class="flex-grid">
           <el-select v-model="selectedContractEvent"
                      class="item-detail"
                      placeholder="请选择">

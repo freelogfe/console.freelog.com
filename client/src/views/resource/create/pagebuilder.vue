@@ -15,7 +15,9 @@
             <el-card :body-style="{padding: 3}" class="js-widget widget-resource"
                      :data-index="index">
               <div>
-                <span>{{widget.resourceName}}</span>
+                <span>
+                  {{widget.resourceName}}
+                </span>
                 <el-popover
                   ref="widgetInfo"
                   placement="bottom"

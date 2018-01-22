@@ -25,7 +25,7 @@
                                   :name="index"
                                   :key="widget.resourceId">
                   <template slot="title">
-                    {{widget.resourceName}}
+                    {{widget.resourceId}}
                     <div class="create-p-btn" v-if="!widget.contractId">
                       <el-tooltip placement="top">
                         <div slot="content">

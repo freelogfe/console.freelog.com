@@ -76,7 +76,7 @@
         <ul class="dep-widget-list">
           <li v-for="widget in formData.widgets" class="widget-detail-link">
             <a :href="widget.detailUrl" target="_blank">
-              <el-tag type="warning">{{widget.resourceName}}</el-tag>
+              <el-tag type="warning">{{widget.resourceId}}</el-tag>
             </a>
           </li>
         </ul>

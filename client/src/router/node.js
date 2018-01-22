@@ -65,7 +65,8 @@ export const nodeItemRoute = {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '资源详情'
+        title: '资源详情',
+        breadcrumbTitle: '资源详情'
       },
       component: resourceDetail
     },
@@ -81,7 +82,8 @@ export const nodeItemRoute = {
       path: 'resources',
       meta: {
         requiresAuth: true,
-        title: '资源市场'
+        title: '资源市场',
+        breadcrumbTitle: '资源市场'
       },
       component: nodeResourceList
     }

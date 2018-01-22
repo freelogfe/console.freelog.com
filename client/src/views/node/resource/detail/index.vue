@@ -5,7 +5,7 @@
         <a :href="widget.detailUrl" class="link"
            target="_blank"
            v-for="widget in detail.systemMeta.widgets" :key="widget.resourceId">
-          <el-tag>{{widget.resourceName}}</el-tag>
+          <el-tag>{{widget.resourceId}}</el-tag>
         </a>
       </el-form-item>
       <el-form-item style="margin-top: 20px">

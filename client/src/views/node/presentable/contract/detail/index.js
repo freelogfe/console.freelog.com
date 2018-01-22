@@ -2,7 +2,7 @@ import CONFIG from '@/config/index'
 import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
-
+import ContractContent from './content.vue'
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
@@ -38,7 +38,6 @@ let eventComponentMap = {
   }
 }
 
-
 export default {
   name: 'presentable-contract-detail',
   data() {
@@ -57,7 +56,8 @@ export default {
   components: {
     TransactionEvent,
     LicenseEvent,
-    ContractDetailInfo
+    ContractDetailInfo,
+    ContractContent
   },
   props: {
     contractDetail: Object
@@ -109,7 +109,7 @@ export default {
           params: event.params
         })
       }
-      console.log('corresponseEvents',corresponseEvents);
+
       corresponseEvents.forEach((transition) => {
         if (transition.event.type === 'compoundEvents') {
           transition.event.params.forEach(pushEvent)

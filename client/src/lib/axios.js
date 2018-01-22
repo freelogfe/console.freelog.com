@@ -19,7 +19,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(config => {
-    if (store.getters.session.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+    if (store.getters.session.user) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
       config.headers.Authorization = store.getters.session.token;
     }
 
@@ -33,8 +33,16 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(response => {
     var errorMsg
     var data = response.data;
-
-    if (response.status === 200 && data.ret === 0) {
+    var loginPath = '/user/login'
+    if (data.errcode === 28 && location.pathname !== loginPath) {
+      location.replace(loginPath)
+      //replace执行存在延迟
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(response)
+        }, 5e2)
+      })
+    } else if (response.status === 200 && data.ret === 0) {
       response.getData = () => {
         return data.data
       };
