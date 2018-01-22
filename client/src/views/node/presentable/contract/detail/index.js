@@ -2,7 +2,7 @@ import CONFIG from '@/config/index'
 import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
-
+import ContractContent from './content.vue'
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
@@ -56,7 +56,8 @@ export default {
   components: {
     TransactionEvent,
     LicenseEvent,
-    ContractDetailInfo
+    ContractDetailInfo,
+    ContractContent
   },
   props: {
     contractDetail: Object
@@ -85,18 +86,7 @@ export default {
 
       formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
       formatContractDetail.events = this.resolveContractEvents(detail)
-      this.parseContract(detail)
       this.formatContractDetail = formatContractDetail
-    },
-    parseContract(detail) {
-      var text = detail.policySegment.segmentText.replace(/\n/g, '<br/>')
-
-      detail.policySegment.fsmDescription.forEach((fms) => {
-        var match = `in ${fms.currentState}`
-        text = text.replace(match, `<span class="state-tag">${match}</span>`)
-      })
-      detail._segmentDetail = text
-      console.log(text)
     },
     resolveContractEvents(detail) {
       let events = []

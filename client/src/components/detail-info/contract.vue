@@ -21,10 +21,10 @@
       <span v-if="detail.partyTwoInfo">{{ detail.partyTwoInfo.nodeName }}</span>
       <span v-else>{{ detail.partyTwo }}</span>
     </el-form-item>
-    <el-form-item label="合同详情" v-if="detail.policySegment">
-      <br>
-      <pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>
-    </el-form-item>
+    <!--<el-form-item label="合同详情" v-if="detail.policySegment">-->
+      <!--<br>-->
+      <!--<pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>-->
+    <!--</el-form-item>-->
     <slot></slot>
   </el-form>
 </template>
@@ -67,6 +67,7 @@
         this.detail = this.format(this.data)
       },
       loadUserInfo(userId) {
+
         return this.$services.user.get(userId).then((res) => {
           return res.getData()
         })

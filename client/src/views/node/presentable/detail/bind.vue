@@ -176,10 +176,10 @@
             .then(() => {
               this.loading = false
             })
-            .catch((err) => {
-              this.$error.showErrorMessage(err)
-              this.loading = false
-            })
+//            .catch((err) => {
+//              this.$error.showErrorMessage(err)
+//              this.loading = false
+//            })
         }
       },
       loadPolicies(resourceId) {
@@ -231,8 +231,15 @@
       formatContracts(contracts) {
         var policyData = this.widget.policyData
         var segmengIdCreatedMap = {}
+
         contracts.forEach((contract) => {
-          ContractDetailInfo.methods.format(contract)
+          contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
+          contract.forUsers = contract.policySegment.users.map((user) => {
+            return {
+              users: user.users.join('、'),
+              type: user.userType
+            }
+          })
           contract.execUrl = `/node/${this.$route.params.nodeId}/presentable/detail?contractId=${contract.contractId}#contract`
           segmengIdCreatedMap[contract.segmentId] = true
         })
