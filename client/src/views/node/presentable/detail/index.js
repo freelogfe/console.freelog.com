@@ -64,7 +64,8 @@ export default {
     this.loading = true
     this.loadDetailData(query)
       .then(this.formatData.bind(this))
-      .then(() => {
+      .then((detail) => {
+        this.detail = detail
         this.loading = false
       })
       .catch((err) => {
@@ -180,7 +181,8 @@ export default {
           userDefinedTags: detail.presentableInfo.tagInfo.userDefined
         })
       }
-      this.detail = detail
+
+      return detail
     },
     loadResourceDetail(resId) {
       return this.$services.resource.get(resId).then((res) => {

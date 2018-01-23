@@ -1,5 +1,5 @@
 import Container from 'views/layout/container.vue'
-
+import store from '../store'
 import {
   nodeCreator,
   nodeUpdator,
@@ -11,9 +11,26 @@ import {
   presentableDetail,
   presentablesView,
   pagebuildList,
-
+  contractsView,
+  NodeLoginView
 } from '@/views'
 
+function requireNodeLogin(to, from, next) {
+  store.dispatch('checkNode')
+    .then(nodeInfo => {
+      if (nodeInfo) {
+        if (/:nodeId/.test(to.path)) {
+          next({path: to.path.replace(':nodeId', nodeInfo.nodeId)})
+        } else {
+          next()
+        }
+      } else {
+        next({path: '/node/login', query: {redirect: to.fullPath}})
+      }
+    })
+}
+
+//节点操作相关的页面
 export const nodeItemRoute = {
   path: ':nodeId',
   component: Container,
@@ -26,11 +43,21 @@ export const nodeItemRoute = {
   children: [
     {
       path: 'presentables',
+      beforeEnter: requireNodeLogin,
       meta: {
         requiresAuth: true,
         title: 'presentables'
       },
       component: presentablesView
+    },
+    {
+      path: 'contracts',
+      beforeEnter: requireNodeLogin,
+      meta: {
+        requiresAuth: true,
+        title: '资源合同'
+      },
+      component: contractsView
     },
     {
       path: 'presentable',
@@ -44,6 +71,7 @@ export const nodeItemRoute = {
       children: [
         {
           path: 'detail',
+          beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: 'presentable详情'
@@ -52,6 +80,7 @@ export const nodeItemRoute = {
         },
         {
           path: 'create',
+          beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: '创建presentable'
@@ -61,31 +90,23 @@ export const nodeItemRoute = {
       ]
     },
     {
-      path: 'resource/detail',
-      hidden: true,
+      path: 'setting',
       meta: {
         requiresAuth: true,
-        title: '资源详情',
-        breadcrumbTitle: '资源详情'
+        title: 'setting'
       },
-      component: resourceDetail
-    },
-    {
-      path: 'pagebuilds',
-      meta: {
-        requiresAuth: true,
-        title: 'PageBuild管理列表'
-      },
-      component: pagebuildList
-    },
-    {
-      path: 'resources',
-      meta: {
-        requiresAuth: true,
-        title: '资源市场',
-        breadcrumbTitle: '资源市场'
-      },
-      component: nodeResourceList
+      component: Container,
+      children: [
+        {
+          path: 'pagebuilds',
+          beforeEnter: requireNodeLogin,
+          meta: {
+            requiresAuth: true,
+            title: 'PageBuild管理'
+          },
+          component: pagebuildList
+        },
+      ]
     }
   ]
 };
@@ -126,13 +147,22 @@ export default {
       component: nodeList
     },
     {
-      path: 'detail',
+      path: 'detail/:nodeId',
       hidden: true,
       meta: {
         requiresAuth: true,
         title: '节点详情'
       },
       component: nodeDetail
+    },
+    {
+      path: 'login',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '节点登录'
+      },
+      component: NodeLoginView
     },
     nodeItemRoute,
   ]

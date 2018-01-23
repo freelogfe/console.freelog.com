@@ -2,12 +2,15 @@
   <div class="nav-menu-list">
     <el-menu ref="navMenu" background-color="#324157" class="nav-menu-wrap" router>
       <template v-for="(navItem,index) in navList">
-        <el-submenu :index="navItem.path" v-if="navItem.children && !navItem.hidden"
+        <el-submenu :index="navItem.path"
+                    v-if="navItem.children && navItem.children.length > 0"
                     :class="{'is-active': navItem.isActive}">
           <template slot="title">
-            <span v-show="shouldShowTitle">{{navItem.meta.title}}</span>
+            <span v-show="shouldShowTitle" class="nav-menu-title">{{navItem.meta.title}}</span>
           </template>
-          <fl-nav-menu :nav-list="navItem.children" :should-show-title="shouldShowTitle"></fl-nav-menu>
+          <el-menu-item :index="item.path" :key="item.path" v-for="item in navItem.children">
+            {{item.meta.title}}
+          </el-menu-item>
         </el-submenu>
         <el-menu-item :index="navItem.path" v-else-if="!navItem.hidden"
                       :class="{'is-active': navItem.isActive}">
@@ -25,7 +28,8 @@
 </script>
 
 <style scoped lang="less">
-  .el-menu-item {
+  .el-menu-item,
+  .nav-menu-title {
     color: #fff
   }
 

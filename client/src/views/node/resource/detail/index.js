@@ -12,8 +12,9 @@ export default {
   components: {ResourceDetailInfo},
 
   mounted() {
-    if (this.$route.query.resourceId) {
-      this.load(this.$route.query.resourceId)
+    var resourceId = this.$route.params.resourceId
+    if (resourceId) {
+      this.load(resourceId)
         .then(this.format.bind(this))
         .then((detail) => {
           this.detail = detail
@@ -26,7 +27,7 @@ export default {
     format(detail) {
       if (detail.systemMeta.widgets) {
         detail.systemMeta.widgets.forEach((widget) => {
-          widget.detailUrl = `/node/${this.$route.params.nodeId}/resource/detail?resourceId=${widget.resourceId}`
+          widget.detailUrl = `/resources/detail/${widget.resourceId}`
         })
       }
 
@@ -37,13 +38,11 @@ export default {
         .then((res) => {
           var detail = res.getData()
           return detail
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+        }).catch(this.$error.showErrorMessage)
     },
     bakcToList() {
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/resources`,
+        path: `/resources/list`,
       })
     },
     gotoCreateContract(resource) {
@@ -54,7 +53,7 @@ export default {
       }
 
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/create`,
+        path: `/node/:nodeId/presentable/create`,
         query: query
       })
     },

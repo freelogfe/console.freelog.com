@@ -3,6 +3,7 @@ import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
 import ContractContent from './content.vue'
+
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
 let contractEventsMap = {
@@ -65,6 +66,8 @@ export default {
   watch: {
     contractDetail: 'formatData'
   },
+  mounted() {
+  },
   methods: {
     handleCloseDialog(done) {
       this.closeDialogHandler()
@@ -81,52 +84,15 @@ export default {
       this.$refs.eventDialog.hide()
     },
     formatData() {
-      var detail = this.contractDetail
-      var formatContractDetail = {}
-
-      formatContractDetail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
-      formatContractDetail.events = this.resolveContractEvents(detail)
-      this.formatContractDetail = formatContractDetail
-    },
-    resolveContractEvents(detail) {
-      let events = []
-      let fsmState = detail.fsmState;
-      let stateTransitionMap = detail.policySegment.fsmDescription;
-      let corresponseEvents = [];
-
-      stateTransitionMap.forEach((transition) => {
-        if (transition.currentState === fsmState) {
-          corresponseEvents.push(transition)
-        }
-      })
-
-      var pushEvent = (event) => {
-        var eventFn = contractEventsMap[event.type] || (() => 'no event handler')
-        events.push({
-          desc: eventFn(event.type),
-          eventId: event.eventId, //用于test，实际要删除
-          type: event.type,
-          params: event.params
-        })
-      }
-
-      corresponseEvents.forEach((transition) => {
-        if (transition.event.type === 'compoundEvents') {
-          transition.event.params.forEach(pushEvent)
-        } else {
-          pushEvent(transition.event)
-        }
-      })
-
-      return events
+      var detail = Object.assign({}, this.contractDetail)
+      detail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
+      this.formatContractDetail = detail
     },
     loadContractDetail(param) {
       return this.$services.contract.get(param || {})
         .then((res) => {
           return res.getData();
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+        }).catch(this.$error.showErrorMessage)
     },
     updateContractDetail() {
       this.loadContractDetail(this.contractDetail.contractId).then((contract) => {
@@ -134,10 +100,9 @@ export default {
         this.formatData()
       })
     },
-    executeContractHandler() {
-      var selectedContractEvent = this.formatContractDetail.events[this.selectedContractEvent];
-      var eventComConfig = eventComponentMap[selectedContractEvent.type]
-      this.selectedContractEvent = selectedContractEvent
+    executeContractHandler(params) {
+      var eventComConfig = eventComponentMap[params.type]
+      this.selectedContractEvent = params
       this.eventComponent = eventComConfig.type;
       this.dialogTitle = eventComConfig.title
       this.showEventExecDialog = true;

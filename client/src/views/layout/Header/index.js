@@ -16,7 +16,6 @@ export default {
   }),
 
   created() {
-    // this.$store.dispatch('getCurrentUser', userId)
     this.resolveRouter();
   },
 
@@ -42,9 +41,7 @@ export default {
       this.$services.other.logout().then((res) => {
         this.$store.dispatch('deleteToken')
         this.$router.replace({path: '/user/login', query: {redirect: this.$route.fullPath}})
-      }).catch((err)=>{
-        this.$message.error(err.response.errorMsg || err)
-      })
+      }).catch(this.$error.showErrorMessage)
     }
   }
 }

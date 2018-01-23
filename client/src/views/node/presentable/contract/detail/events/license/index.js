@@ -6,7 +6,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.contractDetail, this.params)
   },
   props: ['contractDetail', 'params'],
 

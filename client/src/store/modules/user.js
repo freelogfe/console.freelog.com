@@ -1,6 +1,5 @@
 import {UserService, OtherService} from '../../services'
-import {storage} from '@/lib/index'
-
+import {storage, axios} from '@/lib/index'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
@@ -22,11 +21,18 @@ const user = {
 
   actions: {
     [types.GET_CURRENT_USER]({commit}, userId) {
-      return UserService.get(userId)
-        .then(res => {
-          commit(types.CHANGE_SESSION, {user: res.data});
-          return res.data
-        })
+      var promise
+      if (userId) {
+        promise = UserService.get(userId)
+      } else {
+        promise = axios.get('/v1/userinfos/current')
+      }
+      return promise.then(res => {
+        if (res.data.errcode === 0) {
+          commit(types.CHANGE_SESSION, {user: res.data.data});
+        }
+        return res.data.data
+      })
     },
     [types.CHANGE_SESSION]({commit}, data) {
       commit(types.CHANGE_SESSION, data);

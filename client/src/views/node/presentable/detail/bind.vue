@@ -87,6 +87,7 @@
 <script>
   import ContractDetailInfo from '@/components/detail-info/contract.vue'
   import {CONTRACT_STATUS_COLORS} from '@/config/contract'
+  import ContractUtils from '@/data/contract/utils'
 
   export default {
     name: 'presentable-bind-widget',
@@ -115,16 +116,16 @@
       listenWindowVisibility() {
         var self = this
         var hidden = 'hidden';
-        // Standards:
-        if (hidden in document)
-          document.addEventListener('visibilitychange', onchange);
-        else if ((hidden = 'mozHidden') in document)
-          document.addEventListener('mozvisibilitychange', onchange);
-        else if ((hidden = 'webkitHidden') in document)
-          document.addEventListener('webkitvisibilitychange', onchange);
-        else if ((hidden = 'msHidden') in document)
-          document.addEventListener('msvisibilitychange', onchange);
-        // All others:
+        var doc = document
+
+        if (hidden in doc)
+          doc.addEventListener('visibilitychange', onchange);
+        else if ((hidden = 'mozHidden') in doc)
+          doc.addEventListener('mozvisibilitychange', onchange);
+        else if ((hidden = 'webkitHidden') in doc)
+          doc.addEventListener('webkitvisibilitychange', onchange);
+        else if ((hidden = 'msHidden') in doc)
+          doc.addEventListener('msvisibilitychange', onchange);
         else
           window.onpageshow = window.onpagehide
             = window.onfocus = window.onblur = onchange;
@@ -148,7 +149,6 @@
             self.render()
           }
         }
-
       },
       cancelHandler() {
         this.$emit('done', {
@@ -176,10 +176,10 @@
             .then(() => {
               this.loading = false
             })
-//            .catch((err) => {
-//              this.$error.showErrorMessage(err)
-//              this.loading = false
-//            })
+            .catch((err) => {
+              this.$error.showErrorMessage(err)
+              this.loading = false
+            })
         }
       },
       loadPolicies(resourceId) {
@@ -233,13 +233,7 @@
         var segmengIdCreatedMap = {}
 
         contracts.forEach((contract) => {
-          contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
-          contract.forUsers = contract.policySegment.users.map((user) => {
-            return {
-              users: user.users.join('、'),
-              type: user.userType
-            }
-          })
+          ContractUtils.format(contract)
           contract.execUrl = `/node/${this.$route.params.nodeId}/presentable/detail?contractId=${contract.contractId}#contract`
           segmengIdCreatedMap[contract.segmentId] = true
         })

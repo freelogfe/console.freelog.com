@@ -56,11 +56,8 @@ export default {
                 }, 1e3)
               }
             })
-            .catch((err) => {
-              this.$message.error(err.response.errorMsg || err)
-            })
+            .catch(this.$error.showErrorMessage)
         } else {
-          console.log('error submit!!');
           return false;
         }
       });

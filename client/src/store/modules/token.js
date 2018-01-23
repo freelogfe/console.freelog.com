@@ -13,12 +13,14 @@ const token = {
   mutations: {},
 
   actions: {
-    [types.CHECK_TOKEN]({commit, getters}){
+    [types.CHECK_TOKEN]({commit, getters}) {
       return new Promise((resolve, reject) => {
         if (getters.session.user && getters.session.user.userId) {
           resolve(true)
         } else {
-          resolve(false)
+          this.dispatch('getCurrentUser').then((data) => {
+            resolve(!!data)
+          })
         }
       })
     },

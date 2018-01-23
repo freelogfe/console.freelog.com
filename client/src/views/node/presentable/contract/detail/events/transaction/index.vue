@@ -1,5 +1,11 @@
 <template>
   <div class="transaction-wrap">
+    <el-alert
+      v-if="tipMsg"
+      :title="tipMsg"
+      type="warning">
+    </el-alert>
+
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="contractId">
         {{contractDetail.contractId}}
@@ -32,7 +38,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="doneHandler">取 消</el-button>
-        <el-button type="primary" @click="pay">确 定</el-button>
+        <el-button type="primary" @click="pay" :disabled="order.status ==1||order.status ==2">确 定</el-button>
       </el-form-item>
     </el-form>
   </div>

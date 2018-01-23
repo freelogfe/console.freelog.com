@@ -10,7 +10,7 @@ import nodeRoute from './node'
 import accountRoute from './account'
 import resourceRoute from './resource'
 import userRoute from './user'
-import eventRoute from './event'
+import resourceMarket from './resource-market'
 import Container from 'views/layout/container.vue'
 
 Vue.use(Router)
@@ -40,7 +40,7 @@ export default new Router({
   routes: [
     accountRoute,
     userRoute,
-    eventRoute,
+    resourceMarket,
     {
       path: '/resource/create/preview',
       meta: {requiresAuth: true, title: 'page build预览'},

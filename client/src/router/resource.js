@@ -1,3 +1,6 @@
+/**
+ * 资源管理系统
+ */
 import Container from 'views/layout/container.vue'
 
 import {

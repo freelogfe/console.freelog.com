@@ -17,9 +17,8 @@ import PbContract from './pbcontract'
 import ContractRecords from './contractRecords'
 import Accounts from './accounts'
 import Pay from './pay' //支付接口
+import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
-
-// import TokenService from './tokens'
 
 import eventTest from './eventTest' //事件接口测试
 
@@ -35,10 +34,10 @@ export {
   ContractService,
   PagebuildService,
   OtherService,
+  orderInfo,
   PbContract,
   ContractRecords,
   Accounts,
   Pay,
-  // TokenService,
   eventTest
 }

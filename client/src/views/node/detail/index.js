@@ -1,4 +1,5 @@
 import {NodeCreationRule} from '@/views/node/create/index'
+import {NODE_STATUS} from '@/config/node'
 
 export default {
   name: 'node-detail',
@@ -12,20 +13,23 @@ export default {
   },
 
   mounted() {
-    if (this.$route.query.nodeId) {
-      this.load(this.$route.query.nodeId)
+    var nodeId = this.$route.params.nodeId
+    if (nodeId) {
+      this.load(nodeId)
+        .then((detail) => {
+          detail.statusInfo = NODE_STATUS[detail.status]
+          this.detail = detail
+        })
     } else {
-      this.$message.error('缺少参数resourceId');
+      this.$message.error('缺少参数nodeId');
     }
   },
   methods: {
     load(param) {
       return this.$services.nodes.get(param || {})
         .then((res) => {
-          return (this.detail = res.getData());
-        }).catch((err) => {
-          this.$message.error(err.response.errorMsg || err)
-        })
+          return res.getData();
+        }).catch(this.$error.showErrorMessage)
     },
     updateNodeDetail(formName) {
       const self = this;
@@ -43,7 +47,7 @@ export default {
         }
       });
     },
-    backToList () {
+    backToList() {
       this.$router.push({
         path: `/node/list`,
       })

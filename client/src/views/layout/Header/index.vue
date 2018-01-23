@@ -17,13 +17,6 @@
 
       <el-menu background-color="#324157" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
                @select="handleSelect">
-        <!--<el-menu-item index="1">-->
-        <!--<div class="badge-item">-->
-        <!--<el-badge :value="12" class="item">-->
-        <!--<i class="fa fa-envelope-o"></i>-->
-        <!--</el-badge>-->
-        <!--</div>-->
-        <!--</el-menu-item>-->
         <el-submenu index="account" v-if="session.user">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
@@ -31,7 +24,9 @@
           </template>
           <el-menu-item index="setting">
             <router-link to="/account/settings">settings</router-link>
-            <!--<a href="/account/settings" target="_blank">setting</a>-->
+          </el-menu-item>
+          <el-menu-item>
+            <a href="//www.freelog.com/pages/user/index.html" target="_blank">payment</a>
           </el-menu-item>
           <el-menu-item index="logout" @click="logout">logout</el-menu-item>
         </el-submenu>

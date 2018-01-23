@@ -1,9 +1,9 @@
 <template>
   <section>
     <div class="resource-top-sec">
-      <el-button type="primary">
-        <router-link class="route-link" to="/resource/create">创建新资源</router-link>
-      </el-button>
+      <router-link class="route-link" to="/resource/create">
+        <el-button type="primary">创建新资源</el-button>
+      </router-link>
     </div>
     <table-view class="resource-list" :loader="loader()">
       <el-table-column

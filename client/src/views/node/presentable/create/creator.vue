@@ -116,7 +116,6 @@
         }
 
         formData.selectedPolicy = formData.data.policy[this.selectedIndex] || false
-        console.log(formData.selectedPolicy)
       }
     }
   }

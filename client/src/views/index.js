@@ -18,6 +18,9 @@ export const resourceUpdator = resolve => require.ensure([], () => resolve(requi
 export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve(require('@/views/main/index')), 'dashboard')
 export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
 export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/node/resource/detail/index.vue')), 'node')
+export const contractsView = resolve => require.ensure([], () => resolve(require('@/views/node/contract/list/index.vue')), 'contract')
+
+
 export const resourceDetailEditor = resolve => require.ensure([], () => resolve(require('@/views/resource/edit/index.vue')), 'resource')
 
 //node管理
@@ -35,15 +38,11 @@ export const pagebuildList = resolve => require.ensure([], () => resolve(require
 export const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')
 export const helpView = resolve => require.ensure([], () => resolve(require('@/views/help/index.vue')), 'other')
 
-
-//合同事件触发
-export const signmentView = resolve => require.ensure([], () => resolve(require('@/views/event/signment/index.vue')), 'other')//signmentEvent
-export const contractGuarantyView = resolve => require.ensure([], () => resolve(require('@/views/event/contractGuaranty/index.vue')), 'other')//signmentEvent
-
-
 export const pageBuildPreview = resolve => require.ensure([], () => resolve(require('@/views/resource/create/preview.vue')), 'resource')//signmentEvent
 
 export const presentablesView = resolve => require.ensure([], () => resolve(require('@/views/node/presentables/index.vue')), 'presentable')
+
+export const NodeLoginView = resolve => require.ensure([], () => resolve(require('@/views/node/login/index.vue')), 'node')
 
 export default {
   layout,
@@ -63,12 +62,12 @@ export default {
   nodeCreator,
   nodeUpdator,
   nodeList,
+  contractsView,
   nodeDetail,
   nodeResourceList,
   createPresentable,
   presentableDetail,
   pagebuildList,
-  presentablesView,
-  contractGuarantyView,
-  signmentView
+  NodeLoginView,
+  presentablesView
 }

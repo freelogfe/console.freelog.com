@@ -31,7 +31,6 @@ export default {
       this.loadPolicyDetail()
         .then(this.queryContractsStatus.bind(this))
         .then((data) => {
-          console.log(data)
           this.formData = data
         }).catch(this.$error.showErrorMessage)
     },
@@ -83,7 +82,7 @@ export default {
 
         formData.widgets = (resource && resource.systemMeta && resource.systemMeta.widgets) || []
         formData.widgets = formData.widgets.map((w) => {
-          w.detailUrl = `/node/${this.$route.params.nodeId}/resource/detail?resourceId=${w.resourceId}`
+          w.detailUrl = `/resources/detail/${w.resourceId}`
           return w
         })
 
@@ -176,7 +175,6 @@ export default {
       }
       var data = this.extractSubmitData()
 
-      console.log(data)
       this.createResourceContract(data.contract)
         .then((contract) => {
           data.policy.contractId = contract.contractId

@@ -115,6 +115,7 @@
           </el-tooltip>
           合同详情
         </div>
+
         <presentable-contract-detail :contractDetail="detail.contractInfo"></presentable-contract-detail>
       </el-tab-pane>
     </el-tabs>

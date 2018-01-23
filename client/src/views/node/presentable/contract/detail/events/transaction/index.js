@@ -6,7 +6,9 @@ export default {
     return {
       options: [],
       fromAccountId: '',
-      password: ''
+      password: '',
+      tipMsg: '',
+      order: {}
     }
   },
   mounted() {
@@ -14,6 +16,8 @@ export default {
     this.$services.accounts.get().then(function (res) {
       self.options = res.data.data;
     })
+    this.queryOrder()
+      .then(this.checkOrderStatus.bind(this))
   },
   computed: {
     unitType() {
@@ -48,7 +52,40 @@ export default {
       }
     },
     doneHandler(data) {
+      if (this.order) {
+        data = {
+          shouldUpdate: true
+        }
+      }
       this.$emit('close', data)
+    },
+    checkOrderStatus(order) {
+      if (!order) return
+
+      this.order = order
+      var msg
+      switch (order.status) {
+        case 1:
+          msg = '支付进行中'
+          break;
+        case 2:
+          msg = '已支付成功';
+          break;
+        case 3:
+          msg = '支付失败';
+          break;
+      }
+
+      this.tipMsg = msg
+    },
+    queryOrder() {
+      return this.$services.orderInfo.get({
+        params: {
+          targetId: this.contractDetail.contractId
+        }
+      }).then((res) => {
+        return res.getData()
+      })
     },
     pay() {
       var self = this;

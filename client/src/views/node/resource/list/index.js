@@ -22,8 +22,7 @@ export default {
     },
     viewSrcDetail(resource) {
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/resource/detail`,
-        query: {resourceId: resource.resourceId}
+        path: `/resources/detail/${resource.resourceId}`
       })
     },
     querySearchAsync() {
@@ -53,7 +52,7 @@ export default {
       }
 
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/create`,
+        path: `/node/:nodeId/presentable/create`,
         query: query
       })
     },

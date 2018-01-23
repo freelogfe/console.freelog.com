@@ -1,5 +1,8 @@
 <template>
   <el-form label-position="right" :label-width="labelWidth+'px'" class="small-el-form" v-if="detail">
+    <el-form-item label="合同ID">
+      {{detail.contractId }}
+    </el-form-item>
     <el-form-item label="创建日期">
       <span>{{ detail.createDate | fmtDate }}</span>
     </el-form-item>
@@ -21,16 +24,17 @@
       <span v-if="detail.partyTwoInfo">{{ detail.partyTwoInfo.nodeName }}</span>
       <span v-else>{{ detail.partyTwo }}</span>
     </el-form-item>
-    <!--<el-form-item label="合同详情" v-if="detail.policySegment">-->
-      <!--<br>-->
-      <!--<pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>-->
-    <!--</el-form-item>-->
+    <el-form-item label="合同详情" v-if="detail.policySegment && shouldShowSegment">
+      <br>
+      <pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>
+    </el-form-item>
     <slot></slot>
   </el-form>
 </template>
 
 <script>
   import {CONTRACT_STATUS_COLORS} from '@/config/contract'
+  import ContractUtils from '@/data/contract/utils'
 
   export default {
     name: 'contract-detail-info',
@@ -44,6 +48,12 @@
         type: Object,
         default() {
           return {statusInfo: {}}
+        }
+      },
+      shouldShowSegment: {
+        type: Boolean,
+        default() {
+          return true
         }
       },
       labelWidth: {
@@ -64,42 +74,7 @@
 
     methods: {
       render() {
-        this.detail = this.format(this.data)
-      },
-      loadUserInfo(userId) {
-
-        return this.$services.user.get(userId).then((res) => {
-          return res.getData()
-        })
-      },
-      loadNodeInfo(nodeId) {
-        return this.$services.nodes.get(nodeId).then((res) => {
-          return res.getData()
-        })
-      },
-      format(contract) {
-        if (!contract) return
-
-        contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
-        contract.forUsers = contract.policySegment.users.map((user) => {
-          return {
-            users: user.users.join('、'),
-            type: user.userType
-          }
-        })
-
-        if (contract.partyOne) {
-          this.loadUserInfo(contract.partyOne).then((userInfo) => {
-            this.$set(contract, 'partyOneInfo', userInfo)
-          })
-        }
-
-        if (contract.partyTwo) {
-          this.loadNodeInfo(contract.partyTwo).then((nodeInfo) => {
-            this.$set(contract, 'partyTwoInfo', nodeInfo)
-          })
-        }
-        return contract
+        this.detail = ContractUtils.format(this.data)
       }
     }
   }

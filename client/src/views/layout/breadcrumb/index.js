@@ -30,22 +30,16 @@ export default {
       if (this.$route.name === '404') {
         this.breadcrumbs = []
       } else {
-        var breadcrumbTitle = this.$route.meta.breadcrumbTitle
-        if (this.$route.meta.breadcrumbTitle) {
-          this.breadcrumbs.push({
-            title: breadcrumbTitle,
-            path: this.$route.fullPath
-          })
-        } else {
-          this.breadcrumbs = matched.map((m) => {
-            var title = m.meta.title || ''
+        this.breadcrumbs = matched.map((m) => {
+          var title = m.meta.title || ''
 
-            return {
-              path: m.path,
-              title: this.paddingTitle(title)
-            }
-          })
-        }
+          return {
+            path: m.path,
+            title: this.paddingTitle(title)
+          }
+        }).filter((item) => {
+          return !!item.title
+        })
       }
     }
   }

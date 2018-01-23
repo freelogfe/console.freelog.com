@@ -91,7 +91,6 @@ export default {
             var presentables = responses[1]
             self.mergeResourceData(contracts, resourcesData)
             self.mergePersentableData(contracts, presentables)
-            console.log(contracts)
             return res
           })
         })
@@ -109,19 +108,14 @@ export default {
     loadContracts(param) {
       return this.$services.contract.get(param || {}).then((res) => {
         return res
-      }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
-      })
+      }).catch(this.$error.showErrorMessage)
     },
     loadPresentables(param) {
       return this.$services.presentables.get({params: param}).then((res) => {
         return res.getData()
-      }).catch((err) => {
-        this.$message.error(err.response.errorMsg || err)
-      })
+      }).catch(this.$error.showErrorMessage)
     },
     handleCommand(cmd) {
-      console.log(cmd)
     },
     handlePresentable(row, action) {
       var query = {

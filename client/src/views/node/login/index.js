@@ -1,14 +1,23 @@
 import TableView from '@/components/TableView/index.vue'
 import ClipBoard from '@/components/clipboard/index.vue'
-import {NODE_STATUS} from '@/config/node'
+
 import {mapGetters} from 'vuex'
 
 export default {
-  name: 'my-nodes',
+  name: 'node-login',
   data() {
     return {
       resourceList: [],
-      NODE_STATUS: NODE_STATUS
+      NODE_STATUS: [{
+        text: '正常',
+        type: 'success'
+      }, {
+        text: '未审核',
+        type: 'warning'
+      }, {
+        text: '冻结',
+        type: 'danger'
+      }]
     }
   },
   components: {
@@ -21,9 +30,6 @@ export default {
   mounted() {
   },
   methods: {
-    resolveDomain(row){
-      return `${location.protocol}//${row.nodeDomain}.freelog.com`
-    },
     loader() {
       var self = this;
       return () => {
@@ -34,17 +40,20 @@ export default {
         })
       }
     },
-    copyDoneHandler(){
-      this.$message.success('已复制节点地址')
-    },
-    handleEdit(nodeDetail) {
-      this.$router.push({path: `/node/detail/${nodeDetail.nodeId}`})
-    },
     gotoNodeHandler(nodeDetail) {
+      var path
+      var redirect = this.$route.query.redirect
+      if (redirect) {
+        path = redirect.replace(':nodeId', nodeDetail.nodeId)
+      } else {
+        path = `/node/${nodeDetail.nodeId}`
+      }
+
       this.$store.dispatch('changeNode', nodeDetail)
-        .then(()=>{
+        .then(() => {
           this.$router.push({path: `/node/${nodeDetail.nodeId}`})
         })
+      this.$router.push({path: `/node/${nodeDetail.nodeId}`})
     }
   }
 }

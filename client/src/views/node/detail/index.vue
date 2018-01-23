@@ -1,21 +1,29 @@
 <template>
   <section class="node-form-container">
-    <div class="node-form">
-      <ul class="node-detail">
-        <li><label>node domain </label>:<span>{{detail.nodeDomain}}.freelog.com</span></li>
-        <li><label>node ID </label>:<span>{{detail.nodeId}}</span></li>
-        <li><label>create date </label>:<span>{{(new Date(detail.createDate)).toLocaleDateString()}}</span></li>
-      </ul>
-      <el-form :model="detail" :rules="rules" ref="detail" label-width="100px">
-        <el-form-item label="nodeName" prop="nodeName">
-          <el-input v-model="detail.nodeName"></el-input>
-        </el-form-item>
-        <el-form-item class="btns">
-          <el-button type="primary" @click="updateNodeDetail('detail')">保存</el-button>
-          <el-button @click="backToList()">返回</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <el-form label-position="right" label-width="100px"
+             :model="detail" :rules="rules" ref="detail"
+             class="small-el-form">
+      <el-form-item label="节点域名">
+        {{detail.nodeDomain}}.freelog.com
+      </el-form-item>
+      <el-form-item label="节点ID">
+        {{detail.nodeId}}
+      </el-form-item>
+      <el-form-item label="节点状态" v-if="detail.statusInfo">
+        <el-tag :type="detail.statusInfo.type">{{detail.statusInfo.text}}</el-tag>
+      </el-form-item>
+      <el-form-item label="创建时间">
+        {{detail.createDate | fmtDate}}
+      </el-form-item>
+
+      <el-form-item label="节点描述" class="flex-grid" prop="nodeName">
+        <el-input v-model="detail.nodeName" style="width: 500px"></el-input>
+      </el-form-item>
+      <el-form-item class="btns">
+        <el-button type="primary" @click="updateNodeDetail('detail')">保存</el-button>
+        <el-button @click="backToList()">返回</el-button>
+      </el-form-item>
+    </el-form>
   </section>
 </template>
 
@@ -26,25 +34,5 @@
 </script>
 
 <style lang="less" scoped>
-  .node-detail {
-    label {
-      width: 100px;
-      display: inline-block;
-    }
-    span {
-      padding-left: 9px;
-    }
-
-    li {
-      border-bottom: 1px solid #eee;
-      margin-bottom: 12px;
-      padding-bottom: 3px;
-    }
-  }
-
-  .node-form {
-    width: 600px;
-    margin: auto;
-  }
 
 </style>

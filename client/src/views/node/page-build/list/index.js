@@ -16,7 +16,6 @@ export default {
     this.loader()
       .then(this.format.bind(this))
       .then((data) => {
-        console.log(data)
         this.pagebuildList = data
       })
   },

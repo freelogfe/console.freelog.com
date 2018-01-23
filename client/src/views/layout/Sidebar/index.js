@@ -4,8 +4,9 @@ import NavMenu from '../NavMenu/index.vue'
 import nodeRoute from '@/router/node'
 import resourceRoute from '@/router/resource'
 import {nodeItemRoute} from '@/router/node'
-import node from "../../../router/node";
+import resourceMarket from '@/router/resource-market'
 
+import node from "../../../router/node";
 
 function cloneArray(arr) {
   return arr.map((item) => {
@@ -17,18 +18,16 @@ function cloneArray(arr) {
   })
 }
 
-function paddingPath(prefix, navs) {
-  navs = navs.map((nav) => {
-    if (nav.path[0] !== '/') {
-      nav.path = [prefix, nav.path].join('/')
-    }
+function filterHidden(navList) {
+  navList = navList.filter(nav => {
     if (nav.children && nav.children.length) {
-      nav.children = paddingPath(nav.path, cloneArray(nav.children))
+      nav.children = filterHidden(nav.children)
     }
 
-    return nav;
-  });
-  return navs;
+    return !nav.hidden
+  })
+
+  return navList
 }
 
 export default {
@@ -43,29 +42,37 @@ export default {
     }
   },
   computed: mapGetters({
-    sidebar: 'sidebar'
+    sidebar: 'sidebar',
+    nodeState: 'node'
   }),
   methods: {
     changeRouteHandler() {
-      var fullPath = this.$route.fullPath;
-      var paths = fullPath.split('/').filter((v) => {
+      var currentPath = this.$route.path;
+      var paths = currentPath.split('/').filter((v) => {
         return !!v;
       });
       var navList;
       var homePath;
 
-      if (this.$route.params.nodeId) {
-        homePath = `/node/${this.$route.params.nodeId}`;
-        navList = nodeItemRoute.children
+      this.routeType = paths[0] || '';
+      if (currentPath === nodeRoute.redirect) {
+        navList = cloneArray(nodeRoute.children) //避免修改源数据
+        homePath = '/node'
+        this.paddingPath(homePath, navList)
       } else {
-        this.routeType = paths[0] || '';
-        homePath = '/' + this.routeType
         switch (this.routeType) {
           case 'node':
-            navList = nodeRoute.children;
+          case 'resources':
+            let nodeId = (this.nodeState.loginNode && this.nodeState.loginNode.nodeId) || ':nodeId'
+            navList = cloneArray(nodeItemRoute.children) //避免修改源数据
+            homePath = `/node/${nodeId}`;
+            this.paddingPath(homePath, navList)
+            navList.push(resourceMarket)
             break;
           case 'resource':
-            navList = resourceRoute.children;
+            homePath = '/resource'
+            navList = cloneArray(resourceRoute.children) //避免修改源数据
+            this.paddingPath(homePath, navList)
             break;
           default:
             break;
@@ -73,8 +80,7 @@ export default {
       }
 
       if (navList) {
-        navList = cloneArray(navList) //避免修改源数据
-        navList = paddingPath(homePath, navList)
+        navList = filterHidden(navList)
         this.checkActiveNav(navList)
         this.navList = navList
         this.$store.dispatch('openSidebar')
@@ -83,9 +89,23 @@ export default {
         this.$store.dispatch('closeSidebar') //hidesidebar?
       }
     },
-    checkActiveNav(navList){
-      navList.forEach((nav)=>{
-        nav.isActive = this.$route.path === nav.path
+    paddingPath(prefix, navs) {
+      navs = navs.map((nav) => {
+        if (nav.path[0] !== '/') {
+          nav.path = [prefix, nav.path].join('/')
+        }
+        if (nav.children && nav.children.length) {
+          nav.children = this.paddingPath(nav.path, cloneArray(nav.children))
+        }
+
+        return nav;
+      });
+      return navs;
+    },
+    checkActiveNav(navList) {
+      var curPath = this.$route.path
+      navList.forEach((nav) => {
+        nav.isActive = (curPath === nav.path) || (curPath == nav.redirect)
       })
     }
   },
