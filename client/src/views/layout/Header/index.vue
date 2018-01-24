@@ -25,7 +25,7 @@
           <el-menu-item index="setting">
             <router-link to="/account/settings">settings</router-link>
           </el-menu-item>
-          <el-menu-item>
+          <el-menu-item index="payment">
             <a href="//www.freelog.com/pages/user/index.html" target="_blank">payment</a>
           </el-menu-item>
           <el-menu-item index="logout" @click="logout">logout</el-menu-item>

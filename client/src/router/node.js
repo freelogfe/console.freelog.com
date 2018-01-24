@@ -20,7 +20,10 @@ function requireNodeLogin(to, from, next) {
     .then(nodeInfo => {
       if (nodeInfo) {
         if (/:nodeId/.test(to.path)) {
-          next({path: to.path.replace(':nodeId', nodeInfo.nodeId)})
+          var copyTo = Object.assign({}, to)
+          copyTo.path = to.path.replace(':nodeId', nodeInfo.nodeId)
+          copyTo.fullPath = to.fullPath.replace(':nodeId', nodeInfo.nodeId)
+          next(copyTo)
         } else {
           next()
         }

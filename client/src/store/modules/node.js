@@ -8,7 +8,9 @@ const types = {
 
 const node = {
   state: {
-    loginNode: null
+    loginNode: {
+      nodeId: ':nodeId'
+    }
   },
 
   mutations: {
@@ -23,7 +25,7 @@ const node = {
   actions: {
     [types.CHECK_NODE]({commit, getters}) {
       return new Promise((resolve, reject) => {
-        if (getters.node.loginNode && getters.node.loginNode.nodeId) {
+        if (getters.node.loginNode && getters.node.loginNode.nodeDomain) {
           resolve(getters.node.loginNode)
         } else {
           resolve(null)
