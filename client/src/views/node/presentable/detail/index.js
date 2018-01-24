@@ -247,6 +247,7 @@ export default {
       })
     },
     updatePresentableHandler() {
+      debugger
       var param = {
         name: this.editPresentable.name,
         policyText: btoa(this.editPresentable.policyText),

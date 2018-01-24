@@ -174,7 +174,7 @@ export default {
         return this.$message.warning('未选择合同策略')
       }
       var data = this.extractSubmitData()
-
+      console.log(data);
       this.createResourceContract(data.contract)
         .then((contract) => {
           data.policy.contractId = contract.contractId
@@ -189,4 +189,3 @@ export default {
     }
   }
 }
-

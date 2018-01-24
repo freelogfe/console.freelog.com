@@ -5,9 +5,9 @@ export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: `for NODES :
+      policyText: `for group_user_test :
   in initial :
-    proceed to signing on transaction of 200 to feth209fa4da1a4
+    proceed to signing on transaction of 200 to feth233dbc32069
   in signing:
     proceed to <activate> on license license_A`
     }
