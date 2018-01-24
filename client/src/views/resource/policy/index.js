@@ -7,7 +7,7 @@ export default {
       submitLoading: false,
       policyText: this.value || `for group_user_aASaa , 13480125810 :
   in initial :
-    proceed to <signing> on transaction of 100 to feth1026f01634a
+    proceed to <signing> on transaction of 100 to feth233dbc32069
   in <signing> :
     proceed to activate on license license_A`,
       options: [
