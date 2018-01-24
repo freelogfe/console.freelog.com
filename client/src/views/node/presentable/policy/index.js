@@ -5,11 +5,11 @@ export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: `For users in NODES :
+      policyText: `for NODES :
   in initial :
     proceed to signing on transaction of 200 to feth209fa4da1a4
   in signing:
-    proceed to ^activate^ on license license_A`
+    proceed to <activate> on license license_A`
     }
   },
   props: {

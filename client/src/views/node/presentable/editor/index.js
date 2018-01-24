@@ -25,10 +25,9 @@ export default {
           userDefinedTags: [],
           policyText: `For userA@userB :
         in initial :
-        proceed to activate on accepting transaction of 100 to feth1026f01634a
-        in activate :
-        proceed to suspend on accepting license LicenseA
-          I agree to authorize token in activate`,
+        proceed to <activate> on transaction of 100 to feth1026f01634a
+        in <activate> :
+        proceed to suspend on license LicenseA`,
           name: ''
         }
       }

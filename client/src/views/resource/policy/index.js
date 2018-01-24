@@ -5,13 +5,11 @@ export default {
   data() {
     return {
       submitLoading: false,
-      policyText: this.value || `For users in NODES :
-    in initial :
-      proceed to signing on transaction of 100 to feth1090d4667ab
-    in signing :
-      proceed to ^activate^ on license license_A
-    in activate :
-      proceed to suspend on visit of 20000 `,
+      policyText: this.value || `for group_user_aASaa , 13480125810 :
+  in initial :
+    proceed to <signing> on transaction of 100 to feth1026f01634a
+  in <signing> :
+    proceed to activate on license license_A`,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
@@ -32,6 +30,7 @@ export default {
   methods: {
     validate() {
       var myBeautify = compiler.compile(this.policyText, 'beautify')
+
       if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
       } else {
