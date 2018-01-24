@@ -41,8 +41,9 @@ export default {
       }
     },
     gotoNodeHandler(nodeDetail) {
-      var path
       var redirect = this.$route.query.redirect
+      var path
+
       if (redirect) {
         path = redirect.replace(':nodeId', nodeDetail.nodeId)
       } else {
@@ -51,9 +52,8 @@ export default {
 
       this.$store.dispatch('changeNode', nodeDetail)
         .then(() => {
-          this.$router.push({path: `/node/${nodeDetail.nodeId}`})
+          this.$router.push({path: path})
         })
-      this.$router.push({path: `/node/${nodeDetail.nodeId}`})
     }
   }
 }

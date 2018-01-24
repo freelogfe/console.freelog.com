@@ -5,11 +5,7 @@ export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: `for group_user_test :
-  in initial :
-    proceed to signing on transaction of 200 to feth233dbc32069
-  in signing:
-    proceed to <activate> on license license_A`
+      policyText: ''
     }
   },
   props: {
@@ -21,14 +17,13 @@ export default {
       }
     }
   },
-  mounted() {
-    if (this.value) {
+  watch: {
+    value: function () {
       this.policyText = this.value
     }
-
-    setTimeout(() => {
-      this.textChange() //test
-    }, 1e3)
+  },
+  mounted() {
+    this.policyText = this.value
   },
   methods: {
     textChange() {
