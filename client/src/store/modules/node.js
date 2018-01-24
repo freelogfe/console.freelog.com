@@ -25,8 +25,8 @@ const node = {
   actions: {
     [types.CHECK_NODE]({commit, getters}) {
       return new Promise((resolve, reject) => {
-        if (getters.node.loginNode && getters.node.loginNode.nodeDomain) {
-          resolve(getters.node.loginNode)
+        if (getters.nodeSession && getters.nodeSession.nodeDomain) {
+          resolve(getters.nodeSession)
         } else {
           resolve(null)
         }

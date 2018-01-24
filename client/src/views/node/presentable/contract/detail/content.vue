@@ -53,7 +53,7 @@
       render() {
         this.currentEvents = this.resolveContractEvents(this.data)
         this.segmentDetail = this.parseContract(this.data)
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
 //          this.$el.querySelector('.js-action-anim').classList.add('slideInRight')
         })
       },
@@ -145,8 +145,9 @@
         return result
       },
       tagOperation(html) {
-        var reg = /proceed\s+to\s+(\w+)\s+on\s+(.+)$/
+        var reg = /proceed\s+to\s+<(\w+)>\s+on\s+(.+)$/
         html = html.replace(reg, ($, $1, $2) => {
+
           var event = this.getEvent($2)
           var index = -1
           var snippet1 = `<span class="to-state">${$1}</span>`

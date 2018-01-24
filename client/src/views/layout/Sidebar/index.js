@@ -43,7 +43,7 @@ export default {
   },
   computed: mapGetters({
     sidebar: 'sidebar',
-    nodeState: 'node'
+    nodeSession: 'nodeSession'
   }),
   methods: {
     changeRouteHandler() {
@@ -63,7 +63,7 @@ export default {
         switch (this.routeType) {
           case 'node':
           case 'resources':
-            let nodeId = (this.nodeState.loginNode && this.nodeState.loginNode.nodeId) || ':nodeId'
+            let nodeId = this.nodeSession.nodeId
             navList = cloneArray(nodeItemRoute.children) //避免修改源数据
             homePath = `/node/${nodeId}`;
             this.paddingPath(homePath, navList)

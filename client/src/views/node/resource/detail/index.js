@@ -12,7 +12,7 @@ export default {
 
   components: {ResourceDetailInfo},
   computed: mapGetters({
-    nodeInfo: 'node'
+    nodeSession: 'nodeSession'
   }),
   mounted() {
     var resourceId = this.$route.params.resourceId
@@ -55,7 +55,7 @@ export default {
         resourceId: resource.resourceId
       }
 
-      var nodeId = this.nodeInfo.loginNode.nodeId
+      var nodeId = this.nodeSession.nodeId
       this.$router.push({
         path: `/node/${nodeId}/presentable/create`,
         query: query
