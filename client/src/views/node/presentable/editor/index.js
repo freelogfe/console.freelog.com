@@ -23,11 +23,11 @@ export default {
       default() {
         return {
           userDefinedTags: [],
-          policyText: `For userA@userB :
-        in initial :
-        proceed to <activate> on transaction of 100 to feth1026f01634a
-        in <activate> :
-        proceed to suspend on license LicenseA`,
+          policyText: `for NODES :
+  in initial :
+    proceed to signing on transaction of 200 to feth209fa4da1a4
+  in signing:
+    proceed to <activate> on license license_A`,
           name: ''
         }
       }
@@ -36,6 +36,5 @@ export default {
   mounted() {
 
   },
-  methods: {
-  }
+  methods: {}
 }

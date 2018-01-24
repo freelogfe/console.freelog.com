@@ -121,10 +121,18 @@
         return cls.join(' ')
       },
       tagState(html) {
-        var reg = /in (\w+)\s*:/
+        var reg = /in (\S+)\s*:/
         html = html.replace(reg, ($, $1) => {
-          var cls = this.getState($1)
-          return `in <span class="from-state ${cls}" data-action="info" data-state="${$1}">${$1}<i class="el-icon-fa-stop-circle-o cur-step-icon"></i></span>:`
+          var stateReg = /<(\w+)>/
+          var state = $1
+          if (stateReg.test($1)) {
+            var match = stateReg.exec($1)
+            state = match[1]
+            $1 = $1.replace(stateReg, '< $1 >')
+          }
+          var cls = this.getState(state)
+          console.log(state)
+          return `in <span class="from-state ${cls}" data-action="info" data-state="${state}">${$1}<i class="el-icon-fa-stop-circle-o cur-step-icon"></i></span>:`
         })
 
         return html
