@@ -45,7 +45,7 @@ export default {
     },
     bakcToList() {
       this.$router.push({
-        path: `/resources/list`,
+        path: `/resources/market`,
       })
     },
     gotoCreateContract(resource) {
