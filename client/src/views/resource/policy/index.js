@@ -5,7 +5,7 @@ export default {
   data() {
     return {
       submitLoading: false,
-      policyText: this.value || `for group_user_aASaa , 13480125810 :
+      policyText: this.value || `for group_user_aASaa :
   in initial :
     proceed to <signing> on transaction of 100 to feth233dbc32069
   in <signing> :
