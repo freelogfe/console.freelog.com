@@ -1,10 +1,12 @@
 import {UserService, OtherService} from '../../services'
 import {storage, axios} from '@/lib/index'
+import router from '@/router'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
   CHANGE_SESSION: 'changeSession',
-  USER_LOGIN: 'userLogin'
+  USER_LOGIN: 'userLogin',
+  USER_LOGOUT: 'userLogout'
 }
 
 const user = {
@@ -43,6 +45,19 @@ const user = {
           const token = res.headers.authorization;
           commit(types.CHANGE_SESSION, {user: res.data.data, token: token});
           return res.data.data
+        } else {
+          return Promise.reject(res.data.msg);
+        }
+      });
+    },
+    [types.USER_LOGOUT]({commit}, redirect) {
+      redirect = redirect || '/'
+      return OtherService.logout().then(res => {
+        if (res.data.ret === 0 && res.data.errcode == 0) {
+          commit('deleteNode')
+          setTimeout(() => {
+            router.replace({path: '/user/login', query: {redirect: redirect}})
+          }, 20)
         } else {
           return Promise.reject(res.data.msg);
         }

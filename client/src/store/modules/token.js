@@ -1,10 +1,7 @@
 import {OtherService} from '@/services'
-import {mutationTypes} from "./user";
 
 const types = {
-  CHECK_TOKEN: 'checkToken',
-  DELETE_TOKEN: 'deleteToken',
-  CREATE_TOKEN: 'createToken'
+  CHECK_TOKEN: 'checkToken'
 };
 
 const token = {
@@ -23,13 +20,6 @@ const token = {
           })
         }
       })
-    },
-    [types.DELETE_TOKEN]({commit, getters}) {
-      commit(mutationTypes.CHANGE_SESSION, {token: null, user: null})
-    },
-    //去登录
-    [types.CREATE_TOKEN]({commit}, data) {
-      return this.dispatch('userLogin', data)
     }
   }
 }

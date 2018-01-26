@@ -34,6 +34,7 @@ instance.interceptors.response.use(response => {
     var errorMsg
     var data = response.data;
     var loginPath = '/user/login'
+
     if ([28, 30].indexOf(data.errcode) > -1 && location.pathname !== loginPath) {
       location.replace(loginPath)
       //replace执行存在延迟
@@ -42,9 +43,9 @@ instance.interceptors.response.use(response => {
           resolve(response)
         }, 5e2)
       })
-    } else if (response.status === 200 && data.ret === 0) {
+    } else if (response.status === 200 && (!data.ret || data.ret === 0)) {
       response.getData = () => {
-        return data.data
+        return data.data || data
       };
       return response
     } else {

@@ -1,6 +1,7 @@
 import CONFIG from '@/config/index'
 import compiler from 'freelog_policy_compiler'
 import PresentableCreator from './creator.vue'
+import {presentableDetail} from "../../../index";
 
 const {RESOURCE_TYPES} = CONFIG
 
@@ -158,12 +159,19 @@ export default {
         let resourceType = this.formData.resource.resourceType || data.tagInfo.resourceInfo.resourceType
         ispb = resourceType === RESOURCE_TYPES.pageBuild
       }
+
+      var query = {ispb: ispb}
+      if (data.presentableId) {
+        query.presentableId = data.presentableId
+      } else if (data.contractId) {
+        query.contractId = data.contractId
+      }
       var routeParam = pbPresentableId ? {
         path: `/node/${nodeId}/presentable/detail`,
         query: {presentableId: pbPresentableId, ispb: true}
       } : {
         path: `/node/${nodeId}/presentable/detail#presentable`,
-        query: {presentableId: data.presentableId, ispb: ispb}
+        query: query
       }
 
       this.$router.push(routeParam)
@@ -180,11 +188,17 @@ export default {
           data.policy.contractId = contract.contractId
         })
         .then(() => {
-          return this.createPresentablePolicy(data.policy)
+          if (data.policy.name && data.policy.policyText) {
+            return this.createPresentablePolicy(data.policy)
+          }
         })
-        .then((data) => {
+        .then((presentableDetail) => {
           this.$message.success('presentable创建成功');
-          this.gotoPresentablDetail(data)
+          if (presentableDetail) {
+            this.gotoPresentablDetail(presentableDetail)
+          } else {
+            this.gotoPresentablDetail(data.policy)
+          }
         }).catch(this.$error.showErrorMessage)
     }
   }

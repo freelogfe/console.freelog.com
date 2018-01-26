@@ -4,7 +4,8 @@ export const RESOURCE_TYPES = {
   audio: 'audio',
   markdown: 'markdown',
   pageBuild: 'page_build',
-  revealSlide: 'reveal_slide'
+  revealSlide: 'reveal_slide',
+  license: 'license'
 };
 
 

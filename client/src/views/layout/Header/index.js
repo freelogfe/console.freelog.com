@@ -25,8 +25,8 @@ export default {
       this[cmd] && this[cmd]()
     },
     logoutNodeHandler() {
-       this.$store.dispatch('deleteNode')
-      location.reload()
+      this.$store.dispatch('deleteNode')
+      // location.reload()
     },
     switchNodeHandler() {
       this.$store.dispatch('deleteNode')
@@ -50,10 +50,8 @@ export default {
       console.log(key, keyPath);
     },
     logout() {
-      this.$services.other.logout().then((res) => {
-        this.$store.dispatch('deleteToken')
-        this.$router.replace({path: '/user/login', query: {redirect: this.$route.fullPath}})
-      }).catch(this.$error.showErrorMessage)
+      this.$store.dispatch('userLogout', this.$route.fullPath)
+        .catch(this.$error.showErrorMessage)
     }
   }
 }

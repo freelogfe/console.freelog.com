@@ -1,11 +1,11 @@
 <template>
   <div class="license-event-wrap">
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
-      <el-form-item label="协议编号">
+      <el-form-item label="协议">
         <div class="license-window">
-          <p v-for="license in licenses">
+          <pre v-for="license in licenses">
             {{license}}
-          </p>
+          </pre>
         </div>
       </el-form-item>
       <el-form-item>

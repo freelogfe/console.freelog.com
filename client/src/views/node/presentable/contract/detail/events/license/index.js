@@ -7,20 +7,31 @@ export default {
     }
   },
   mounted() {
-      this.params.params.forEach((param)=> {
-        this.$axios.get('/v1/auths/resource/'+param+'.data').then((res)=>{
-          console.log(res.headers);
-        })
-      })
+    this.loadLicenses()
   },
+
   props: ['contractDetail', 'params'],
 
   methods: {
+    loadLicenses() {
+      var promises = this.params.params.map((rid) => {
+        return this.loadLicenseContent(rid)
+      })
+
+      Promise.all(promises).then((list) => {
+        this.licenses = list
+      }).catch(this.$error.showErrorMessage)
+    },
+    loadLicenseContent(resourceId) {
+      return this.$axios.get(`/v1/auths/resource/${resourceId}.data`)
+        .then((res) => {
+          return res.getData()
+        })
+    },
     signHandler() {
-      this.$services.signingLicenses.post({
+      this.$services.eventTest.post({
         contractId: this.contractDetail.contractId,
-        eventId: this.params.eventId,
-        licenseIds: this.params.params
+        eventId: this.params.eventId
       }).then(() => {
         this.$message.success('执行成功')
         this.doneHandler(true)
