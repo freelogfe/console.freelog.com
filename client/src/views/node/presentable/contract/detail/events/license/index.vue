@@ -2,7 +2,11 @@
   <div class="license-event-wrap">
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="协议编号">
-        {{params.params.join(',')}}
+        <div class="license-window">
+          <p v-for="license in licenses">
+            {{license}}
+          </p>
+        </div>
       </el-form-item>
       <el-form-item>
         <el-checkbox v-model="accepted">接受协议</el-checkbox>
@@ -14,7 +18,12 @@
     </el-form>
   </div>
 </template>
-
+<style media="screen">
+  .license-window {
+    height: 300px;
+    overflow: auto;
+  }
+</style>
 <script type="text/javascript">
   import LicenseEvent from './index.js'
 

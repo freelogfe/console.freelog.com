@@ -20,7 +20,6 @@ import Pay from './pay' //支付接口
 import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
 
-import eventTest from './eventTest' //事件接口测试
 
 
 
@@ -39,5 +38,4 @@ export {
   ContractRecords,
   Accounts,
   Pay,
-  eventTest
 }

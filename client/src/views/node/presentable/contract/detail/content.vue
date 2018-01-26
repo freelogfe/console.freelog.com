@@ -80,7 +80,7 @@
           if (eventFn) {
             events.push({
               desc: eventFn(event.type),
-              eventId: event.eventId, //用于test，实际要删除
+              eventId: event.eventId,
               type: event.type,
               params: event.params
             })
@@ -88,9 +88,11 @@
         }
 
         corresponseEvents.forEach((transition) => {
-          if (transition.event.type === 'compoundEvents') {
+          if (!transition.event ) {
+            //TERMINATE的event会是undefined情况不报错
+          } else if (transition.event.type === 'compoundEvents') {
             transition.event.params.forEach(pushEvent)
-          } else {
+          }else {
             pushEvent(transition.event)
           }
         })
