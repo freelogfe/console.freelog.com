@@ -49,7 +49,7 @@ export default {
       ]
     }
 
-    var model = storage.get('signupForm') || {
+    var model = {
       loginName: '',
       nickname: '',
       password: '',
@@ -89,7 +89,6 @@ export default {
         })
     },
     submit(ref) {
-      storage.set('signupForm', this.model)
       if (this.loading) {
         return
       }

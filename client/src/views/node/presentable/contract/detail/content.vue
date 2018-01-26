@@ -53,9 +53,6 @@
       render() {
         this.currentEvents = this.resolveContractEvents(this.data)
         this.segmentDetail = this.parseContract(this.data)
-        this.$nextTick(() => {
-//          this.$el.querySelector('.js-action-anim').classList.add('slideInRight')
-        })
       },
       cmdHandler(event) {
         var action = event.target.dataset.action
@@ -110,6 +107,7 @@
       getState(state) {
         var contract = this.data
         var cls = []
+
         if (state === contract.fsmState) {
           cls.push('cur-state')
         }
@@ -123,24 +121,17 @@
       tagState(html) {
         var reg = /in (\S+)\s*:/
         html = html.replace(reg, ($, $1) => {
-          var stateReg = /<(\w+)>/
-          var state = $1
-          if (stateReg.test($1)) {
-            var match = stateReg.exec($1)
-            state = match[1]
-            $1 = $1.replace(stateReg, '< $1 >')
-          }
-          var cls = this.getState(state)
-          console.log(state)
-          return `in <span class="from-state ${cls}" data-action="info" data-state="${state}">${$1}<i class="el-icon-fa-stop-circle-o cur-step-icon"></i></span>:`
+          var $$ = this.escapeOutputState($1)
+
+          var cls = this.getState($1)
+          var html = `<span class="from-state ${cls}" data-action="info" data-state="${$1}">${$$}<i class="el-icon-fa-stop-circle-o cur-step-icon"></i></span>`
+          return $.replace($1, html)
         })
 
         return html
       },
       getEvent(eventDesc) {
-        var contract = this.data
         var events = this.currentEvents
-        var steps = contract.policySegment.fsmDescription
         var result;
 
         events.forEach((event, i) => {
@@ -152,13 +143,17 @@
         })
         return result
       },
+      escapeOutputState(state) {
+        state = state.replace('<', '&lt;').replace('>', '&gt;')
+        return state
+      },
       tagOperation(html) {
-        var reg = /proceed\s+to\s+<(\w+)>\s+on\s+(.+)$/
+        var reg = /proceed\s+to\s+(\S+)\s+on\s+(.+)$/
         html = html.replace(reg, ($, $1, $2) => {
-
           var event = this.getEvent($2)
           var index = -1
-          var snippet1 = `<span class="to-state">${$1}</span>`
+          var toState = this.escapeOutputState($1)
+          var snippet1 = `<span class="to-state">${toState}</span>`
           var snippet2 = ''
 
           //正在进行中的事件

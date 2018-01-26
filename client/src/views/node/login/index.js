@@ -25,9 +25,13 @@ export default {
     ClipBoard
   },
   computed: mapGetters({
-    session: 'session'
+    session: 'session',
+    nodeSession: 'nodeSession'
   }),
   mounted() {
+    if (this.nodeSession.nodeName) {
+      this.gotoNodeHandler(this.nodeSession)
+    }
   },
   methods: {
     loader() {

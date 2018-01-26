@@ -20,7 +20,7 @@ export default {
     return {
       model: {
         loginName: storage.get('loginName') || '',
-        password: '123456',
+        password: '',
       },
       rules: rules,
       error: null,

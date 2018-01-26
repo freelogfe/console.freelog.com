@@ -34,7 +34,7 @@ instance.interceptors.response.use(response => {
     var errorMsg
     var data = response.data;
     var loginPath = '/user/login'
-    if (data.errcode === 28 && location.pathname !== loginPath) {
+    if ([28, 30].indexOf(data.errcode) > -1 && location.pathname !== loginPath) {
       location.replace(loginPath)
       //replace执行存在延迟
       return new Promise((resolve) => {

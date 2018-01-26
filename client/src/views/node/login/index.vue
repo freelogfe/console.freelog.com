@@ -25,7 +25,7 @@
         <template slot-scope="scope">
           <el-button
             size="small"
-            @click="gotoNodeHandler(scope.row)">登录节点
+            @click="gotoNodeHandler(scope.row)">进入该节点
           </el-button>
         </template>
       </el-table-column>

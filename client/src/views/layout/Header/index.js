@@ -12,7 +12,8 @@ export default {
   },
   computed: mapGetters({
     sidebar: 'sidebar',
-    session: 'session'
+    session: 'session',
+    nodeSession: 'nodeSession'
   }),
 
   created() {
@@ -20,6 +21,17 @@ export default {
   },
 
   methods: {
+    handleCommand(cmd) {
+      this[cmd] && this[cmd]()
+    },
+    logoutNodeHandler() {
+       this.$store.dispatch('deleteNode')
+      location.reload()
+    },
+    switchNodeHandler() {
+      this.$store.dispatch('deleteNode')
+      this.$router.push({path: '/node/login'})
+    },
     toggleSidebarHandler() {
       this.$store.dispatch('toggleSidebar')
     },
@@ -29,7 +41,7 @@ export default {
       for (var i = 0; i < routes.length; i++) {
         let route = routes[i];
         if (route.path === '/') {
-          this.navRoutes = route.children.filter(r=>!r.hidden);
+          this.navRoutes = route.children.filter(r => !r.hidden);
           break;
         }
       }
