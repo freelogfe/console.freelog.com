@@ -1,4 +1,4 @@
-import {OtherService} from '@/services'
+import {storage} from '@/lib'
 
 const types = {
   CHECK_NODE: 'checkNode',
@@ -8,17 +8,21 @@ const types = {
 
 const node = {
   state: {
-    loginNode: {
+    nodeSession: storage.get('nodeSession') || {
       nodeId: ':nodeId'
     }
   },
 
   mutations: {
     [types.DELETE_NODE](state) {
-      state.loginNode = null
+      state.nodeSession = {
+        nodeId: ':nodeId'
+      }
+      storage.remove('nodeSession')
     },
     [types.CHANGE_NODE](state, data) {
-      state.loginNode = data
+      state.nodeSession = data
+      storage.set('nodeSession', data)
     }
   },
 
@@ -34,6 +38,9 @@ const node = {
     },
     [types.DELETE_NODE]({commit, getters}) {
       commit(types.DELETE_NODE)
+      return new Promise((resolve) => {
+        setTimeout(resolve, 10)
+      })
     },
     [types.CHANGE_NODE]({commit}, data) {
       commit(types.CHANGE_NODE, data)

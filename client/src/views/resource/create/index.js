@@ -36,7 +36,7 @@ export default {
       //格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('规则/^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/，如：freelog-demo-testwidget'));
+        callback(new Error('/^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/'));
       } else {
         callback()
       }
@@ -64,7 +64,7 @@ export default {
       activeTabName: 'resourceInfo',
 
       formData: {
-        resourceType: RESOURCE_TYPES.pageBuild || '',
+        resourceType: RESOURCE_TYPES.widget || '',
         resourceName: '',
         widgetName: '',
         meta: '',
@@ -219,10 +219,21 @@ export default {
 
       uploadData.meta = JSON.stringify(uploadData.meta)
     },
-    fileLimitHandler(file, fileList) {
+    fileChangeHandler(file, fileList) {
+      if (this.fileLimitValidator(file, fileList)) {
+        if (!this.formData.widgetName) {
+          this.formData.widgetName = file.name.split('.', 2)[0]
+        }
+      }
+    },
+    //是否超过上传限制
+    fileLimitValidator(file, fileList) {
       if (fileList.length > 1) {
         fileList.shift()
+        return false
       }
+
+      return true
     },
     submitResourceHandler(formName) {
       var $uploader = this.$refs.upload;

@@ -6,28 +6,6 @@ import ContractContent from './content.vue'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
-let contractEventsMap = {
-  transaction() {
-    return '支付事件'
-  },
-  signing(params) {
-    return '进入协议签署页面'
-  },
-  contractGuaranty() {
-    return '进入支付保证金'
-  },
-  period() {
-    return '周期性支付'
-  },
-  arrivalDate(params) {
-    if (params[0] === 1) {
-      return '到达日期' + params[1] + '进入下一个状态'
-    } else if (params[0] === 0) {
-      return params[1] + '天后进入下一个状态'
-    }
-  }
-}
-
 let eventComponentMap = {
   transaction: {
     type: 'transaction-event',

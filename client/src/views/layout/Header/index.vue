@@ -8,10 +8,28 @@
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
       <el-menu background-color="#324157" text-color="#fff"
-               active-text-color="#ffd04b" default-active="-1" class="left-nav-bar" mode="horizontal"
+               active-text-color="#ffd04b" default-active="-1"
+               class="left-nav-bar" mode="horizontal"
                router>
-        <el-menu-item :index="'/'+navItem.path" :key="index" v-for="(navItem, index) in navRoutes">
-          {{navItem.meta.title}}
+        <el-menu-item index="/resource/list">
+          资源系统
+        </el-menu-item>
+        <el-menu-item index="/node/list">
+          <span class="node-sys-title">
+            <span>节点系统</span>
+            <span v-if="nodeSession.nodeName">
+              <i class="split-line">|</i>
+              <el-dropdown @command="handleCommand">
+                <span class="el-dropdown-link">
+                  {{nodeSession.nodeName}}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="logoutNodeHandler">退出该登录节点</el-dropdown-item>
+                  <el-dropdown-item command="switchNodeHandler">切换节点</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </span>
+          </span>
         </el-menu-item>
       </el-menu>
 

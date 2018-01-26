@@ -4,7 +4,7 @@
       <el-tab-pane label="资源基础属性" name="resourceInfo">
         <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
           <el-form-item label="资源名称" prop="resourceName" required class="input-item">
-            <el-input v-model="formData.resourceName"></el-input>
+            <el-input v-model="formData.resourceName" clearable></el-input>
           </el-form-item>
           <el-form-item label="资源类型" prop="resourceType" required class="input-item">
             <el-select
@@ -29,6 +29,7 @@
                         v-show="formData.resourceType === ResourceTypes.widget">
             <el-input v-model="formData.widgetName"
                       style="width: 95%"
+                      clearable
                       placeholder="保持与web component中自定义标签名一致">
             </el-input>
             <el-tooltip class="item" effect="dark" content="必须以freelog-开头，仅支持[a-z0-9._-]" placement="top">
@@ -47,7 +48,7 @@
               :data="uploader.data"
               :headers="uploader.headers"
               :on-error="errorHandler"
-              :on-change="fileLimitHandler"
+              :on-change="fileChangeHandler"
               :on-success="successHandler"
               :auto-upload="false">
               <i class="el-icon-upload"></i>
