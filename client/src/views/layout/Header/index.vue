@@ -35,7 +35,7 @@
 
       <el-menu background-color="#324157" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
                @select="handleSelect">
-        <el-submenu index="account" v-if="session.user">
+        <el-submenu index="account" v-if="session">
           <template slot="title">
             <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
             <span style="color: #909399">{{session.user.nickname}}</span>

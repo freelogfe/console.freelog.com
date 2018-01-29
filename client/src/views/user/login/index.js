@@ -50,11 +50,11 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            //self.$route.query.redirect
             self.$router.replace('/node/list')
             self.loading = false
           })
           .catch(err => {
+            console.log(err)
             if (typeof err === 'string') {
               self.error = {title: '', message: err}
             } else {
