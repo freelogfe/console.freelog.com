@@ -5,6 +5,7 @@
       ref="eventDialog"
       :visible.sync="showEventExecDialog"
       :before-close="handleCloseDialog"
+      center=true
       width="40%">
       <component :is="eventComponent"
                  :contractDetail="contractDetail"
