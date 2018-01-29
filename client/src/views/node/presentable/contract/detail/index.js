@@ -13,7 +13,7 @@ let eventComponentMap = {
   },
   signing: {
     type: 'license-event',
-    title: '签约license'
+    title: '签署'
   }
 }
 
