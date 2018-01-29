@@ -33,7 +33,11 @@ export default {
 
       if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+        this.$emit('validate',{done: true})
       } else {
+        this.$emit('validate',{done: false, error: {
+          message: myBeautify.errorMsg
+        }})
         this.$message.error(myBeautify.errorMsg)
       }
     },
