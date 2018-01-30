@@ -16,4 +16,14 @@
 
 import store from 'store'
 
+var engine = require('store/src/store-engine')
+var storages = [
+  require('store/storages/cookieStorage')
+]
+var plugins = [
+  require('store/plugins/defaults'),
+  require('store/plugins/expire')
+];
+
+export const cookieStore = engine.createStore(storages, plugins)
 export default store

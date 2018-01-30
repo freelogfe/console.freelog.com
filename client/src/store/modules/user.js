@@ -1,12 +1,14 @@
 import {UserService, OtherService} from '../../services'
 import {storage, axios} from '@/lib/index'
-import router from '@/router'
+import {cookieStore} from '@/lib/storage'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
   CHANGE_SESSION: 'changeSession',
+  DELETE_SESSION: 'deleteSession',
   USER_LOGIN: 'userLogin',
-  USER_LOGOUT: 'userLogout'
+  USER_LOGOUT: 'userLogout',
+  CHECK_USER_SESSION: 'checkUserSession'
 }
 
 const user = {
@@ -18,6 +20,10 @@ const user = {
     [types.CHANGE_SESSION](state, data) {
       Object.assign(state.session, data);
       storage.set('user_session', state.session);
+    },
+    [types.DELETE_SESSION](state) {
+      state.session = {user: {}, token: null}
+      storage.remove('user_session');
     }
   },
 
@@ -39,6 +45,24 @@ const user = {
     [types.CHANGE_SESSION]({commit}, data) {
       commit(types.CHANGE_SESSION, data);
     },
+    [types.CHECK_USER_SESSION]({commit, getters}) {
+      var authInfo = cookieStore.get('authInfo')
+      return new Promise((resolve) => {
+        if (!authInfo) {
+          resolve(false)
+        } else {
+          var jwt = authInfo.split('.')
+          var userInfo = atob(jwt[1])
+          try {
+            userInfo = JSON.parse(userInfo)
+          } catch (err) {
+            console.error(err)
+            userInfo = {}
+          }
+          resolve(!(!getters.session || getters.session.user.userId !== userInfo.userId))
+        }
+      })
+    },
     [types.USER_LOGIN]({commit}, data) {
       return OtherService.login(data).then(res => {
         if (res.data.ret === 0 && res.data.errcode == 0) {
@@ -50,14 +74,11 @@ const user = {
         }
       });
     },
-    [types.USER_LOGOUT]({commit}, redirect) {
-      redirect = redirect || '/'
+    [types.USER_LOGOUT]({commit}) {
       return OtherService.logout().then(res => {
         if (res.data.ret === 0 && res.data.errcode == 0) {
+          commit(types.DELETE_SESSION)
           commit('deleteNode')
-          setTimeout(() => {
-            router.replace({path: '/user/login', query: {redirect: redirect}})
-          }, 20)
         } else {
           return Promise.reject(res.data.msg);
         }
