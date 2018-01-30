@@ -23,9 +23,8 @@ export default {
       }).catch(this.$error.showErrorMessage)
     },
     loadLicenseContent(resourceId) {
-      return this.$axios.get(`/v1/auths/resource/licenseA.data`)
+      return this.$axios.get(`/v1/auths/resource/${resourceId}.data`)
         .then((res) => {
-          console.log(res.getData());
           var error = res.getData().errcode;
           if ( error== 15 ) {
             this.$message.warning('协议格式不正确，请联系合约作者。')
