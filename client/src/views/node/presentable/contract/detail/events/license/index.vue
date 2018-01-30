@@ -5,7 +5,6 @@
         <div class="license-window">
           <pre class="license-format" v-for="license in licenses">
             {{license}}
-
           </pre>
         </div>
       </el-form-item>

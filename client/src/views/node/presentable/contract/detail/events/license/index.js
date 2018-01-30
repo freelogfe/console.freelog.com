@@ -23,15 +23,23 @@ export default {
       }).catch(this.$error.showErrorMessage)
     },
     loadLicenseContent(resourceId) {
-      return this.$axios.get(`/v1/auths/resource/${resourceId}.data`)
+      return this.$axios.get(`/v1/auths/resource/licenseA.data`)
         .then((res) => {
+          console.log(res.getData());
+          var error = res.getData().errcode;
+          if ( error== 15 ) {
+            this.$message.warning('协议格式不正确，请联系合约作者。')
+            return;
+          }
           return res.getData()
         })
     },
     signHandler() {
-      this.$services.eventTest.post({
+      this.$services.signingLicenses.post({
         contractId: this.contractDetail.contractId,
-        eventId: this.params.eventId
+        eventId: this.params.eventId,
+        licenseIds: this.params.params,
+        nodeId: this.$route.params.nodeId
       }).then(() => {
         this.$message.success('执行成功')
         this.doneHandler(true)

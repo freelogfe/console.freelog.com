@@ -5,11 +5,16 @@ export default {
   data() {
     return {
       submitLoading: false,
-      policyText: this.value || `for group_user_aASaa :
+      policyText: this.value || `for nodes :
   in initial :
     proceed to <signing> on transaction of 100 to feth233dbc32069
   in <signing> :
-    proceed to activate on license license_A`,
+    proceed to activate on license e759419923ea25bf6dff2694391a1e65c21739ce`,
+      licenses: [],
+      state4: '',
+      licenseContent: '',
+      licenseMap: {},
+      timeout:  null,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
@@ -25,7 +30,8 @@ export default {
     }
   },
   mounted() {
-    this.$on('submit', this.submit.bind(this))
+    this.$on('submit', this.submit.bind(this));
+    this.licenses = this.loadAll();
   },
   methods: {
     validate() {
@@ -78,6 +84,43 @@ export default {
           reject(err.response.errorMsg || err)
         })
       })
+    },
+    loadAll() {
+      this.$axios.get('/v1/resources/warehouse?resourceType=license').then((res)=> {
+        this.licenses = res.data.data.dataList.map((data)=> {
+          return {
+            value: data.resourceName,
+            id: data.resourceId
+          }
+        })
+      })
+    },
+    querySearchAsync(queryString, cb) {
+      var licenses = this.licenses;
+      var results = queryString ? licenses.filter(this.createStateFilter(queryString)) : licenses;
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 3000 * Math.random());
+    },
+    createStateFilter(queryString) {
+      return (state) => {
+        return (state.id.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    handleSelect(item) {
+      this.showLicenseContent(item);
+    },
+    showLicenseContent(item) {
+      // console.log(this.licenseMap[item.id]);
+      if (this.licenseMap[item.id]) {
+        this.licenseContent = this.licenseMap[item.id];
+      } else {
+        this.$axios.get('/v1/auths/resource/'+ item.id +'.data').then((res)=> {
+          this.licenseContent = res.getData();
+          this.licenseMap[item.id] = res.getData();
+        })
+      }
     }
   }
 }

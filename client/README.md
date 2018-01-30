@@ -1,6 +1,6 @@
 # bashboard
 
-> dashboard of freelog 
+> dashboard of freelog
 
 ## features
 

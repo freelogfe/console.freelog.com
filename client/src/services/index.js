@@ -38,4 +38,5 @@ export {
   ContractRecords,
   Accounts,
   Pay,
+  SigningLicenses
 }
