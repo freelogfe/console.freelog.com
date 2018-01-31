@@ -139,7 +139,8 @@ export default {
           })
           .catch((errMsg) => {
             this.loading = false
-            self.$message.error(`资源策略创建失败，${errMsg}`);
+            self.$message.error(`资源创建成功,资源策略创建失败，${errMsg}`);
+            self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
           })
       }
     },
@@ -269,7 +270,7 @@ export default {
           break;
       }
     },
-    validatePolicyHandler(detail){
+    validatePolicyHandler(detail) {
       if (detail.done) {
         this.$message.success('校验通过')
       }

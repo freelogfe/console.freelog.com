@@ -10,6 +10,8 @@
       <el-tag :type="detail.statusInfo.type">
         {{detail.statusInfo.desc }}
       </el-tag>
+      <i class="el-icon-refresh" @click="refreshHandler" v-if="detail.status < 3"></i>
+
     </el-form-item>
     <el-form-item label="状态机状态">
       <el-tag :type="detail.status===3?'success':'warning'">
@@ -35,6 +37,7 @@
 <script>
   import {CONTRACT_STATUS_COLORS} from '@/config/contract'
   import ContractUtils from '@/data/contract/utils'
+  import ContractLoader from '@/data/contract/loader'
 
   export default {
     name: 'contract-detail-info',
@@ -73,6 +76,13 @@
     },
 
     methods: {
+      refreshHandler() {
+        ContractLoader.loadContractDetail(this.detail.contractId)
+          .then((detail) => {
+            Object.assign(this.detail, detail)
+            this.detail = ContractUtils.format(this.detail)
+          })
+      },
       render() {
         this.detail = ContractUtils.format(this.data)
       }

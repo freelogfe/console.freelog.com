@@ -20,9 +20,9 @@ module.exports = appInfo => {
         }
     };
 
-    config.jsonp = {
-        whiteList: ['jsonp.demo.com'],
-    }
+    // config.jsonp = {
+    //     whiteList: ['jsonp.demo.com'],
+    // }
 
     config.mysql = {
         // 单数据库信息配置

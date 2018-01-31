@@ -5,6 +5,7 @@
         <el-form :model="detail" class="small-el-form" :rules="rules" ref="detail" label-width="120px">
           <el-form-item label="resourceName"
                         class="input-item"
+                        :inline-message="true"
                         prop="resourceName" required>
             <el-input v-model="detail.resourceName"></el-input>
           </el-form-item>
@@ -39,11 +40,12 @@
         <resource-meta-info v-model="detail.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="资源策略" name="policy">
-        <!--<el-tooltip class="item" effect="dark" content="更新policy后，已签约的policy不变，新签约的policy以更新后的为准" placement="top">-->
-          <!--<i class="el-icon-question"></i>-->
-        <!--</el-tooltip>-->
+        <el-tooltip class="item" effect="dark" content="更新policy后，已签约的policy不变，新签约的policy以更新后的为准" placement="top">
+          <i class="el-icon-question"></i>
+        </el-tooltip>
         <policy-editor ref="policyEditor"
                        v-model="policyText"
+                       @validate="validatePolicyHandler"
                        :resourceId="detail.resourceId"></policy-editor>
       </el-tab-pane>
     </el-tabs>

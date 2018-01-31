@@ -74,7 +74,7 @@ export default {
           resource: resource,
           data: {},
           presentableInput: {
-            name: '',
+            name: resource.resourceName,
             policyText: '',
             userDefinedTags: []
           },

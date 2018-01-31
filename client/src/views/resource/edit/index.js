@@ -157,6 +157,11 @@ export default {
           this.fixCodeMirrorRender()
           break;
       }
+    },
+    validatePolicyHandler(detail) {
+      if (detail.done) {
+        this.$message.success('校验通过')
+      }
     }
   }
 }
