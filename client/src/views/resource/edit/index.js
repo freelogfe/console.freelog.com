@@ -11,6 +11,8 @@ export default {
     return {
       detail: {},
       activeTabName: '',
+      valid:true,
+      policyValid:true,
       submitLoading: false,
       showKeys: ['resourceId', 'resourceType', 'resourceUrl', 'mimeType', 'createDate'],
       policyText: '',
@@ -23,14 +25,23 @@ export default {
       }
     }
   },
-  computed: mapGetters({
+  computed: Object.assign({send: function() {
+    return this.valid && this.policyValid
+  }}, mapGetters({
     session: 'session'
-  }),
+  })),
   components: {
     ResourceMetaInfo,
     PolicyEditor
   },
   mounted() {
+
+    this.$watch('detail', () => {
+      this.$refs.detail.validate((valid, err) => {
+        this.valid = valid
+      });
+    }, {deep: true})
+
     var self = this;
     var resourceId = this.$route.query.resourceId
 
@@ -51,6 +62,9 @@ export default {
     }
   },
   methods: {
+    policyValidation(valid) {
+        this.policyValid = valid.done
+    },
     loadResourceDetail(resourceId) {
       return this.$services.resource.get(resourceId)
         .then((res) => {

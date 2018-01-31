@@ -44,12 +44,12 @@
         <!--</el-tooltip>-->
         <policy-editor ref="policyEditor"
                        v-model="policyText"
-                       :resourceId="detail.resourceId"></policy-editor>
+                       :resourceId="detail.resourceId" v-on:validate="policyValidation"></policy-editor>
       </el-tab-pane>
     </el-tabs>
     <div class="btns">
-      <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading">保存</el-button>
-      <el-button type="primary" @click="updatePageBuildHandler('detail')">更新资源</el-button>
+      <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading" :disabled="!send">保存</el-button>
+      <el-button type="primary" @click="updatePageBuildHandler('detail')" :disabled="!send">更新资源</el-button>
       <el-button @click="backToList()">返回</el-button>
     </div>
   </section>

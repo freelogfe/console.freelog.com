@@ -18,9 +18,11 @@ export default {
     ResourceMetaInfo,
     PolicyEditor
   },
-  computed: mapGetters({
+  computed: Object.assign({send: function() {
+    return this.valid && this.policyValid
+  }}, mapGetters({
     session: 'session'
-  }),
+  })),
   data() {
     const validateResourceType = (rule, value, callback) => {
       const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
@@ -59,6 +61,7 @@ export default {
       }),
 
       tabs: [],
+      policyValid: true,
       valid: false,
       loading: false,
       activeTabName: 'resourceInfo',
@@ -82,7 +85,6 @@ export default {
     if (this.session.token) {
       this.uploader.headers.authorization = this.session.token
     }
-
     var tabName = this.$route.hash.slice(1)
     if (tabName) {
       this.activeTabName = tabName
@@ -95,7 +97,13 @@ export default {
       });
     }, {deep: true})
   },
+  watch : {
+
+  },
   methods: {
+    policyValidation(valid) {
+        this.policyValid = valid.done
+    },
     resourceTypeChange(type) {
       if (type === RESOURCE_TYPES.pageBuild) {
         this.tabs.push({

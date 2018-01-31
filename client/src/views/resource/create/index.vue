@@ -3,7 +3,7 @@
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性" name="resourceInfo">
         <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
-          <el-form-item label="资源名称" prop="resourceName" required class="input-item">
+          <el-form-item label="资源名称" prop="resourceName" required class="input-item" >
             <el-input v-model="formData.resourceName" clearable></el-input>
           </el-form-item>
           <el-form-item label="资源类型" prop="resourceType" required class="input-item">
@@ -62,7 +62,7 @@
         <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="资源策略" name="policy">
-        <policy-editor ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
+        <policy-editor v-on:validate="policyValidation" ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
       </el-tab-pane>
       <el-tab-pane
         :key="item.name"
@@ -75,7 +75,7 @@
     <div style="text-align: center;margin-top: 15px">
       <el-button type="primary"
                  :loading="loading"
-                 @click="submitResourceHandler('createForm')" :disabled="!valid">创建</el-button>
+                 @click="submitResourceHandler('createForm')" :disabled="!send">创建</el-button>
     </div>
   </section>
 </template>
