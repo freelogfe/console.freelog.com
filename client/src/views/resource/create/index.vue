@@ -64,7 +64,7 @@
         <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="资源策略" name="policy">
-        <policy-editor ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
+        <policy-editor v-on:validate="policyValidation" ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
       </el-tab-pane>
       <el-tab-pane
         :key="item.name"
@@ -77,7 +77,7 @@
     <div style="text-align: center;margin-top: 15px">
       <el-button type="primary"
                  :loading="loading"
-                 @click="submitResourceHandler('createForm')" :disabled="!valid">创建</el-button>
+                 @click="submitResourceHandler('createForm')" :disabled="!send">创建</el-button>
     </div>
   </section>
 </template>

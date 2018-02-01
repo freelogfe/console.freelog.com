@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     validate() {
+      console.log('herere',this.policyText);
       var myBeautify = compiler.compile(this.policyText, 'beautify')
 
       if (!myBeautify.errorMsg) {
