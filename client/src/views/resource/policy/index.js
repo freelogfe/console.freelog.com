@@ -9,7 +9,7 @@ export default {
   in initial :
     proceed to <signing> on transaction of 100 to feth233dbc32069
   in <signing> :
-    proceed to activate on license e759419923ea25bf6dff2694391a1e65c21739ce`,
+    proceed to activate on accepting license e759419923ea25bf6dff2694391a1e65c21739ce`,
       licenses: [],
       state4: '',
       licenseContent: '',
@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     validate() {
-      console.log('herere',this.policyText);
       var myBeautify = compiler.compile(this.policyText, 'beautify')
 
       if (!myBeautify.errorMsg) {
@@ -113,7 +112,6 @@ export default {
       this.showLicenseContent(item);
     },
     showLicenseContent(item) {
-      // console.log(this.licenseMap[item.id]);
       if (this.licenseMap[item.id]) {
         this.licenseContent = this.licenseMap[item.id];
       } else {

@@ -247,7 +247,11 @@ export default {
       })
     },
     updatePresentableHandler() {
-      debugger
+      let result = compiler.compile(this.editPresentable.policyText, 'beautify')
+      if ( result.errorMsg ) {
+        this.$message.error(result.errorMsg)
+        return;
+      }
       var param = {
         name: this.editPresentable.name,
         policyText: btoa(this.editPresentable.policyText),
