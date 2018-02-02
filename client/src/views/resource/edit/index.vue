@@ -4,20 +4,25 @@
       <el-tab-pane label="资源基础属性">
         <el-form :model="detail" class="small-el-form" :rules="rules" ref="detail" label-width="120px">
           <el-form-item label="resourceName"
-                        class="input-item"
+                        class="flex-grid"
                         :inline-message="true"
                         prop="resourceName" required>
-            <el-input v-model="detail.resourceName"></el-input>
+            <el-input v-model="detail.resourceName" style="width: 500px"></el-input>
           </el-form-item>
+          <template v-if="detail.resourceType === 'widget'">
+            <el-form-item label="widget name">
+              {{detail.systemMeta.widgetName}}
+            </el-form-item>
+            <el-form-item label="widget版本">
+              {{detail.systemMeta.version}}
+            </el-form-item>
+          </template>
           <el-form-item :label="key"
-                        class="input-item"
                         :key="key"
-                        style="width: 100%"
                         v-for="key in showKeys">
             {{detail[key]}}
           </el-form-item>
           <el-form-item label="file"
-                        class="input-item"
                         required>
             <el-upload
               class="upload-container"
@@ -64,10 +69,6 @@
 </script>
 
 <style lang="less" scoped>
-  .input-item {
-    width: 500px;
-  }
-
   .btns {
     text-align: center;
     margin-top: 15px;
