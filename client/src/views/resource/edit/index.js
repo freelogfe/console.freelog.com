@@ -11,8 +11,9 @@ export default {
     return {
       detail: {},
       activeTabName: '',
-      valid:true,
-      policyValid:true,
+      canUpdate: false,
+      valid: true,
+      policyValid: true,
       submitLoading: false,
       showKeys: ['resourceId', 'resourceType', 'resourceUrl', 'mimeType', 'createDate'],
       policyText: '',
@@ -25,9 +26,11 @@ export default {
       }
     }
   },
-  computed: Object.assign({send: function() {
-    return this.valid && this.policyValid
-  }}, mapGetters({
+  computed: Object.assign({
+    send: function () {
+      return this.valid && this.policyValid
+    }
+  }, mapGetters({
     session: 'session'
   })),
   components: {
@@ -93,6 +96,8 @@ export default {
       if (fileList.length > 1) {
         fileList.shift()
       }
+      this.canUpdate = fileList.length > 0
+
     },
     validate() {
       return new Promise((resolve) => {
@@ -103,7 +108,7 @@ export default {
       })
     },
     successHandler(data) {
-      if (data.ret == 0 && data.errcode === 0) {
+      if (data.ret === 0 && data.errcode === 0) {
         this.$message.success('更新成功')
       } else {
         this.$message.error(data.msg)

@@ -30,6 +30,14 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="创建时间"
+        align="center"
+        width="150px">
+        <template slot-scope="scope">
+          {{scope.row.createDate | fmtDate}}
+        </template>
+      </el-table-column>
+      <el-table-column
         align="center"
         label="资源链接">
         <template slot-scope="scope">

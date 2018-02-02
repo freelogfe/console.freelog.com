@@ -89,3 +89,9 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .el-icon-refresh {
+    cursor: pointer;
+  }
+</style>
