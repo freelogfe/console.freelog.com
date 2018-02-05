@@ -53,8 +53,13 @@ export default {
     this.tableData = this.data;
     this.total = this.tableData.length
     this.load()
+
+    this.$on('reload', this.reload.bind(this))
   },
   methods: {
+    reload(params) {
+      this.load(params)
+    },
     load(pageInfo) {
       Object.assign(this.pageMeta, pageInfo || {})
       if (this.loader) {
@@ -93,7 +98,6 @@ export default {
       var data = {page: val}
       this.load(data);
       this.$emit('pageChange', data)
-
     }
   }
 }

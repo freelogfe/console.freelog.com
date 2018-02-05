@@ -25,14 +25,10 @@ export default {
         path: `/resources/detail/${resource.resourceId}`
       })
     },
-    querySearchAsync() {
-
-    },
-    handleSelectSearchItem() {
-
-    },
     queryHandler() {
-      this.$message.warning('待开发')
+      this.$refs.resourceList.$emit('reload', {
+        keyWords: encodeURIComponent(this.query)
+      })
     },
     loader() {
       return (param) => {

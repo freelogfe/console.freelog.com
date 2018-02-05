@@ -1,10 +1,10 @@
 <template>
   <section>
-    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input" @keyup.enterk="queryHandler">
-      <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler"></el-button>
+    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input" @keyup.enter.native="queryHandler">
+      <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler" ></el-button>
     </el-input>
 
-    <table-view class="resource-list" :loader="loader()">
+    <table-view class="resource-list" ref="resourceList" :loader="loader()">
       <el-table-column
         prop="resourceName"
         label="资源名称">
