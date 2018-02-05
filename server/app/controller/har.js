@@ -8,7 +8,7 @@ const proxy = require('http-proxy-middleware');
 
 module.exports = app => {
   const RESOURCE_CONFIG = app.config.resource
-  const harfilePath = path.join(app.baseDir, ['app', 'data', 'local.freelog.com.har'].join(path.sep))
+  const harfilePath = path.join(app.baseDir, ['app', 'data', 'markdown.freelog.com.har'].join(path.sep))
   const harData = JSON.parse(fs.readFileSync(harfilePath).toString())
   const entries = harData.log.entries
 
@@ -21,7 +21,7 @@ module.exports = app => {
       for (var i = 0, len = entries.length; i < len; i++) {
         let entry = entries[i]
         let request = entry.request
-        if (request.method === method && request.url === href) {
+        if (request.method === method && href.indexOf(request.url) > -1) {
           let response = entry.response
           response.headers.forEach((item) => {
             ctx.set(item.name, item.value)

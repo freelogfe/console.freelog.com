@@ -7,8 +7,12 @@
     </div>
     <table-view class="resource-list" :loader="loader()">
       <el-table-column
-        prop="resourceName"
         label="资源名称">
+        <template slot-scope="scope">
+          {{scope.row.resourceName}}
+          <span v-if="scope.row.systemMeta.version"
+                class="widget-version">v {{scope.row.systemMeta.version}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="resourceType"
@@ -76,6 +80,14 @@
 </script>
 
 <style lang="less" scoped>
+  .widget-version {
+    background-color: #e77334;
+    color: white;
+    padding: 0 5px;
+    border-radius: 3px;
+    border: 1px solid #cc5819;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  }
   .resource-top-sec {
     margin-bottom: 15px;
   }
