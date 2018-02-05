@@ -13,7 +13,7 @@
       <i class="el-icon-refresh"
          :class="{'el-icon-loading': refreshing}"
          @click="refreshHandler"
-         v-if="detail.status < 3"></i>
+         v-if="showRefreshing && detail.status < 3"></i>
     </el-form-item>
     <el-form-item label="状态机状态">
       <el-tag :type="detail.status===3?'success':'warning'">
@@ -65,6 +65,12 @@
         type: Number,
         default() {
           return 100
+        }
+      },
+      showRefreshing: {
+        type: Boolean,
+        default() {
+          return false
         }
       }
     },
