@@ -14,7 +14,7 @@
     </el-dialog>
 
     <div v-if="contractDetail">
-      <contract-detail-info :data="contractDetail" :labelWidth="120" :shouldShowSegment="false">
+      <contract-detail-info :data="formatContractDetail" :showRefreshing="true" :labelWidth="120" :shouldShowSegment="false" @refresh="updateContractDetail">
         <el-form-item label="合同详情">
           <contract-content :data="formatContractDetail" @execute="executeContractHandler"></contract-content>
         </el-form-item>

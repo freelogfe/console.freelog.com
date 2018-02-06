@@ -3,6 +3,8 @@ import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
 import ContractContent from './content.vue'
+import ContractUtils from '@/data/contract/utils'
+import ContractLoader from '@/data/contract/loader'
 
 const {CONTRACT_STATUS_TIPS} = CONFIG
 
@@ -63,7 +65,7 @@ export default {
     },
     formatData() {
       var detail = Object.assign({}, this.contractDetail)
-      detail.statusTip = CONTRACT_STATUS_TIPS[detail.status]
+      detail = ContractUtils.format(detail)
       this.formatContractDetail = detail
     },
     loadContractDetail(param) {
@@ -72,10 +74,13 @@ export default {
           return res.getData();
         }).catch(this.$error.showErrorMessage)
     },
-    updateContractDetail() {
+    updateContractDetail(detail) {
       this.loadContractDetail(this.contractDetail.contractId).then((contract) => {
         Object.assign(this.contractDetail, contract)
         this.formatData()
+        if (detail && detail.done) {
+          detail.done()
+        }
       })
     },
     executeContractHandler(params) {

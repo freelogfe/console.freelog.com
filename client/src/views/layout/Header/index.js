@@ -75,7 +75,6 @@ export default {
     },
     logoutNodeHandler() {
       this.$store.dispatch('deleteNode')
-      // location.reload()
     },
     switchNodeHandler() {
       this.$store.dispatch('deleteNode')

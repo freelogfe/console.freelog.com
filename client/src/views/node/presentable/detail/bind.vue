@@ -105,12 +105,14 @@
     mounted() {
       this.render()
       this.listenWindowVisibility()
-
     },
     watch: {
       widget() {
         this.render()
       }
+    },
+    beforeDestroy() {
+      this.offEvent && this.offEvent()
     },
     methods: {
       listenWindowVisibility() {
@@ -118,17 +120,34 @@
         var hidden = 'hidden';
         var doc = document
 
-        if (hidden in doc)
+        if (hidden in doc) {
           doc.addEventListener('visibilitychange', onchange);
-        else if ((hidden = 'mozHidden') in doc)
+          this.offEvent = function () {
+            doc.removeEventListener('visibilitychange', onchange);
+          }
+        } else if ((hidden = 'mozHidden') in doc) {
           doc.addEventListener('mozvisibilitychange', onchange);
-        else if ((hidden = 'webkitHidden') in doc)
+          this.offEvent = function () {
+            doc.removeEventListener('mozvisibilitychange', onchange);
+          }
+        } else if ((hidden = 'webkitHidden') in doc) {
           doc.addEventListener('webkitvisibilitychange', onchange);
-        else if ((hidden = 'msHidden') in doc)
+          this.offEvent = function () {
+            doc.removeEventListener('webkitvisibilitychange', onchange);
+          }
+        } else if ((hidden = 'msHidden') in doc) {
           doc.addEventListener('msvisibilitychange', onchange);
-        else
+          this.offEvent = function () {
+            doc.removeEventListener('msvisibilitychange', onchange);
+          }
+        } else {
           window.onpageshow = window.onpagehide
             = window.onfocus = window.onblur = onchange;
+          this.offEvent = function () {
+            window.onpageshow = window.onpagehide = window.onfocus = window.onblur = function () {
+            }
+          }
+        }
 
         function onchange(evt) {
           var v = 'visible';

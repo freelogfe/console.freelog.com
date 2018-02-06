@@ -16,14 +16,12 @@ function format(contract) {
 
   if (contract.partyOne) {
     loadUserInfo(contract.partyOne).then((userInfo) => {
-      contract.partyOneInfo = userInfo
       Vue.set(contract, 'partyOneInfo', userInfo)
     })
   }
 
   if (contract.partyTwo) {
     loadNodeInfo(contract.partyTwo).then((nodeInfo) => {
-      contract.partyTwoInfo = nodeInfo
       Vue.set(contract, 'partyTwoInfo', nodeInfo)
     })
   }
