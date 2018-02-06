@@ -33,7 +33,7 @@
         </el-menu-item>
       </el-menu>
 
-      <el-menu background-color="#324157" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
+      <el-menu background-color="#324157" active-text-color="#ffd04b" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
                @select="handleSelect">
         <el-submenu index="account" v-if="session">
           <template slot="title">
