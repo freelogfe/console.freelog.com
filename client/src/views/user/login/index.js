@@ -8,8 +8,7 @@ export default {
     const rules = {
       loginName: [
         {required: true, message: '请输入账号', trigger: 'blur'},
-        {validator: validateLoginName, trigger: 'blur'},
-        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+        {validator: validateLoginName, trigger: 'blur'}
       ],
       password: [
         {required: true, message: '请输入密码', trigger: 'blur'},
