@@ -1,4 +1,4 @@
-import store from '@/lib/storage'
+import {sessionStore} from '@/lib/storage'
 
 export default {
   name: 'table-view',
@@ -37,7 +37,7 @@ export default {
       type: Object,
       default() {
         //记忆上一次查看的页码
-        var histroyPage = store.get(`PAGE_${this.$route.fullPath}_index`) || {}
+        var histroyPage = sessionStore.get(`PAGE_${this.$route.fullPath}_index`) || {}
         return Object.assign({
           pageSize: 10,
           page: 1 //页码
@@ -46,7 +46,7 @@ export default {
     }
   },
   beforeDestroy() {
-    store.set(`PAGE_${this.pageUrl}_index`, this.pageMeta)
+    sessionStore.set(`PAGE_${this.pageUrl}_index`, this.pageMeta)
   },
   mounted() {
     this.pageUrl = this.$route.fullPath
