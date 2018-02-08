@@ -31,12 +31,18 @@ export default {
   },
   methods: {
     validate() {
+      var result = compiler.compile(this.policyText)
       var myBeautify = compiler.compile(this.policyText, 'beautify')
 
-      if (!myBeautify.errorMsg) {
+      if (!myBeautify.errorMsg && !result.errorMsg ) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
         this.$emit('validate',{done: true})
-      } else {
+      } else if (result.errorMsg) {
+        this.$emit('validate',{done: false, error: {
+          message: result.errorMsg
+        }})
+        this.$message.error(result.errorMsg)
+      }else {
         this.$emit('validate',{done: false, error: {
           message: myBeautify.errorMsg
         }})
