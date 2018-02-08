@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input" @keyup.enter.native="queryHandler">
+    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input" @keyup.enter.native="queryHandler" @keydown.native="autoQueryHandler">
       <el-button slot="append" icon="el-icon-search" type="primary" @click="queryHandler"></el-button>
     </el-input>
 
@@ -69,6 +69,7 @@
     border-radius: 3px;
     border: 1px solid #cc5819;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    display: inline-block;
   }
 
   .query-input {

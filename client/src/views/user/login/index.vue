@@ -26,7 +26,7 @@
       <el-form-item>
         <el-checkbox v-model="rememberUser">记住我</el-checkbox>
         <span class="user-ops">
-          <a class="user-op" href="/user/reset_pw">忘记密码</a> | <a class="user-op" href="/user/signup">注册新用户</a>
+          <a class="user-op" href="/user/reset_pw">忘记密码</a> | <a class="user-op" :href="signUpLink">注册新用户</a>
         </span>
       </el-form-item>
       <el-form-item class="login-btns">

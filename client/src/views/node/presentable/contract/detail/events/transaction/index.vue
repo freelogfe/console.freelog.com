@@ -6,6 +6,14 @@
       type="warning">
     </el-alert>
 
+    <el-alert
+      v-if="showError"
+      type="warning">
+      未设置支付密码，<a href="//www.freelog.com/pages/account/security.html" style="color: #409EFF;
+" target="_blank">去设置</a>
+    </el-alert>
+
+
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="contractId">
         {{contractDetail.contractId}}

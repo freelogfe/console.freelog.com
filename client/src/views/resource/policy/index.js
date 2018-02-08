@@ -5,11 +5,7 @@ export default {
   data() {
     return {
       submitLoading: false,
-      policyText: this.value || `for nodes :
-  in initial :
-    proceed to <signing> on transaction of 100 to feth233dbc32069
-  in <signing> :
-    proceed to activate on accepting license e759419923ea25bf6dff2694391a1e65c21739ce`,
+      policyText: this.value,
       licenses: [],
       state4: '',
       licenseContent: '',

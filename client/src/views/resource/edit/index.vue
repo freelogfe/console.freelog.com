@@ -23,6 +23,7 @@
             {{detail[key]}}
           </el-form-item>
           <el-form-item label="file"
+                        v-if="isDev"
                         required>
             <el-upload
               class="upload-container"
@@ -56,7 +57,7 @@
     </el-tabs>
     <div class="btns">
       <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading" :disabled="!send">保存</el-button>
-      <el-button type="primary" @click="updatePageBuildHandler('detail')" :disabled="!canUpdate">更新资源</el-button>
+      <el-button type="primary" v-if="isDev" @click="updatePageBuildHandler('detail')" :disabled="!canUpdate">更新资源</el-button>
       <el-button @click="backToList()">返回</el-button>
     </div>
   </section>
