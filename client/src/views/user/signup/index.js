@@ -33,21 +33,19 @@ export default {
         {validator: validateLoginName, trigger: 'blur'}
       ],
       nickname: [
-        {required: true, message: '请输入昵称', trigger: 'blur'},
-        {min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur'}
+        {required: true, message: '请输入昵称', trigger: 'blur'}
       ],
       password: [
         {required: true, message: '请输入密码', trigger: 'blur'},
         {validator: validatePassword, trigger: 'blur'},
-        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
       ],
       checkPassword: [
         {required: true, message: '请输入确认密码', trigger: 'blur'},
         {validator: validateCheckPassword, trigger: 'blur'},
-        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
       ]
     }
-
     var model = {
       loginName: '',
       nickname: '',
@@ -66,7 +64,7 @@ export default {
   methods: {
     login() {
       var self = this;
-      var isNewPage = /^(https?)?\/\//.test(self.$route.query.redirect)
+      var isNewPage = /^(https?:)?\/\//.test(this.$route.query.redirect)
       var data = {
         loginName: this.model.loginName,
         password: this.model.password,

@@ -12,8 +12,13 @@ export default {
       ],
       password: [
         {required: true, message: '请输入密码', trigger: 'blur'},
-        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
       ]
+    }
+
+    var signUpLink = '/user/signup'
+    if (this.$route.query.redirect) {
+      signUpLink += `?redirect=${this.$route.query.redirect}`
     }
 
     return {
@@ -21,6 +26,7 @@ export default {
         loginName: storage.get('loginName') || '',
         password: '',
       },
+      signUpLink: signUpLink,
       rules: rules,
       error: null,
       loading: false,

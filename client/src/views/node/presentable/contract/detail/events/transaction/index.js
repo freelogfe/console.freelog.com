@@ -8,7 +8,8 @@ export default {
       fromAccountId: '',
       password: '',
       tipMsg: '',
-      order: {}
+      order: {},
+      showError: false
     }
   },
   mounted() {
@@ -98,9 +99,11 @@ export default {
         "password": self.password
       }).then((res) => {
         if (res.data.errcode === 0) {
+          this.showError = false
           this.payResultHandler(res.data.data)
           this.doneHandler({shouldUpdate: true, data: res.data.data})
         } else {
+          this.showError = true
           this.$message.error(res.data.msg)
         }
       }).catch(this.$error.showErrorMessage)

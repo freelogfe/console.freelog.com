@@ -46,6 +46,9 @@ export default {
     }
   },
   beforeDestroy() {
+    if (this.pageMeta && this.pageMeta.keyWords) {
+      delete this.pageMeta.keyWords
+    }
     sessionStore.set(`PAGE_${this.pageUrl}_index`, this.pageMeta)
   },
   mounted() {
