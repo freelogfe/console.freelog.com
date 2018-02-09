@@ -55,6 +55,7 @@ export default {
       var homePath;
 
       this.routeType = paths[0] || '';
+      //重定向链接和当前路径一样
       if (currentPath === nodeRoute.redirect) {
         navList = cloneArray(nodeRoute.children) //避免修改源数据
         homePath = '/node'
