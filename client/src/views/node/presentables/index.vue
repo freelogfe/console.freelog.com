@@ -13,8 +13,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="resourceDetail.resourceName"
         label="资源名称">
+        <template slot-scope="scope">
+          {{scope.row.resourceDetail.resourceName}}
+          <span v-if="scope.row.resourceDetail.systemMeta.version"
+                class="widget-version">v {{scope.row.resourceDetail.systemMeta.version}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="resourceDetail.resourceType"

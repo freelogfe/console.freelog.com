@@ -33,7 +33,8 @@
         </el-menu-item>
       </el-menu>
 
-      <el-menu background-color="#324157" active-text-color="#ffd04b" text-color="#fff" default-active="-1" class="navbar-menu" mode="horizontal"
+      <el-menu background-color="#324157" text-color="#fff"
+               active-text-color="#ffd04b" default-active="-1" class="navbar-menu" mode="horizontal"
                @select="handleSelect">
         <el-submenu index="account" v-if="session">
           <template slot="title">
@@ -41,10 +42,10 @@
             <span style="color: #909399">{{session.user.nickname}}</span>
           </template>
           <el-menu-item index="setting">
-            <router-link to="/account/settings">settings</router-link>
+            <router-link to="/account/settings" style="color: white">settings</router-link>
           </el-menu-item>
           <el-menu-item index="payment">
-            <a href="//www.freelog.com/pages/user/index.html" target="_blank">payment</a>
+            <a href="//www.freelog.com/pages/user/index.html" target="_blank" style="color: white">payment</a>
           </el-menu-item>
           <el-menu-item index="logout" @click="logout">logout</el-menu-item>
         </el-submenu>

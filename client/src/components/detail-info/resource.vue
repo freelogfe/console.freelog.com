@@ -50,8 +50,8 @@
     },
 
     methods: {
-      loadAuthorInfo(userId){
-        return this.$services.user.get(userId).then((res)=>{
+      loadAuthorInfo(userId) {
+        return this.$services.user.get(userId).then((res) => {
           return res.getData()
         })
       },
@@ -59,7 +59,7 @@
         var detail = this.data
         detail.statusInfo = RESOURCE_STATUS[detail.status]
         if (detail.userId) {
-          this.loadAuthorInfo(detail.userId).then((authorInfo)=>{
+          this.loadAuthorInfo(detail.userId).then((authorInfo) => {
             this.$set(detail, 'authorInfo', authorInfo)
           })
         }

@@ -36,6 +36,7 @@
                         </el-button>
                       </el-tooltip>
                     </div>
+                    <i class="el-icon-warning" v-if="isWidgetValid(widget)"></i>
                   </template>
                   <div v-loading="widget.loading">
                     <div class="detail-info-wrap" v-if="widget.contractInfo">
@@ -50,6 +51,7 @@
                             </el-button>
                           </el-form-item>
                         </contract-detail-info>
+                        <div style="margin-bottom: 15px; text-align: center"><el-button v-if="widget.contractInfo.status < 3" type="primary" @click="gotoExecContractHandler(widget)">去执行</el-button></div>
                       </div>
                     </div>
                     <div class="detail-info-wrap">

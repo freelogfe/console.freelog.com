@@ -74,6 +74,16 @@ export default {
       })
   },
   methods: {
+    isWidgetValid(widget){
+      return widget.contractInfo && widget.contractInfo.status < 3
+    },
+    gotoExecContractHandler(widget) {
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/presentable/detail#contract`,
+        query: {contractId: widget.contractInfo.contractId}
+      })
+      location.reload()
+    },
     isPageBuild(data) {
       return (data.tagInfo.resourceInfo.resourceType === RESOURCE_TYPES.pageBuild)
     },
@@ -248,7 +258,7 @@ export default {
     },
     updatePresentableHandler() {
       let result = compiler.compile(this.editPresentable.policyText, 'beautify')
-      if ( result.errorMsg ) {
+      if (result.errorMsg) {
         this.$message.error(result.errorMsg)
         return;
       }
