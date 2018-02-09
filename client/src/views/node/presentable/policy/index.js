@@ -30,12 +30,9 @@ export default {
       this.$emit('input', this.policyText)
     },
     validate() {
-      var result = compiler.compile(this.policyText)
       var myBeautify = compiler.compile(this.policyText, 'beautify')
-      if (!myBeautify.errorMsg && !result.errorMsg ) {
+      if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
-      } else if (result.errorMsg)  {
-        this.$message.error(result.errorMsg)
       } else {
         this.$message.error(myBeautify.errorMsg)
       }
