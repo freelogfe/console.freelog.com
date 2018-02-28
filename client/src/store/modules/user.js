@@ -1,6 +1,6 @@
 import {UserService, OtherService} from '../../services'
 import {storage, axios} from '@/lib/index'
-import {cookieStore} from '@/lib/storage'
+import {cookieStore, sessionStore} from '@/lib/storage'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
@@ -13,17 +13,17 @@ const types = {
 
 const user = {
   state: {
-    session: storage.get('user_session') || {user: {}, token: null},
+    session: {user: {}, token: null}, // sessionStore.get('user_session')
   },
 
   mutations: {
     [types.CHANGE_SESSION](state, data) {
       Object.assign(state.session, data);
-      storage.set('user_session', state.session);
+      sessionStore.set('user_session', state.session);
     },
     [types.DELETE_SESSION](state) {
       state.session = {user: {}, token: null}
-      storage.remove('user_session');
+      sessionStore.remove('user_session');
     }
   },
 

@@ -15,7 +15,7 @@
     "draggabilly": "^2.1.1",
     "element-ui": "^2.1.0",
     "font-awesome": "^4.7.0",
-    "freelog_policy_compiler": "^0.1.22",
+    "freelog_policy_compiler": "^0.1.28",
     "fs": "0.0.1-security",
     "lodash": "^4.17.5",
     "normalize.css": "^7.0.0",
