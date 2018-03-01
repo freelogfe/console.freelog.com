@@ -193,7 +193,6 @@ export default {
       }
     },
     setViewModeContent(detail) {
-      debugger
       this.$refs.page.innerHTML = detail.html
       this.initWidgetsEvent()
     },

@@ -89,7 +89,6 @@
   import FreelogTags from '@/components/Tags/index.vue'
   import PresentablePolicy from '../policy/index.vue'
   import CONFIG from '@/config/index'
-  import compiler from 'freelog_policy_compiler'
   import PresentableEditor from '../editor/index.vue'
 
   export default {

@@ -1,4 +1,4 @@
-import compiler from 'presentable_policy_compiler'
+import compiler from '@freelog/presentable-policy-compiler'
 import {RESOURCE_TYPES} from "@/config/resource";
 
 export default {
@@ -30,7 +30,7 @@ export default {
       this.$emit('input', this.policyText)
     },
     validate() {
-      var myBeautify = compiler.compile(this.policyText, 'beautify')
+      var myBeautify = compiler.beautify(this.policyText)
       if (!myBeautify.errorMsg) {
         this.policyText = myBeautify.stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
       } else {

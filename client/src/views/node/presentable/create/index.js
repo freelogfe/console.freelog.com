@@ -1,7 +1,6 @@
 import CONFIG from '@/config/index'
-import compiler from 'freelog_policy_compiler'
+import compiler from '@freelog/resource-policy-compiler'
 import PresentableCreator from './creator.vue'
-import {presentableDetail} from "../../../index";
 
 const {RESOURCE_TYPES} = CONFIG
 
@@ -106,7 +105,7 @@ export default {
       })
     },
     formatSegmentText(segmentText) {
-      return compiler.compile(segmentText, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+      return compiler.beautify(segmentText);
     },
     createResourceContract(param) {
       return this.$services.contract.post(param)

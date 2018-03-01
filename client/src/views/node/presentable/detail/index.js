@@ -1,4 +1,4 @@
-import compiler from 'presentable_policy_compiler'
+import compiler from '@freelog/presentable-policy-compiler'
 import PresentableContractDetail from '../contract/detail/index.vue'
 import PresentablePolicy from '../policy/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
@@ -166,7 +166,7 @@ export default {
     },
     beautifySegmentText(text) {
       if (text) {
-        return compiler.compile(text, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+        return compiler.beautify(text);
       } else {
         return ''
       }
@@ -257,7 +257,7 @@ export default {
       })
     },
     updatePresentableHandler() {
-      let result = compiler.compile(this.editPresentable.policyText, 'beautify')
+      let result = compiler.beautify(this.editPresentable.policyText)
       if (result.errorMsg) {
         this.$message.error(result.errorMsg)
         return;

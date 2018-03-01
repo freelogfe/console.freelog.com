@@ -1,4 +1,4 @@
-import {compile} from 'freelog_policy_compiler'
+import {compile, beautify} from '@freelog/resource-policy-compiler'
 
 export default {
   name: 'policy-editor',
@@ -33,7 +33,7 @@ export default {
     validate() {
       var myBeautify = compile(this.policyText)
       if (!myBeautify.errorMsg) {
-        this.policyText = compile(this.policyText, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+        this.policyText = beautify(this.policyText);
         this.$emit('validate',{done: true})
       } else {
         this.$emit('validate',{done: false, error: {

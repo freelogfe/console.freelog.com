@@ -1,6 +1,6 @@
 import PresentableSteps from '@/views/node/presentable/steps/index.vue'
 import CONFIG from '@/config/index'
-import compiler from 'freelog_policy_compiler'
+import compiler from '@freelog/resource-policy-compiler'
 
 const {RESOURCE_TYPES} = CONFIG
 
@@ -132,7 +132,7 @@ export default {
       })
     },
     formatSegmentText(segmentText) {
-      return compiler.compile(segmentText, 'beautify').stringArray.splice(1).join(' ').replace(/\n\s/g, '\n');
+      return compiler.beautify(segmentText);
     },
     validatePageBuildParam() {
       return new Promise((resolve, reject) => {
