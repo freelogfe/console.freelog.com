@@ -1,11 +1,11 @@
 import ACCOUNT_CONFIG from '../config/account'
 
 export default (Vue, options) => {
-  //单位转换+千分位格式化
-  var ACCOUNT_MAP = Object.values(ACCOUNT_CONFIG).reduce((AccountMap, accountType) => {
-    AccountMap[accountType.abbr] = accountType
-    return AccountMap
-  }, {});
+
+
+  Vue.filter('humanizeNumber', function (value) {
+    return value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+  })
 
 
   Vue.filter('fmtDate', function (value, frm) {
@@ -14,6 +14,11 @@ export default (Vue, options) => {
     return date.toLocaleDateString()
   })
 
+  //单位转换+千分位格式化
+  var ACCOUNT_MAP = Object.values(ACCOUNT_CONFIG).reduce((AccountMap, accountType) => {
+    AccountMap[accountType.abbr] = accountType
+    return AccountMap
+  }, {});
   Vue.filter('humanizeCurrency', function (value, abbr) {
     if (!value) return '0'
     var account = ACCOUNT_MAP[abbr || 'feth']

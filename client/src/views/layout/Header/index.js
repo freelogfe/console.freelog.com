@@ -95,7 +95,6 @@ export default {
       }
     },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     },
     logout() {
       this.$store.dispatch('userLogout')

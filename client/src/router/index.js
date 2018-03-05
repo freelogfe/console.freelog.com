@@ -7,6 +7,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import nodeRoute from './node'
+import groupRote from './group'
 import accountRoute from './account'
 import resourceRoute from './resource'
 import userRoute from './user'
@@ -60,7 +61,7 @@ export default new Router({
       path: '/',
       meta: {requiresAuth: true, title: '首页'},
       component: layout,
-      children: [resourceRoute, nodeRoute, {
+      children: [resourceRoute, nodeRoute, groupRote, {
         path: 'about',
         hidden: true,
         meta: {

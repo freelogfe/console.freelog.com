@@ -19,8 +19,7 @@ import Accounts from './accounts'
 import Pay from './pay' //支付接口
 import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
-
-
+import groupsService from './groups'
 
 
 export {
@@ -38,5 +37,6 @@ export {
   ContractRecords,
   Accounts,
   Pay,
-  SigningLicenses
+  SigningLicenses,
+  groupsService
 }

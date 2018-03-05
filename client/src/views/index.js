@@ -44,6 +44,17 @@ export const presentablesView = resolve => require.ensure([], () => resolve(requ
 
 export const NodeLoginView = resolve => require.ensure([], () => resolve(require('@/views/node/login/index.vue')), 'node')
 
+
+
+
+//group
+export const GroupCreator = resolve => require.ensure([], () => resolve(require('@/views/group/create/index.vue')), 'group')
+export const GroupDetail = resolve => require.ensure([], () => resolve(require('@/views/group/detail/index.vue')), 'group')
+export const GroupList = resolve => require.ensure([], () => resolve(require('@/views/group/list/index.vue')), 'group')
+
+
+
+
 export default {
   layout,
   login,
@@ -69,5 +80,9 @@ export default {
   presentableDetail,
   pagebuildList,
   NodeLoginView,
-  presentablesView
+  presentablesView,
+
+  GroupCreator,
+  GroupDetail,
+  GroupList
 }

@@ -13,6 +13,12 @@ export default {
       default() {
         return []
       }
+    },
+    actionText: {
+      type: String,
+      default() {
+        return 'New Tag'
+      }
     }
   },
   watch: {
