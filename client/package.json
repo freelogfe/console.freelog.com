@@ -1,5 +1,5 @@
 {
-  "name": "bashboard",
+  "name": "console",
   "version": "1.0.0",
   "description": "dashboard of freelog",
   "author": "daizch <daizech@gmail.com>",
@@ -11,10 +11,8 @@
     "pack": "tar -zcvf console.tar dist"
   },
   "dependencies": {
-    "@freelog/presentable-policy-compiler": "0.0.8",
-    "@freelog/presentable-policy-lang": "0.0.5",
-    "@freelog/resource-policy-compiler": "0.0.5",
-    "@freelog/resource-policy-lang": "0.0.4",
+    "@freelog/presentable-policy-compiler": "latest",
+    "@freelog/resource-policy-compiler": "latest",
     "axios": "^0.16.2",
     "draggabilly": "^2.1.1",
     "element-ui": "^2.2.1",

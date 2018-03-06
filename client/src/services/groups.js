@@ -13,7 +13,7 @@ const apis = {
     return axios.post(`/v1/groups/operationMembers/${groupId}`, options)
   },
   list: function (options) {
-    return axios.get('/v1/groups/list', options)
+    return axios.get('/v1/groups', options)
   },
   isExistMember: function (options) {
     return axios.get('/v1/groups/isExistMember', options)

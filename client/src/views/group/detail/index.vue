@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form label-position="right" label-width="120px" class="small-el-form">
+    <el-form label-position="right" ref="dataForm" label-width="120px" class="small-el-form">
       <el-form-item label="groupName">
         {{detail.groupName}}
       </el-form-item>
@@ -14,10 +14,10 @@
         {{detail.groupType===1?'用户分组':'节点分组'}}
       </el-form-item>
       <el-form-item label="分组成员列表">
-        <freelog-tags v-model="groupMembers" action-text="添加成员"></freelog-tags>
+        <group-member-selector v-model="groupMembers" :group-type="detail.groupType"></group-member-selector>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="margin-top:15px">更新</el-button>
+        <el-button @click="updateDetail" type="primary" style="margin-top:15px">更新</el-button>
       </el-form-item>
     </el-form>
   </section>

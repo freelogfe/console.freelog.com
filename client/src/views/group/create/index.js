@@ -1,4 +1,5 @@
-import FreelogTags from '@/components/Tags/index.vue'
+import {GROUP_TYPES, USER_GROUP_TYPE, NODE_GROUP_TYPE} from "../../../config/group";
+import GroupMemberSelector from '../member-selector/index.vue'
 
 const validateMembers = (rule, value, callback) => {
   if (value && value.length) {
@@ -20,13 +21,7 @@ export default {
   data() {
     return {
       formRules: formRules,
-      options: [{
-        value: '1',
-        label: '用户分组'
-      }, {
-        value: '2',
-        label: '节点分组'
-      }],
+      options: GROUP_TYPES,
       detail: {
         groupName: '',
         members: [],
@@ -34,12 +29,16 @@ export default {
       }
     }
   },
-  components: {FreelogTags},
+
+  components: {GroupMemberSelector},
   mounted() {
   },
   methods: {
     goBackHandler() {
       history.back()
+    },
+    changeGroupType() {
+      this.detail.members = []
     },
     submitForm(formName) {
       const self = this;

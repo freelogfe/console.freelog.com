@@ -31,6 +31,9 @@
             </span>
           </span>
         </el-menu-item>
+        <el-menu-item index="/group/list">
+          分组管理
+        </el-menu-item>
       </el-menu>
 
       <el-menu background-color="#324157" text-color="#fff"

@@ -5,7 +5,7 @@
         <el-input v-model="detail.groupName"></el-input>
       </el-form-item>
       <el-form-item label="分组类型" prop="groupType" required>
-        <el-select v-model="detail.groupType" placeholder="请选择">
+        <el-select v-model="detail.groupType" @change="changeGroupType" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="分组成员" prop="members" required>
-        <freelog-tags v-model="detail.members" action-text="添加成员"></freelog-tags>
+        <group-member-selector v-model="detail.members" :group-type="detail.groupType"></group-member-selector>
       </el-form-item>
 
       <el-form-item>

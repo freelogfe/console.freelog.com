@@ -52,7 +52,7 @@ module.exports = {
         test: /\.js$/,
         // loader: 'babel-loader',
         loader: 'happypack/loader?id=happybabel',
-        include: [resolve('src'), resolve('test'),resolve('node_modules/@freelog')]
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
