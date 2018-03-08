@@ -3,6 +3,9 @@
     <el-form label-position="right" label-width="100px"
              :model="detail" :rules="rules" ref="detail"
              class="small-el-form">
+      <el-form-item label="节点名称" class="flex-grid" prop="nodeName">
+        {{detail.nodeName}}
+      </el-form-item>
       <el-form-item label="节点域名">
         {{detail.nodeDomain}}.freelog.com
       </el-form-item>
@@ -14,10 +17,6 @@
       </el-form-item>
       <el-form-item label="创建时间">
         {{detail.createDate | fmtDate}}
-      </el-form-item>
-
-      <el-form-item label="节点描述" class="flex-grid" prop="nodeName">
-        <el-input v-model="detail.nodeName" style="width: 500px"></el-input>
       </el-form-item>
       <el-form-item class="btns">
         <el-button type="primary" @click="updateNodeDetail('detail')">保存</el-button>

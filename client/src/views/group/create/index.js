@@ -46,8 +46,7 @@ export default {
         if (valid) {
           self.$services.groups.post(self.detail)
             .then((res) => {
-              var data = res.getData();
-              if (!data) {
+              if (res.data.errcode !== 0) {
                 this.$message.error(res.data.msg)
               } else {
                 self.$message.success('分组创建成功')

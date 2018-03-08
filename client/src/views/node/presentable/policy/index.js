@@ -52,7 +52,7 @@ export default {
         languageType: 'freelog_policy_lang'
       }).then((res) => {
         var data = res.getData()
-        if (!data) {
+        if (res.data.errcode !== 0) {
           this.$message.error(res.data.msg)
         } else {
           this.$message.success('presentable创建成功');

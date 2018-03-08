@@ -1,7 +1,7 @@
 <template>
   <section class="node-form-container">
     <el-form :model="dataForm" :rules="formRules" ref="dataForm" label-width="100px" class="node-form">
-      <el-form-item label="节点描述" prop="nodeName" required>
+      <el-form-item label="节点名称" prop="nodeName" required>
         <el-input v-model="dataForm.nodeName" placeholder="长度为4-20字符"></el-input>
       </el-form-item>
       <el-form-item label="节点域名" prop="nodeDomain" required>

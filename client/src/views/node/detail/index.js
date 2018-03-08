@@ -37,7 +37,11 @@ export default {
         if (valid) {
           self.$services.nodes.patch(self.detail.nodeId, self.detail)
             .then((res) => {
+            if (res.data.errcode === 0) {
               self.$message.success('节点修改成功')
+            } else {
+              self.$message.error(res.data.msg)
+            }
             }).catch((err) => {
             self.$message.error(err.response.errorMsg || err)
           })

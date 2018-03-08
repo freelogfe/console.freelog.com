@@ -1,19 +1,19 @@
 <template>
   <section>
     <div class="node-top-sec">
-      <el-button type="primary">
-        <router-link class="route-link" to="/node/create">创建新节点</router-link>
-      </el-button>
+      <router-link class="route-link" to="/node/create">
+        <el-button type="primary">创建新节点</el-button>
+      </router-link>
     </div>
     <table-view class="node-list" :loader="loader()">
       <el-table-column
         prop="nodeName"
-        label="node name">
+        label="节点名">
       </el-table-column>
       <el-table-column
-        label="node domain">
+        label="节点地址">
         <template slot-scope="scope">
-          {{scope.row.nodeDomain}}.freelog.com
+          {{resolveDomain(scope.row)}}
           <clip-board
             style="display: inline-block"
             @copyDone="copyDoneHandler"
@@ -26,10 +26,10 @@
       </el-table-column>
       <el-table-column
         prop="nodeId"
-        label="node Id">
+        label="节点ID">
       </el-table-column>
       <el-table-column
-        label="status">
+        label="节点状态">
         <template slot-scope="scope">
           <el-tag :type="NODE_STATUS[scope.row.status].type">{{NODE_STATUS[scope.row.status].text}}</el-tag>
         </template>

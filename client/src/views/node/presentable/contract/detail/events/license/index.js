@@ -39,9 +39,13 @@ export default {
         eventId: this.params.eventId,
         licenseIds: this.params.params,
         nodeId: this.$route.params.nodeId
-      }).then(() => {
-        this.$message.success('执行成功')
-        this.doneHandler(true)
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message.success('执行成功')
+          this.doneHandler(true)
+        } else {
+          this.$message.error(res.data.msg)
+        }
       })
     },
     doneHandler(shouldUpdate) {

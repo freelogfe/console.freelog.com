@@ -1,3 +1,4 @@
+import compiler from '@freelog/resource-policy-compiler'
 import {loadUserInfo} from '../user/loader'
 import {loadNodeInfo} from '../node/loader'
 import {CONTRACT_STATUS_COLORS} from '@/config/contract'
@@ -6,6 +7,9 @@ import Vue from 'vue'
 function format(contract) {
   if (!contract) return
 
+  if (contract.policySegment) {
+    contract._segmentText =  compiler.beautify(contract.policySegment.segmentText)
+  }
   contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
   contract.forUsers = contract.policySegment.users.map((user) => {
     return {

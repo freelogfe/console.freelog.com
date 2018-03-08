@@ -3,7 +3,7 @@
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性">
         <el-form :model="detail" class="small-el-form" :rules="rules" ref="detail" label-width="120px">
-          <el-form-item label="resourceName"
+          <el-form-item label="资源描述"
                         class="flex-grid"
                         :inline-message="true"
                         prop="resourceName" required>
@@ -17,12 +17,22 @@
               {{detail.systemMeta.version}}
             </el-form-item>
           </template>
-          <el-form-item :label="key"
-                        :key="key"
-                        v-for="key in showKeys">
-            {{detail[key]}}
+          <el-form-item label="ID">
+            {{detail.resourceId}}
           </el-form-item>
-          <el-form-item label="file"
+          <el-form-item label="类型">
+            {{detail.resourceType}}
+          </el-form-item>
+          <el-form-item label="资源URL">
+            {{detail.resourceUrl}}
+          </el-form-item>
+          <el-form-item label="mimeType">
+            {{detail.mimeType}}
+          </el-form-item>
+          <el-form-item label="创建日期">
+            {{detail.createDate | fmtDate}}
+          </el-form-item>
+          <el-form-item label="资源文件"
                         v-if="isDev"
                         required>
             <el-upload
@@ -57,7 +67,8 @@
     </el-tabs>
     <div class="btns">
       <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading" :disabled="!send">保存</el-button>
-      <el-button type="primary" v-if="isDev" @click="updatePageBuildHandler('detail')" :disabled="!canUpdate">更新资源</el-button>
+      <el-button type="primary" v-if="isDev" @click="updatePageBuildHandler('detail')" :disabled="!canUpdate">更新资源
+      </el-button>
       <el-button @click="backToList()">返回</el-button>
     </div>
   </section>

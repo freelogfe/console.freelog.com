@@ -5,6 +5,8 @@
 </template>
 
 <script>
+  import compiler from '@freelog/resource-policy-compiler'
+
   let contractEventsMap = {
     transaction() {
       return '支付事件'
@@ -86,11 +88,11 @@
         }
 
         corresponseEvents.forEach((transition) => {
-          if (!transition.event ) {
+          if (!transition.event) {
             //TERMINATE的event会是undefined情况不报错
           } else if (transition.event.type === 'compoundEvents') {
             transition.event.params.forEach(pushEvent)
-          }else {
+          } else {
             pushEvent(transition.event)
           }
         })
@@ -172,7 +174,7 @@
         return html
       },
       parseContract(detail) {
-        var lines = detail.policySegment.segmentText.split(/\n/)
+        var lines = compiler.beautify(detail.policySegment.segmentText).split(/\n/)
         var text = ''
         lines.forEach((line) => {
           let html = this.fillSpace(line)

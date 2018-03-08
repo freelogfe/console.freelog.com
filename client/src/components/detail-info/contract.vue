@@ -30,7 +30,7 @@
     </el-form-item>
     <el-form-item label="合同详情" v-if="detail.policySegment && shouldShowSegment">
       <br>
-      <pre style="overflow: auto">{{ detail.policySegment.segmentText }}</pre>
+      <pre style="overflow: auto">{{ detail._segmentText }}</pre>
     </el-form-item>
     <slot></slot>
   </el-form>
@@ -39,7 +39,6 @@
 <script>
   import {CONTRACT_STATUS_COLORS} from '@/config/contract'
   import ContractUtils from '@/data/contract/utils'
-
   export default {
     name: 'contract-detail-info',
     data() {

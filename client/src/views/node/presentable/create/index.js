@@ -121,7 +121,11 @@ export default {
     createPresentablePolicy(params) {
       return this.$services.presentables.post(params)
         .then((res) => {
-          return res.getData()
+          if (res.data.errcode === 0) {
+            return res.getData()
+          } else {
+            throw new Error(res.data.msg)
+          }
         })
     },
     extractSubmitData() {
@@ -181,7 +185,6 @@ export default {
         return this.$message.warning('未选择合同策略')
       }
       var data = this.extractSubmitData()
-      console.log(data);
       this.createResourceContract(data.contract)
         .then((contract) => {
           data.policy.contractId = contract.contractId

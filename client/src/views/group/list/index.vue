@@ -1,9 +1,9 @@
 <template>
   <section>
     <div class="group-top-sec">
-      <el-button type="primary">
-        <router-link class="route-link" to="/group/create">创建新分组</router-link>
-      </el-button>
+      <router-link class="route-link" to="/group/create">
+        <el-button type="primary">创建新分组</el-button>
+      </router-link>
     </div>
     <table-view class="group-list" :loader="loader()">
       <el-table-column

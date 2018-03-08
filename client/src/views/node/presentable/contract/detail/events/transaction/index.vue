@@ -8,11 +8,11 @@
 
     <el-alert
       v-if="showError"
+      title=""
       type="warning">
       未设置支付密码，<a href="//www.freelog.com/pages/account/security.html" style="color: #409EFF;
 " target="_blank">去设置</a>
     </el-alert>
-
 
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="contractId">
@@ -39,6 +39,12 @@
             :value="item.accountId">
           </el-option>
         </el-select>
+        <el-tooltip placement="top">
+          <div slot="content">
+            <p><a style="color: white" href="//www.freelog.com/pages/account/create.html" target="_blank">没有账号？去添加一个</a></p>
+          </div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="支付密码">
         <el-input type="password" size="small" style="max-width: 300px;" v-model="password"

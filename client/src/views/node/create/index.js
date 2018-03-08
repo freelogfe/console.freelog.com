@@ -35,28 +35,41 @@ export default {
   mounted() {
   },
   methods: {
-    goBackHandler(){
+    goBackHandler() {
       history.back()
+    },
+    createNode() {
+      const self = this;
+      var data = Object.assign({}, self.dataForm)
+      data.nodeDomain = data.nodeDomain.toLowerCase()
+      self.$services.nodes.post(self.dataForm)
+        .then((res) => {
+          if (res.data.errcode !== 0) {
+            this.$message.error(res.data.msg)
+          } else {
+            self.$message.success('节点创建成功')
+            setTimeout(() => {
+              self.$router.push({path: '/node/list'})
+            }, 1e3)
+          }
+        })
+        .catch(this.$error.showErrorMessage)
+    },
+    comfirm() {
+      return this.$confirm('节点名称和域名一旦创建后不可更改，确定继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
     },
     submitForm(formName) {
       const self = this;
       self.$refs[formName].validate((valid) => {
         if (valid) {
-          var data = Object.assign({}, self.dataForm)
-          data.nodeDomain = data.nodeDomain.toLowerCase()
-          self.$services.nodes.post(self.dataForm)
-            .then((res) => {
-              var data = res.getData();
-              if (!data) {
-                this.$message.error(res.data.msg)
-              } else {
-                self.$message.success('节点创建成功')
-                setTimeout(() => {
-                  self.$router.push({path: '/node/list'})
-                }, 1e3)
-              }
-            })
-            .catch(this.$error.showErrorMessage)
+          this.comfirm()
+            .then(() => {
+              this.createNode()
+            }).catch(()=>{})
         } else {
           return false;
         }
