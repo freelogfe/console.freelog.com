@@ -34,12 +34,12 @@ module.exports = {
       '/v1': {
         changeOrigin: true,
         autoRewrite: true,
-        target: 'http://api.freelog.com'
+        target: 'https://api.freelog.com'
       },
-      freelog: {
-        filter: '/api/**',
-        target: 'http://localhost:7001'
-      }
+      // freelog: {
+      //   filter: '/api/**',
+      //   target: 'http://localhost:7001'
+      // }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

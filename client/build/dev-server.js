@@ -5,13 +5,18 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
+var fs = require('fs')
 var opn = require('opn')
 var path = require('path')
+var https = require('https')
 var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 var cors = require('cors')
+var privateKey  = fs.readFileSync(path.join(__dirname,'cert/server_ca.key'), 'utf8');
+var certificate = fs.readFileSync(path.join(__dirname,'cert/server_ca.crt'), 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -68,7 +73,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://localhost:' + port
+var uri = 'https://localhost:' + port
 
 var _resolve
 var readyPromise = new Promise(resolve => {
@@ -85,7 +90,9 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
-var server = app.listen(port)
+
+var httpsServer = https.createServer(credentials, app);
+var server = httpsServer.listen(port);
 
 module.exports = {
   ready: readyPromise,
