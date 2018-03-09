@@ -29,7 +29,7 @@ export default {
     initMessageListener() {
       window.addEventListener('message', (event) => {
         var origin = event.origin || event.originalEvent.origin;
-        if (origin !== "http://console.freelog.com")
+        if (origin !== location.origin)
           return;
 
         var data = event.data

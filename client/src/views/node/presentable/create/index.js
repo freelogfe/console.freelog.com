@@ -185,23 +185,23 @@ export default {
         return this.$message.warning('未选择合同策略')
       }
       var data = this.extractSubmitData()
-      this.createResourceContract(data.contract)
-        .then((contract) => {
-          data.policy.contractId = contract.contractId
-        })
-        .then(() => {
-          if (data.policy.name && data.policy.policyText) {
-            return this.createPresentablePolicy(data.policy)
-          }
-        })
-        .then((presentableDetail) => {
-          this.$message.success('presentable创建成功');
-          if (presentableDetail) {
-            this.gotoPresentablDetail(presentableDetail)
-          } else {
-            this.gotoPresentablDetail(data.policy)
-          }
-        }).catch(this.$error.showErrorMessage)
+      this.createResourceContract(data.contract).then((contract) => {
+        data.policy.contractId = contract.contractId
+      }).then(() => {
+        if (data.policy.name && data.policy.policyText) {
+          return this.createPresentablePolicy(data.policy)
+        }
+      }).then((presentableDetail) => {
+        this.$message.success('presentable创建成功');
+        if (presentableDetail) {
+          this.gotoPresentablDetail(presentableDetail)
+        } else {
+          this.gotoPresentablDetail(data.policy)
+        }
+      }).catch((err) => {
+        this.$error.showErrorMessage(err)
+        this.gotoPresentablDetail(data.policy)
+      })
     }
   }
 }

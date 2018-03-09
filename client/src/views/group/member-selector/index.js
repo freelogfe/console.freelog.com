@@ -64,7 +64,7 @@ export default {
     },
     asyncSearchMembers(query) {
       this.asyncMembers = []
-      if (query.length > 5) {
+      if (query.length >= 5) {
         this.loading = true;
         this.queryMemberInfo(query)
           .then(() => {

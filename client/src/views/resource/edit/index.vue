@@ -17,7 +17,7 @@
               {{detail.systemMeta.version}}
             </el-form-item>
           </template>
-          <el-form-item label="ID">
+          <el-form-item label="资源ID">
             {{detail.resourceId}}
           </el-form-item>
           <el-form-item label="类型">

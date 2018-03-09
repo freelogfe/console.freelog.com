@@ -173,6 +173,7 @@ export default {
     },
     formatData(detail) {
       var presentableId = detail.presentableInfo && detail.presentableInfo.presentableId
+
       if (presentableId) {
         detail.presentableInfo.policy.forEach((segment) => {
           segment._formatSegmentText = this.beautifySegmentText(segment.segmentText)
@@ -190,6 +191,8 @@ export default {
           policyText: detail.presentableInfo.policyText,
           userDefinedTags: detail.presentableInfo.tagInfo.userDefined
         })
+      } else {
+        this.editPresentable.name = detail.resourceInfo.resourceName
       }
 
       return detail

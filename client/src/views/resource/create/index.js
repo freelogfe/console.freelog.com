@@ -18,9 +18,11 @@ export default {
     ResourceMetaInfo,
     PolicyEditor
   },
-  computed: Object.assign({send: function() {
-    return this.valid && this.policyValid
-  }}, mapGetters({
+  computed: Object.assign({
+    send: function () {
+      return this.valid && this.policyValid
+    }
+  }, mapGetters({
     session: 'session'
   })),
   data() {
@@ -97,12 +99,10 @@ export default {
       });
     }, {deep: true})
   },
-  watch : {
-
-  },
+  watch: {},
   methods: {
     policyValidation(valid) {
-        this.policyValid = valid.done
+      this.policyValid = valid.done
     },
     resourceTypeChange(type) {
       if (type === RESOURCE_TYPES.pageBuild) {
@@ -118,6 +118,7 @@ export default {
       }
     },
     errorHandler(err) {
+      this.loading = false
       switch (err.status) {
         case 400:
           this.$message.error('不支持的文件类型');
@@ -180,7 +181,13 @@ export default {
       })
     },
     packDataForwidget($uploader) {
-      $uploader.data.meta.widgetName = this.formData.widgetName;
+      return new Promise((resolve, reject) => {
+        if (!$uploader.data.meta.version) {
+          return reject('meta信息必须包含符合semver规则的version')
+        }
+        $uploader.data.meta.widgetName = this.formData.widgetName;
+        resolve()
+      })
     },
     parseMeta() {
       var $uploader = this.$refs.upload;
@@ -204,14 +211,18 @@ export default {
 
       this.parseMeta()
 
-      var fn = this[fnName] && this[fnName]($uploader); //资源类型数据处理函数
-      this.packMetaData()
-
-      if (fn instanceof Promise) {
-        fn.then(callback).catch((errMsg) => {
-          this.$message.error(errMsg)
-        })
+      if (this[fnName]) {
+        //资源类型数据处理函数
+        this[fnName]($uploader)
+          .then(() => {
+            this.packMetaData()
+          })
+          .then(callback)
+          .catch((errMsg) => {
+            this.$message.error(errMsg)
+          })
       } else {
+        this.packMetaData()
         callback()
       }
     },
