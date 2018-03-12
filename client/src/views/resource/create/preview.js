@@ -169,6 +169,7 @@ export default {
         containment: $wrapper
       })
 
+      //hover添加组件信息提示，默认不加因为不污染源码切换
       $widget.addEventListener('mouseenter', () => {
         this.currentEditWidget = $widget
         $editMask.style = self.object2style({
