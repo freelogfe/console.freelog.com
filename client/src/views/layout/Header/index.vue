@@ -45,12 +45,12 @@
             <span style="color: #909399">{{session.user.nickname}}</span>
           </template>
           <el-menu-item index="setting">
-            <router-link to="/account/settings" style="color: white">settings</router-link>
+            <router-link to="/account/settings" class="nav-link">设置</router-link>
           </el-menu-item>
           <el-menu-item index="payment">
-            <a href="//www.freelog.com/pages/user/index.html" target="_blank" style="color: white">payment</a>
+            <a href="//www.freelog.com/pages/user/index.html" target="_blank" class="nav-link">支付</a>
           </el-menu-item>
-          <el-menu-item index="logout" @click="logout">logout</el-menu-item>
+          <el-menu-item index="logout" @click="logout" class="nav-link">退出</el-menu-item>
         </el-submenu>
       </el-menu>
     </nav>

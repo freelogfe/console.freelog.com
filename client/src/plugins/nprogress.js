@@ -12,10 +12,10 @@ export default Vue => {
     nprogress.start()
     next()
   })
+
   router.afterEach(route => {
     nprogress.done()
   })
-
 
   axios.interceptors.request.use(config => {
     nprogress.start()

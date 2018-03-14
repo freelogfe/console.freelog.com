@@ -1,7 +1,6 @@
 import {mapGetters} from 'vuex'
 
 import NavMenu from '../NavMenu/index.vue'
-import nodeRoute from '@/router/node'
 import resourceRoute from '@/router/resource'
 import {nodeItemRoute} from '@/router/node'
 import resourceMarket from '@/router/resource-market'
@@ -47,37 +46,26 @@ export default {
   }),
   methods: {
     changeRouteHandler() {
-      var currentPath = this.$route.path;
-      var paths = currentPath.split('/').filter((v) => {
-        return !!v;
-      });
       var navList;
       var homePath;
+      this.routeType = this.$route.meta.type || '';
 
-      this.routeType = paths[0] || '';
-      //重定向链接和当前路径一样
-      if (currentPath === nodeRoute.redirect) {
-        navList = cloneArray(nodeRoute.children) //避免修改源数据
-        homePath = '/node'
-        this.paddingPath(homePath, navList)
-      } else {
-        switch (this.routeType) {
-          case 'node':
-          case 'resources':
-            let nodeId = this.nodeSession.nodeId
-            navList = cloneArray(nodeItemRoute.children) //避免修改源数据
-            homePath = `/node/${nodeId}`;
-            this.paddingPath(homePath, navList)
-            navList.push(resourceMarket)
-            break;
-          case 'resource':
-            homePath = '/resource'
-            navList = cloneArray(resourceRoute.children) //避免修改源数据
-            this.paddingPath(homePath, navList)
-            break;
-          default:
-            break;
-        }
+      switch (this.routeType) {
+        case 'node':
+        case 'resources':
+          let nodeId = this.nodeSession.nodeId
+          navList = cloneArray(nodeItemRoute.children) //避免修改源数据
+          homePath = `/node/${nodeId}`;
+          this.paddingPath(homePath, navList)
+          navList.push(resourceMarket)
+          break;
+        case 'resource':
+          homePath = '/resource'
+          navList = cloneArray(resourceRoute.children) //避免修改源数据
+          this.paddingPath(homePath, navList)
+          break;
+        default:
+          break;
       }
 
       if (navList) {

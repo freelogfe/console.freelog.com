@@ -22,20 +22,25 @@ export default {
     {
       path: 'market',
       hidden: true,
-      meta: {},
+      meta: {
+        type: 'node'
+      },
       component: nodeResourceList
     },
     {
       path: 'detail',
       redirect: '/resources/market',
       hidden: true,
-      meta: {},
+      meta: {
+        type: 'node'
+      },
       component: Container,
       children: [{
         path: ':resourceId',
         hidden: true,
         meta: {
-          title: '资源详情'
+          title: '资源详情',
+          type: 'node'
         },
         component: resourceDetail
       }]

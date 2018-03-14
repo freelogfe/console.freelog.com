@@ -75,6 +75,9 @@ export default {
     },
     logoutNodeHandler() {
       this.$store.dispatch('deleteNode')
+        .then(() => {
+          this.$router.push('/node/list')
+        })
     },
     switchNodeHandler() {
       this.$store.dispatch('deleteNode')

@@ -1,5 +1,7 @@
 import Container from 'views/layout/container.vue'
 import store from '../store'
+import { nprogress } from '../lib'
+
 import {
   nodeCreator,
   nodeUpdator,
@@ -49,7 +51,8 @@ export const nodeItemRoute = {
       beforeEnter: requireNodeLogin,
       meta: {
         requiresAuth: true,
-        title: 'presentables'
+        title: 'presentables',
+        type: 'node'  //nav router type
       },
       component: presentablesView
     },
@@ -58,7 +61,8 @@ export const nodeItemRoute = {
       beforeEnter: requireNodeLogin,
       meta: {
         requiresAuth: true,
-        title: '资源合同'
+        title: '资源合同',
+        type: 'node'
       },
       component: contractsView
     },
@@ -66,7 +70,8 @@ export const nodeItemRoute = {
       path: 'presentable',
       meta: {
         requiresAuth: true,
-        title: 'presentable'
+        title: 'presentable',
+        type: 'node'
       },
       hidden: true,
       component: Container,
@@ -77,7 +82,8 @@ export const nodeItemRoute = {
           beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
-            title: 'presentable详情'
+            title: 'presentable详情',
+            type: 'node'
           },
           component: presentableDetail
         },
@@ -86,7 +92,8 @@ export const nodeItemRoute = {
           beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
-            title: '创建presentable'
+            title: '创建presentable',
+            type: 'node'
           },
           component: createPresentable
         }
@@ -105,7 +112,8 @@ export const nodeItemRoute = {
           beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
-            title: 'PageBuild管理'
+            title: 'PageBuild管理',
+            type: 'node'
           },
           component: pagebuildList
         },
@@ -143,6 +151,20 @@ export default {
     },
     {
       path: 'list',
+      beforeEnter: (to, from, next) => {
+        var nodeId = store.getters.nodeSession && store.getters.nodeSession.nodeId
+        if (!isNaN(parseInt(nodeId))) {
+          var target = `/node/${nodeId}/presentables`
+          if (from.fullPath !== target) {
+            next({path: target})
+          } else {
+            next(false)
+            nprogress.done()
+          }
+        } else {
+          next()
+        }
+      },
       meta: {
         requiresAuth: true,
         title: '节点列表'

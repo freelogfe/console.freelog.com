@@ -3,6 +3,7 @@
  * hidden=true表示在导航上默认不展示
  * requiresAuth=true 表示需要身份验证即需要登录
  * scrollTop=true 切换路由时，页面滚动到顶部，默认是true
+ * type: resource/node 对应的侧边栏
  */
 import Vue from 'vue'
 import Router from 'vue-router'

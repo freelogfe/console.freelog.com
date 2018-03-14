@@ -26,7 +26,8 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '创建资源'
+        title: '创建资源',
+        type: 'resource'
       },
       component: resourceCreator,
     },
@@ -35,7 +36,8 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '更新资源'
+        title: '更新资源',
+        type: 'resource'
       },
       component: resourceUpdator
     },
@@ -52,7 +54,8 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '编辑资源详情'
+        title: '编辑资源详情',
+        type: 'resource'
       },
       component: resourceDetailEditor
     }

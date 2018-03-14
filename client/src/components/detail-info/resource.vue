@@ -11,7 +11,7 @@
     <el-form-item label="资源类型">
       {{data.resourceType}}
     </el-form-item>
-    <el-form-item label="版本" v-if="data.systemMeta.version">
+    <el-form-item label="版本" v-if="data.systemMeta && data.systemMeta.version">
       {{data.systemMeta.version}}
     </el-form-item>
     <el-form-item label="资源状态" v-if="data.statusInfo">
