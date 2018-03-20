@@ -69,7 +69,8 @@ export default {
         const nodeId = self.$route.params.nodeId
         if (typeof param === 'object') {
           Object.assign(param, {
-            partyTwo: nodeId
+            partyTwo: nodeId,
+            contractType: 2
           })
           param = {
             params: param
