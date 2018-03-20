@@ -32,13 +32,6 @@
           {{scope.row.createDate | fmtDate}}
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="资源链接">
-        <template slot-scope="scope">
-          <a :href="scope.row.resourceUrl" target="_blank">资源链接</a>
-        </template>
-      </el-table-column>
       <el-table-column align="center">
         <template slot-scope="scope">
           <el-dropdown size="small" split-button type="primary"

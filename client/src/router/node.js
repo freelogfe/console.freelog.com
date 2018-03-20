@@ -103,7 +103,7 @@ export const nodeItemRoute = {
       path: 'setting',
       meta: {
         requiresAuth: true,
-        title: 'setting'
+        title: '节点设置'
       },
       component: Container,
       children: [
