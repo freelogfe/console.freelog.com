@@ -20,6 +20,7 @@ import Pay from './pay' //支付接口
 import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
 import groupsService from './groups'
+import pbStatics from './pbStatics' //pb签约情况统计
 
 
 export {
@@ -38,5 +39,6 @@ export {
   Accounts,
   Pay,
   SigningLicenses,
-  groupsService
+  groupsService,
+  pbStatics
 }

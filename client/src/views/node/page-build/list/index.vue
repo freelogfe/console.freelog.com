@@ -31,9 +31,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="资源链接（for test）">
+      width="350px"
+        label="签约信息">
         <template slot-scope="scope">
-          <a :href="scope.row.resourceDetail.resourceUrl" target="_blank">资源链接</a>
+          <p>全部插件数量: {{scope.row.pbStatics.widgetsCount}}</p>
+          <p>已经关联的合同数量:{{scope.row.pbStatics.widgetContractCount}}</p>
+          <p>已经关联的合同激活状态的数量:{{scope.row.pbStatics.widgetsCount}}</p>
+          <p>已经关联的合同创建presentable数量: {{scope.row.pbStatics.widgetPresentableCount}}</p>
+
         </template>
       </el-table-column>
       <el-table-column
