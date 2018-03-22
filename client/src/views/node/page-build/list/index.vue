@@ -34,10 +34,9 @@
       width="350px"
         label="签约信息">
         <template slot-scope="scope">
-          <p>全部插件数量: {{scope.row.pbStatics.widgetsCount}}</p>
-          <p>已经关联的合同数量:{{scope.row.pbStatics.widgetContractCount}}</p>
-          <p>已经关联的合同激活状态的数量:{{scope.row.pbStatics.widgetsCount}}</p>
-          <p>已经关联的合同创建presentable数量: {{scope.row.pbStatics.widgetPresentableCount}}</p>
+          <div>全部插件数量: {{scope.row.pbStatics.widgetsCount}}</div>
+          <div>已关联插件创建presentable数: {{scope.row.pbStatics.widgetPresentableCount}}</div>
+          <div>已关联插件激活比:<span style="color:red" v-if="scope.row.pbStatics.widgetContractActivatedCount != scope.row.pbStatics.widgetContractCount">{{scope.row.pbStatics.widgetContractActivatedCount}}-{{scope.row.pbStatics.widgetContractCount}}</span><span v-if="scope.row.pbStatics.widgetContractActivatedCount == scope.row.pbStatics.widgetContractCount">{{scope.row.pbStatics.widgetContractActivatedCount}}-{{scope.row.pbStatics.widgetContractCount}}</span></div>
 
         </template>
       </el-table-column>

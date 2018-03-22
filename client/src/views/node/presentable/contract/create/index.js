@@ -48,7 +48,6 @@ export default {
       var resourceIds = data.map((tabData) => {
         return tabData.resourceId
       }).join(',')
-
       this.$services.contractRecords.get({
         params: {
           resourceIds: resourceIds,

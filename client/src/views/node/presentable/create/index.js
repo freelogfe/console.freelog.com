@@ -39,6 +39,7 @@ export default {
       let partyTwo = this.$route.params.nodeId
       return this.$services.contractRecords.get({
         params: {
+          contractType:2,
           resourceIds: formData.resource.resourceId,
           partyTwo: partyTwo
         }
