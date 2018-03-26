@@ -1,21 +1,7 @@
-import Container from 'views/layout/container.vue'
 import store from '../store'
-import { nprogress } from '../lib'
+import {nprogress} from '../lib'
 
-import {
-  nodeCreator,
-  nodeUpdator,
-  nodeList,
-  nodeDetail,
-  nodeResourceList,
-  resourceDetail,
-  createPresentable,
-  presentableDetail,
-  presentablesView,
-  pagebuildList,
-  contractsView,
-  NodeLoginView
-} from '@/views'
+import Views from '@/views'
 
 function requireNodeLogin(to, from, next) {
   store.dispatch('checkNode')
@@ -38,7 +24,7 @@ function requireNodeLogin(to, from, next) {
 //节点操作相关的页面
 export const nodeItemRoute = {
   path: ':nodeId',
-  component: Container,
+  component: Views.container,
   hidden: true,
   meta: {
     requiresAuth: true,
@@ -54,7 +40,7 @@ export const nodeItemRoute = {
         title: 'presentables',
         type: 'node'  //nav router type
       },
-      component: presentablesView
+      component: Views.presentableList
     },
     {
       path: 'contracts',
@@ -64,7 +50,7 @@ export const nodeItemRoute = {
         title: '资源合同',
         type: 'node'
       },
-      component: contractsView
+      component: Views.contractList
     },
     {
       path: 'presentable',
@@ -74,7 +60,7 @@ export const nodeItemRoute = {
         type: 'node'
       },
       hidden: true,
-      component: Container,
+      component: Views.container,
       redirect: '/node/:nodeId/presentables',
       children: [
         {
@@ -85,7 +71,7 @@ export const nodeItemRoute = {
             title: 'presentable详情',
             type: 'node'
           },
-          component: presentableDetail
+          component: Views.presentableDetail
         },
         {
           path: 'create',
@@ -95,7 +81,7 @@ export const nodeItemRoute = {
             title: '创建presentable',
             type: 'node'
           },
-          component: createPresentable
+          component: Views.presentableCreator
         }
       ]
     },
@@ -105,7 +91,7 @@ export const nodeItemRoute = {
         requiresAuth: true,
         title: '节点设置'
       },
-      component: Container,
+      component: Views.container,
       children: [
         {
           path: 'pagebuilds',
@@ -115,7 +101,7 @@ export const nodeItemRoute = {
             title: 'PageBuild管理',
             type: 'node'
           },
-          component: pagebuildList
+          component: Views.pagebuildList
         },
       ]
     }
@@ -128,7 +114,7 @@ export default {
     requiresAuth: true,
     title: '节点管理系统'
   },
-  component: Container,
+  component: Views.container,
   redirect: '/node/list',
   children: [
     {
@@ -138,16 +124,7 @@ export default {
         requiresAuth: true,
         title: '创建节点'
       },
-      component: nodeCreator
-    },
-    {
-      path: 'edit',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '更新节点'
-      },
-      component: nodeUpdator
+      component: Views.nodeCreator
     },
     {
       path: 'list',
@@ -167,9 +144,10 @@ export default {
       },
       meta: {
         requiresAuth: true,
+        type: 'node',
         title: '节点列表'
       },
-      component: nodeList
+      component: Views.nodeList
     },
     {
       path: 'detail/:nodeId',
@@ -178,7 +156,7 @@ export default {
         requiresAuth: true,
         title: '节点详情'
       },
-      component: nodeDetail
+      component: Views.nodeDetail
     },
     {
       path: 'login',
@@ -187,7 +165,48 @@ export default {
         requiresAuth: true,
         title: '节点登录'
       },
-      component: NodeLoginView
+      component: Views.nodeLogin
+    },
+    {
+      path: 'policy_tpl/list',
+      meta: {
+        requiresAuth: true,
+        title: '策略模板列表',
+        type: 'node'
+      },
+      component: Views.policyTplList
+    },
+    {
+      path: 'policy_tpl',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        type: 'node'
+      },
+      component: Views.container,
+      redirect: '/node/policy_tpl/list',
+      children: [
+        {
+          path: 'create',
+          hidden: true,
+          meta: {
+            requiresAuth: true,
+            title: '创建策略模板',
+            type: 'node'
+          },
+          component: Views.policyTplCreator
+        },
+        {
+          path: 'detail',
+          hidden: true,
+          meta: {
+            requiresAuth: true,
+            title: '策略模板详情',
+            type: 'node'
+          },
+          component: Views.policyTplDetail
+        }
+      ]
     },
     nodeItemRoute,
   ]

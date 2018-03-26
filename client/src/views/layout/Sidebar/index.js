@@ -36,8 +36,7 @@ export default {
   },
   data() {
     return {
-      navList: [],
-      routeType: ''
+      navList: []
     }
   },
   computed: mapGetters({
@@ -48,16 +47,21 @@ export default {
     changeRouteHandler() {
       var navList;
       var homePath;
-      this.routeType = this.$route.meta.type || '';
+      var routeType = this.$route.meta.type || '';
 
-      switch (this.routeType) {
+      switch (routeType) {
         case 'node':
-        case 'resources':
-          let nodeId = this.nodeSession.nodeId
-          navList = cloneArray(nodeItemRoute.children) //避免修改源数据
-          homePath = `/node/${nodeId}`;
-          this.paddingPath(homePath, navList)
-          navList.push(resourceMarket)
+          if (!isNaN(parseInt(this.nodeSession.nodeId))) {
+            let nodeId = this.nodeSession.nodeId
+            navList = cloneArray(nodeItemRoute.children) //避免修改源数据
+            navList.push(resourceMarket);
+            homePath = `/node/${nodeId}`;
+            this.paddingPath(homePath, navList)
+          } else {
+            navList = cloneArray(node.children) //避免修改源数据
+            homePath = `/node`;
+            this.paddingPath(homePath, navList)
+          }
           break;
         case 'resource':
           homePath = '/resource'

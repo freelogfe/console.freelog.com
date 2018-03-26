@@ -1,15 +1,7 @@
 /**
  * 资源管理系统
  */
-import Container from 'views/layout/container.vue'
-
-import {
-  resourceCreator,
-  resourceUpdator,
-  resourcePolicyUpdator,
-  resourceList,
-  resourceDetailEditor
-} from '@/views'
+import Views from '@/views'
 
 export default {
   name: 'resource',
@@ -18,7 +10,7 @@ export default {
     requiresAuth: true,
     title: '资源管理系统'
   },
-  component: Container,
+  component: Views.container,
   redirect: '/resource/list',
   children: [
     {
@@ -29,25 +21,16 @@ export default {
         title: '创建资源',
         type: 'resource'
       },
-      component: resourceCreator,
-    },
-    {
-      path: 'update',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '更新资源',
-        type: 'resource'
-      },
-      component: resourceUpdator
+      component: Views.resourceCreator,
     },
     {
       path: 'list',
       meta: {
         requiresAuth: true,
-        title: '我的资源'
+        title: '我的资源',
+        type: 'resource'
       },
-      component: resourceList
+      component: Views.resourceList
     },
     {
       path: 'detail',
@@ -57,7 +40,48 @@ export default {
         title: '编辑资源详情',
         type: 'resource'
       },
-      component: resourceDetailEditor
+      component: Views.resourceDetail
+    },
+    {
+      path: 'policy_tpl/list',
+      meta: {
+        requiresAuth: true,
+        title: '资源策略模板列表',
+        type: 'resource'
+      },
+      component: Views.policyTplList
+    },
+    {
+      path: 'policy_tpl',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        type: 'resource'
+      },
+      component: Views.container,
+      redirect: '/resource/policy_tpl/list',
+      children: [
+        {
+          path: 'create',
+          hidden: true,
+          meta: {
+            requiresAuth: true,
+            title: '创建资源策略模板',
+            type: 'resource'
+          },
+          component: Views.policyTplCreator
+        },
+        {
+          path: 'detail',
+          hidden: true,
+          meta: {
+            requiresAuth: true,
+            title: '资源策略模板详情',
+            type: 'resource'
+          },
+          component: Views.policyTplDetail
+        }
+      ]
     }
   ]
 }

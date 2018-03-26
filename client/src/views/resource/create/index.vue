@@ -3,7 +3,7 @@
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性" name="resourceInfo">
         <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
-          <el-form-item label="资源名称" prop="resourceName"
+          <el-form-item label="资源描述" prop="resourceName"
                         required class="input-item">
             <el-input v-model="formData.resourceName" clearable></el-input>
           </el-form-item>

@@ -20,7 +20,7 @@ import Pay from './pay' //支付接口
 import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
 import groupsService from './groups'
-
+import policyTemplateService from './policyTemplates'
 
 export {
   UserService,
@@ -38,5 +38,6 @@ export {
   Accounts,
   Pay,
   SigningLicenses,
-  groupsService
+  groupsService,
+  policyTemplateService
 }

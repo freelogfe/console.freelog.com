@@ -1,7 +1,4 @@
-import Container from 'views/layout/container.vue'
-
-import {signup, login, resetPassword} from '@/views/index'
-
+import Views from '@/views/index'
 
 export default {
   path: '/user',
@@ -9,7 +6,7 @@ export default {
     requiresAuth: false,
     title: '节点管理系统'
   },
-  component: Container,
+  component: Views.container,
   redirect: '/user/login',
   children: [
     {
@@ -18,7 +15,7 @@ export default {
         requiresAuth: false,
         title: '用户登录'
       },
-      component: login
+      component: Views.userLogin
     },
     {
       path: 'reset_pw',
@@ -27,7 +24,7 @@ export default {
         requiresAuth: false,
         title: '重置密码'
       },
-      component: resetPassword
+      component: Views.userResetPassword
     },
     {
       path: 'signup',
@@ -35,7 +32,7 @@ export default {
         requiresAuth: false,
         title: '注册新账户'
       },
-      component: signup
+      component: Views.userSignup
     }
   ]
 }

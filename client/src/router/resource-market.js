@@ -1,18 +1,12 @@
 /**
  * 资源市场
  */
-import Container from 'views/layout/container.vue'
-
-import {
-  layout,
-  resourceDetail,
-  nodeResourceList
-} from '@/views'
+import Views from '@/views'
 
 export default {
   name: 'resources',
   path: '/resources',
-  component: layout,
+  component: Views.layout,
   redirect: '/resources/market',
   meta: {
     requiresAuth: true,
@@ -25,7 +19,7 @@ export default {
       meta: {
         type: 'node'
       },
-      component: nodeResourceList
+      component: Views.nodeResourceList
     },
     {
       path: 'detail',
@@ -34,7 +28,7 @@ export default {
       meta: {
         type: 'node'
       },
-      component: Container,
+      component: Views.container,
       children: [{
         path: ':resourceId',
         hidden: true,
@@ -42,7 +36,7 @@ export default {
           title: '资源详情',
           type: 'node'
         },
-        component: resourceDetail
+        component: Views.nodeResourceDetail
       }]
     }
   ]
