@@ -12,7 +12,11 @@ const token = {
   actions: {
     [types.CHECK_TOKEN]({commit, getters}) {
       return new Promise((resolve, reject) => {
-        if (getters.session.user && getters.session.user.userId) {
+        var ignore = (location.hostname === 'localhost') && (process.env.NODE_ENV === 'development')
+
+        if (ignore) {
+          resolve(false)
+        } else if (getters.session.user && getters.session.user.userId) {
           resolve(true)
         } else {
           this.dispatch('getCurrentUser').then((data) => {

@@ -10,7 +10,7 @@ export default Vue => {
         .then(valid => {
           if (valid) return next()
 
-          next({ path: '/user/login', query: { redirect: to.fullPath } })
+          next({path: '/user/login', query: {redirect: to.fullPath}})
         })
     }
   })
