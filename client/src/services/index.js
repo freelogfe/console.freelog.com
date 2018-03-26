@@ -21,6 +21,8 @@ import orderInfo from './orderInfo' //支付接口
 import SigningLicenses from './signingLicenses'
 import groupsService from './groups'
 import policyTemplateService from './policyTemplates'
+import pbStatics from './pbStatics' //pb签约情况统计
+
 
 export {
   UserService,
@@ -39,5 +41,6 @@ export {
   Pay,
   SigningLicenses,
   groupsService,
-  policyTemplateService
+  policyTemplateService,
+  pbStatics
 }

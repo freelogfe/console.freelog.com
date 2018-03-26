@@ -29,21 +29,29 @@ export default {
         params: param
       }).then((res) => {
         var presentables = res.getData()
-        var promises = []
+        var promises = [];
+        var promises2 = [];
         presentables.forEach((p) => {
           var promise = self.$services.resource.get(p.resourceId).then((resourceRes) => {
             p.resourceDetail = resourceRes.getData()
             return resourceRes
           })
           promises.push(promise)
+
+          var promise2 = self.$services.pbStatics.get({params: {presentableIds:p.presentableId}}).then((resourceRes) => {
+            p.pbStatics = resourceRes.getData()[0]
+            return resourceRes
+          })
+          promises2.push(promise2)
         })
 
-        return Promise.all(promises).then((resources) => {
-          return res.getData()
+        return Promise.all(promises.concat(promises2)).then((resources) => {
+          return presentables
         })
       })
     },
     format(pagebuildList) {
+      console.log('pagebuildList',pagebuildList)
       pagebuildList.forEach((item) => {
         item.statusInfo = (item.status === PAGE_BUILD_STATUS.show) ? {
           desc: '默认展示',

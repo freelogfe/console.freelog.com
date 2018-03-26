@@ -217,9 +217,12 @@
           return policyData
         })
       },
+
       loadResourceContracts() {
+
         return this.$services.contractRecords.get({
           params: {
+            contractType:2,
             resourceIds: this.widget.resourceId,
             partyTwo: this.$route.params.nodeId
           }
