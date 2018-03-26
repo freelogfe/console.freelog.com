@@ -23,13 +23,17 @@ export const NodeCreationRule = formRules;
 export default {
   name: 'node-creator',
   data() {
-
     return {
       dataForm: {
         nodeName: '',
         nodeDomain: ''
       },
       formRules: formRules
+    }
+  },
+  computed: {
+    domainPostfix() {
+      return /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com'
     }
   },
   mounted() {
@@ -69,7 +73,8 @@ export default {
           this.comfirm()
             .then(() => {
               this.createNode()
-            }).catch(()=>{})
+            }).catch(() => {
+          })
         } else {
           return false;
         }

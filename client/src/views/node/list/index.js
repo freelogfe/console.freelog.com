@@ -21,8 +21,10 @@ export default {
   mounted() {
   },
   methods: {
-    resolveDomain(row){
-      return `${location.protocol}//${row.nodeDomain}.freelog.com`
+    resolveDomain(row) {
+      var post = /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com'
+
+      return `${location.protocol}//${row.nodeDomain}${post}`
     },
     loader() {
       var self = this;
@@ -34,7 +36,7 @@ export default {
         })
       }
     },
-    copyDoneHandler(){
+    copyDoneHandler() {
       this.$message.success('已复制节点地址')
     },
     handleEdit(nodeDetail) {
@@ -42,7 +44,7 @@ export default {
     },
     gotoNodeHandler(nodeDetail) {
       this.$store.dispatch('changeNode', nodeDetail)
-        .then(()=>{
+        .then(() => {
           this.$router.push({path: `/node/${nodeDetail.nodeId}`})
         })
     }

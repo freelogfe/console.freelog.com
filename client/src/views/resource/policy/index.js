@@ -1,4 +1,6 @@
 import {compile, beautify} from '@freelog/resource-policy-compiler'
+import PolicyTplList from '@/components/policyTplSelector/index.vue'
+import defaultPolicyTpls from './defaultPolicyTpls'
 
 export default {
   name: 'policy-editor',
@@ -10,16 +12,21 @@ export default {
       state4: '',
       licenseContent: '',
       licenseMap: {},
-      timeout:  null,
+      timeout: null,
       options: [
         {value: 'widget', label: 'widget'},
         {value: 'file', label: 'file'}
-      ]
+      ],
+      policyTpls: [],
+      showCustomPolicyTplDialog: false,
+      queryPolicyTpl: '',
+      defaultPolicyTpls: defaultPolicyTpls
     }
   },
   props: {
     value: String
   },
+  components: {PolicyTplList},
   watch: {
     value: function () {
       this.policyText = this.value
@@ -34,11 +41,13 @@ export default {
       var myBeautify = compile(this.policyText)
       if (!myBeautify.errorMsg) {
         this.policyText = beautify(this.policyText);
-        this.$emit('validate',{done: true})
+        this.$emit('validate', {done: true})
       } else {
-        this.$emit('validate',{done: false, error: {
-          message: myBeautify.errorMsg
-        }})
+        this.$emit('validate', {
+          done: false, error: {
+            message: myBeautify.errorMsg
+          }
+        })
         this.$message.error(myBeautify.errorMsg)
       }
     },
@@ -81,8 +90,8 @@ export default {
       })
     },
     loadAll() {
-      this.$axios.get('/v1/resources/warehouse?resourceType=license').then((res)=> {
-        this.licenses = res.data.data.dataList.map((data)=> {
+      this.$axios.get('/v1/resources/warehouse?resourceType=license').then((res) => {
+        this.licenses = res.data.data.dataList.map((data) => {
           return {
             value: data.resourceName,
             id: data.resourceId
@@ -110,11 +119,42 @@ export default {
       if (this.licenseMap[item.id]) {
         this.licenseContent = this.licenseMap[item.id];
       } else {
-        this.$axios.get('/v1/auths/resource/'+ item.id +'.data').then((res)=> {
+        this.$axios.get('/v1/auths/resource/' + item.id + '.data').then((res) => {
           this.licenseContent = res.getData();
           this.licenseMap[item.id] = res.getData();
         })
       }
+    },
+    loadCustomPolicyTpl() {
+      return this.$services.policyTemplate.get({
+        params: {
+          templateType: 1,
+          pageSize: 1e2
+        }
+      }).then((res) => {
+        var data = res.getData()
+        if (data) {
+          return data.dataList
+        } else {
+          throw new Error(res.data.msg)
+        }
+      })
+    },
+    useCustomPolicyTpl() {
+      this.loadCustomPolicyTpl()
+        .then((list) => {
+          this.policyTpls = list
+          this.showCustomPolicyTplDialog = true
+        })
+    },
+    selectPolicyTplHandler(data) {
+      this.showCustomPolicyTplDialog = false
+      this.policyText = data.template
+    },
+    filterHandler(list) {
+      return list.filter((tpl) => {
+        return this.queryPolicyTpl ? tpl.name.indexOf(this.queryPolicyTpl) > -1 : true
+      })
     }
   }
 }

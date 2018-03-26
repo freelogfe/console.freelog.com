@@ -42,16 +42,20 @@ export default {
 
       if (ret.errorMsg) {
         this.$message.error(ret.errorMsg)
+        return false
       } else {
         this.data.template = isNodeType ? presentableCompiler.beautify(tpl) : resourceCompiler.beautify(tpl)
         this.$message.success('校验通过')
+        return true
       }
     },
     submitHandler() {
       var data = Object.assign({}, this.data);
 
-      data.template = btoa(data.template)
-      this.createPolicyTpl(data)
+      if (this.validatePolicy()) {
+        data.template = btoa(data.template)
+        this.createPolicyTpl(data)
+      }
     }
   }
 }

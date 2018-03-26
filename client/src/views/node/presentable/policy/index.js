@@ -1,11 +1,17 @@
 import compiler from '@freelog/presentable-policy-compiler'
 import {RESOURCE_TYPES} from "@/config/resource";
+import defaultPolicyTpls from './defaultPolicyTpls'
+import PolicyTplList from '@/components/policyTplSelector/index.vue'
 
 export default {
   name: 'presentable-policy',
   data() {
     return {
-      policyText: ''
+      policyText: '',
+      policyTpls: [],
+      defaultPolicyTpls: defaultPolicyTpls,
+      queryPolicyTpl: '',
+      showCustomPolicyTplDialog: false
     }
   },
   props: {
@@ -17,6 +23,7 @@ export default {
       }
     }
   },
+  components: {PolicyTplList},
   watch: {
     value: function () {
       this.policyText = this.value
@@ -65,6 +72,38 @@ export default {
           })
         }
       }).catch(this.$error.showErrorMessage)
+    },
+    loadCustomPolicyTpl() {
+      return this.$services.policyTemplate.get({
+        params: {
+          templateType: 2,
+          pageSize: 1e2
+        }
+      }).then((res) => {
+        var data = res.getData()
+        if (data) {
+          return data.dataList
+        } else {
+          throw new Error(res.data.msg)
+        }
+      })
+    },
+    useCustomPolicyTpl() {
+      this.loadCustomPolicyTpl()
+        .then((list) => {
+          this.policyTpls = list
+          this.showCustomPolicyTplDialog = true
+        })
+    },
+    selectPolicyTplHandler(data) {
+      this.showCustomPolicyTplDialog = false
+      this.policyText = data.template
+      this.$emit('input', this.policyText)
+    },
+    filterHandler(list) {
+      return list.filter((tpl) => {
+        return this.queryPolicyTpl ? tpl.name.indexOf(this.queryPolicyTpl) > -1 : true
+      })
     }
   }
 }
