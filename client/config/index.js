@@ -23,7 +23,10 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8080,
+    port: {
+      'http': 8080,
+      'https': 8443
+    },
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -34,12 +37,8 @@ module.exports = {
       '/v1': {
         changeOrigin: true,
         autoRewrite: true,
-        target: 'https://api.freelog.com'
-      },
-      // freelog: {
-      //   filter: '/api/**',
-      //   target: 'http://localhost:7001'
-      // }
+        target: 'http://api.freelog.com'
+      }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
