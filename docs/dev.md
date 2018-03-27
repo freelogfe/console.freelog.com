@@ -19,7 +19,6 @@
 * 第一步，构建打包
 ```sh
 $ npm run build
-$ npm run pack
 ```
 * 第二步，提交到服务器，线上为``/data/web/console.freelog.com``，测试环境为``/data/web/console.testfreelog.com``
 * 第三步，在服务器提交目录下，执行

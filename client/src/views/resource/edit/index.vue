@@ -23,8 +23,8 @@
           <el-form-item label="类型">
             {{detail.resourceType}}
           </el-form-item>
-          <el-form-item label="资源URL">
-            {{detail.resourceUrl}}
+          <el-form-item label="资源URL" v-if="isDev">
+            <a :href="resolveResourceUrl(detail.resourceUrl)" target="_blank">资源文件链接</a>
           </el-form-item>
           <el-form-item label="mimeType">
             {{detail.mimeType}}

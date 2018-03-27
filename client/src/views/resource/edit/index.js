@@ -68,6 +68,9 @@ export default {
     }
   },
   methods: {
+    resolveResourceUrl(url){
+      return url.replace('-internal.','.')
+    },
     loadResourceDetail(resourceId) {
       return this.$services.resource.get(resourceId)
         .then((res) => {

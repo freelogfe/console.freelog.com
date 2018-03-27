@@ -108,7 +108,7 @@ export default {
       var nodeId = this.$route.params.nodeId
       if (!row.presentableDetail) {
         this.$router.push({
-          path: `/node/${nodeId}/presentable/create`,
+          path: `/node/${nodeId}/presentable/detail#presentable`,
           query: {contractId: row.contractId}
         })
       } else {
