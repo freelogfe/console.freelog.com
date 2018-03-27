@@ -1,6 +1,6 @@
 import FreelogTags from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from "@/config/resource";
-import PresentablePolicy from '../policy/index.vue'
+import PresentablePolicy from '@/components/policyEditor/index.vue'
 
 export default {
   name: 'presentable-editor',
@@ -32,5 +32,11 @@ export default {
   mounted() {
 
   },
-  methods: {}
+  methods: {
+    validatePolicyHandler(detail) {
+      if (detail.done) {
+        this.$message.success('校验通过')
+      }
+    }
+  }
 }

@@ -14,6 +14,7 @@
       </el-form-item>
       <el-form-item label="用户授权策略" required prop="policyText">
         <presentable-policy :showValidateButton="false" v-model="data.policyText"
+                            @validate="validatePolicyHandler"
                             style="width: 700px"></presentable-policy>
       </el-form-item>
       <slot name="append"></slot>

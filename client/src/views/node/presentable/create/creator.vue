@@ -87,7 +87,7 @@
 
 <script>
   import FreelogTags from '@/components/Tags/index.vue'
-  import PresentablePolicy from '../policy/index.vue'
+  import PresentablePolicy from '@/components/policyEditor/index.vue'
   import CONFIG from '@/config/index'
   import PresentableEditor from '../editor/index.vue'
 

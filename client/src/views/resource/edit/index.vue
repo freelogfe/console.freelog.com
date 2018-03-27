@@ -56,13 +56,10 @@
         <resource-meta-info v-model="detail.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="资源策略" name="policy">
-        <el-tooltip class="item" effect="dark" content="更新policy后，已签约的policy不变，新签约的policy以更新后的为准" placement="top">
-          <i class="el-icon-question"></i>
-        </el-tooltip>
         <policy-editor ref="policyEditor"
+                       class="policy-editor"
                        v-model="policyText"
-                       @validate="validatePolicyHandler"
-                       :resourceId="detail.resourceId"></policy-editor>
+                       @validate="validatePolicyHandler"></policy-editor>
       </el-tab-pane>
     </el-tabs>
     <div class="btns">
@@ -84,6 +81,10 @@
   .btns {
     text-align: center;
     margin-top: 15px;
+  }
+
+  .policy-editor {
+    width: 80%;
   }
 
 </style>

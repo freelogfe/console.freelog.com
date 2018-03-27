@@ -63,7 +63,7 @@
         <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
       <el-tab-pane label="资源策略" name="policy">
-        <policy-editor v-on:validate="policyValidation" ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
+        <policy-editor ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
       </el-tab-pane>
       <el-tab-pane
         :key="item.name"
