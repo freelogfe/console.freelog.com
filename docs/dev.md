@@ -3,8 +3,8 @@
 ## 开发环境
 
 * nodejs
-* 现代高级浏览器（需支持web component、fetch）
-
+* 现代浏览器（需支持web component、fetch）
+* 本地代理服务器（支持https，比如[xproxy](https://www.npmjs.com/package/xproxy)）
 
 ### 环境区分
 
