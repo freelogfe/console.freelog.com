@@ -55,7 +55,7 @@
       <el-tab-pane label="资源meta信息" name="metaInfo">
         <resource-meta-info v-model="detail.meta"></resource-meta-info>
       </el-tab-pane>
-      <el-tab-pane label="资源策略" name="policy">
+      <!-- <el-tab-pane label="资源策略" name="policy">
         <el-tooltip class="item" effect="dark" content="更新policy后，已签约的policy不变，新签约的policy以更新后的为准" placement="top">
           <i class="el-icon-question"></i>
         </el-tooltip>
@@ -63,7 +63,7 @@
                        v-model="policyText"
                        @validate="validatePolicyHandler"
                        :resourceId="detail.resourceId"></policy-editor>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
     <div class="btns">
       <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading" :disabled="!send">保存</el-button>

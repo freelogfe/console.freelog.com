@@ -91,7 +91,6 @@ export default {
     if (tabName) {
       this.activeTabName = tabName
     }
-
     this.resourceTypeChange(this.formData.resourceType)
     this.$watch('formData', () => {
       this.$refs.createForm.validate((valid, err) => {
@@ -255,9 +254,9 @@ export default {
 
       return true
     },
+    //找到form，触发upload的submit，再触发policyeditor的submit
     submitResourceHandler(formName) {
       var $uploader = this.$refs.upload;
-
       this.$refs[formName].validate((valid, err) => {
         if (valid) {
           this.packUploadData(() => {

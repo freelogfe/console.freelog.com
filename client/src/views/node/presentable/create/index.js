@@ -32,6 +32,7 @@ export default {
         .then(this.queryContractsStatus.bind(this))
         .then((data) => {
           this.formData = data
+          console.log(this.formData.data.policy);
         }).catch(this.$error.showErrorMessage)
     },
     //查询合同创建状态

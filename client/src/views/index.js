@@ -19,9 +19,12 @@ export const resourcePolicyUpdator = resolve => require.ensure([], () => resolve
 export const resourceList = resolve => require.ensure([], () => resolve(require('@/views/resource/list/index.vue')), 'resource')
 export const resourceDetail = resolve => require.ensure([], () => resolve(require('@/views/node/resource/detail/index.vue')), 'node')
 export const contractsView = resolve => require.ensure([], () => resolve(require('@/views/node/contract/list/index.vue')), 'contract')
-
-
 export const resourceDetailEditor = resolve => require.ensure([], () => resolve(require('@/views/resource/edit/index.vue')), 'resource')
+
+export const resourceCreateAuthNode = resolve => require.ensure([], () => resolve(require('@/views/resource/authnode/index.vue')), 'resource')
+// 授权点列表
+export const authNodeList = resolve => require.ensure([], () => resolve(require('@/views/resource/authnodelist/index.vue')), 'resource')
+
 
 //node管理
 export const nodeCreator = resolve => require.ensure([], () => resolve(require('@/views/node/create/index.vue')), 'node')

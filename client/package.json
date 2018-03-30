@@ -16,6 +16,7 @@
     "@freelog/resource-policy-lang": "0.0.13",
     "axios": "^0.16.2",
     "draggabilly": "^2.1.1",
+    "echarts": "^4.0.4",
     "element-ui": "^2.2.2",
     "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",

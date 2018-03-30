@@ -51,7 +51,7 @@
       <el-table-column
         label=""
         align="center"
-        width="200px">
+        width="300px">
         <template slot-scope="scope">
           <el-button
             size="small"
@@ -60,12 +60,12 @@
           <el-button
             size="small"
             v-show="scope.row.status === 1"
-            @click="handlePolicy(scope.row)">创建policy
+            @click="createAuthNode(scope.row)">创建授权
           </el-button>
           <el-button
             size="small"
             v-show="scope.row.status === 2"
-            @click="handlePolicy(scope.row)">修改policy
+            @click="createAuthNode(scope.row)">授权管理
           </el-button>
         </template>
       </el-table-column>

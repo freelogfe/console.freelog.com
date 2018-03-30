@@ -49,8 +49,8 @@ export default {
       var navList;
       var homePath;
       this.routeType = this.$route.meta.type || '';
-
       switch (this.routeType) {
+
         case 'node':
         case 'resources':
           let nodeId = this.nodeSession.nodeId
@@ -67,7 +67,6 @@ export default {
         default:
           break;
       }
-
       if (navList) {
         navList = filterHidden(navList)
         this.checkActiveNav(navList)

@@ -8,7 +8,9 @@ import {
   resourceUpdator,
   resourcePolicyUpdator,
   resourceList,
-  resourceDetailEditor
+  authNodeList,
+  resourceDetailEditor,
+  resourceCreateAuthNode
 } from '@/views'
 
 export default {
@@ -45,7 +47,8 @@ export default {
       path: 'list',
       meta: {
         requiresAuth: true,
-        title: '我的资源'
+        title: '我的资源',
+        type: 'resource'
       },
       component: resourceList
     },
@@ -58,6 +61,25 @@ export default {
         type: 'resource'
       },
       component: resourceDetailEditor
-    }
+    },
+    {
+      path: 'authnode',
+      hidden:true,
+      meta: {
+        requiresAuth: true,
+        title: '创建授权点',
+        type: 'resource'
+      },
+      component: resourceCreateAuthNode
+    },
+    {
+      path: 'authnodemanagement',
+      meta: {
+        requiresAuth: true,
+        title: '授权合同管理',
+        type: 'resource'
+      },
+      component: authNodeList
+    },
   ]
 }
