@@ -3,7 +3,7 @@ policy更新后，后续签订的policy按新的来，已签约过的按更新�
  */
 import {mapGetters} from 'vuex'
 import ResourceMetaInfo from '../meta/index.vue'
-import PolicyEditor from '../policy/index.vue'
+import PolicyEditor from '@/components/policyEditor/index.vue'
 
 export default {
   name: 'resource-detail-edit',
@@ -39,7 +39,6 @@ export default {
     PolicyEditor
   },
   mounted() {
-
     this.$watch('detail', () => {
       this.$refs.detail.validate((valid, err) => {
         this.valid = valid
@@ -59,6 +58,9 @@ export default {
           if (policy) {
             self.policyText = policy.policyText
           }
+          this.detail.policyText = self.policyText
+
+          console.log('detail', this.detail)
         })
       this.activeTabName = this.$route.hash.slice(1)
     } else {
@@ -66,6 +68,9 @@ export default {
     }
   },
   methods: {
+    resolveResourceUrl(url){
+      return url.replace('-internal.','.')
+    },
     loadResourceDetail(resourceId) {
       return this.$services.resource.get(resourceId)
         .then((res) => {
@@ -116,7 +121,16 @@ export default {
       }
     },
     updatePolicy(resourceId) {
-      return this.$refs.policyEditor.submit(resourceId)
+      var data = {
+        policyText: btoa(this.policyText),
+        languageType: 'freelog_policy_lang'
+      };
+      if (this.detail.policyText) {
+        return this.$services.policy.put(resourceId, data)
+      } else {
+        data.resourceId = resourceId
+        return this.$services.policy.post(data)
+      }
     },
     saveHandler() {
       if (this.submitLoading) {
@@ -140,7 +154,12 @@ export default {
 
       var promises = []
       promises.push(this.$services.resource.put(resId, data))
-      promises.push(this.updatePolicy(resId))
+
+
+      if (this.detail.policyText !== this.policyText) {
+        promises.push(this.updatePolicy(resId))
+      }
+
       Promise.all(promises)
         .then((resList) => {
           this.submitLoading = false

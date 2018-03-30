@@ -126,7 +126,7 @@
           var $$ = this.escapeOutputState($1)
 
           var cls = this.getState($1)
-          var html = `<span class="from-state ${cls}" data-action="info" data-state="${$1}">${$$}<i class="el-icon-fa-stop-circle-o cur-step-icon"></i></span>`
+          var html = `<span class="from-state ${cls}" data-action="info" data-state="${$1}">${$$}<i class="el-icon-fa-arrow-circle-left cur-step-icon"></i></span>`
           return $.replace($1, html)
         })
 

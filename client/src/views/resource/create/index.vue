@@ -3,7 +3,7 @@
     <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
       <el-tab-pane label="资源基础属性" name="resourceInfo">
         <el-form :model="formData" label-width="100px" :rules="rules" ref="createForm">
-          <el-form-item label="资源名称" prop="resourceName"
+          <el-form-item label="资源描述" prop="resourceName"
                         required class="input-item">
             <el-input v-model="formData.resourceName" clearable></el-input>
           </el-form-item>
@@ -62,9 +62,9 @@
       <el-tab-pane label="资源meta信息" name="metaInfo">
         <resource-meta-info v-model="formData.meta"></resource-meta-info>
       </el-tab-pane>
-      <!-- <el-tab-pane label="资源策略" name="policy">
-        <policy-editor v-on:validate="policyValidation" ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
-      </el-tab-pane> -->
+      <el-tab-pane label="资源策略" name="policy">
+        <policy-editor ref="policyEditor" v-model="formData.policyText" @validate="validatePolicyHandler"></policy-editor>
+      </el-tab-pane>
       <el-tab-pane
         :key="item.name"
         v-for="(item, index) in tabs"

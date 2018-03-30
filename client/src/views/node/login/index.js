@@ -1,6 +1,6 @@
 import TableView from '@/components/TableView/index.vue'
 import ClipBoard from '@/components/clipboard/index.vue'
-
+import {isSafeUrl} from '@/lib/security'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -47,6 +47,10 @@ export default {
     gotoNodeHandler(nodeDetail) {
       var redirect = this.$route.query.redirect
       var path
+
+      if (!isSafeUrl(redirect)) {
+        return
+      }
 
       if (redirect) {
         path = redirect.replace(':nodeId', nodeDetail.nodeId)

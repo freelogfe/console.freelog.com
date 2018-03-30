@@ -1,13 +1,7 @@
 /**
  * 资源管理系统
  */
-import Container from 'views/layout/container.vue'
-
-import {
-  GroupCreator,
-  GroupDetail,
-  GroupList,
-} from '@/views'
+import Views from '@/views'
 
 export default {
   name: 'group',
@@ -16,7 +10,7 @@ export default {
     requiresAuth: true,
     title: '分组管理系统'
   },
-  component: Container,
+  component: Views.container,
   redirect: '/group/list',
   children: [
     {
@@ -26,7 +20,7 @@ export default {
         requiresAuth: true,
         title: '创建分组'
       },
-      component: GroupCreator,
+      component: Views.groupCreator,
     },
     {
       path: 'list',
@@ -34,7 +28,7 @@ export default {
         requiresAuth: true,
         title: '分组列表'
       },
-      component: GroupList
+      component: Views.groupList
     },
     {
       path: 'detail/:groupId',
@@ -43,7 +37,7 @@ export default {
         requiresAuth: true,
         title: '分组详情'
       },
-      component: GroupDetail
+      component: Views.groupDetail
     }
   ]
 }

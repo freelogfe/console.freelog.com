@@ -16,11 +16,11 @@
       <el-table-column
         align="center"
         prop="contractId"
-        label="contractId">
+        label="合同ID">
       </el-table-column>
       <el-table-column
         prop="resourceId"
-        label="resourceId">
+        label="资源ID">
       </el-table-column>
       <el-table-column
         align="center"
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="createDate">
+        label="创建时间">
         <template slot-scope="scope">
           {{scope.row.createDate | fmtDate}}
         </template>
@@ -41,7 +41,7 @@
         width="120px"
         align="center"
         prop="resourceDetail.resourceType"
-        label="resourceType">
+        label="资源类型">
       </el-table-column>
       <el-table-column
         width="100px"
@@ -61,7 +61,7 @@
             @click="previewHandler(scope.row)">查看详情</el-button>
           <el-button
             size="small"
-            @click="handlePresentable(scope.row)">{{scope.row.presentableDetail?'查看presentable': '创建presentable'}}</el-button>
+            @click="handlePresentable(scope.row)">{{scope.row.presentableDetail?'查看presentable': '创建user policy'}}</el-button>
         </template>
       </el-table-column>
     </table-view>

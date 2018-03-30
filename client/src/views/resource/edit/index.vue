@@ -23,8 +23,8 @@
           <el-form-item label="类型">
             {{detail.resourceType}}
           </el-form-item>
-          <el-form-item label="资源URL">
-            {{detail.resourceUrl}}
+          <el-form-item label="资源URL" v-if="isDev">
+            <a :href="resolveResourceUrl(detail.resourceUrl)" target="_blank">资源文件链接</a>
           </el-form-item>
           <el-form-item label="mimeType">
             {{detail.mimeType}}
@@ -55,15 +55,12 @@
       <el-tab-pane label="资源meta信息" name="metaInfo">
         <resource-meta-info v-model="detail.meta"></resource-meta-info>
       </el-tab-pane>
-      <!-- <el-tab-pane label="资源策略" name="policy">
-        <el-tooltip class="item" effect="dark" content="更新policy后，已签约的policy不变，新签约的policy以更新后的为准" placement="top">
-          <i class="el-icon-question"></i>
-        </el-tooltip>
+      <el-tab-pane label="资源策略" name="policy">
         <policy-editor ref="policyEditor"
+                       class="policy-editor"
                        v-model="policyText"
-                       @validate="validatePolicyHandler"
-                       :resourceId="detail.resourceId"></policy-editor>
-      </el-tab-pane> -->
+                       @validate="validatePolicyHandler"></policy-editor>
+      </el-tab-pane>
     </el-tabs>
     <div class="btns">
       <el-button type="primary" @click="saveHandler('detail')" :loading="submitLoading" :disabled="!send">保存</el-button>
@@ -84,6 +81,10 @@
   .btns {
     text-align: center;
     margin-top: 15px;
+  }
+
+  .policy-editor {
+    width: 80%;
   }
 
 </style>

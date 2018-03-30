@@ -13,11 +13,10 @@ import accountRoute from './account'
 import resourceRoute from './resource'
 import userRoute from './user'
 import resourceMarket from './resource-market'
-import Container from 'views/layout/container.vue'
 
 Vue.use(Router)
 
-import {layout, login, error, aboutView, helpView, pageBuildPreview} from '@/views/index'
+import Views from '@/views/index'
 
 const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
@@ -46,7 +45,7 @@ export default new Router({
     {
       path: '/resource/create/preview',
       meta: {requiresAuth: true, title: 'page build预览'},
-      component: Container,
+      component: Views.container,
       hidden: true,
       children: [{
         path: '/',
@@ -55,13 +54,13 @@ export default new Router({
           requiresAuth: false,
           title: 'page build预览'
         },
-        component: pageBuildPreview
+        component: Views.pageBuildPreview
       }]
     },
     {
       path: '/',
       meta: {requiresAuth: true, title: '首页'},
-      component: layout,
+      component: Views.layout,
       children: [resourceRoute, nodeRoute, groupRote, {
         path: 'about',
         hidden: true,
@@ -69,7 +68,7 @@ export default new Router({
           requiresAuth: false,
           title: '关于freelog'
         },
-        component: aboutView
+        component: Views.aboutView
       }, {
         path: 'help',
         hidden: true,
@@ -77,7 +76,7 @@ export default new Router({
           requiresAuth: false,
           title: '帮助中心'
         },
-        component: helpView
+        component: Views.helpView
       }]
     },
     {
@@ -86,7 +85,7 @@ export default new Router({
         requiresAuth: false,
         title: 'not found'
       },
-      component: layout,
+      component: Views.layout,
       children: [{
         name: '404',
         path: '',
@@ -94,7 +93,7 @@ export default new Router({
           requiresAuth: false,
           title: '404'
         },
-        component: error
+        component: Views.error
       }]
     }
   ]

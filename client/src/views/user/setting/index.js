@@ -1,6 +1,8 @@
 import {mapGetters} from 'vuex'
 import {storage} from '@/lib'
 import {validateLoginName} from '../validator'
+import {isSafeUrl} from '@/lib/security'
+
 // import ImageCropUpload from 'vue-image-crop-upload';
 
 export default {
@@ -70,7 +72,11 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            this.$router.replace(this.$route.query.redirect || '/')
+            var redirect = this.$route.query.redirect;
+            if (!redirect || !isSafeUrl(redirect)) {
+              redirect = '/'
+            }
+            this.$router.replace(redirect)
             this.loading = false
           })
           .catch(err => {

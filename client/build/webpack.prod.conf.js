@@ -9,6 +9,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 var ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 var env = config.build.env
 
@@ -99,7 +100,10 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new WebpackShellPlugin({
+      onBuildEnd: ['npm run pack']
+    })
   ]
 })
 

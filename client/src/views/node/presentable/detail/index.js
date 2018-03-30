@@ -1,6 +1,6 @@
 import compiler from '@freelog/presentable-policy-compiler'
 import PresentableContractDetail from '../contract/detail/index.vue'
-import PresentablePolicy from '../policy/index.vue'
+import PresentablePolicy from '@/components/policyEditor/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from '@/config/resource'
 import PresentableBindWidget from './bind.vue'

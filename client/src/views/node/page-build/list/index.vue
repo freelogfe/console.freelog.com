@@ -16,12 +16,12 @@
       <el-table-column
         prop="presentableId"
         width="220px"
-        label="presentableId(for test)">
+        label="presentable ID">
       </el-table-column>
       <el-table-column
         prop="resourceId"
         width="350px"
-        label="资源id(for test)">
+        label="资源ID">
       </el-table-column>
       <el-table-column
         width="120px"

@@ -1,4 +1,5 @@
 import {storage} from '@/lib'
+import {isSafeUrl} from '@/lib/security'
 
 export default {
   name: 'reset-password',
@@ -38,7 +39,11 @@ export default {
         this.loading = true
 
         this.$services.other.resetPassword(this.model).then(() => {
-          this.$router.replace(this.$route.query.redirect || '/')
+          var redirect = this.$route.query.redirect;
+          if (!redirect || !isSafeUrl(redirect)) {
+            redirect = '/'
+          }
+          this.$router.replace(redirect)
           this.loading = false
         }).catch(err => {
           this.loading = false

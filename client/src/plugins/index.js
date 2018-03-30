@@ -9,6 +9,7 @@ import nprogress from './nprogress'
 import authorize from './authorize'
 import filters from './filters'
 import error from './error'
+
 export default {
   install (Vue) {
     axios(Vue)

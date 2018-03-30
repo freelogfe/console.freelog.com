@@ -4,9 +4,9 @@ web component自定义标签名规则https://www.w3.org/TR/custom-elements/#vali
  */
 import PageBuilder from './pagebuilder.vue'
 import ResourceMetaInfo from '../meta/index.vue'
-import PolicyEditor from '../policy/index.vue'
+import PolicyEditor from '@/components/policyEditor/index.vue'
 import {mapGetters} from 'vuex'
-
+import {storage} from '@/lib'
 import CONFIG from '@/config/index'
 
 const {RESOURCE_TYPES} = CONFIG
@@ -69,7 +69,7 @@ export default {
       activeTabName: 'resourceInfo',
 
       formData: {
-        resourceType: RESOURCE_TYPES.widget || '',
+        resourceType: storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget,
         resourceName: '',
         widgetName: '',
         meta: '',
@@ -100,9 +100,6 @@ export default {
   },
   watch: {},
   methods: {
-    policyValidation(valid) {
-      this.policyValid = valid.done
-    },
     resourceTypeChange(type) {
       if (type === RESOURCE_TYPES.pageBuild) {
         this.tabs.push({
@@ -115,6 +112,8 @@ export default {
       } else {
         this.tabs = this.tabs.filter((tab) => tab.name !== RESOURCE_TYPES.pageBuild)
       }
+
+      storage.set('CREATE_RESOURCE_TYPE', type)
     },
     errorHandler(err) {
       this.loading = false
@@ -132,25 +131,39 @@ export default {
       this.$refs.upload.fileList = [] //reset
     },
     successHandler(res) {
-      var self = this;
       if (res.ret !== 0 || res.errcode !== 0) {
-        self.$message.error(res.msg);
+        this.$message.error(res.msg);
         this.loading = false
+        //reset
+        this.$refs.upload.uploadFiles.forEach((file) => {
+          file.status = 'ready'
+        })
       } else {
-        self.$refs.policyEditor.submit(res.data.resourceId)
-          .then(() => {
-            this.loading = false
-            self.$message.success('资源创建成功');
-            setTimeout(() => {
-              self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
-            }, 5e2)
-          })
-          .catch((errMsg) => {
-            this.loading = false
-            self.$message.error(`资源创建成功,资源策略创建失败，${errMsg}`);
-            self.$router.push({path: '/resource/detail', query: {resourceId: res.data.resourceId}})
-          })
+        this.createPolicy({
+          resourceId: res.data.resourceId,
+          policyText: btoa(this.formData.policyText),
+          languageType: 'freelog_policy_lang'
+        })
       }
+    },
+    createPolicy(data) {
+      return this.$services.policy.post(data)
+        .then((res) => {
+          this.loading = false
+          if (res.data.errcode === 0) {
+            this.$message.success('资源创建成功');
+          } else {
+            this.$message.error(res.data.msg)
+          }
+          setTimeout(() => {
+            this.$router.push({path: '/resource/detail', query: {resourceId: data.resourceId}})
+          }, 5e2)
+        })
+        .catch((errMsg) => {
+          this.loading = false
+          this.$message.error(`资源创建成功,资源策略创建失败，${errMsg}`);
+          this.$router.push({path: '/resource/detail', query: {resourceId: data.resourceId}})
+        })
     },
     generatePageBuildFile(opt) {
       var filename = opt.filename || 'page-build.html'
@@ -261,6 +274,7 @@ export default {
         if (valid) {
           this.packUploadData(() => {
             //检查是否有上传文件
+            console.log($uploader.uploadFiles.length)
             if ($uploader.uploadFiles.length > 0) {
               this.loading = true
               $uploader.submit()
@@ -290,6 +304,7 @@ export default {
     },
     validatePolicyHandler(detail) {
       if (detail.done) {
+        this.policyValid = detail.done
         this.$message.success('校验通过')
       }
     }

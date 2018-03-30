@@ -1,5 +1,6 @@
 import {storage} from '@/lib'
 import {validateLoginName} from '../validator'
+import {isSafeUrl} from '@/lib/security'
 
 export default {
   name: 'login',
@@ -16,17 +17,12 @@ export default {
       ]
     }
 
-    var signUpLink = '/user/signup'
-    if (this.$route.query.redirect) {
-      signUpLink += `?redirect=${this.$route.query.redirect}`
-    }
-
     return {
       model: {
         loginName: storage.get('loginName') || '',
         password: '',
       },
-      signUpLink: signUpLink,
+      signUpLink: '/user/signup',
       rules: rules,
       error: null,
       loading: false,
@@ -34,6 +30,10 @@ export default {
     }
   },
   mounted() {
+    var redirect = this.$route.query.redirect;
+    if (isSafeUrl(redirect)) {
+      this.signUpLink += `?redirect=${redirect}`
+    }
   },
 
   methods: {
@@ -55,7 +55,12 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            self.$router.replace('/node/list')
+            var redirect = this.$route.query.redirect;
+            if (isSafeUrl(redirect)) {
+              self.$router.replace(redirect)
+            } else {
+              self.$router.replace('/node/list')
+            }
             self.loading = false
           })
           .catch(err => {

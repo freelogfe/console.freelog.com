@@ -20,7 +20,6 @@
         },
         methods: {
             copyHandler() {
-                console.log('copy')
                 var copyTextarea = this.$refs.copyText;
                 copyTextarea.select();
                 try {

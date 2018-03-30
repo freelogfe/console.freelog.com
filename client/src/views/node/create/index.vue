@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="节点域名" prop="nodeDomain" required>
         <el-input v-model="dataForm.nodeDomain" placeholder="只能输入数字字母和-,长度为4-20字符">
-          <template slot="append"><span class="node-domain-postfix">.freelog.com</span></template>
+          <template slot="append"><span class="node-domain-postfix">{{domainPostfix}}</span></template>
         </el-input>
       </el-form-item>
       <el-form-item>

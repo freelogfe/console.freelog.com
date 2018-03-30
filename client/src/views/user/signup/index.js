@@ -1,5 +1,6 @@
 import {storage} from '@/lib'
 import {validateLoginName} from '../validator'
+import {isSafeUrl} from '@/lib/security'
 
 
 export default {
@@ -64,11 +65,16 @@ export default {
   methods: {
     login() {
       var self = this;
-      var isNewPage = /^(https?:)?\/\//.test(this.$route.query.redirect)
+      var redirect = this.$route.query.redirect
+      var isNewPage = /^(https?:)?\/\//.test(redirect)
       var data = {
         loginName: this.model.loginName,
         password: this.model.password,
         jwtType: isNewPage ? 'cookie' : 'header'
+      };
+
+      if (!redirect || !isSafeUrl(redirect)) {
+        redirect = '/node/list'
       }
 
       self.logining = true
@@ -76,9 +82,9 @@ export default {
         .then(() => {
           storage.set('loginName', data.loginName)
           if (isNewPage) {
-            location.replace(self.$route.query.redirect)
+            location.replace(redirect)
           } else {
-            self.$router.replace(self.$route.query.redirect || '/node/list')
+            self.$router.replace(redirect || '/node/list')
           }
         })
         .catch(_ => {

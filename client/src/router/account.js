@@ -1,4 +1,4 @@
-import {layout, userSetting}  from '@/views/index'
+import Views  from '@/views/index'
 
 export default  {
   name: 'account',
@@ -7,7 +7,7 @@ export default  {
     requiresAuth: true,
     title: '账户'
   },
-  component: layout,
+  component: Views.layout,
   redirect: '/account/settings',
   children: [
     {
@@ -16,7 +16,7 @@ export default  {
         requiresAuth: true,
         title: '账户设置'
       },
-      component: userSetting
+      component: Views.userSetting
     }
   ]
 }
