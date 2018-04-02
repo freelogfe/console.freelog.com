@@ -1,4 +1,3 @@
-import PolicyEditor from '../policy/index.vue'
 import TableView from '@/components/TableView/index.vue'
 import CreateAuthNode from '../createauthnode/index.vue'
 import EditAuthNode from '../editauthnode/index.vue'
@@ -16,7 +15,6 @@ export default {
     }
   },
   components: {
-    PolicyEditor,
     TableView,
     CreateAuthNode,
     EditAuthNode
@@ -26,7 +24,9 @@ export default {
       this.removeTab(id)
     })
     this.resourceId = this.$route.query.resourceId
-    this.$services.resource.get(this.resourceId).then((res)=> {
+    this.$services.authSchemes.get({params: {
+      resourceIds: this.resourceId
+    }}).then((res)=> {
       let data = res.getData();
       let meta = data.meta;
     })
@@ -99,7 +99,12 @@ export default {
             params: param
           }
         }
-        return this.$services.resource.get(param || {})
+        // return this.$services.authSchemes.get({params:{
+        //   resourceIds: this.$route.query.resourceId
+        // }})
+        return this.$services.resource.get({params:{
+          resourceIds: this.$route.query.resourceId
+        }})
       }
     }
   }

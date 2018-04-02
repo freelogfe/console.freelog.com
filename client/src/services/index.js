@@ -22,6 +22,7 @@ import SigningLicenses from './signingLicenses'
 import groupsService from './groups'
 import policyTemplateService from './policyTemplates'
 import pbStatics from './pbStatics' //pb签约情况统计
+import authSchemes from './authSchemes'
 
 
 export {
@@ -42,5 +43,6 @@ export {
   SigningLicenses,
   groupsService,
   policyTemplateService,
-  pbStatics
+  pbStatics,
+  authSchemes
 }

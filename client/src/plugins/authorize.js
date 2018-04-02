@@ -9,7 +9,6 @@ export default Vue => {
       store.dispatch('checkToken')
         .then(valid => {
           if (valid) return next()
-
           next({path: '/user/login', query: {redirect: to.fullPath}})
         })
     }

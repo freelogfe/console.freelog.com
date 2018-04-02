@@ -1,57 +1,43 @@
 <template>
   <section>
-<div style="display: inline-block;width:60%">
+<div style="display: inline-block;width:60%;vertical-align:top;">
       <div class="step-1 op-step">
         <div class="step-header">
           <div class="step-circle">1</div>
-          <div class="step-title">授权点名称</div>
+          <div class="step-title">授权点名称<span style="color:red;">(必填)</span></div>
         </div>
-        <el-input placeholder="sdfa78979298fd6s66a666as9f0"></el-input>
+        <el-input placeholder="请输入授权点名称" v-model="authSchemeName"></el-input>
      </div>
 
 
      <div class="step-2 op-step">
        <div class="step-header">
          <div class="step-circle">2</div>
-         <div class="step-title">创建授权点策略</div>
+         <div class="step-title">创建授权点策略<span style="color:red;">(必填)</span></div>
        </div>
        <el-input
       type="textarea"
+      v-model="policyText"
       :autosize="{ minRows: 2, maxRows: 4}"
       placeholder="请输入内容">
       </el-input>
     </div>
 
-    <div class="step-3 op-step">
-      <div class="step-header">
-        <div class="step-circle">3</div>
-        <div class="step-title">依赖关系</div>
-      </div>
-        <table-view :loader="loader()">
-          <el-table-column
-            label="资源名称">
-            <template slot-scope="scope">
-              {{scope.row.resourceName}}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="是否授权">
-            <template slot-scope="scope">
-              否
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="操作">
-            <template slot-scope="scope">
-              <el-button>建立授权关系</el-button>
-            </template>
-          </el-table-column>
-        </table-view>
-   </div>
+</div>
+<div style="display:inline-block;width:30%;">
+
+      <div class="step-3 op-step">
+        <div class="step-header">
+          <div class="step-circle">3</div>
+          <div class="step-title">依赖关系</div>
+        </div>
+
+        <dependency-tree @dependencies="dependencies"></dependency-tree>
+     </div>
 
 </div>
 
-<!-- 
+<!--
 <div style="display: inline-block;  width: 38%;vertical-align: top;">
   <el-table
     class="step-body contract-select-wrap"
