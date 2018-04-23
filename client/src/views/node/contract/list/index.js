@@ -1,5 +1,6 @@
 import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
+import DataLoader from '@/data'
 
 export default {
   name: 'node-contracts',
@@ -27,9 +28,7 @@ export default {
     },
     loadResourceData(resIds) {
       var promiseList = resIds.map((resId) => {
-        return this.$services.resource.get(resId).then((res) => {
-          return res.getData()
-        })
+        return DataLoader.resource.loadDetail(resId)
       })
 
       return Promise.all(promiseList)
@@ -40,9 +39,7 @@ export default {
       }).catch(this.$error.showErrorMessage)
     },
     loadPresentables(param) {
-      return this.$services.presentables.get({params: param}).then((res) => {
-        return res.getData()
-      }).catch(this.$error.showErrorMessage)
+      return DataLoader.presentable.loadDetail({params: param}).catch(this.$error.showErrorMessage)
     },
     mergeDataByResourceId(contracts, data) {
       var dataMap = {}

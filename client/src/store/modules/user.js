@@ -13,7 +13,7 @@ const types = {
 
 const user = {
   state: {
-    session: {user: {}, token: null}, // sessionStore.get('user_session')
+    session: sessionStore.get('user_session') || {user: {}, token: null}, // sessionStore.get('user_session')
   },
 
   mutations: {
@@ -46,21 +46,25 @@ const user = {
       commit(types.CHANGE_SESSION, data);
     },
     [types.CHECK_USER_SESSION]({commit, getters}) {
-      var authInfo = cookieStore.get('authInfo')
-      return new Promise((resolve) => {
-        if (!authInfo) {
-          resolve(false)
-        } else {
-          var jwt = authInfo.split('.')
-          var userInfo = atob(jwt[1])
-          try {
-            userInfo = JSON.parse(userInfo)
-          } catch (err) {
-            console.error(err)
-            userInfo = {}
-          }
-          resolve(!(!getters.session || getters.session.user.userId !== userInfo.userId))
+      var session = getters.session || sessionStore.get('user_session')
+      var authInfo = (session && session.user)
+
+      if (!authInfo || !authInfo.userId) {
+        authInfo = cookieStore.get('authInfo')
+        var jwt = authInfo.split('.')
+        var userInfo = atob(jwt[1])
+        try {
+          userInfo = JSON.parse(userInfo)
+        } catch (err) {
+          console.error(err)
+          userInfo = {}
         }
+      } else {
+        userInfo = authInfo
+      }
+      return new Promise((resolve) => {
+        var logged = (!(!getters.session || getters.session.user.userId !== userInfo.userId))
+        resolve(logged)
       })
     },
     [types.USER_LOGIN]({commit}, data) {

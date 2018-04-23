@@ -1,15 +1,15 @@
 import {UserService} from '@/services'
 
-function loadUserInfo(userId) {
+function loadDetail(userId) {
   return UserService.get(userId).then((res) => {
     return res.getData()
   })
 }
 
 export {
-  loadUserInfo
+  loadDetail
 }
 
 export default {
-  loadUserInfo
+  loadDetail
 }

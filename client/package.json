@@ -11,6 +11,7 @@
     "pack": "tar -zcf console.tar dist"
   },
   "dependencies": {
+    "@antv/g6": "^1.2.8",
     "@freelog/presentable-policy-compiler": "0.0.11",
     "@freelog/resource-policy-compiler": "0.0.11",
     "@freelog/resource-policy-lang": "0.0.13",

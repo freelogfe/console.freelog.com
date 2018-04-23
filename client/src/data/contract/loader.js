@@ -1,15 +1,15 @@
 import {ContractService} from '@/services'
 
-function loadContractDetail(id) {
+function loadDetail(id) {
   return ContractService.get(id).then((res) => {
     return res.getData()
   })
 }
 
 export {
-  loadContractDetail
+  loadDetail
 }
 
 export default {
-  loadContractDetail
+  loadDetail
 }

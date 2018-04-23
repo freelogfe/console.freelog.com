@@ -1,7 +1,8 @@
 <template>
   <section class="resource-detail">
-    <el-tabs type="border-card" v-model="activeTabName" @tab-click="tabChange">
-      <el-tab-pane label="资源基础属性">
+    <el-tabs type="border-card" v-model="activeTabName"
+             @tab-remove="closeTabHandler" @tab-click="tabChange">
+      <el-tab-pane label="资源基础属性" name="resource">
         <el-form :model="detail" class="small-el-form" :rules="rules" ref="detail" label-width="120px">
           <el-form-item label="资源描述"
                         class="flex-grid"
@@ -55,11 +56,19 @@
       <el-tab-pane label="资源meta信息" name="metaInfo">
         <resource-meta-info v-model="detail.meta"></resource-meta-info>
       </el-tab-pane>
-      <el-tab-pane label="资源策略" name="policy">
-        <policy-editor ref="policyEditor"
-                       class="policy-editor"
-                       v-model="policyText"
-                       @validate="validatePolicyHandler"></policy-editor>
+      <el-tab-pane label="授权管理" name="authnode">
+        <div style="margin-bottom: 15px">
+          <el-button type="primary" @click="openTabHandler('createAuthNode')">创建授权点</el-button>
+        </div>
+        <auth-node-list :refresh="refreshAuthList" @openTab="openTabHandler" :isShow="isInCurrentTab('authnode')"></auth-node-list>
+      </el-tab-pane>
+      <el-tab-pane
+        v-for="(item, index) in dynamicTabs"
+        :key="item.name"
+        :label="item.title"
+        :name="item.name"
+        :closable="true">
+        <component :is="item.content" @closeTab="closeTabHandler" :tab-name="item.name" :data="item.data"></component>
       </el-tab-pane>
     </el-tabs>
     <div class="btns">
@@ -82,9 +91,4 @@
     text-align: center;
     margin-top: 15px;
   }
-
-  .policy-editor {
-    width: 80%;
-  }
-
 </style>

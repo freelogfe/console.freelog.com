@@ -1,5 +1,6 @@
 import {NodeCreationRule} from '@/views/node/create/index'
 import {NODE_STATUS} from '@/config/node'
+import nodeLoader from '@/data/node/loader'
 
 export default {
   name: 'node-detail',
@@ -26,10 +27,7 @@ export default {
   },
   methods: {
     load(param) {
-      return this.$services.nodes.get(param || {})
-        .then((res) => {
-          return res.getData();
-        }).catch(this.$error.showErrorMessage)
+      return nodeLoader.loadDetail(param || {}).catch(this.$error.showErrorMessage)
     },
     updateNodeDetail(formName) {
       const self = this;

@@ -1,6 +1,6 @@
 import compiler from '@freelog/resource-policy-compiler'
-import {loadUserInfo} from '../user/loader'
-import {loadNodeInfo} from '../node/loader'
+import userLoader from '../user/loader'
+import nodeLoader from '../node/loader'
 import {CONTRACT_STATUS_COLORS} from '@/config/contract'
 import Vue from 'vue'
 
@@ -19,13 +19,13 @@ function format(contract) {
   })
 
   if (contract.partyOne) {
-    loadUserInfo(contract.partyOne).then((userInfo) => {
+    userLoader.loadDetail(contract.partyOne).then((userInfo) => {
       Vue.set(contract, 'partyOneInfo', userInfo)
     })
   }
 
   if (contract.partyTwo) {
-    loadNodeInfo(contract.partyTwo).then((nodeInfo) => {
+    nodeLoader.loadDetail(contract.partyTwo).then((nodeInfo) => {
       Vue.set(contract, 'partyTwoInfo', nodeInfo)
     })
   }

@@ -4,6 +4,11 @@ policy更新后，后续签订的policy按新的来，已签约过的按更新�
 import {mapGetters} from 'vuex'
 import ResourceMetaInfo from '../meta/index.vue'
 import PolicyEditor from '@/components/policyEditor/index.vue'
+import AuthNodeList from '../authNode/list/index.vue'
+import CreateAuthNode from '../authNode/create/index.vue'
+import EditAuthNode from '../authNode/edit/index.vue'
+
+const CreateAuthNodeTab = 'create-auth-node'
 
 export default {
   name: 'resource-detail-edit',
@@ -14,11 +19,10 @@ export default {
       activeTabName: '',
       canUpdate: false,
       valid: true,
-      policyValid: true,
       submitLoading: false,
       showKeys: ['resourceId', 'resourceType', 'resourceUrl', 'mimeType', 'createDate'],
-      policyText: '',
       rules: {},
+      dynamicTabs: [],
       uploader: {
         headers: {
           method: 'POST'
@@ -29,14 +33,17 @@ export default {
   },
   computed: Object.assign({
     send: function () {
-      return this.valid && this.policyValid
+      return this.valid
     }
   }, mapGetters({
     session: 'session'
   })),
   components: {
     ResourceMetaInfo,
-    PolicyEditor
+    PolicyEditor,
+    AuthNodeList,
+    CreateAuthNode,
+    EditAuthNode
   },
   mounted() {
     this.$watch('detail', () => {
@@ -53,23 +60,84 @@ export default {
     }
     if (resourceId) {
       this.loadResourceDetail(resourceId)
-      this.loadPolicyDetail(resourceId)
-        .then((policy) => {
-          if (policy) {
-            self.policyText = policy.policyText
-          }
-          this.detail.policyText = self.policyText
-
-          console.log('detail', this.detail)
-        })
-      this.activeTabName = this.$route.hash.slice(1)
+      var hash = this.$route.hash
+      this.activeTabName = hash.slice(1) || 'resource'
     } else {
       this.$message.error('缺少参数resourceId');
     }
   },
   methods: {
-    resolveResourceUrl(url){
-      return url.replace('-internal.','.')
+    closeTabHandler(data) {
+      var tabName;
+      var tabData
+      if (typeof data === 'string') {
+        tabName = data
+        tabData = {}
+      } else if (typeof data === 'object') {
+        tabName = data.name;
+        tabData = data.data || {}
+      }
+
+      tabName = tabName || this.activeTabName;
+      var dynamicTabs = this.dynamicTabs
+
+      if (tabName === CreateAuthNodeTab) {
+        this.newAuthNode = tabData
+      }
+
+      for (let tab of dynamicTabs) {
+        if (tab.name === tabName) {
+          dynamicTabs.splice(dynamicTabs.indexOf(tabName), 1)
+          this.activeTabName = 'authnode'
+          break;
+        }
+      }
+    },
+    refreshAuthList(fn) {
+      fn(this.newAuthNode)
+      this.newAuthNode = null
+    },
+    isInCurrentTab(name) {
+      return this.activeTabName === name
+    },
+    openTabHandler(data) {
+      var tabConfig
+      var tabName;
+      var tabData
+      if (typeof data === 'string') {
+        tabName = data
+        tabData = {}
+      } else {
+        tabName = data.name;
+        tabData = data.data || {}
+      }
+      switch (tabName) {
+        case 'createAuthNode':
+          tabConfig = {
+            title: '新增授权点',
+            name: CreateAuthNodeTab,
+            content: 'create-auth-node'
+          };
+          break;
+        case 'editAuthNode':
+          tabConfig = {
+            title: '编辑授权点',
+            name: `edit-auth-node-${tabData.authSchemeId}`,
+            content: 'edit-auth-node'
+          };
+          break;
+      }
+
+      if (tabConfig) {
+        Object.assign(tabConfig, {
+          data: tabData
+        })
+        this.dynamicTabs.push(tabConfig);
+        this.activeTabName = tabConfig.name
+      }
+    },
+    resolveResourceUrl(url) {
+      return url ? url.replace('-internal.', '.') : ''
     },
     loadResourceDetail(resourceId) {
       return this.$services.resource.get(resourceId)
@@ -77,12 +145,6 @@ export default {
           var detail = res.getData()
           detail.meta = JSON.stringify(detail.meta)
           return (this.detail = detail);
-        }).catch(this.$error.showErrorMessage)
-    },
-    loadPolicyDetail(resId) {
-      return this.$services.policy.get(resId)
-        .then((res) => {
-          return res.getData()
         }).catch(this.$error.showErrorMessage)
     },
     //todo 测试阶段使用
@@ -120,18 +182,6 @@ export default {
         this.$message.error(data.msg)
       }
     },
-    updatePolicy(resourceId) {
-      var data = {
-        policyText: btoa(this.policyText),
-        languageType: 'freelog_policy_lang'
-      };
-      if (this.detail.policyText) {
-        return this.$services.policy.put(resourceId, data)
-      } else {
-        data.resourceId = resourceId
-        return this.$services.policy.post(data)
-      }
-    },
     saveHandler() {
       if (this.submitLoading) {
         return
@@ -154,11 +204,6 @@ export default {
 
       var promises = []
       promises.push(this.$services.resource.put(resId, data))
-
-
-      if (this.detail.policyText !== this.policyText) {
-        promises.push(this.updatePolicy(resId))
-      }
 
       Promise.all(promises)
         .then((resList) => {
@@ -192,12 +237,6 @@ export default {
         case 'metaInfo':
           this.fixCodeMirrorRender()
           break;
-      }
-    },
-    validatePolicyHandler(detail) {
-      this.policyValid = detail.done
-      if (detail.done) {
-        this.$message.success('校验通过')
       }
     }
   }

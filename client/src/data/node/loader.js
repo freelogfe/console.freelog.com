@@ -1,15 +1,15 @@
 import {NodesService} from '@/services'
 
-function loadNodeInfo(nodeId) {
+function loadDetail(nodeId) {
   return NodesService.get(nodeId).then((res) => {
     return res.getData()
   })
 }
 
 export {
-  loadNodeInfo
+  loadDetail
 }
 
 export default {
-  loadNodeInfo
+  loadDetail
 }

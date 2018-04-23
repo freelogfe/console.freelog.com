@@ -35,7 +35,7 @@ export default {
       this.$router.push({path: '/resource/detail', query: {resourceId: resource.resourceId}})
     },
     createAuthNode(resource) {
-      this.$router.push({path: '/resource/authnode', query: {resourceId: resource.resourceId}})
+      this.$router.push({path: '/resource/detail#authnode', query: {resourceId: resource.resourceId}})
     }
   }
 }

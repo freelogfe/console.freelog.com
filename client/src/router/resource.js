@@ -43,16 +43,6 @@ export default {
       component: Views.resourceDetail
     },
     {
-      path: 'authnode',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '授权管理',
-        type: 'resource'
-      },
-      component: Views.authNode
-    },
-    {
       path: 'policy_tpl/list',
       meta: {
         requiresAuth: true,
