@@ -2,9 +2,7 @@
   <div :class="[sidebar.openSidebar?'': 'collapse-sidebar']">
     <fl-header/>
     <section class="main">
-      <fl-sidebar class="left-sidebar"/>
       <main class="content">
-        <fl-breadcrumb></fl-breadcrumb>
         <transition name="content">
           <router-view class="main-view"></router-view>
         </transition>
@@ -43,7 +41,6 @@
   }
 
   .main-view {
-    padding: 15px;
     min-height: 100%;
   }
 
@@ -60,12 +57,10 @@
   }
 
   .content {
-    margin-left: @sidebar-width;
     transition: all .5s;
   }
 
   .footer-wrap {
-    margin-left: @sidebar-width;
     transition: all .5s;
   }
 

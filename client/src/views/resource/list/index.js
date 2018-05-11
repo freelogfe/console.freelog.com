@@ -28,14 +28,11 @@ export default {
         return this.$services.resource.get(param || {})
       }
     },
-    handlePolicy(resource) {
-      this.$router.push({path: '/resource/detail#policy', query: {resourceId: resource.resourceId}})
-    },
     handleEdit(resource) {
-      this.$router.push({path: '/resource/detail', query: {resourceId: resource.resourceId}})
+      this.$router.push({path: `/resource/detail/${resource.resourceId}`})
     },
-    createAuthNode(resource) {
-      this.$router.push({path: '/resource/detail#authnode', query: {resourceId: resource.resourceId}})
+    editAuthNode(resource) {
+      this.$router.push({path: `/resource/detail/${resource.resourceId}/auth_schemes`})
     }
   }
 }

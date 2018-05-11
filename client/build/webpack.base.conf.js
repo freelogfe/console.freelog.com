@@ -45,25 +45,20 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        // loader: 'vue-loader',
         loader: 'happypack/loader?id=happyVue'
       },
       {
         test: /\.js$/,
-        // loader: 'babel-loader',
         loader: 'happypack/loader?id=happybabel',
         include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        // loader: 'url-loader',
         loader: 'happypack/loader?id=image'
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        // loader: 'url-loader',
         loader: 'happypack/loader?id=media',
-        // exclude: /node_modules/
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -72,7 +67,6 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-        // loader: 'happypack/loader?id=fonts',
       }
     ]
   },

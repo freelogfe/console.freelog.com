@@ -27,6 +27,12 @@ export default {
       }
     },
 
+    showValidate: {
+      type: Boolean,
+      default(){
+        return true
+      }
+    },
     config: {
       type: Object,
       default() {
@@ -87,6 +93,9 @@ export default {
     },
     selectLicenseIdCallback(data) {
       this.policyText += ` ${data.licenseId}`
+    },
+    changePolicyText(){
+      this.$emit('input', this.policyText)
     }
   }
 }

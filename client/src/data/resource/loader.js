@@ -2,7 +2,11 @@ import {ResourceService} from '@/services'
 
 function loadDetail(resourceId) {
   return ResourceService.get(resourceId).then((res) => {
-    return res.getData()
+    if (res.data.errcode === 0) {
+      return res.getData()
+    } else {
+      return Promise.reject(res.data)
+    }
   })
 }
 

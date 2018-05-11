@@ -41,10 +41,9 @@ export default {
       this.data = val
 
       if (!this.validator) {
-
         this.validator = throttle(() => {
           this.validateJSON()
-        }, 3e3)
+        }, 2e3)
       } else {
         this.validator()
       }
@@ -59,6 +58,8 @@ export default {
       } catch (err) {
         this.errorMsg = 'JSON格式有误！' + err
       }
+
+      this.$emit('validate', this.errorMsg)
     },
     clearErrorMsg() {
       this.errorMsg = ''

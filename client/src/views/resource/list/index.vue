@@ -52,13 +52,7 @@
           </el-button>
           <el-button
             size="small"
-            v-show="scope.row.status === 1"
-            @click="createAuthNode(scope.row)">创建授权
-          </el-button>
-          <el-button
-            size="small"
-            v-show="scope.row.status === 2"
-            @click="createAuthNode(scope.row)">授权管理
+            @click="editAuthNode(scope.row)">授权管理
           </el-button>
         </template>
       </el-table-column>

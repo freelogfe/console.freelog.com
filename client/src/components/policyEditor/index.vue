@@ -34,12 +34,14 @@
                   type="textarea"
                   :rows="15"
                   placeholder="请输入策略"
+                  @change="changePolicyText"
                   v-model="policyText">
         </el-input>
       </div>
     </div>
     <div>
       <el-button type="primary"
+                 v-show="showValidate"
                  @click="validate">格式校验
       </el-button>
     </div>

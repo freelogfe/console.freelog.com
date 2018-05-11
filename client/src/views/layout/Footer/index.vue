@@ -17,9 +17,10 @@
 
 <style scoped lang="less">
   .app-footer {
-    margin-top: 30px;
+    margin-top: 80px;
     margin-bottom: 50px;
     text-align: center;
+    padding: 10px 0;
   }
 
   a {

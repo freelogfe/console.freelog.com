@@ -35,6 +35,21 @@ export default {
     {
       path: 'detail',
       hidden: true,
+      redirect: '/resource/list',
+    },
+    {
+      path: 'detail/:resourceId/auth_schemes',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '创建资源授权方案',
+        type: 'resource'
+      },
+      component: Views.resourceAuthSchemeEditor
+    },
+    {
+      path: 'detail/:resourceId',
+      hidden: true,
       meta: {
         requiresAuth: true,
         title: '编辑资源详情',
