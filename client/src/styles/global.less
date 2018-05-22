@@ -1,20 +1,23 @@
 @import "mixin.less";
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: tahoma, 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
+  font: 12px/1.5 tahoma, arial, "\5b8b\4f53";
+
   [class^="el-icon-fa"], [class*=" el-icon-fa"] {
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome!important;
+    font: normal normal normal 14px/1 FontAwesome !important;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  };
+  }
+;
 }
 
 @import url("../../node_modules/font-awesome/less/font-awesome");
@@ -32,12 +35,15 @@ body {
   opacity: 0.8;
   filter: alpha(opacity=80);
 }
+
 .gu-hide {
   display: none !important;
 }
+
 .gu-unselectable {
   user-select: none !important;
 }
+
 .gu-transit {
   opacity: 0.2;
 }
@@ -51,3 +57,4 @@ body {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   display: inline-block;
 }
+

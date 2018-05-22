@@ -45,6 +45,9 @@ instance.interceptors.response.use(response => {
       })
     } else if (response.status === 200 && (!data.ret || data.ret === 0)) {
       response.getData = () => {
+        if (data.hasOwnProperty('errcode') && data.errcode !== 0) {
+          throw new Error(data)
+        }
         return data.data || data
       };
       return response

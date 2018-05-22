@@ -7,10 +7,11 @@
           <li v-for="(dep, index) in detail.scheme.dependencies" class="dep-item">
             <el-checkbox class="select-box" v-model="dep.checked"
                          @change="selectDependency(dep)"
-                         :disabled="dep.active"></el-checkbox>
+                         :disabled="detail.isPublished"></el-checkbox>
             <div class="resource-name" :class="{active:dep.active}">
               <p>
-                <i class="dot" :class="{selected: !!dep.authSchemeId}"></i>{{dep.resourceName}}
+                <i class="dot" :class="{selected: dep.selectedAuthScheme && !!dep.selectedAuthScheme.authSchemeId,
+                active: detail.isPublished}"></i>{{dep.resourceName}}
                 <i class="el-icon-edit" @click="editDepResource(dep)"></i>
               </p>
               <ul class="auth-node-list">
@@ -18,7 +19,7 @@
                     @click="changeResourceScheme(dep, authNode, index, $event)"
                     v-for="authNode in dep.authSchemes">
                   <span class="title"><i class="dot"
-                                         :class="{selected: (dep.authSchemeId === authNode.authSchemeId)}"></i>{{authNode.authSchemeName}}</span>
+                                         :class="{selected: (dep.selectedAuthScheme && dep.selectedAuthScheme.authSchemeId === authNode.authSchemeId), active: detail.isPublished}"></i>{{authNode.authSchemeName}}</span>
                 </li>
               </ul>
               <div :class="'line-'+dep.resourceId" class="line-arrow">
@@ -58,7 +59,8 @@
                             class="duty-resource">
             <template slot="title">
               <h4>{{duty.resourceName}}</h4>
-              <div class="duty-resource-sub-title">{{duty.authNode.authSchemeName}}/{{duty.selectSegment}}</div>
+              <div class="duty-resource-sub-title">{{duty.selectedAuthScheme.authSchemeName}}/{{duty.selectSegment}}
+              </div>
             </template>
             <pre class="policy-segment-text">{{duty.selectedPolicy.segmentText}}</pre>
           </el-collapse-item>
@@ -66,38 +68,41 @@
       </div>
       <div class="auth-scheme-wrap" v-show="viewMode==='tree'">
         <div class="auth-scheme-list-wrap" :key="index" v-for="(scheme,index) in schemes">
-          <div class="step-title">{{scheme.authNode.authSchemeName}}</div>
+          <div class="step-title">{{scheme.activeAuthScheme.authSchemeName}}</div>
           <ul>
-            <li v-for="dep in scheme.dependencies" class="dep-item">
+            <li v-for="dep in scheme.activeAuthScheme.dependencies" class="dep-item">
               <div class="resource-name">
-                <p><i class="dot" :class="{active: dep.done, selected: !!dep.authSchemeId}"></i>{{dep.resourceName||dep.resourceId}}
+                <p><i class="dot"
+                      :class="{active: dep.done || dep.selected}"></i>{{dep.resourceName||dep.resourceId}}
                 </p>
                 <ul class="auth-node-list">
                   <li class="auth-scheme-title" @click="selectAuthNode(dep, authNode, index, $event)"
                       v-for="authNode in dep.authSchemes">
                   <span class="title">
-                    <i class="dot" :class="{selected: (dep.authSchemeId === authNode.authSchemeId)}"></i>{{authNode.authSchemeName}}</span>
+                    <i class="dot"
+                       :class="{active: (dep.selectedAuthScheme&&dep.selectedAuthScheme.authSchemeId === authNode.authSchemeId)}"></i>{{authNode.authSchemeName}}</span>
                   </li>
                 </ul>
               </div>
             </li>
           </ul>
-          <div class="policy-wrap">
+          <div class="policy-wrap" v-if="scheme.activeAuthScheme.policy">
             <h3 style="margin-bottom: 15px;">授权策略:</h3>
             <div class="policy-content">
-              <el-radio-group v-if="scheme.authNode.policy.length>1" v-model="scheme.selectSegment">
+              <el-radio-group v-if="scheme.activeAuthScheme.policy.length>1"
+                              v-model="scheme.selectedPolicy.segmentId">
                 <el-radio class="policy-radio" :label="policy.segmentId" :key="index"
-                          v-for="(policy, index) in scheme.authNode.policy">
+                          @change="changePolicy(scheme, policy)"
+                          v-for="(policy, index) in scheme.activeAuthScheme.policy">
                   <pre class="policy-segment-text">{{policy.segmentText}}</pre>
                 </el-radio>
               </el-radio-group>
-              <pre class="policy-segment-text" v-else-if="scheme.authNode.policy.length">{{scheme.authNode.policy[0].segmentText}}</pre>
+              <pre class="policy-segment-text" v-else-if="scheme.activeAuthScheme.policy.length">{{scheme.activeAuthScheme.policy[0].segmentText}}</pre>
               <div style="text-align: center">
                 <el-button type="primary" round
-                           :disabled="scheme.active"
                            class="policy-select-btn" @click="selectAuthScheme(scheme)">
                   <i class="el-icon-fa-check"
-                     :class="{selected: (scheme.authSchemeId === scheme.authNode.authSchemeId)}"></i>预选
+                     :class="{selected: scheme.activeAuthScheme.authSchemeId === scheme.selectedAuthScheme.authSchemeId}"></i>预选
                 </el-button>
               </div>
             </div>
@@ -128,6 +133,7 @@
 
 <script>
   import {cloneDeep} from 'lodash'
+  import DataLoader from './data'
   import ResourceLoader from '@/data/resource/loader'
   import PolicyEditor from '@/components/policyEditor/index.vue'
   import resourceCompiler from '@freelog/resource-policy-compiler'
@@ -162,21 +168,56 @@
         editActionType: '',
         currentAuthNodeIndex: -1,
         currentEditDepResource: {},
-        resourcesMap: {},
         dutyResourceMap: {},
         curEditDepResourceId: '716062e04d0f20f736411e3b53d50d39ba0bd2da'
       }
     },
     mounted() {
-      let dutyStatements = this.detail.scheme.dutyStatements
 
-      if (dutyStatements && dutyStatements.length) {
-        this.initDutyStatements(dutyStatements)
-      }
+      this.initDependencies(this.detail.scheme);
     },
     computed: {},
     watch: {},
     methods: {
+      initDependencies(scheme) {
+        let dutyStatements = scheme.dutyStatements
+        let dependencies = scheme.dependencies
+        var promises = []
+        dependencies.forEach((dep) => {
+          DataLoader.initAuthScheme(dep)
+          var p = DataLoader.loadSchemesForResource(dep.resourceId).then((authSchemes) => {
+            dep.authSchemes = authSchemes
+          });
+          promises.push(p)
+        });
+
+        Promise.all(promises).then(() => {
+          this.$forceUpdate()
+        })
+
+        if (dutyStatements && dutyStatements.length) {
+          this.loadDutyStatements(dutyStatements).then((authSchemeMap) => {
+            dependencies.forEach((dep) => {
+              var duty = this.dutyResourceMap[dep.resourceId]
+              if (duty) {
+                dep.selectedAuthScheme = (authSchemeMap[duty.authSchemeId] || {})
+                for (var i = 0; i < dep.selectedAuthScheme.policy.length; i++) {
+                  let policy = dep.selectedAuthScheme.policy[i]
+                  if (policy.segmentId === duty.policySegmentId) {
+                    dep.selectedPolicy = {...policy};
+                    dep.checked = true
+                    break;
+                  }
+                }
+                //已发布的不在待签约列表
+                if (!this.detail.isPublished) {
+                  this.dutyStatements.push(dep)
+                }
+              }
+            })
+          })
+        }
+      },
       changeViewMode(mode) {
         if (mode === 'list') {
           this.hideLineArrow(this.$el)
@@ -184,43 +225,49 @@
           this.showLineArrows()
         }
       },
-      initDutyStatements(dutyStatements) {
-        dutyStatements.forEach((scheme) => {
-          this.dutyResourceMap[scheme.resourceId] = scheme
+      loadDutyStatements(dutyStatements) {
+        dutyStatements.forEach((res) => {
+          this.dutyResourceMap[res.resourceId] = res
         });
 
-        this.loadAuthSchemes({
+        return DataLoader.loadAuthSchemes({
           authSchemeIds: dutyStatements.map((d) => {
             return d.authSchemeId
-          }).join(',')
+          })
         }).then((data) => {
-          var authSchemeMap = data.reduce((authSchemeMap, scheme) => {
+          return data.reduce((authSchemeMap, scheme) => {
             authSchemeMap[scheme.authSchemeId] = scheme
             return authSchemeMap
           }, {});
-          dutyStatements.forEach((duty) => {
-            duty.authNode = (authSchemeMap[duty.authSchemeId] || {})
-            for (var i = 0; i < duty.authNode.policy.length; i++) {
-              let policy = duty.authNode.policy[i]
-              if (policy.segmentId === duty.policySegmentId) {
-                duty.selectedPolicy = policy;
-                duty.selectSegment = duty.policySegmentId
-                break;
-              }
-            }
-          });
-          this.dutyStatements = dutyStatements;
         })
       },
       addDepResource() {
-        this.showEditDepResource = true
-        this.editActionType = 'add'
+        if (this.canEditDep()) {
+          this.showEditDepResource = true
+          this.editActionType = 'add'
+        } else {
+          this.showEditDepDisabled()
+        }
       },
       editDepResource(dep) {
-        this.showEditDepResource = true
-        this.currentEditDepResource = dep
-        this.curEditDepResourceId = dep.resourceId
-        this.editActionType = 'modify'
+        if (this.canEditDep()) {
+          this.showEditDepResource = true
+          this.currentEditDepResource = dep
+          this.curEditDepResourceId = dep.resourceId
+          this.editActionType = 'modify'
+        } else {
+          this.showEditDepDisabled()
+        }
+      },
+      canEditDep(){
+        return this.detail.enableEditDependency
+      },
+      showEditDepDisabled(){
+        this.$confirm('存在已发布授权方案，不可更改依赖资源方案。需删除所有已发布授权方案才可修改依赖资源。',{
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonText: '知道了'
+        })
       },
       resetDepResourceEditor() {
         this.curEditDepResourceId = ''
@@ -268,16 +315,22 @@
 
       },
       selectDependency(dep) {
-        if (!dep.selectSegment) {
+        if (!dep.selectedPolicy.segmentId) {
           this.$message.warning('先选择该资源任一个授权方案')
           dep.checked = false
         }
+
+//        this.$forceUpdate()
       },
       updateData() {
         this.updateCallback({
           id: this.detail.id,
           data: this._data
         })
+      },
+      changePolicy(scheme, policy) {
+        scheme.selectedPolicy = {...policy}
+        this.$forceUpdate()
       },
       formatResource(res) {
         Object.assign(res, {
@@ -297,8 +350,8 @@
           return dep.resourceId
         })
 
-        return this.loadAuthSchemes({
-          resourceIds: rids.join(',')
+        return DataLoader.loadAuthSchemes({
+          resourceIds: rids
         }).then((data) => {
           var authSchemeMap = data.reduce((authSchemeMap, scheme) => {
             if (!authSchemeMap[scheme.resourceId]) {
@@ -310,13 +363,6 @@
           deps.forEach((dep) => {
             dep.authSchemes = (authSchemeMap[dep.resourceId] || [])
           })
-        })
-      },
-      loadAuthSchemes(params) {
-        return this.$axios.get(`/v1/resources/authSchemes`, {
-          params: params
-        }).then((res) => {
-          return res.getData()
         })
       },
       handleInputConfirm(ev) {
@@ -334,7 +380,7 @@
         })
       },
       changeResourceScheme(dep, authNode, index, ev) {
-        if (dep.authNode && (dep.authNode.authSchemeId === authNode.authSchemeId)) {
+        if (dep.activeAuthScheme && (dep.activeAuthScheme.authSchemeId === authNode.authSchemeId)) {
           return
         }
         this.schemes = []
@@ -349,9 +395,9 @@
       },
       //默认取消后续的授权方案
       cancelBackSchemes(scheme) {
-        if (scheme.dependencies.length) {
-          scheme.dependencies.forEach((dep) => {
-            if (dep.selectSegment) {
+        if (scheme.activeAuthScheme.dependencies.length) {
+          scheme.activeAuthScheme.dependencies.forEach((dep) => {
+            if (dep.selectedPolicy && dep.selectedPolicy.segmentId) {
               this.resetSelectedScheme(dep)
             }
           })
@@ -363,7 +409,7 @@
         var start = false
         for (var i = schemes.length - 1; i >= 0; i--) {
           let tmp = schemes[i]
-          if (start && !tmp.authSchemeId) {
+          if (start && !tmp.selected) {
             this.setSelectedScheme(tmp)
           }
 
@@ -383,44 +429,32 @@
         }
       },
       resetSelectedScheme(scheme) {
-        scheme.authSchemeId = ''
-        scheme.selectSegment = ''
-        scheme.selectedPolicy = null
+        scheme.selectedAuthScheme = {}
         scheme.selected = false
+
         this.deleteFromDutyStateMents(scheme)
         this.cancelBackSchemes(scheme)
       },
       setSelectedScheme(scheme) {
-        if (scheme.selectSegment) {
+        if (scheme.selectedPolicy.segmentId) {
           this.deleteFromDutyStateMents(scheme)
         }
 
-        var selectedPolicy
-        let policies = scheme.authNode.policy;
-
+        var policies = scheme.activeAuthScheme.policy
         scheme.selected = true
-        scheme.authSchemeId = scheme.authNode.authSchemeId
-        for (var i = 0; i < policies.length; i++) {
-          let policy = policies[i]
-          if (policy.segmentId === scheme.selectSegment) {
-            selectedPolicy = policy
-            break;
-          }
-        }
 
-        if (!selectedPolicy && scheme.authNode.policy.length) {
-          selectedPolicy = scheme.authNode.policy[0]
+//        //没有选择，则默认选中一个
+        if ((!scheme.selectedPolicy || !scheme.selectedPolicy.segmentId) && (policies.length)) {
+          scheme.selectedPolicy = {...policies[0]}
         }
-
-        if (selectedPolicy) {
-          scheme.selectSegment = selectedPolicy.segmentId
-          scheme.serialNumber = scheme.authNode.serialNumber
-          this.$set(scheme, 'selectedPolicy', selectedPolicy);
+        scheme.selectedAuthScheme = scheme.activeAuthScheme
+        if (scheme.selectedPolicy) {
           this.dutyStatements.push(scheme)
         }
       },
       selectAuthScheme(scheme) {
-        if (scheme.authSchemeId === scheme.authNode.authSchemeId) {
+        if (scheme.selectedAuthScheme &&
+          scheme.selectedAuthScheme.authSchemeId === scheme.activeAuthScheme.authSchemeId) {
           if (this.schemes[0].resourceId === scheme.resourceId) {
             this.schemes[0].checked = false
           }
@@ -460,41 +494,21 @@
         this.computeLineArrow(target, ev.currentTarget.querySelector('.title'), parentNode)
       },
       pushSchemeDep(dep, authNode) {
-        dep.authNode = authNode
-
-        if (!this.resourcesMap[dep.resourceId]) {
-          var dutyResourceMap = this.dutyResourceMap
-          dep.dependencies = cloneDeep(authNode.bubbleResources).map((res) => {
-            let duty = dutyResourceMap[res.resourceId]
-            res.checked = false
-            res.authSchemes = []
-            if (duty) {
-              res.selectSegment = duty.policySegmentId
-              res.authSchemeId = duty.authSchemeId
-              res.serialNumber = duty.serialNumber
-            } else {
-              res.selectSegment = ''
-              res.authSchemeId = ''
-              res.serialNumber = ''
-            }
-            return res
-          });
-          //默认选择策略
-          if (!dep.selectSegment && authNode.policy.length) {
-            dep.selectSegment = authNode.policy[0].segmentId
-          }
-
-          this.loadDependeciesAuthSchemes(dep.dependencies).then(() => {
-            authNode.dutyStatements.forEach((duty) => {
-              duty.done = true
-              dep.dependencies.push(duty)
-            })
-            this.schemes.push(dep)
-            this.resourcesMap[dep.resourceId] = dep
+        if (!authNode.dependencies) {
+          authNode.dependencies = authNode.bubbleResources
+          authNode.dutyStatements.forEach((duty) => {
+            duty.done = true
+            authNode.dependencies.push(duty)
           })
-        } else {
-          this.schemes.push(dep)
+
+          this.initDependencies(authNode)
         }
+        //默认选择策略
+        if (authNode.policy.length) {
+          dep.selectedPolicy = {...authNode.policy[0]}
+        }
+        dep.activeAuthScheme = authNode
+        this.schemes.push(dep)
       },
       hideLineArrow($el) {
         var $lines = $el.querySelectorAll('.line-arrow')
@@ -536,6 +550,5 @@
   .el-collapse-item__arrow {
     display: none;
   }
-
   }
 </style>

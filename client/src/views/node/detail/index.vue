@@ -1,28 +1,30 @@
 <template>
-  <section class="node-form-container">
-    <el-form label-position="right" label-width="100px"
-             :model="detail" :rules="rules" ref="detail"
-             class="small-el-form">
-      <el-form-item label="节点名称" class="flex-grid" prop="nodeName">
-        {{detail.nodeName}}
-      </el-form-item>
-      <el-form-item label="节点域名">
-        {{detail.nodeDomain}}.freelog.com
-      </el-form-item>
-      <el-form-item label="节点ID">
-        {{detail.nodeId}}
-      </el-form-item>
-      <el-form-item label="节点状态" v-if="detail.statusInfo">
-        <el-tag :type="detail.statusInfo.type">{{detail.statusInfo.text}}</el-tag>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        {{detail.createDate | fmtDate}}
-      </el-form-item>
-      <el-form-item class="btns">
-        <el-button type="primary" @click="updateNodeDetail('detail')">保存</el-button>
-        <el-button @click="backToList()">返回</el-button>
-      </el-form-item>
-    </el-form>
+  <section class="node-detail-container">
+    <div class="node-nav-area">
+      <div class="node-info-wrap">
+        <h3 class="title">{{detail.nodeName}}</h3>
+        <div class="node-link">{{detail.nodeDomain}}{{domainSuffix}}
+          <clip-board
+            style="display: inline-block"
+            @copyDone="copyDoneHandler"
+            :value="resolveDomain(detail)">
+            <a href="javascript:;">
+              <i class="el-icon-fa-clipboard"></i>
+            </a>
+          </clip-board>
+        </div>
+      </div>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item">页面样式</li>
+          <li class="nav-item">引用资源</li>
+        </ul>
+      </nav>
+    </div>
+    <div class="right-side-wrap">
+      <div class="test" style="height: 3000px;"></div>
+      <!--<component :is="nav.content" data=""></component>-->
+    </div>
   </section>
 </template>
 
@@ -33,5 +35,5 @@
 </script>
 
 <style lang="less" scoped>
-
+  @import "index.less";
 </style>

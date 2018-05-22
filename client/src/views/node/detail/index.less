@@ -1,0 +1,40 @@
+@leftSideWidth: 380px;
+
+.node-nav-area {
+  width: @leftSideWidth;
+  padding-top: 50px;
+  position: fixed;
+
+  .node-info-wrap {
+    margin-left: 72px;
+    margin-bottom: 25px;
+    .title {
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+    .node-link {
+      font-size: 16px;
+      color: #666666;
+    }
+  }
+  .nav-item {
+    padding-left: 72px;
+    font-size: 14px;
+    color: #333;
+    line-height: 50px;
+    &:hover {
+      background-color: #F5F5F5;
+    }
+  }
+}
+
+.right-side-wrap {
+  background-color: #FAFAFA;
+  margin-left: @leftSideWidth;
+  overflow: scroll;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

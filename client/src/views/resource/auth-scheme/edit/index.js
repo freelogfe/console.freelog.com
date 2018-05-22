@@ -1,6 +1,7 @@
 import {cloneDeep} from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import ResourceAuthScheme from './auth-scheme.vue'
+import DataLoader from './data'
 
 function getUUID() {
   return Math.random().toString().substr(2);
@@ -10,7 +11,8 @@ function getUUID() {
 const PUBLISH_STATUS = {
   INIT: 0,
   PUBLISHED: 1,
-  OFF_LINE: 2
+  OFF_LINE: 2,
+  DELETE: 4
 }
 
 export default {
@@ -33,6 +35,7 @@ export default {
       resourceSchemes: {},
       tabsSchemeMap: {},
       schemeList: [],
+      enableEditDependency: true,
       resourceDepChanged: false,
       showErrorTip: false
     }
@@ -41,95 +44,48 @@ export default {
     //查询依赖树
     this.loadDeps()
       .then((depData) => {
-        var rids = [];
+        var rids = [this.resourceId];
         depData.dependencies.forEach((dep) => {
-          dep.checked = false
-          dep.selected = ''
-          dep.active = false
           rids.push(dep.resourceId)
         })
-        rids.push(this.resourceId)
         this.resourceDetail = depData;
         //查询授权点
-        return this.loadAuthSchemes(rids)
+        return DataLoader.loadAuthSchemes({resourceIds: rids})
       })
       .then(() => {
-        // this.resourceDetail.authSchemes = authSchemes
-        var authSchemes = this.resourceSchemes[this.resourceId];
-        if (authSchemes && authSchemes.length) {
-          authSchemes.forEach((scheme) => {
-            this.createTab(scheme)
+        this.resourceDetail.dependencies.forEach((dep) => {
+          DataLoader.loadSchemesForResource(dep.resourceId).then((authSchemes) => {
+            dep.authSchemes = authSchemes
           })
-        } else {
-          this.createTab()
-        }
+        })
+
+        DataLoader.loadSchemesForResource(this.resourceId).then((authSchemes) => {
+          if (authSchemes && authSchemes.length) {
+            authSchemes.forEach((scheme) => {
+              if (scheme.status === PUBLISH_STATUS.PUBLISHED) {
+                this.enableEditDependency = false
+              }
+              this.createTab(scheme)
+            })
+          } else {
+            this.createTab()
+          }
+        })
       })
 
   },
   watch: {},
   methods: {
-    initSchemeData(data) {
-      var scheme = Object.assign({
-        policyText: '',
-        checked: false,
-        selected: false,
-        selectSegment: '',
-        authSchemeId: '',
-        serialNumber: '',
-        authSchemeName: '未命名的授权方案',
-        bubbleResources: [],
-        dutyStatements: []
-      }, data);
-
-      var resourceSchemes = this.resourceSchemes;
-      var toRequestResources = []
-      scheme.dependencies.forEach((res) => {
-        var authSchemes = resourceSchemes[res.resourceId]
-        Object.assign(res, {
-          checked: false,
-          selectSegment: '',
-          authSchemeId: '',
-          serialNumber: ''
-        })
-        if (!authSchemes) {
-          toRequestResources.push(res)
-        }
-      });
-
-      this.loadAuthSchemes(toRequestResources.map((r) => r.resourceId)).then(() => {
-        this.initSchemeState(scheme.dependencies, scheme)
-      })
-      return scheme
-    },
-    initSchemeState(resources, scheme) {
-      var dutyMap = {}
-      var dutyResources = {}
-      var resourceSchemes = this.resourceSchemes;
-
-      if (scheme.dutyStatements && scheme.dutyStatements.length) {
-        scheme.dutyStatements.forEach((duty) => {
-          dutyMap[duty.authSchemeId] = duty
-          dutyResources[duty.resourceId] = duty
-        })
+    initSchemeData(oldScheme) {
+      var resourceDetail = this.resourceDetail;
+      var newScheme = {
+        resourceId: resourceDetail.resourceId,
+        dependencies: cloneDeep(resourceDetail.dependencies)
       }
-      resources.forEach((res) => {
-        var authSchemes = resourceSchemes[res.resourceId]
-        if (!authSchemes) {
-          return
-        }
-        var dutyResource = dutyResources[res.resourceId]
-        if (dutyResource) {
-          Object.assign(res, {
-            checked: true,
-            selectSegment: dutyResource.policySegmentId,
-            authSchemeId: dutyResource.authSchemeId,
-            serialNumber: dutyResource.serialNumber
-          })
-        }
-        if (authSchemes) {
-          this.$set(res, 'authSchemes', cloneDeep(authSchemes))
-        }
-      });
+      if (oldScheme) {
+        newScheme = Object.assign(newScheme, oldScheme);
+      }
+      return DataLoader.initAuthScheme(newScheme)
     },
     changeDepsHandler(detail) {
       switch (detail.action) {
@@ -149,9 +105,9 @@ export default {
     addDependencies(data) {
       this.resourceDetail.dependencies.push(cloneDeep(data))
       data.checked = false
-      data.selected = ''
+      data.selected = false
       data.authSchemes = []
-      this.loadAuthSchemes([data.resourceId]).then((list) => {
+      DataLoader.loadSchemesForResource(data.resourceId).then((list) => {
         if (list.length) {
           data.authSchemes = list
         }
@@ -174,8 +130,7 @@ export default {
         for (var i = 0, len = deps.length; i < len; i++) {
           let dep = deps[i];
           if (dep.resourceId === data.oldResource.resourceId) {
-            this.loadAuthSchemes([data.newResource.resourceId]).then(() => {
-              this.initSchemeState([data.newResource], scheme)
+            DataLoader.loadSchemesForResource(data.newResource.resourceId).then(() => {
               deps.splice(i, 1, data.newResource)
             })
             break;
@@ -197,22 +152,16 @@ export default {
         data: {
           id: newTabName,
           scheme: scheme,
+          enableEditDependency: this.enableEditDependency,
           isPublished: scheme.status === PUBLISH_STATUS.PUBLISHED
         }
       });
+      scheme.tabId = newTabName
       this.tabsSchemeMap[newTabName] = scheme
       this.curTabName = newTabName;
     },
     createTab(oldScheme) {
-      var resourceDetail = this.resourceDetail;
-      var newScheme = {
-        resourceId: resourceDetail.resourceId,
-        dependencies: cloneDeep(resourceDetail.dependencies)
-      }
-      if (oldScheme) {
-        newScheme = Object.assign(newScheme, oldScheme);
-      }
-      newScheme = this.initSchemeData(newScheme)
+      var newScheme = this.initSchemeData(oldScheme)
       this.schemeList.push(newScheme)
       this.addTab(newScheme)
     },
@@ -247,45 +196,6 @@ export default {
           return res.getData()
         })
     },
-    //请求授权点列表
-    loadAuthSchemes(resourceIds) {
-      var resourceSchemes = this.resourceSchemes
-      var list = []
-      var requestIds = []
-      resourceIds.forEach((rid) => {
-        if (resourceSchemes[rid]) {
-          list = list.concat(resourceSchemes[rid].slice(0))
-        } else {
-          requestIds.push(rid)
-        }
-      })
-
-
-      if (!requestIds.length) {
-        return Promise.resolve(list)
-      }
-
-      return this.$axios.get(`/v1/resources/authSchemes`, {
-        params: {
-          resourceIds: requestIds.join(',')
-        }
-      }).then((res) => {
-        var data = res.getData()
-        data.forEach((scheme) => {
-          if (this.schemesMap[scheme.authSchemeId]) {
-            return
-          }
-          if (!resourceSchemes[scheme.resourceId]) {
-            resourceSchemes[scheme.resourceId] = []
-          }
-          resourceSchemes[scheme.resourceId].push(scheme)
-          this.schemesMap[scheme.authSchemeId] = scheme
-          list.push(scheme)
-        });
-
-        return list
-      })
-    },
     handleInputConfirm(ev) {
       ev.target.blur()
     },
@@ -304,17 +214,18 @@ export default {
     },
     getDutyStateMents(schemeData) {
       var dutyStatements = [];
+      console.log(schemeData)
       schemeData.dependencies.forEach((dep) => {
-        if (dep.selectSegment && (dep.checked || dep.selected)) {
+        if (dep.selectedAuthScheme && (dep.checked || dep.selected)) {
           dutyStatements.push({
             resourceId: dep.resourceId,
-            authSchemeId: dep.authSchemeId,
-            policySegmentId: dep.selectSegment,
-            serialNumber: dep.serialNumber || dep.authNode.serialNumber
+            authSchemeId: dep.selectedAuthScheme.authSchemeId,
+            policySegmentId: dep.selectedPolicy.segmentId,
+            serialNumber: dep.selectedAuthScheme.serialNumber
           });
 
-          if (dep.dependencies && dep.dependencies.length) {
-            dutyStatements = dutyStatements.concat(this.getDutyStateMents(dep))
+          if (dep.selectedAuthScheme.dependencies && dep.selectedAuthScheme.dependencies.length) {
+            dutyStatements = dutyStatements.concat(this.getDutyStateMents(dep.selectedAuthScheme))
           }
         }
       })
@@ -344,8 +255,9 @@ export default {
       if (this.resourceDepChanged) {
         this.updateDependenciesMeta();
       }
-      // var data = this.resolveSchemeData(schemeData)
-      // return Promise.resolve()
+      var data = this.resolveSchemeData(schemeData)
+      console.log(data)
+      return Promise.resolve()
       return new Promise((resolve, reject) => {
         this.validate()
           .then(() => {
@@ -387,9 +299,9 @@ export default {
       this.nextHandler(scheme).then(() => {
         this.signScheme().then(() => {
           this.$message.success('操作成功')
-          this.$router.push('/')
+          // this.$router.push('/')
         })
-      })
+      }).catch(this.$error.showErrorMessage)
     },
     signScheme() {
       var scheme = this.tabsSchemeMap[this.curTabName]
@@ -399,10 +311,53 @@ export default {
       var scheme = this.tabsSchemeMap[this.curTabName]
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')
-        this.$router.push('/resource/list')
+        // this.$router.push('/resource/list')
+      }).catch(this.$error.showErrorMessage)
+    },
+    deleteAuthSchemeHandler(tab) {
+      console.log(tab)
+      this.$confirm('确定删除授权方案？', {}).then(() => {
+        let tabId = tab.data.id;
+        this.deleteTabById(tabId)
+        this.deleteAuthSchemeById(tabId)
+        this.setActiveTab()
+      }).catch(() => {
+
       })
     },
-
+    setActiveTab() {
+      if (this.tabs.length) {
+        this.curTabName = this.tabs[this.tabs.length - 1].name
+      }
+    },
+    deleteTabById(tabId) {
+      for (var i = 0, len = this.tabs.length; i < len; i++) {
+        let tabData = this.tabs[i]
+        if (tabData.data.id === tabId) {
+          this.tabs.splice(i, 1)
+          break;
+        }
+      }
+    },
+    deleteAuthSchemeById(id) {
+      for (var i = 0, len = this.schemeList.length; i < len; i++) {
+        let scheme = this.schemeList[i]
+        if (scheme.tabId === id) {
+          this.schemeList.splice(i, 1);
+          scheme.authSchemeId && this.deleteScheme(scheme.authSchemeId)
+          break;
+        }
+      }
+    },
+    deleteScheme(authSchemeId) {
+      return this.$services.authSchemes.delete(authSchemeId).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message.success('成功删除授权方案');
+        } else {
+          this.$error.showErrorMessage(res)
+        }
+      })
+    },
     inputDownHandler(ev) {
       const keyCode = ev.keyCode;
       //屏蔽elementUI左右快捷键的操作

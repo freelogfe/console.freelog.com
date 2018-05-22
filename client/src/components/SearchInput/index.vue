@@ -1,0 +1,28 @@
+<template>
+  <div class="fl-search-input-wrap">
+    <el-input size="small" v-model="input"
+              v-if="showInput"
+              ref="input"
+              placeholder="请输入搜索内容"
+              :style="{width: width}"
+              @blur="hideInputHandler"
+              class="search-input"
+              @keyup.enter.native="searchHandler">
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+    </el-input>
+    <el-button type="text" @click="showInputHandler" v-else><i class="el-icon-search"></i></el-button>
+  </div>
+</template>
+
+<script>
+  import FreelogSearchInput from './index'
+
+  export default FreelogSearchInput
+</script>
+
+<style lang="less" scoped>
+  i {
+    color: #666;
+  }
+
+</style>

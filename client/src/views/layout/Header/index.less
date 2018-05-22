@@ -22,24 +22,35 @@
 
 .nav-header {
   .clearfix;
-  background-color: @theme-color;
+  background-color: #fff;
+  color: black;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 9;
+  border: 1px solid #E6E6E6;
   height: @header-height;
+}
+
+.tool-icon {
+  width: 12px;
+  height: 100%;
+  font-size: 12px;
+  margin-right: 10px;
 }
 
 .brand {
   float: left;
-  width: @sidebar-width;
   height: 100%;
-  line-height: @header-height;
-  text-align: center;
-  font-size: 30px;
+  display: flex;
+  align-items: center;
+  margin-left: 105px;
   a {
     color: white;
+    font-size: 19px;
+    background-color: black;
+    padding: 1px 12px;
   }
 }
 
@@ -60,32 +71,107 @@
   .left-nav-bar {
     float: left;
   }
-  .navbar-menu {
-    i {
-      font-size: 25px;
-      vertical-align: top;
-    }
-  }
 
   .badge-item {
-    height: 30px;
-    display: inline-block;
+    margin-top: -28px;
+    margin-left: -12px;
   }
 }
 
 .nav-link {
-  color: #fff;
+  color: black;
   display: inline-block;
   width: 100%;
 }
 
 .navbar-menu {
   float: right;
+  margin-right: 110px;
   a {
-    color: #fff;
+    color: #000000;
   }
   .avatar {
     border-radius: 50%;
     width: 35px;
   }
+
+  i {
+    font-size: 20px;
+  }
+
+  .nav-right-menu-item {
+    float: left;
+    margin: auto 12px;
+    font-size: 12px;
+    position: relative;
+    i {
+      color: #666;
+    }
+  }
+
+  .my-profile:hover {
+    .my-profile-items {
+      display: block;
+    }
+  }
+}
+
+.hover {
+  &:hover {
+    background-color: #F5F5F5;
+  }
+}
+
+.center {
+  display: flex;
+  align-items: center;
+}
+
+.my-profile-items {
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 155px;
+  line-height: 1;
+  font-size: 12px;
+  color: #333;
+
+  i {
+    font-size: 12px;
+    margin-right: 10px;
+  }
+
+  .el-icon-plus {
+    cursor: pointer;
+  }
+
+  .create-node-btn {
+    float: right;
+    padding-left: 5px;
+    width: auto;
+  }
+
+  .my-node-list {
+    margin-top: 10px;
+  }
+
+  .my-profile-item {
+    min-height: 20px;
+    border-bottom: 1px solid #ccc;
+    padding: 12px;
+    .node-item {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      color: #666;
+      cursor: pointer;
+      line-height: 25px;
+      padding-left: 25px;
+      padding-right: 18px;
+    }
+  }
+}
+
+.page-title {
+  margin-left: 18px;
+  font-size: 16px;
 }

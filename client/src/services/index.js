@@ -23,7 +23,7 @@ import groupsService from './groups'
 import policyTemplateService from './policyTemplates'
 import pbStatics from './pbStatics' //pb签约情况统计
 import authSchemes from './authSchemes'
-
+import collectionsService from './collections'
 
 export {
   UserService,
@@ -44,5 +44,6 @@ export {
   groupsService,
   policyTemplateService,
   pbStatics,
-  authSchemes
+  authSchemes,
+  collectionsService
 }

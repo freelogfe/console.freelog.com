@@ -1,0 +1,74 @@
+@dotSize: 10px;
+
+.auth-scheme-detail-container {
+  background-color: #F5F5F5;
+  padding: 45px 30px;
+
+  .nav-title {
+    margin-bottom: 12px;
+    padding: 0 6px;
+  }
+  .tab-radio-group {
+    display: flex;
+  }
+
+  .tabs-content {
+    padding: 0 6px;
+    .dep-item {
+      margin-bottom: 15px;
+    }
+
+    .policy-name {
+      color: #333333;
+    }
+
+    .policy-options {
+      padding-top: 15px;
+    }
+
+    .policy-segment-text {
+      margin-left: 24px;
+      margin-top: 10px;
+      color: #666666;
+      white-space: normal;
+    }
+
+    .policy-radio {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+  }
+
+  .tabs-header {
+    margin-bottom: 20px;
+  }
+
+  .scheme-name {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    display: inline-block;
+    padding: 0 13px;
+    &:after {
+      content: '';
+      border-radius: 50%;
+      height: @dotSize;
+      width: @dotSize;
+      background-color: #f23e5c;
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 6px;
+    }
+
+    &.selected:after {
+      background-color: #FFC033
+    }
+
+    &.done:after {
+      background-color: #66bc35
+    }
+  }
+}

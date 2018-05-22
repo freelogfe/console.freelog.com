@@ -1,58 +1,54 @@
 <template>
   <header class="nav-header">
-    <h1 class="brand">
-      <router-link to="/">FreeLog</router-link>
-    </h1>
+    <div class="brand">
+      <router-link to="/">F</router-link> <span class="page-title">{{pageTitle}}</span>
+    </div>
     <nav class="toolbar">
-      <div class="sidebar-toggle" @click="toggleSidebarHandler" :class="{'sidebar-open': sidebar.openSidebar}">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-      </div>
-      <el-menu background-color="#324157" text-color="#fff"
-               active-text-color="#ffd04b" default-active="-1"
-               class="left-nav-bar" mode="horizontal"
-               router>
-        <el-menu-item index="/resource/list">
-          资源系统
-        </el-menu-item>
-        <el-menu-item index="/node/list">
-          <span class="node-sys-title">
-            <span>节点系统</span>
-            <span v-if="nodeSession.nodeName">
-              <i class="split-line">|</i>
-              <el-dropdown @command="handleCommand">
-                <span class="el-dropdown-link">
-                  {{nodeSession.nodeName}}<i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="logoutNodeHandler">退出该登录节点</el-dropdown-item>
-                  <el-dropdown-item command="switchNodeHandler">切换节点</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span>
-          </span>
-        </el-menu-item>
-        <el-menu-item index="/group/list">
-          分组管理
-        </el-menu-item>
-      </el-menu>
-
-      <el-menu background-color="#324157" text-color="#fff"
-               active-text-color="#ffd04b" default-active="-1" class="navbar-menu" mode="horizontal"
-               @select="handleSelect">
-        <el-submenu index="account" v-if="session">
-          <template slot="title">
-            <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
-            <span style="color: #909399">{{session.user.nickname}}</span>
-          </template>
-          <el-menu-item index="setting">
-            <router-link to="/account/settings" class="nav-link">设置</router-link>
-          </el-menu-item>
-          <el-menu-item index="payment">
-            <a href="//www.freelog.com/pages/user/index.html" target="_blank" class="nav-link">支付</a>
-          </el-menu-item>
-          <el-menu-item index="logout" @click="logout" class="nav-link">退出</el-menu-item>
-        </el-submenu>
-      </el-menu>
+      <ul class="navbar-menu">
+        <li class="nav-right-menu-item">
+          <search-input></search-input>
+          <!--<el-button type="text"><i class="el-icon-search"></i></el-button>-->
+        </li>
+        <li class="nav-right-menu-item">
+          <el-button type="text"><i class="el-icon-bell"></i></el-button>
+          <el-badge value="1" class="badge-item"></el-badge>
+        </li>
+        <li class="nav-right-menu-item my-profile" v-if="session">
+          <!--<img class="avatar" :src="session.user&&session.user.meta.avatar" alt="">-->
+          <el-popover
+            placement="bottom-end"
+            title=""
+            style="padding: 0;"
+            popper-class="nav-list-pop-wrap"
+            trigger="hover">
+            <span style="color: #909399" slot="reference">{{session.user.nickname}}</span>
+            <ul class="my-profile-items">
+              <li class="my-profile-item center hover">
+                <router-link to="/resource/list" class="nav-link">
+                  <img class="tool-icon" src="../../../assets/img/icons/resource.png" alt="">我的资源库
+                </router-link>
+              </li>
+              <li class="my-profile-item">
+                <div><img class="tool-icon" src="../../../assets/img/icons/node.png" alt="">节点
+                  <router-link to="/node/create" class="nav-link create-node-btn"><i class="el-icon-plus"></i>
+                  </router-link>
+                </div>
+                <ul class="my-node-list">
+                  <li class="node-item hover" :key="node.nodeId" v-for="node in nodeList">
+                    <router-link :to="'/node/detail/'+node.nodeId" class="nav-link">{{node.nodeName}}</router-link>
+                  </li>
+                </ul>
+              </li>
+              <li class="my-profile-item center hover">
+                <router-link to="/account/settings" class="nav-link"><i class="el-icon-setting tool-icon"></i>设置</router-link>
+              </li>
+              <li class="my-profile-item center hover" @click="logout">
+                <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出
+              </li>
+            </ul>
+          </el-popover>
+        </li>
+      </ul>
     </nav>
   </header>
 </template>
@@ -65,4 +61,11 @@
 
 <style scoped lang="less">
   @import "index.less";
+</style>
+
+
+<style>
+  .el-popover.nav-list-pop-wrap {
+    padding: 0;
+  }
 </style>

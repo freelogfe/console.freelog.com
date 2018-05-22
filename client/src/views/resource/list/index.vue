@@ -1,62 +1,28 @@
 <template>
-  <section>
-    <div class="resource-top-sec">
-      <router-link class="route-link" to="/resource/create">
-        <el-button type="primary">创建新资源</el-button>
-      </router-link>
+  <section class="my-resources">
+    <h3 class="title">我的资源库</h3>
+    <div class="body-content">
+      <el-tabs tab-position="top" v-model="curTabName">
+        <el-tab-pane label="已获取资源" name="signed">
+          <keep-alive>
+            <resource-items type="signed" v-if="curTabName==='signed'"></resource-items>
+          </keep-alive>
+        </el-tab-pane>
+        <el-tab-pane label="自制资源" name="self">
+          <resource-items type="self"></resource-items>
+        </el-tab-pane>
+        <el-tab-pane label="收藏资源" name="favor">
+          <resource-items type="favor"></resource-items>
+        </el-tab-pane>
+      </el-tabs>
+      <div class="right-tool-bar-wrap">
+        <ul class="tool-bars">
+          <li class="tool-item">
+            <search-input></search-input>
+          </li>
+        </ul>
+      </div>
     </div>
-    <table-view class="resource-list" :loader="loader()">
-      <el-table-column
-        label="资源名称">
-        <template slot-scope="scope">
-          {{scope.row.resourceName}}
-          <span v-if="scope.row.systemMeta.version"
-                class="widget-version">v {{scope.row.systemMeta.version}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="resourceType"
-        align="center"
-        label="资源类型">
-      </el-table-column>
-      <el-table-column
-        prop="resourceId"
-        label="资源ID"
-        width="350px">
-      </el-table-column>
-      <el-table-column
-        prop="resourceType"
-        label="资源状态"
-        align="center"
-        width="150px">
-        <template slot-scope="scope">
-          <el-tag :type="RESOURCE_STATUS[scope.row.status].type">{{RESOURCE_STATUS[scope.row.status].desc}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        width="150px">
-        <template slot-scope="scope">
-          {{scope.row.createDate | fmtDate}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label=""
-        align="center"
-        width="300px">
-        <template slot-scope="scope">
-          <el-button
-            size="small"
-            @click="handleEdit(scope.row)">详情
-          </el-button>
-          <el-button
-            size="small"
-            @click="editAuthNode(scope.row)">授权管理
-          </el-button>
-        </template>
-      </el-table-column>
-    </table-view>
   </section>
 </template>
 
@@ -67,25 +33,5 @@
 </script>
 
 <style lang="less" scoped>
-  .widget-version {
-    background-color: #e77334;
-    color: white;
-    padding: 0 5px;
-    border-radius: 3px;
-    border: 1px solid #cc5819;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    display: inline-block;
-  }
-  .resource-top-sec {
-    margin-bottom: 15px;
-  }
-
-  .route-link {
-    color: white;
-  }
-
-  .resource-list {
-    width: 100%;
-    min-height: 600px;
-  }
+  @import "index.less";
 </style>

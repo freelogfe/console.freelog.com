@@ -52,9 +52,17 @@ module.exports = {
         loader: 'happypack/loader?id=happybabel',
         include: [resolve('src'), resolve('test')]
       },
+      // {
+      //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      //   loader: 'happypack/loader?id=image'
+      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'happypack/loader?id=image'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
@@ -88,7 +96,7 @@ module.exports = {
       loaders: [{
         loader: 'url-loader',
         options: {
-          limit: 10000,
+          limit: 1e4,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       }],

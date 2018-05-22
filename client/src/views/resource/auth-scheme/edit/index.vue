@@ -13,9 +13,10 @@
             <input type="text"
                    class="input-auth-name"
                    v-model="item.data.scheme.authSchemeName"
-                   @keydown = "inputDownHandler"
+                   @keydown="inputDownHandler"
                    @keyup.enter="handleInputConfirm">
           </el-button>
+            <i class="el-icon-delete" @click="deleteAuthSchemeHandler(item)"></i>
           </span>
           <component :is="item.content"
                      @change="changeDepsHandler"

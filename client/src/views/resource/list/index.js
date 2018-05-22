@@ -1,5 +1,6 @@
-import TableView from '@/components/TableView/index.vue'
+import SearchInput from '@/components/SearchInput/index.vue'
 import CONFIG from '@/config/index'
+import ResourceItems from './list.vue'
 
 const {RESOURCE_STATUS} = CONFIG
 
@@ -8,26 +9,18 @@ export default {
   data() {
     return {
       resourceList: [],
+      curTabName: 'self',
       RESOURCE_STATUS: RESOURCE_STATUS
     }
   },
   components: {
-    TableView
+    ResourceItems,
+    SearchInput
   },
 
   mounted() {
   },
   methods: {
-    loader() {
-      return (param) => {
-        if (typeof param === 'object') {
-          param = {
-            params: param
-          }
-        }
-        return this.$services.resource.get(param || {})
-      }
-    },
     handleEdit(resource) {
       this.$router.push({path: `/resource/detail/${resource.resourceId}`})
     },

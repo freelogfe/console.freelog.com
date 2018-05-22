@@ -1,6 +1,8 @@
 import {NodeCreationRule} from '@/views/node/create/index'
 import {NODE_STATUS} from '@/config/node'
 import nodeLoader from '@/data/node/loader'
+import ClipBoard from '@/components/clipboard/index.vue'
+
 
 export default {
   name: 'node-detail',
@@ -9,10 +11,16 @@ export default {
       detail: {},
       rules: {
         nodeName: NodeCreationRule.nodeName
-      }
+      },
+      nav: {
+        content: ''
+      },
+      domainSuffix: /\.testfreelog\.com$/.test(location.host) ? '.testfreelog.com' : '.freelog.com'
     }
   },
-
+  components: {
+    ClipBoard
+  },
   mounted() {
     var nodeId = this.$route.params.nodeId
     if (nodeId) {
@@ -28,6 +36,12 @@ export default {
   methods: {
     load(param) {
       return nodeLoader.loadDetail(param || {}).catch(this.$error.showErrorMessage)
+    },
+    copyDoneHandler() {
+      this.$message.success('已复制节点地址')
+    },
+    resolveDomain(node) {
+      return `${location.protocol}//${node.nodeDomain}${this.domainSuffix}`
     },
     updateNodeDetail(formName) {
       const self = this;

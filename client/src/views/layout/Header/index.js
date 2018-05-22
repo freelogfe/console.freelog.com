@@ -1,5 +1,5 @@
 import {mapGetters} from 'vuex'
-
+import SearchInput from '@/components/SearchInput/index.vue'
 
 export default {
   name: 'fl-header',
@@ -7,23 +7,48 @@ export default {
   data() {
     return {
       navRoutes: [],
-      isSideBarOpen: true
+      isSideBarOpen: true,
+      nodeList: []
     }
   },
-  computed: mapGetters({
-    sidebar: 'sidebar',
-    session: 'session',
-    nodeSession: 'nodeSession'
-  }),
+  computed: {
+    ...mapGetters({
+      sidebar: 'sidebar',
+      session: 'session',
+      nodeSession: 'nodeSession'
+    }),
+    pageTitle(){
+      return (this.$route.meta && this.$route.meta.title) || ''
+    }
+  },
+
+  components: {
+    SearchInput
+  },
 
   created() {
     this.listenWindowVisibility()
     this.resolveRouter();
+    if (this.session.user && this.session.user.userId) {
+      this.loadNodeList().then((data) => {
+        this.nodeList = data.dataList;
+      })
+    }
   },
 
+  mounted() {
+    console.log('session', this.session)
+  },
   methods: {
-    handleCommand(cmd) {
-      this[cmd] && this[cmd]()
+    loadNodeList() {
+      return this.$services.nodes.get({
+        params: {
+          ownerUserId: this.session.user.userId,
+          pageSize: 1e2
+        }
+      }).then((res) => {
+        return res.getData()
+      })
     },
     listenWindowVisibility() {
       var self = this
@@ -82,9 +107,6 @@ export default {
     switchNodeHandler() {
       this.$store.dispatch('deleteNode')
       this.$router.push({path: '/node/login'})
-    },
-    toggleSidebarHandler() {
-      this.$store.dispatch('toggleSidebar')
     },
     resolveRouter() {
       var routes = this.$router.options.routes;
