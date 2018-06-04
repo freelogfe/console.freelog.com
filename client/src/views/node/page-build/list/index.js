@@ -1,5 +1,3 @@
-import TableView from '@/components/TableView/index.vue'
-
 const PAGE_BUILD_STATUS = {
   show: 1,
   hide: 2
@@ -9,14 +7,20 @@ export default {
   data() {
     return {
       pagebuildList: [],
-      PAGE_BUILD_STATUS: PAGE_BUILD_STATUS
+      PAGE_BUILD_STATUS: PAGE_BUILD_STATUS,
+      currentIndex: 1
     }
   },
   mounted() {
     this.loader()
       .then(this.format.bind(this))
       .then((data) => {
-        this.pagebuildList = data
+        this.pagebuildList = [1, 2, 3].map(n => {
+          return {
+            index: n
+          }
+        })
+        // this.pagebuildList = data
       })
   },
   methods: {
@@ -38,7 +42,7 @@ export default {
           })
           promises.push(promise)
 
-          var promise2 = self.$services.pbStatics.get({params: {presentableIds:p.presentableId}}).then((resourceRes) => {
+          var promise2 = self.$services.pbStatics.get({params: {presentableIds: p.presentableId}}).then((resourceRes) => {
             p.pbStatics = resourceRes.getData()[0]
             return resourceRes
           })
@@ -51,7 +55,7 @@ export default {
       })
     },
     format(pagebuildList) {
-      console.log('pagebuildList',pagebuildList)
+      console.log('pagebuildList', pagebuildList)
       pagebuildList.forEach((item) => {
         item.statusInfo = (item.status === PAGE_BUILD_STATUS.show) ? {
           desc: '默认展示',
@@ -96,6 +100,9 @@ export default {
         path: `/node/${this.$route.params.nodeId}/presentable/detail`,
         query: {presentableId: presentable.presentableId, ispb: true}
       })
+    },
+    changePageBuildHandler(pagebuild) {
+      this.currentIndex = pagebuild.index
     }
   }
 }

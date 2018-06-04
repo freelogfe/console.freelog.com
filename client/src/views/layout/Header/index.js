@@ -37,7 +37,6 @@ export default {
   },
 
   mounted() {
-    console.log('session', this.session)
   },
   methods: {
     loadNodeList() {

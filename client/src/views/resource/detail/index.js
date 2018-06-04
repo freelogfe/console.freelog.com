@@ -154,7 +154,11 @@ export default {
       })
     },
     getResourceAuthHandler() {
-      this.showNodeOptions().catch(this.$error.showErrorMessage)
+      if (this.selectedPolicy.policy) {
+        this.showNodeOptions().catch(this.$error.showErrorMessage)
+      } else {
+        this.showAuthSchemeHandler()
+      }
     },
     cancelAuthHandler() {
       this.showNodesPanel = false

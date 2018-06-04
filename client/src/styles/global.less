@@ -1,4 +1,5 @@
 @import "mixin.less";
+@import "icon.less";
 
 #app {
   font-family: tahoma, 'Avenir', Helvetica, Arial, sans-serif;
@@ -58,3 +59,50 @@ body {
   display: inline-block;
 }
 
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+
+@dotSize: 10px;
+
+.dot {
+  display: inline-block;
+  &:after {
+    content: '';
+    border-radius: 50%;
+    height: @dotSize;
+    width: @dotSize;
+    background-color: #f23e5c;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 6px;
+  }
+}
+
+.active-status-0 {
+  .dot {
+    &:after {
+      background-color: #f23e5c
+    }
+  }
+}
+
+.active-status-1 {
+  .dot {
+    &:after {
+      background-color: #FFC033
+    }
+  }
+}
+
+.active-status-2 {
+  .dot {
+    &:after {
+      background-color: #66bc35
+    }
+  }
+}

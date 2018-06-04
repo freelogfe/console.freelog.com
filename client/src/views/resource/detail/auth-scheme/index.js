@@ -117,22 +117,36 @@ export default {
       curChoice: 0,
       choices: [],
       selectedPolicy: '',
-      schemes: []
+      schemes: [],
+      inited: false
     }
   },
   components: {},
   props: {
     selectedCallback: {
       type: Function
+    },
+    resource: {
+      type: Object
+    }
+  },
+  watch: {
+    resource() {
+      if (this.resource && this.resource.resourceId && !this.inited) {
+        this.init()
+        this.inited = true
+      }
     }
   },
   mounted() {
-    this.loadPolicies().then((data) => {
-      this.schemes = this.formatSchemes(data);
-      console.log(this.schemes)
-    }).catch(this.$error.showErrorMessage)
+
   },
   methods: {
+    init() {
+      this.loadPolicies().then((data) => {
+        this.schemes = this.formatSchemes(data);
+      }).catch(this.$error.showErrorMessage)
+    },
     changePolicy(scheme, policy) {
       this.selectedCallback && this.selectedCallback(scheme, policy)
     },
@@ -156,7 +170,7 @@ export default {
     loadPolicies() {
       return this.$services.authSchemes.get({
         params: {
-          resourceIds: this.$route.params.resourceId
+          resourceIds: this.resource.resourceId
         }
       }).then((res) => {
         if (res.data.errcode === 0) {

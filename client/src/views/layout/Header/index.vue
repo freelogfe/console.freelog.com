@@ -1,7 +1,8 @@
 <template>
   <header class="nav-header">
     <div class="brand">
-      <router-link to="/">F</router-link> <span class="page-title">{{pageTitle}}</span>
+      <router-link to="/">F</router-link>
+      <span class="page-title">{{pageTitle}}</span>
     </div>
     <nav class="toolbar">
       <ul class="navbar-menu">
@@ -21,8 +22,15 @@
             style="padding: 0;"
             popper-class="nav-list-pop-wrap"
             trigger="hover">
-            <span style="color: #909399" slot="reference">{{session.user.nickname}}</span>
+            <span class="user-profile" slot="reference">
+              <i class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
+            </span>
             <ul class="my-profile-items">
+              <li class="my-profile-item center hover">
+                <router-link to="/resource/create" class="nav-link">
+                  <i class="el-icon-plus"></i>创建资源
+                </router-link>
+              </li>
               <li class="my-profile-item center hover">
                 <router-link to="/resource/list" class="nav-link">
                   <img class="tool-icon" src="../../../assets/img/icons/resource.png" alt="">我的资源库
@@ -40,13 +48,19 @@
                 </ul>
               </li>
               <li class="my-profile-item center hover">
-                <router-link to="/account/settings" class="nav-link"><i class="el-icon-setting tool-icon"></i>设置</router-link>
+                <router-link to="/account/settings" class="nav-link"><i class="el-icon-setting tool-icon"></i>设置
+                </router-link>
               </li>
               <li class="my-profile-item center hover" @click="logout">
                 <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出
               </li>
             </ul>
           </el-popover>
+        </li>
+        <li class="nav-right-menu-item my-profile" v-else>
+          <router-link to="/user/login" class="nav-link">
+            登录/注册
+          </router-link>
         </li>
       </ul>
     </nav>

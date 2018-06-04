@@ -64,11 +64,31 @@ export const nodeItemRoute = {
       redirect: '/node/:nodeId/presentables',
       children: [
         {
+          path: ':presentableId',
+          // beforeEnter: requireNodeLogin,
+          meta: {
+            requiresAuth: true,
+            title: '节点资源详情',
+            type: 'node'
+          },
+          component: Views.presentableDetail,
+        },
+        {
+          path: ':presentableId/schemes',
+          // beforeEnter: requireNodeLogin,
+          meta: {
+            requiresAuth: true,
+            title: '资源依赖授权管理',
+            type: 'node'
+          },
+          component: Views.presentableSchemeDetail
+        },
+        {
           path: 'detail',
           beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
-            title: 'presentable详情',
+            title: '节点资源详情',
             type: 'node'
           },
           component: Views.presentableDetail

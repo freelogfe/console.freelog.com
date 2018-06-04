@@ -16,7 +16,7 @@
   bottom: 60px;
   right: 0;
   overflow: scroll;
-  width: 500px;
+  width: 430px;
 
   .auth-schems-img-icon {
     width: 30px;
@@ -25,6 +25,35 @@
   .auth-scheme-detail {
     animation-duration: @showSchemeAnimateTime;
     animation-fill-mode: both;
+    height: 100%;
+    padding-bottom: 180px;
+  }
+
+  .scheme-contract-status-wrap {
+    bottom: 75px;
+    opacity: 0;
+    //transition: all .8s;
+    //z-index: -9;
+    position: relative;
+    width: 0;
+    animation-duration: @showSchemeAnimateTime;
+    animation-fill-mode: both;
+    .slideOutRight;
+    &.show-status-btn {
+      .slideInRight;
+      position: fixed;
+      width: 430px;
+      opacity: 1;
+      z-index: 9;
+    }
+    .contract-status-btn-wrap {
+      padding: 10px 45px;
+      background-color: #F5F5F5;
+    }
+
+    .scheme-contract-status-btn {
+      width: 100%;
+    }
   }
 }
 

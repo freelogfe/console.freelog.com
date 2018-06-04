@@ -5,7 +5,9 @@
       <div class="tabs-header">
         <el-radio-group class="tab-radio-group"
                         v-model="curChoice">
-          <el-radio-button class="tab-radio-item" :label="choice.index" v-for="choice in choices">{{choice.label}}
+          <el-radio-button class="tab-radio-item"
+                           :key="choice.index"
+                           :label="choice.index" v-for="choice in choices">{{choice.label}}
           </el-radio-button>
         </el-radio-group>
       </div>

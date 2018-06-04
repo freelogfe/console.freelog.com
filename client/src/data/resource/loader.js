@@ -1,4 +1,8 @@
 import {ResourceService} from '@/services'
+import {createLoader} from '@/lib/utils'
+
+var loaders = {}
+
 
 function loadDetail(resourceId) {
   return ResourceService.get(resourceId).then((res) => {
@@ -10,10 +14,27 @@ function loadDetail(resourceId) {
   })
 }
 
+function onloadResourceDetail(resourceId) {
+  var loader = loaders[resourceId];
+  if (!loader) {
+    loader = loaders[resourceId] = createLoader(function (callback) {
+      loadDetail(resourceId).then(callback)
+    })
+  }
+
+  return new Promise((resolve) => {
+    loader(function (data) {
+      resolve(data)
+    })
+  })
+}
+
 export {
-  loadDetail
+  loadDetail,
+  onloadResourceDetail
 }
 
 export default {
-  loadDetail
+  loadDetail,
+  onloadResourceDetail
 }

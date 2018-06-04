@@ -59,7 +59,7 @@ export default new Router({
     },
     {
       path: '/',
-      meta: {requiresAuth: true, title: '首页'},
+      meta: {title: '首页'},
       component: Views.layout,
       children: [resourceRoute, nodeRoute, groupRote, {
         path: 'about',
@@ -77,6 +77,14 @@ export default new Router({
           title: '帮助中心'
         },
         component: Views.helpView
+      }, {
+        path: '/',
+        hidden: true,
+        meta: {
+          requiresAuth: false,
+          title: '首页'
+        },
+        component: Views.mainView
       }]
     },
     {

@@ -2,24 +2,14 @@
   <div class="resource-items">
     <ul>
       <li class="resource-item" v-for="resource in resources">
-        <h4 class="res-title">{{resource.resourceName}}</h4>
-        <div class="res-intro-detail">
-          <div class="res-intro-bd">
-            <span class="res-type">#{{resource.resourceType}}</span> <span
-            class="res-size">{{resource._fileSize}}</span>
-            <span class="res-desc">{{resource.resourceDesc}}</span>
-          </div>
-          <div class="res-intro-ft">
-            <span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>
-            <span class="update-time">创建时间：{{resource.createDate|fmtDate}}</span>
-          </div>
-        </div>
+        <resource-item :resource="resource"></resource-item>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+  import ResourceItem from '../list-item/index.vue'
   import {onloadUserInfo} from '@/data/user/loader'
 
   export default {
@@ -28,7 +18,8 @@
     data() {
       return {
         search: '',
-        resources: []
+        resources: [],
+        loader: null
       }
     },
 
@@ -41,15 +32,73 @@
       }
     },
 
+    watch: {
+      type() {
+        this.initView()
+      }
+    },
+    components: {ResourceItem},
     mounted() {
-      this.loader().then((resources) => {
-        this.resources = this.resources.concat(resources)
-        console.log(this.resources)
-      })
+      this.initView();
     },
 
     methods: {
-      loader(param) {
+      initView() {
+        switch (this.type) {
+          case 'favor':
+            this.loader = this.getFavorResourcesLoader()
+            break;
+          case 'self':
+            this.loader = this.getSelfResourcesLoader()
+            break;
+          case 'all':
+          default:
+            break;
+        }
+
+        if (this.loader) {
+          this.loader().then((data) => {
+            this.resources = data.dataList
+          })
+        }
+      },
+      getSelfResourcesLoader() {
+        return (param) => {
+          //test
+          param = {
+            pageSize: 1e2
+          }
+          if (typeof param === 'object') {
+            param = {
+              params: param
+            }
+          }
+          return this.$services.resource.get(param || {}).then((res) => {
+            return res.getData()
+          })
+        }
+      },
+      getFavorResourcesLoader(param) {
+        return (param) => {
+          //test
+          param = {
+            pageSize: 1e2
+          }
+          if (typeof param === 'object') {
+            param = {
+              params: param
+            }
+          }
+          return this.$services.collections.get(param || {}).then((res) => {
+            return res.getData()
+          })
+        }
+      },
+      getAllResourcesLoader(param) {
+        //test
+        param = {
+          pageSize: 1e2
+        }
         if (typeof param === 'object') {
           param = {
             params: param
@@ -57,69 +106,12 @@
         }
         return this.$services.resource.get(param || {}).then((res) => {
           return res.getData()
-        }).then(this.format.bind(this))
-      },
-      format(data) {
-        var resources = data.dataList;
-        resources.forEach((res) => {
-          res._fileSize = this.humanizeSize(res.systemMeta.fileSize)
-          onloadUserInfo(res.userId).then((userInfo) => {
-            this.$set(res, '_userInfo', userInfo)
-          })
         })
-
-        return resources;
-      },
-      humanizeSize(number) {
-        const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-        if (number < 1) {
-          return number + 'B';
-        }
-
-        const algorithm = 1024
-        const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
-        number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
-        const unit = UNITS[exponent];
-
-        return number + unit;
       }
     }
   }
 </script>
 
 <style lang="less" scoped>
-  .resource-item {
-    margin-top: 25px;
-  }
 
-  .res-title {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 8px;
-  }
-
-  .res-intro-bd {
-    margin-bottom: 8px;
-    font-size: 13px;
-  }
-
-  .res-type,
-  .res-size {
-    margin-right: 3px;
-    color: #1696C0;
-  }
-
-  .res-desc {
-    margin-left: 15px;
-  }
-
-  .res-intro-ft {
-    color: #999;
-    font-size: 12px;
-  }
-
-  .res-author {
-    margin-right: 12px;
-  }
 </style>

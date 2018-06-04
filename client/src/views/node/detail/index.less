@@ -4,7 +4,7 @@
   width: @leftSideWidth;
   padding-top: 50px;
   position: fixed;
-
+  height: 100%;
   .node-info-wrap {
     margin-left: 72px;
     margin-bottom: 25px;
@@ -16,14 +16,37 @@
       font-size: 16px;
       color: #666666;
     }
+
+    .fl-icon-node-page {
+      vertical-align: middle;
+      margin-left: 15px;
+      width: 15px;
+    }
   }
   .nav-item {
     padding-left: 72px;
     font-size: 14px;
     color: #333;
     line-height: 50px;
+    cursor: pointer;
     &:hover {
       background-color: #F5F5F5;
+    }
+
+    &.active {
+      background-color: #F5F5F5;
+    }
+  }
+
+  .node-status-info {
+    padding-left: 72px;
+    position: absolute;
+    bottom: 135px;
+    right: 0;
+    left: 0;
+    padding-right: 72px;
+    p {
+      margin-bottom: 6px;
     }
   }
 }

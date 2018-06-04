@@ -23,15 +23,6 @@
 </script>
 
 <style lang="less" scoped>
+  @import "index.less";
   @import "footer.less";
-  .create-resource-wrapper {
-    margin: auto;
-    position: relative;
-  }
-
-  .bd {
-    display: flex;
-    justify-content: center;
-    z-index: 9;
-  }
 </style>

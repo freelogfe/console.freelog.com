@@ -7,6 +7,7 @@ import PresentableBindWidget from './bind.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
 import ResourceDetailInfo from '@/components/detail-info/resource.vue'
 import PresentableEditor from '../editor/index.vue'
+import ResourceIntroInfo from '../../../resource/intro/index.vue'
 
 export default {
   name: 'presentable-detail',
@@ -15,14 +16,21 @@ export default {
       showBindWidgetDialog: false,
       loading: false,
       bindWidget: {},
-      detail: {},
+      presentableDetail: {},
       activeTabName: 'resource',
       nodeId: this.$route.params.nodeId,
       editPresentable: {
         name: '',
         policyText: '',
         userDefinedTags: []
-      }
+      },
+      presentableData: {}
+    }
+  },
+
+  props: {
+    detail: {
+      type: Object
     }
   },
   components: {
@@ -32,12 +40,13 @@ export default {
     PresentableBindWidget,
     ContractDetailInfo,
     ResourceDetailInfo,
-    PresentableEditor
+    PresentableEditor,
+    ResourceIntroInfo
   },
 
   computed: {
     shouldShowResourceWarning: function () {
-      var widgets = this.detail.widgets
+      var widgets = this.presentableDetail.widgets
       if (widgets && widgets.length) {
         return widgets.some((w) => {
           return !w.contractId
@@ -47,34 +56,52 @@ export default {
       }
     },
     shouldShowPresentableWarning() {
-      return this.detail.presentableInfo === null
+      return this.presentableDetail.presentableInfo === null
     },
     shouldShowContractWarning() {
-      return this.detail.contractInfo && ([1, 2].includes(this.detail.contractInfo.status))
+      return this.presentableDetail.contractInfo && ([1, 2].includes(this.presentableDetail.contractInfo.status))
     }
   },
 
-  mounted() {
-    const query = this.$route.query
-
-    if (this.$route.hash) {
-      this.activeTabName = this.$route.hash.slice(1)
+  watch: {
+    detail() {
+      this.init()
     }
-
-    this.loading = true
-    this.loadDetailData(query)
-      .then(this.formatData.bind(this))
-      .then((detail) => {
-        this.detail = detail
-        this.loading = false
-      })
-      .catch((err) => {
-        this.loading = false
-        this.$error.showErrorMessage(err)
-      })
+  },
+  mounted() {
+    this.init()
   },
   methods: {
-    isWidgetValid(widget){
+    init() {
+
+      //test
+      this.loadResourceDetail('387c33541e5fc5016c5dd08cd920e0569e32d91a').then((resource) => {
+        console.log(resource)
+        this.$set(this.presentableData, 'resourceInfo', resource)
+      })
+      if (!this.detail.presentableId) {
+        return
+      }
+      this.loading = true
+      this.loadPresentableDetail(this.detail.presentableId)
+        .then(this.formatData.bind(this))
+        .then(detail => {
+          this.loading = false
+          this.presentableData.presentableInfo = detail
+          return detail
+        })
+        .then((presentable)=>{
+          return this.loadResourceDetail(presentable.resourceId).then((resource) => {
+            this.presentableData.resourceInfo = resource
+            return resource
+          })
+        })
+        .catch((err) => {
+          this.loading = false
+          this.$error.showErrorMessage(err)
+        })
+    },
+    isWidgetValid(widget) {
       return widget.contractInfo && widget.contractInfo.status < 3
     },
     gotoExecContractHandler(widget) {
@@ -252,7 +279,7 @@ export default {
           this.$message.error(res.data.msg)
         } else {
           this.$message.success('创建成功');
-          this.$set(this.detail, 'presentableInfo', data)
+          this.$set(this.presentableDetail, 'presentableInfo', data)
         }
       }).catch((err) => {
         this.submitLoading = false;
@@ -271,11 +298,11 @@ export default {
         userDefinedTags: this.editPresentable.userDefinedTags.join(',')
       };
 
-      this.$services.presentables.put(this.detail.presentableInfo.presentableId, param)
+      this.$services.presentables.put(this.presentableDetail.presentableInfo.presentableId, param)
         .then((res) => {
           if (res.data.errcode === 0) {
             var data = res.getData()
-            Object.assign(this.detail, data)
+            Object.assign(this.presentableDetail, data)
             this.$message.success('更新成功')
           } else {
             this.$message.error(res.data.msg || '更新失败')
@@ -283,19 +310,19 @@ export default {
         }).catch(this.$error.showErrorMessage)
     },
     updateContractDetail() {
-      this.loadContractDetail(this.detail.contractInfo.contractId).then((contract) => {
-        Object.assign(this.detail.contractInfo, contract)
+      this.loadContractDetail(this.presentableDetail.contractInfo.contractId).then((contract) => {
+        Object.assign(this.presentableDetail.contractInfo, contract)
       })
     },
     activatedWidgetResourceHandler(activeArr) {
-      var widgets = this.detail.widgets;
+      var widgets = this.presentableDetail.widgets;
       activeArr.forEach((index) => {
         let widget = widgets[index]
         this.loadWidgetDetail(widget, index)
       })
     },
     loadWidgetDetail(widget, index) {
-      var widgets = this.detail.widgets;
+      var widgets = this.presentableDetail.widgets;
       let promises = []
       if (!widget.resourceInfo) {
         let p1 = this.loadResourceDetail(widget.resourceId).then((resourceDetail) => {
@@ -355,7 +382,7 @@ export default {
     },
     bindPageBuildWidgetContract(params) {
       this.$axios.post('/v1/presentables/pageBuildAssociateWidget', {
-        pbPresentableId: this.detail.presentableInfo.presentableId,
+        pbPresentableId: this.presentableDetail.presentableInfo.presentableId,
         increaseContractIds: [params.contractId],
         removeContractIds: [params.removeContractId] //需要删除老的合同绑定
       }).then((res) => {
@@ -368,6 +395,9 @@ export default {
           throw new Error(res.data.msg)
         }
       }).catch(this.$error.showErrorMessage)
+    },
+    changePolicyHandler(){
+
     }
   }
 }

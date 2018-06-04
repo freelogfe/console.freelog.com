@@ -1,33 +1,113 @@
 
-.box {
-  margin-bottom: 15px;
+.disabled-tag {
+  color: #ccc;
+  cursor: not-allowed;
 }
 
-.tool-list {
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  border-bottom: none;
-  padding-left: 15px;
+.policy-input-item {
+  margin-bottom: 25px;
 
-  li {
-    display: inline-block;
-    margin-right: 4px;
-    height: 42px;
-    line-height: 42px;
-    .op-btn {
-      padding: 0;
+  .policy-name-input-wrap {
+    margin-bottom: 15px;
+    .policy-name-input-item {
+      padding-left: 29px;
     }
-
-    i {
-      font-size: 16px;
-      padding: 0 3px;
-      transition: all .2s;
+    .del-policy-btn {
+      display: none;
+      float: left;
+      padding-top: 6px;
     }
 
     &:hover {
-      i {
-        font-size: 20px;
+      margin-left: 0;
+      .del-policy-btn {
+        display: inline-block;
       }
     }
+
+    .policy-name-input {
+      padding: 3px 5px;
+      height: 20px;
+      font-size: 16px;
+      border: none;
+      border-bottom: 2px solid #333333;
+      outline: none;
+      background-color: transparent;
+    }
+  }
+
+  .fl-icon-revert-hover {
+    display: none;
+  }
+
+  &.disabled-policy {
+    .policy-name-input {
+      border-bottom-color: #CCCCCC;
+      .disabled-tag;
+    }
+    .fl-icon-revert-hover {
+      display: inline-block;
+    }
+
+    .fl-icon-close-hover {
+      display: none;
+    }
+  }
+}
+
+.policy-content-input-wrap {
+  margin-left: 29px;
+  position: relative;
+
+  .policy-content-input {
+    width: 90%;
+    height: 180px;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border-color: #ccc;
+    color: #666;
+    outline: none;
+    line-height: 1.5;
+    font-size: 14px;
+    resize: none;
+    &[disabled] {
+      .disabled-tag;
+    }
+  }
+
+  &.policy-editing .policy-toolbar {
+    display: block;
+    animation: showIn .3s;
+  }
+  .policy-toolbar {
+    position: absolute;
+    left: -29px;
+    top: -10px;
+    display: none;
+    .op-btn {
+      color: black;
+    }
+    li {
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
+
+@keyframes showIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.add-policy-btn {
+  color: #CCCCCC;
+  font-size: 16px;
+  .el-icon-plus {
+    margin-right: 9px;
   }
 }

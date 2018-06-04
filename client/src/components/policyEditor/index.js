@@ -16,12 +16,14 @@ export default {
       submitLoading: false,
       policyText: this.value,
       showCustomPolicyTplDialog: false,
-      currentTool: ''
+      currentTool: '',
+      editingIndex: -1,
+      policyList: []
     }
   },
   props: {
     value: {
-      type: String,
+      type: [Array, Object],
       default() {
         return ''
       }
@@ -29,7 +31,7 @@ export default {
 
     showValidate: {
       type: Boolean,
-      default(){
+      default() {
         return true
       }
     },
@@ -45,16 +47,42 @@ export default {
 
   components: {PolicyTemplateSelector, QueryPolicyLicense},
   watch: {
-    value: function () {
-      this.policyText = this.value || ''
+    policyList: {
+      handler: function (val, oldVal) {
+        this.$emit('change', this.policyList)
+      },
+      deep: true
     }
   },
   mounted() {
     if (!this.config.type) {
       this.config.type = (this.$route.meta.type === 'node') ? 'presentable' : 'resource'
     }
+    this.fillePolicyList(this.value)
   },
   methods: {
+    fillePolicyList(list) {
+      if (list.policy) {
+        this.policyList = list.policy.map(p => {
+          var segmentText = p.segmentText
+          var _compiler = compiler[this.config.type];
+          var ret = _compiler.compile(segmentText)
+          if (!ret.errorMsg) {
+            segmentText = _compiler.beautify(segmentText);
+          }
+          return {
+            policyName: p.policyName || '',
+            policyText: segmentText,
+            policySegmentId: p.segmentId,
+            disabled: p.status === 0
+          }
+        });
+      }
+
+      if (!this.policyList.length) {
+        this.addNewPolicy()
+      }
+    },
     validate() {
       var _compiler = compiler[this.config.type];
       var ret = _compiler.compile(this.policyText)
@@ -72,6 +100,13 @@ export default {
         this.$message.error(ret.errorMsg) //外层控制??
       }
     },
+    addNewPolicy() {
+      this.policyList.push({
+        policyName: '未命名策略',
+        policyText: '',
+        disabled: false
+      })
+    },
     createHandler(data) {
       return this.$services.policy.post(data)
     },
@@ -88,14 +123,26 @@ export default {
         this.$emit('input', this.policyText)
       }
     },
+    getCurrentEditingPolicy() {
+      return this.policyList[this.editingIndex];
+    },
     selectPolicyTemplateCallback(data) {
-      this.policyText = data.template;
+      var policy = this.getCurrentEditingPolicy()
+      policy.policyText = data.template;
     },
     selectLicenseIdCallback(data) {
-      this.policyText += ` ${data.licenseId}`
+      var policy = this.getCurrentEditingPolicy()
+      policy.policyText += ` ${data.licenseId}`
     },
-    changePolicyText(){
-      this.$emit('input', this.policyText)
+    changePolicyText(policy) {
+      //to validate
+    },
+    focusInputHandler(ev, index) {
+      this.editingIndex = index
+    },
+    switchPolicyStatusHandler(policy, index) {
+      policy.disabled = !policy.disabled
+      // this.policyList.splice(index, 1)
     }
   }
 }

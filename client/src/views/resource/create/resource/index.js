@@ -1,13 +1,15 @@
 import ResourceMetaInfo from '../../meta/index.vue'
 import {storage} from '@/lib'
 import CONFIG from '@/config/index'
+import DescriptionEditor from 'vue-wangeditor'
 
 const {RESOURCE_TYPES} = CONFIG
 
 export default {
   name: 'base-resource-creator',
   components: {
-    ResourceMetaInfo
+    ResourceMetaInfo,
+    DescriptionEditor
   },
   data() {
     const validateResourceType = (rule, value, callback) => {
@@ -51,7 +53,9 @@ export default {
       formData: {
         resourceType: storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget,
         resourceName: '',
-        widgetName: ''
+        widgetName: '',
+        description: '',
+        previewImage: ''
       },
       //上传到服务器的数据
       uploader: {
@@ -78,10 +82,8 @@ export default {
   watch: {
     data() {
       if (this.data.resourceId) {
-        this.formData.resourceType = this.data.resourceType
-        this.formData.resourceName = this.data.resourceName
         this.formData.widgetName = this.data.systemMeta.widgetName || ''
-
+        Object.assign(this.formatData, this.data)
         if (this.data.meta) {
           try {
             this.meta = JSON.stringify(this.data.meta)
@@ -94,6 +96,7 @@ export default {
   },
   mounted() {
     this.resourceTypeChange(this.formData.resourceType)
+    console.log(this.$refs.editor)
   },
   methods: {
     resourceTypeChange(type) {
@@ -121,6 +124,7 @@ export default {
     },
     successHandler(res) {
       this.loading = false
+
       if (res.ret !== 0 || res.errcode !== 0) {
         //reset
         this.$refs.upload.uploadFiles.forEach((file) => {
@@ -142,6 +146,29 @@ export default {
         if (!this.formData.resourceName) {
           this.formData.resourceName = fileName
         }
+      }
+    },
+    imageUploadSuccessHandler(res) {
+      if (res.errcode === 0) {
+        this.formData.previewImage = res.data
+      } else {
+        this.$error.showErrorMessage(res.msg)
+      }
+    },
+    previewImageChangeHandler(file, fileList) {
+      this.fileLimitValidator(file, fileList)
+    },
+    imgUploadSuccessHandler(fid, res) {
+      var editor =  this.$refs.editor;
+
+      try {
+        res = JSON.parse(res)
+      } catch (err){
+        res = {}
+        console.error(err)
+      }
+      if (res.data) {
+        editor.insertImg(res.data)
       }
     },
     validate() {
@@ -168,23 +195,33 @@ export default {
       var $uploader = this.$refs.upload;
       var uploadData = $uploader.data;
       var formData = this.formData;
-      var metaData
+      var metaData;
+      const INPUT_KEYS = ['resourceName', 'resourceType', 'previewImage']
+
+      INPUT_KEYS.forEach(key => {
+        if (formData[key]) {
+          uploadData[key] = formData[key]
+        }
+      });
+
+
+      var desc = this.$refs.editor.getHtml()
+      if (desc) {
+        uploadData.description = desc
+      }
+
+      //包装meta数据
       try {
         metaData = JSON.parse(this.meta)
       } catch (err) {
         console.error(err)
         metaData = {}
       }
-      Object.keys(formData).forEach((key) => {
-        if (/^resource/i.test(key)) {
-          uploadData[key] = formData[key]
-        }
-      });
-
       if (this.formData.widgetName) {
         metaData.widgetName = this.formData.widgetName;
       }
       uploadData.meta = JSON.stringify(metaData)
+      console.log(uploadData)
     },
     isChanged() {
       return (this.data.resourceName !== this.formData.resourceName) ||
@@ -228,7 +265,7 @@ export default {
         resourceName: this.formData.resourceName,
         meta: JSON.parse(this.meta)
       }).then((res) => {
-        if (res.ret !== 0 || res.errcode !== 0) {
+        if (res.data.ret !== 0 || res.data.errcode !== 0) {
           return Promise.reject(res)
         }
         return res.getData()

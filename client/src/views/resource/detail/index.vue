@@ -15,7 +15,17 @@
       <auth-scheme-detail class="auth-scheme-detail"
                           :selectedCallback="selectPolicyHandler"
                           :class="animateCls"
+                          :resource="resourceDetail.resourceInfo"
                           v-show="showAuthSchemes"></auth-scheme-detail>
+
+      <div class="scheme-contract-status-wrap" :class="{'show-status-btn':showAuthSchemes}">
+        <div class="contract-status-btn-wrap">
+          <el-button class="scheme-contract-status-btn publish-scheme-btn">发布</el-button>
+          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">合约待执行</el-button>-->
+          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">未发布</el-button>-->
+          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">已发布</el-button>  -->
+        </div>
+      </div>
     </div>
 
     <div class="res-detail-content" :style="{transform: contentTransform}">

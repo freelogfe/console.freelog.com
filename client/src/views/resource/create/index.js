@@ -1,5 +1,5 @@
 import BaseResourceCreator from './resource/index.vue'
-import AuthSchemeCreator from '../auth-scheme/edit/index.vue'
+import AuthSchemeCreator from '../auth-scheme/index.vue'
 
 import ResourceLoader from '@/data/resource/loader'
 
@@ -29,6 +29,7 @@ export default {
     executeNext(callback) {
       if (this.$refs.inputArea.nextHandler) {
         this.$refs.inputArea.nextHandler(this.data).then((detail) => {
+          console.log(detail)
           if (detail){
             Object.assign(this.resourceDetail, detail)
           }
@@ -53,7 +54,7 @@ export default {
     create2AddHandler() {
       var detail = this.resourceDetail
       this.executeNext(() => {
-        this.$router.push(`/resource/detail/${detail.resourceId}/auth_schemes`)
+        detail.resourceId && this.$router.push(`/resource/detail/${detail.resourceId}/auth_schemes`)
       })
     }
   }
