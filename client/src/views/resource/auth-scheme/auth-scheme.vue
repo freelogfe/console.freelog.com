@@ -8,8 +8,8 @@
               @click="changeResourceScheme(dep, index, $event)"
               class="dep-item"
               :class="['active-status-'+dep.activeStatus]">
-            <el-checkbox class="select-box" v-model="dep.checked"
-                         :disabled="detail.isPublished"></el-checkbox>
+            <!--<el-checkbox class="select-box" v-model="dep.checked"-->
+                         <!--:disabled="detail.isPublished"></el-checkbox>-->
             <div class="resource-name" :class="{active:dep.active}">
               <p>
                 <i class="dot"></i>{{dep.resourceName}}
@@ -35,6 +35,7 @@
       </div>
     </div>
     <resource-scheme-tree :resource="curDepResource"
+                          :contracts="dutyStatements"
                           @update="updateDepResourceSchemesHandler"
                           style="margin-left: 480px;"></resource-scheme-tree>
     <el-dialog
@@ -282,23 +283,3 @@
   @import "auth-scheme.less";
 </style>
 
-<style lang="less">
-  .auth-scheme-section {
-
-  .el-collapse {
-    border: none;
-  }
-
-  .el-collapse-item__header {
-    height: auto;
-    background-color: transparent;
-    line-height: 25px;
-    padding-bottom: 10px;
-  }
-
-  .el-collapse-item__arrow {
-    display: none;
-  }
-
-  }
-</style>

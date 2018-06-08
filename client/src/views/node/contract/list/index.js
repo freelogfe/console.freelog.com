@@ -137,8 +137,23 @@ export default {
         query: query
       })
     },
-    activateContractHandler() {
-      this.$message.warning('待开发')
+    activateContractHandler(contract) {
+      this.$axios.get(`/v1/contracts/initial`, {
+        params: {
+          contractIds: contract.contractId
+        }
+      }).then(res => {
+        if (res.data.errcode === 0) {
+          this.$message.success('成功激活合同')
+          this.loadContracts(contract.contractId).then(res => {
+            Object.assign(contract, res.getData());
+            ContractUtils.format(contract)
+            this.$forceUpdate()
+          })
+        } else {
+          this.$error.showErrorMessage(res.data.msg)
+        }
+      })
     }
   }
 }

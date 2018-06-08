@@ -15,12 +15,11 @@ export default {
     this.loader()
       .then(this.format.bind(this))
       .then((data) => {
-        this.pagebuildList = [1, 2, 3].map(n => {
-          return {
-            index: n
-          }
-        })
-        // this.pagebuildList = data
+        this.pagebuildList = data.map((item, index) => {
+          item.index = index
+          return item
+        });
+        console.log(this.pagebuildList)
       })
   },
   methods: {
@@ -34,28 +33,25 @@ export default {
       }).then((res) => {
         var presentables = res.getData()
         var promises = [];
-        var promises2 = [];
         presentables.forEach((p) => {
           var promise = self.$services.resource.get(p.resourceId).then((resourceRes) => {
             p.resourceDetail = resourceRes.getData()
+            if (p.resourceDetail.previewImages.length) {
+              p.resourceDetail._previewImage = p.resourceDetail.previewImages[0]
+            } else {
+              p.resourceDetail._previewImage = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527660657079&di=44f93c3efc9bf6e81a4996ae1e10b886&imgtype=0&src=http%3A%2F%2Fgb.cri.cn%2Fmmsource%2Fimages%2F2014%2F04%2F08%2F90%2F13642159619414055870.jpg'
+            }
             return resourceRes
           })
           promises.push(promise)
-
-          var promise2 = self.$services.pbStatics.get({params: {presentableIds: p.presentableId}}).then((resourceRes) => {
-            p.pbStatics = resourceRes.getData()[0]
-            return resourceRes
-          })
-          promises2.push(promise2)
         })
 
-        return Promise.all(promises.concat(promises2)).then((resources) => {
+        return Promise.all(promises).then((resources) => {
           return presentables
         })
       })
     },
     format(pagebuildList) {
-      console.log('pagebuildList', pagebuildList)
       pagebuildList.forEach((item) => {
         item.statusInfo = (item.status === PAGE_BUILD_STATUS.show) ? {
           desc: '默认展示',

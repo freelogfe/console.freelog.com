@@ -67,6 +67,7 @@ export default {
 
     var unwatch = this.$watch('contracts', () => {
       this.fillDutyStatements()
+      console.log('change contracts', this.contracts)
       unwatch()
     })
   },
@@ -99,17 +100,16 @@ export default {
   },
   methods: {
     fillDutyStatements() {
-      this.dutyStatements = this.contracts
+
       this.contracts.forEach(contract => {
         var rid = contract.resourceId
         this.dutyResourceMap[rid] = contract
       });
-
+      this.dutyStatements = this.contracts
       this.schemes.forEach(dep => {
         this.haveSelectedScheme(dep)
         this.checkResourceActiveStatus(dep)
       });
-
 
       this.$forceUpdate()
     },
@@ -117,7 +117,7 @@ export default {
       var resourceId = this.resourceId || this.resource.resourceId
 
       if (!resourceId) {
-        return
+        return Promise.resolve()
       }
 
       var resourceSchemesCache = this.resourceSchemesCache
@@ -200,16 +200,11 @@ export default {
     },
     showUnSignedPolicyList() {
       this.dutyStatements.forEach((duty) => {
+        this.onSetResourceDetail(duty)
+
         if (!duty.selectedScheme) {
-          SchemeDataLoader.onloadSchemeDetail(duty.authSchemeId).then(scheme => {
-            for (var i = 0; i < scheme.policy.length; i++) {
-              let p = scheme.policy[i];
-              if (p.segmentId === duty.policySegmentId) {
-                scheme.selectedPolicy = p;
-                break;
-              }
-            }
-            duty.selectedScheme = scheme
+          this.loadResourceSchemes(this.resourcesMap[duty.resourceId]).then(res => {
+            this.haveSelectedScheme(this.resourcesMap[duty.resourceId])
           })
         }
       });
@@ -309,26 +304,22 @@ export default {
       if (!resource.selectedScheme || !resource.selectedScheme.authSchemeId) {
         activeStatus = ''
       } else {
-        debugger
         var bubbleResources = resource.selectedScheme.bubbleResources
         if (bubbleResources.length) {
           var cnt = 0
+          activeStatus = DEPENDENCY_STATUS.SOME
           bubbleResources.forEach((res) => {
-            if (this.dutyResourceMap[res.resourceId]) {
+            var duty = this.dutyResourceMap[res.resourceId]
+            if (duty && (duty.activeStatus === DEPENDENCY_STATUS.ALL)) {
               cnt++
             }
           });
-          if (cnt === 0) {
-            activeStatus = DEPENDENCY_STATUS.SOME //至少解决了资源本身
-          } else if (cnt === bubbleResources.length) {
+          if (cnt === bubbleResources.length) {
             activeStatus = DEPENDENCY_STATUS.ALL
-          } else {
-            activeStatus = DEPENDENCY_STATUS.SOME
           }
         } else {
           activeStatus = DEPENDENCY_STATUS.ALL
         }
-
       }
       resource.activeStatus = activeStatus
       this.$forceUpdate()
@@ -350,12 +341,12 @@ export default {
     checkResourceCancelable(resource) {
       var deps = resource.selectedScheme.dependencies;
       var selectedDeps = []
+
       deps.forEach(dep => {
-        if (dep.selected) {
+        if (dep.selected || dep.activeStatus === DEPENDENCY_STATUS.ALL || dep.activeStatus === DEPENDENCY_STATUS.SOME) {
           selectedDeps.push(dep)
         }
       });
-
 
       if (!selectedDeps.length) {
         return Promise.resolve()
@@ -458,25 +449,30 @@ export default {
         return false
       }
     },
+    loadResourceSchemes(dep) {
+      if (dep.schemes) {
+        return Promise.resolve(dep)
+      }
+      dep.schemes = []
+      //获取已发布的授权点列表 {authSchemeStatus: 1}
+      return SchemeDataLoader.onloadSchemesForResource(dep.resourceId).then((schemes) => {
+        dep.schemes = this.formatSchemes(schemes)
+        if (!this.haveSelectedScheme(dep)) {
+          dep.activeScheme = dep.schemes[0]
+        }
+        this.checkResourceActiveStatus(dep)
+        return dep
+      })
+    },
     pushSchemeDep(dep) {
       if (!this.resourcesMap[dep.resourceId]) {
         this.onSetResourceDetail(dep)
       }
 
       if (!dep.schemes) {
-        dep.schemes = []
-        //获取已发布的授权点列表 {authSchemeStatus: 1}
-        SchemeDataLoader.onloadSchemesForResource(dep.resourceId).then((schemes) => {
-          dep.schemes = this.formatSchemes(schemes)
-          if (!this.haveSelectedScheme(dep)) {
-            dep.activeScheme = dep.schemes[0]
-          }
-          // if (dep.activeStatus === undefined) {
-          //   this.checkResourceActiveStatus(dep)
-          // }
-          this.checkResourceActiveStatus(dep)
+        this.loadResourceSchemes(dep).then(() => {
           this.$forceUpdate()
-        })
+        });
       } else if (dep.activeStatus === undefined) {
         this.checkResourceActiveStatus(dep);
         if (!dep.activeScheme && dep.schemes.length) {
@@ -484,8 +480,9 @@ export default {
         }
       }
 
-      if (dep.activeIndex === undefined) {
+      if (!this.haveSelectedScheme(dep)) {
         dep.activeIndex = 0
+        dep.activeScheme = dep.schemes[0]
       }
 
       this.schemes.push(dep);
@@ -581,6 +578,13 @@ export default {
       this.$forceUpdate()
     },
     getDutyStatements() {
+      this.dutyStatements.forEach(res => {
+        var detail = this.resourcesMap[res.resourceId]
+        //更新数据
+        if (detail) {
+          Object.assign(res, detail)
+        }
+      });
       return this.dutyStatements
     }
   }

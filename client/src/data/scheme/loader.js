@@ -1,5 +1,6 @@
 import {createLoader, createCacheLoaders} from '@/lib/utils'
 import axios from '@/lib/axios'
+
 /**
  * @param params
  * @param params.authSchemeIds {Array}
@@ -26,9 +27,27 @@ function loadAuthSchemes(params) {
   })
 }
 
+function loadSchemeDetail(authSchemeId, params) {
+  params = params || {}
+  return axios.get(`/v1/resources/authSchemes/${authSchemeId}`, {
+    params: params
+  }).then((res) => {
+    if (res.data.errcode === 0) {
+      return res.getData()
+    } else {
+      return Promise.reject(res.data.msg)
+    }
+  })
+}
+
 
 const onloadSchemeDetail = createCacheLoaders(function (id) {
-  return loadAuthSchemes({authSchemeIds: [id]})
+  return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
+    if (Array.isArray(scheme)) {
+      scheme = scheme[0]
+    }
+    return scheme
+  })
 })
 
 

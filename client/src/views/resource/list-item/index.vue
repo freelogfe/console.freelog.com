@@ -70,7 +70,7 @@
         return number + unit;
       },
       gotoDetail(resource) {
-//        this.$router.push(`/resource/detail/${resource.resourceId}`)
+       this.$router.push(`/resource/detail/${resource.resourceId}`)
       }
     }
   }

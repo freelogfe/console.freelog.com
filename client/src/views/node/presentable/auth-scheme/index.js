@@ -35,13 +35,15 @@ export default {
           this.presentableDetail = data
 
           data.contracts.slice(0).reduce((cachedContractsMap, item) => {
-            cachedContractsMap[item.policySegmentId] = item
+            cachedContractsMap[this.getSchemeContractKey(item)] = item
             return cachedContractsMap
           }, this.cachedContractsMap);
           console.log(this.cachedContractsMap)
         }
       });
-
+    },
+    getSchemeContractKey(item) {
+      return `${item.authSchemeId}_${item.policySegmentId}`
     },
     saveSchemeHandler() {
       var dutyStatements = this.$refs.schemeTree.getDutyStatements()
@@ -49,66 +51,56 @@ export default {
       var targetResourceId = this.presentableDetail.resourceId
       var cachedContractsMap = this.cachedContractsMap
       var contracts = [];
-      console.log(this.presentableDetail)
-      console.log(dutyStatements)
+
       dutyStatements.map(dep => {
-        if (dep.selectedScheme) {
-          resource2schemeMap[dep.resourceId] = dep.selectedScheme.authSchemeId
-          let selectedSegmentId = dep.selectedScheme.selectedPolicy.segmentId
-          var contract = {
+        let selectedScheme = dep.selectedScheme
+        if (selectedScheme) {
+          resource2schemeMap[dep.resourceId] = selectedScheme.authSchemeId
+          let selectedSegmentId = selectedScheme.selectedPolicy.segmentId
+          let contract = {
             resourceId: dep.resourceId
           };
-
-          if (cachedContractsMap[selectedSegmentId]) {
-            contract.contractId = cachedContractsMap[selectedSegmentId].contractId
+          let schemePolicy = {
+            authSchemeId: selectedScheme.authSchemeId,
+            policySegmentId: selectedSegmentId
+          };
+          let key = this.getSchemeContractKey(schemePolicy)
+          if (cachedContractsMap[key]) {
+            contract.contractId = cachedContractsMap[key].contractId
           } else {
-            Object.assign(contract, {
-              authSchemeId: dep.selectedScheme.authSchemeId,
-              policySegmentId: dep.selectedScheme.selectedPolicy.segmentId
-            })
+            Object.assign(contract, schemePolicy)
           }
           contracts.push(contract)
         } else {
           resource2schemeMap[dep.resourceId] = dep.authSchemeId
         }
-      })
+      });
+      // console.log(this.presentableDetail)
+      // console.log('dutyStatements', dutyStatements)
+      // console.log('cachedContractsMap', cachedContractsMap)
+      // console.log('resource2schemeMap', resource2schemeMap)
 
-      SchemeDataLoader.onloadSchemesForResource(targetResourceId)
-        .then(schemes => {
-          var selectedScheme;
-          for (var i = 0; i < schemes.length; i++) {
-            if (schemes[i].authSchemeId === resource2schemeMap[targetResourceId]) {
-              selectedScheme = schemes[i]
-              break;
-            }
-          }
+      var targetResource;
+      for (let i = 0; i < dutyStatements.length; i++) {
+        if (dutyStatements[i].resourceId === targetResourceId) {
+          targetResource = dutyStatements[i]
+          break;
+        }
+      }
 
-          if (selectedScheme) {
-            if (selectedScheme.bubbleResources.length) {
-              let flag = true
-              selectedScheme.bubbleResources.forEach(res => {
-                if (!resource2schemeMap[res.resourceId]) {
-                  flag = false
-                }
-              });
-
-              return flag
-            } else {
-              return true
-            }
-          } else {
-            this.$message.error('未选择授权方案')
-          }
-        }).then(valid => {
-        console.log(contracts)
-        if (valid) {
-          // this.updatePresentableSchemes({
-          //   contracts: contracts
-          // })
+      if (targetResource) {
+        if (targetResource.activeStatus === 2) {
+          console.log('contracts', contracts)
+          this.updatePresentableSchemes({
+            contracts: contracts
+          })
         } else {
           this.$message.error('有资源未选择授权策略')
         }
-      });
+      } else {
+        console.log('error contracts', contracts)
+        this.$message.error('未选择授权方案')
+      }
     },
     updatePresentableSchemes(data) {
       return this.$services.presentables.put(this.params.presentableId, data).then(res => {
@@ -118,9 +110,6 @@ export default {
           this.$error.showErrorMessage(res)
         }
       })
-    },
-    updateSchemesHandler() {
-      console.log(arguments)
     }
   }
 }

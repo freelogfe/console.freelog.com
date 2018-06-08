@@ -98,7 +98,7 @@
 </style>
 
 <style lang="less">
-  .scheme-view-wrap {
+  .auth-scheme-tree-wrap {
 
   .el-collapse {
     border: none;

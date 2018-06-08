@@ -2,7 +2,6 @@
   <div class="presentable-auth-scheme-wrap">
     <resource-scheme-tree :resourceId="params.resourceId"
                           :contracts="presentableDetail.contracts"
-                          @update="updateSchemesHandler"
                           class="presentable-auth-scheme-tree"
                           ref="schemeTree"></resource-scheme-tree>
     <div class="ft clearfix">

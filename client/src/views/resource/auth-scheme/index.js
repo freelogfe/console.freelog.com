@@ -248,6 +248,7 @@ export default {
     },
     getDutyStateMents(schemeData) {
       var dutyStatements = [];
+
       if (schemeData.willDutyStatements) {
         schemeData.willDutyStatements.forEach(dep => {
           dutyStatements.push({
@@ -347,12 +348,12 @@ export default {
           });
 
           //统计删除的
-          // schemeData.policy.forEach(p => {
-          //   if (!existed[p.segmentId]) {
-          //     data.policies.removePolicySegments = data.policies.removePolicySegments || []
-          //     data.policies.removePolicySegments.push(p.segmentId)
-          //   }
-          // })
+          schemeData.policy.forEach(p => {
+            if (!existed[p.segmentId]) {
+              data.policies.removePolicySegments = data.policies.removePolicySegments || []
+              data.policies.removePolicySegments.push(p.segmentId)
+            }
+          })
         }
       } else {
         data.resourceId = this.resourceDetail.resourceId
@@ -369,10 +370,7 @@ export default {
           policies.length && (data.policies = policies)
         }
       }
-      var dutyStatements = this.getDutyStateMents(schemeData)
-      if (dutyStatements.length) {
-        data.dutyStatements = dutyStatements
-      }
+      data.dutyStatements = this.getDutyStateMents(schemeData)
       return data
     },
     backToResourceInfoHandler() {

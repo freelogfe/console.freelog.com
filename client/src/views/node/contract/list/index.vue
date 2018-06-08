@@ -11,7 +11,7 @@
           </div>
           <div v-if="contract.statusInfo">
             <el-tag :type="contract.statusInfo.type">{{contract.statusInfo.desc}}</el-tag>
-            <el-button @click="activateContractHandler" type="text">激活</el-button>
+            <el-button @click="activateContractHandler(contract)" type="text">激活</el-button>
           </div>
           <pre class="policy-text">{{contract._segmentText}}</pre>
         </li>

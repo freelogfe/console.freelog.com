@@ -26,7 +26,6 @@ export default {
           if (list.length) {
             this.currentPresentable.detail = this.presentableList[0]
           }
-          console.log(list)
         })
     } else {
       this.$message.error('缺失节点ID参数');
