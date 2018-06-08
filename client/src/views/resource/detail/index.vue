@@ -1,6 +1,6 @@
 <template>
   <section class="res-detail-wrap">
-    <div class="res-detail-aside">
+    <div class="res-detail-aside" :class="{'active-aside-status':showAuthSchemes}">
       <div class="op-btns">
         <el-button type="text" class="hide-btn" @click="hideAuthSchemeHandler" v-if="showAuthSchemes">
           <i class="el-icon-close"></i>
@@ -18,22 +18,20 @@
                           :resource="resourceDetail.resourceInfo"
                           v-show="showAuthSchemes"></auth-scheme-detail>
 
-      <div class="scheme-contract-status-wrap" :class="{'show-status-btn':showAuthSchemes}">
-        <div class="contract-status-btn-wrap">
-          <el-button class="scheme-contract-status-btn publish-scheme-btn">发布</el-button>
-          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">合约待执行</el-button>-->
-          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">未发布</el-button>-->
-          <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">已发布</el-button>  -->
-        </div>
-      </div>
+      <!--<div class="scheme-contract-status-wrap" :class="{'show-status-btn':showAuthSchemes}">-->
+      <!--<div class="contract-status-btn-wrap">-->
+      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">发布</el-button>-->
+      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">合约待执行</el-button>-->
+      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">未发布</el-button>-->
+      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">已发布</el-button>  -->
+      <!--</div>-->
+      <!--</div>-->
     </div>
 
     <div class="res-detail-content" :style="{transform: contentTransform}">
       <div class="res-detail-hd clearfix">
         <div class="res-author-avatar">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb_dez7L9rZGrxliWIWRzbH6H0u0BMePCrTB6wVbLtcfrAMKII"
-            alt="">
+          <img src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg" alt="">
         </div>
         <div class="res-digest">
           <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
@@ -43,12 +41,12 @@
           </div>
           <div class="res-type-info">
             <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
-            <span class="res-file-size">{{resourceDetail.resourceInfo._filesize}}</span>
+            <!--<span class="res-file-size">{{resourceDetail.resourceInfo._filesize}}</span>-->
           </div>
         </div>
       </div>
       <div class="res-detail-bd">
-        <div class="res-detail-desc">{{resourceDetail.resourceInfo.description}}</div>
+        <div class="res-detail-desc" v-html="resourceDetail.resourceInfo.description"></div>
         <div class="res-detail-meta">
           <h3>meta</h3>
           <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
@@ -66,22 +64,35 @@
           <img class="img-icon" src="../../../assets/img/icons/favor.png"
                alt="收藏">{{resourceDetail.isFavor?'已收藏':'收藏至我的资源库'}}
         </el-button>
+        <el-button type="text" class="favor-btn" @click="editDetailHandler" v-if="showEdit">
+          <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
+        </el-button>
         <el-button class="auth-btn" circle @click="getResourceAuthHandler">获取授权</el-button>
       </div>
     </div>
 
-    <el-dialog title="请选择将授权的节点" :visible.sync="showNodesPanel">
-      <el-select v-model="selectedNode" placeholder="请选择将授权的节点">
-        <el-option
-          v-for="item in nodes"
-          :key="item.nodeId"
-          :label="item.nodeName"
-          :value="item.nodeId">
-        </el-option>
-      </el-select>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelAuthHandler">取 消</el-button>
-        <el-button type="primary" @click="confirmAuthHandler">确 定</el-button>
+    <el-dialog width="640px" title="" :visible.sync="showOptionsDialog">
+      <div class="opts-content-wrap">
+        <div class="select-target-header">
+          <div class="resource-name">{{resourceDetail.resourceInfo.resourceName}}</div>
+          <div class="selected-resource-auth-scheme-policy"></div>
+        </div>
+        <div class="select-target-bd">
+          <h4 class="opts-bd-title">获取资源授权至节点：</h4>
+          <div class="opts-container">
+            <el-checkbox-group
+              v-model="selectedNodes"
+              class="node-opts"
+              :min="1">
+              <el-checkbox class="node-opt-item" v-for="node in nodes" :label="node.nodeId" :key="node.nodeId">
+                {{node.nodeName}}
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <el-button class="deep-color-btn" type="primary" @click="confirmAuthHandler">确 定</el-button>
+        </div>
       </div>
     </el-dialog>
   </section>

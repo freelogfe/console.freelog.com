@@ -48,12 +48,13 @@ export default {
       data.nodeDomain = data.nodeDomain.toLowerCase()
       self.$services.nodes.post(self.dataForm)
         .then((res) => {
-          if (res.data.errcode !== 0) {
-            this.$message.error(res.data.msg)
+          var responseData = res.data
+          if (responseData.errcode !== 0) {
+            this.$message.error(responseData.msg)
           } else {
             self.$message.success('节点创建成功')
             setTimeout(() => {
-              self.$router.push({path: '/node/list'})
+              self.$router.push({path: `/node/${responseData.data.nodeId}`})
             }, 1e3)
           }
         })

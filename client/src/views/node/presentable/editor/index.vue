@@ -1,24 +1,21 @@
 <template>
-  <section>
-    <el-form :model="data" :rules="rules"
-             class="small-el-form"
-             :inline-message="true"
-             label-width="150px"
-             ref="ruleForm">
-      <slot name="prepend"></slot>
-      <el-form-item label="presentable name" required prop="name">
-        <el-input v-model="data.name" style="width: 700px" placeholder="请输入presentable名"></el-input>
-      </el-form-item>
-      <el-form-item label="tags" prop="userDefinedTags">
-        <freelog-tags v-model="data.userDefinedTags"></freelog-tags>
-      </el-form-item>
-      <el-form-item label="用户授权策略" required prop="policyText">
-        <presentable-policy :showValidateButton="false" v-model="data.policyText"
-                            @validate="validatePolicyHandler"
-                            style="width: 700px"></presentable-policy>
-      </el-form-item>
-      <slot name="append"></slot>
-    </el-form>
+  <section class="presentable-input-info">
+    <div class="presentable-input-item">
+      <p class="p-input-item-title"><i class="el-icon-question"></i>节点资源名称</p>
+      <el-input placeholder="输入节点资源名称" v-model="inputData.presentableName" class="presentable-name-input"></el-input>
+    </div>
+
+    <div class="presentable-input-item">
+      <p class="p-input-item-title"><i class="el-icon-question"></i>节点资源授权策略</p>
+      <presentable-policy v-model="inputData"
+                          :showValidate="false"
+                          ref="editor"
+                          @change="changePolicyHandler"></presentable-policy>
+    </div>
+
+    <div class="presentable-input-ft">
+      <el-button @click="savePresentableHandler">保存</el-button>
+    </div>
   </section>
 </template>
 
@@ -29,5 +26,5 @@
 </script>
 
 <style lang="less" scoped>
-
+  @import "index.less";
 </style>

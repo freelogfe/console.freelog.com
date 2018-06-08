@@ -6,7 +6,7 @@ export default {
   name: 'node-contracts',
   data() {
     return {
-      resourceList: [],
+      contractList: [],
       query: ''
     }
   },
@@ -15,6 +15,13 @@ export default {
   },
 
   mounted() {
+    var self = this;
+    var loader = this.loader()
+
+    return loader({}).then(list => {
+      this.contractList = list
+      console.log('contracts', list)
+    })
   },
   methods: {
     querySearchAsync() {
@@ -27,11 +34,13 @@ export default {
       this.$message.warning('待开发')
     },
     loadResourceData(resIds) {
-      var promiseList = resIds.map((resId) => {
-        return DataLoader.resource.loadDetail(resId)
+      return this.$axios.get('/v1/resources/list', {
+        params: {
+          resourceIds: resIds.join(',')
+        }
+      }).then(res => {
+        return res.getData()
       })
-
-      return Promise.all(promiseList)
     },
     loadContracts(param) {
       return this.$services.contract.get(param || {}).then((res) => {
@@ -74,7 +83,11 @@ export default {
           }
         }
         return self.loadContracts(param).then((res) => {
+          if (!res.data.data) {
+            return []
+          }
           var contracts = res.data.data.dataList
+
           var contractIds = contracts.map((c) => {
             ContractUtils.format(c)
             return c.contractId
@@ -88,15 +101,12 @@ export default {
           })
 
 
-          return Promise.all([this.loadResourceData(resourceIds), self.loadPresentables({
-            contractIds: contractIds.join(','),
-            nodeId: nodeId
-          })]).then((responses) => {
+          return Promise.all([this.loadResourceData(resourceIds)]).then((responses) => {
             var resourcesData = responses[0]
-            var presentables = responses[1]
             self.mergeDataByResourceId(contracts, resourcesData)
-            self.mergeDataByResourceId(contracts, presentables)
-            return res
+            // self.mergeDataByResourceId(contracts, presentables)
+            console.log(contracts)
+            return contracts
           })
         })
       }
@@ -126,6 +136,9 @@ export default {
         path: `/node/${this.$route.params.nodeId}/presentable/detail#contract`,
         query: query
       })
+    },
+    activateContractHandler() {
+      this.$message.warning('待开发')
     }
   }
 }

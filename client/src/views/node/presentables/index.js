@@ -7,9 +7,9 @@ export default {
   data() {
     return {
       query: '',
-      presentableList: [{}, {}, {}],
+      presentableList: [],
       currentPresentable: {
-        index: 1,
+        index: 0,
         detail: {}
       },
     }
@@ -19,10 +19,13 @@ export default {
   },
 
   mounted() {
-    console.log(this.$route.params.nodeId)
     if (this.$route.params.nodeId) {
       this.loadPresentables({nodeId: this.$route.params.nodeId})
         .then((list) => {
+          this.presentableList = list
+          if (list.length) {
+            this.currentPresentable.detail = this.presentableList[0]
+          }
           console.log(list)
         })
     } else {

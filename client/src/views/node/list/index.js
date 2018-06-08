@@ -40,7 +40,7 @@ export default {
       this.$message.success('已复制节点地址')
     },
     handleEdit(nodeDetail) {
-      this.$router.push({path: `/node/detail/${nodeDetail.nodeId}`})
+      this.$router.push({path: `/node/${nodeDetail.nodeId}`})
     },
     gotoNodeHandler(nodeDetail) {
       this.$store.dispatch('changeNode', nodeDetail)

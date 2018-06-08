@@ -1,85 +1,35 @@
 <template>
-  <section>
-    <el-input placeholder="请输入搜索内容" v-model="query" class="query-input">
-      <el-button slot="append" icon="search" type="primary" @click="queryHandler"></el-button>
-    </el-input>
+  <div class="node-contracts-container">
+    <div class="contract-list-wrapper">
+      <h4 class="contract-list-title"><i class="el-icon-question"></i>合约列表</h4>
+      <ul class="contract-list">
+        <li class="contract-item" v-for="contract in contractList">
+          <div>合同ID： {{contract.contractId}}</div>
+          <div v-if="contract.resourceDetail">
+            <div>{{contract.resourceDetail.resourceName}}</div>
+            <div>资源ID: {{contract.resourceDetail.resourceId}}</div>
+          </div>
+          <div v-if="contract.statusInfo">
+            <el-tag :type="contract.statusInfo.type">{{contract.statusInfo.desc}}</el-tag>
+            <el-button @click="activateContractHandler" type="text">激活</el-button>
+          </div>
+          <pre class="policy-text">{{contract._segmentText}}</pre>
+        </li>
+      </ul>
+    </div>
 
-    <table-view class="contracts-list" :loader="loader()">
-      <el-table-column
-        label="资源名称">
-        <template slot-scope="scope">
-          {{scope.row.resourceDetail.resourceName}}
-          <span v-if="scope.row.resourceDetail.systemMeta.version"
-                class="widget-version">v {{scope.row.resourceDetail.systemMeta.version}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="contractId"
-        label="合同ID">
-      </el-table-column>
-      <el-table-column
-        prop="resourceId"
-        label="资源ID">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="资源作者">
-        <template slot-scope="scope">
-          <span v-if="scope.row.partyOneInfo">{{scope.row.partyOneInfo.nickname}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="创建时间">
-        <template slot-scope="scope">
-          {{scope.row.createDate | fmtDate}}
-        </template>
-      </el-table-column>
+    <div class="contract-exec-container">
 
-      <el-table-column
-        width="120px"
-        align="center"
-        prop="resourceDetail.resourceType"
-        label="资源类型">
-      </el-table-column>
-      <el-table-column
-        width="100px"
-        align="center"
-        label="合同状态">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.statusInfo.type">{{scope.row.statusInfo.desc}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        width="250px"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="small"
-            @click="previewHandler(scope.row)">查看详情</el-button>
-          <el-button
-            size="small"
-            @click="handlePresentable(scope.row)">{{scope.row.presentableDetail?'查看presentable': '创建user policy'}}</el-button>
-        </template>
-      </el-table-column>
-    </table-view>
-  </section>
+    </div>
+  </div>
 </template>
 
 <script>
   import ResourceList from './index'
+
   export default ResourceList
 </script>
 
 <style lang="less" scoped>
-  .query-input {
-    margin-bottom: 15px;
-    width: 50%;
-  }
-  .resource-list {
-    width: 100%;
-    min-height: 600px;
-  }
+  @import "index.less";
 </style>

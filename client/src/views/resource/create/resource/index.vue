@@ -1,11 +1,12 @@
 <template>
-  <div class="base-resource-wrap">
+  <div class="base-resource-wrap" :class="['resource-edit-mode-'+editMode]">
     <div class="step-title">资源基础信息</div>
 
     <el-form :model="formData" label-width="0" :rules="rules" ref="createForm">
       <el-form-item prop="resourceName">
         <el-input v-model="formData.resourceName" class="resource-name"></el-input>
         <el-select
+          :disabled="!showCreatorInputItem"
           v-model="formData.resourceType"
           allow-create
           filterable
@@ -24,10 +25,11 @@
         <el-input v-model="formData.widgetName"
                   style="width: 95%"
                   clearable
+                  :disabled="!showCreatorInputItem"
                   placeholder="widget名称">
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="showCreatorInputItem">
         <el-upload
           class="upload-container"
           drag
@@ -56,6 +58,7 @@
           :on-error="errorHandler"
           :on-change="previewImageChangeHandler"
           :on-success="imageUploadSuccessHandler"
+          :before-upload="validateImageHandler"
           :auto-upload="true">
           <img v-if="formData.previewImage" :src="formData.previewImage" style="height: 100%;" alt="">
           <i v-else class="el-icon-upload"></i>
@@ -63,21 +66,28 @@
           <div class="el-upload__tip" slot="tip" style="color:#DE3A3A">图片不超过3MB,宽高不超过4096px,只支持jpg、png、gif、webp格式</div>
         </el-upload>
       </el-form-item>
+      <!--<el-form-item prop="description">-->
+      <!--<h4>资源描述</h4>-->
+      <!--<description-editor  id="editor" class="res-desc-editor"-->
+      <!--ref="editor"-->
+      <!--width="100%"-->
+      <!--@load="imgUploadSuccessHandler"-->
+      <!--placeholder="资源描述"></description-editor>-->
+      <!--</el-form-item>-->
       <el-form-item prop="description">
         <h4>资源描述</h4>
-        <description-editor  id="editor" class="res-desc-editor"
-                             ref="editor"
-                             width="100%"
-                             v-model="formData.description"
-                             uploadImgUrl="/api/v1/resources/upoladPreviewImage"
-                             @load="imgUploadSuccessHandler"
-                             placeholder="资源描述"></description-editor>
+        <rich-editor class="res-desc-editor"
+                     ref="editor"
+                     width="100%"
+                     v-model="formData.description"
+                     :config="editorConfig"
+                     @load="imgUploadSuccessHandler"
+                     placeholder="资源描述"></rich-editor>
       </el-form-item>
     </el-form>
 
     <div class="resource-meta">
       <div class="step-title">资源meta信息</div>
-
       <resource-meta-info v-model="meta" @validate="checkMetaValid"></resource-meta-info>
     </div>
   </div>
@@ -85,29 +95,10 @@
 
 <script>
   import BaseResourceCreator from './index'
+
   export default BaseResourceCreator
 </script>
 
 <style lang="less" scoped>
-  .base-resource-wrap {
-    width: 720px;
-  }
-
-  .resource-name {
-    width: 64.5%;
-  }
-
-  .resource-type {
-    width: 30%;
-  }
-
-  .step-title {
-    margin-bottom: 20px;
-    font-weight: 600;
-    font-size: 20px;
-  }
-
-  .res-desc-editor {
-
-  }
+  @import "index.less";
 </style>

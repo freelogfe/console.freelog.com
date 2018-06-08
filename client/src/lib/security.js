@@ -1,5 +1,5 @@
 export const isSafeUrl = function (url) {
-  var reg = /^.+\.freelog\.com$/
+  var reg = /^.+\.(test)?freelog\.com$/
 
   try {
     var obj = new URL(url) //正确的链接检测

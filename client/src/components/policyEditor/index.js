@@ -52,16 +52,22 @@ export default {
         this.$emit('change', this.policyList)
       },
       deep: true
+    },
+    'value.policy': {
+      handler: function (val, oldVal) {
+        this.fillPolicyList(this.value)
+      },
+      deep: true
     }
   },
   mounted() {
     if (!this.config.type) {
       this.config.type = (this.$route.meta.type === 'node') ? 'presentable' : 'resource'
     }
-    this.fillePolicyList(this.value)
+    this.fillPolicyList(this.value)
   },
   methods: {
-    fillePolicyList(list) {
+    fillPolicyList(list) {
       if (list.policy) {
         this.policyList = list.policy.map(p => {
           var segmentText = p.segmentText
@@ -143,6 +149,26 @@ export default {
     switchPolicyStatusHandler(policy, index) {
       policy.disabled = !policy.disabled
       // this.policyList.splice(index, 1)
+    },
+    getChangeData() {
+      var policies = {}
+      this.policyList.forEach(p => {
+        if (p.policySegmentId) {
+          policies.updatePolicySegments = policies.updatePolicySegments || []
+          policies.updatePolicySegments.push({
+            policySegmentId: p.policySegmentId,
+            policyName: p.policyName,
+            status: p.disabled ? 0 : 1
+          })
+        } else if (p.policyText) {
+          policies.addPolicySegments = policies.addPolicySegments || []
+          policies.addPolicySegments.push({
+            policyName: p.policyName,
+            policyText: btoa(p.policyText)
+          })
+        }
+      });
+      return policies
     }
   }
 }

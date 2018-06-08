@@ -1,24 +1,12 @@
 <template>
   <section class="presentable-detail-wrapper">
     <resource-intro-info class="res-intro-info" :resource="presentableData.resourceInfo">
-      <div class="presentable-auth-intro">
+      <div class="presentable-auth-intro" @click="gotoSchemeDetailHandler">
         <i class="dot"></i> 授权方案A/授权策略1 <i class="el-icon-edit"></i>
       </div>
     </resource-intro-info>
 
-    <div class="presentable-input-info">
-      <div class="presentable-input-item">
-        <p class="p-input-item-title"><i class="el-icon-question"></i>节点资源名称</p>
-        <el-input placeholder="输入节点资源名称" class="presentable-name-input"></el-input>
-      </div>
-
-      <div class="presentable-input-item">
-        <p class="p-input-item-title"><i class="el-icon-question"></i>节点资源授权策略</p>
-        <presentable-policy v-model="presentableDetail"
-                            :showValidate="false"
-                            @change="changePolicyHandler"></presentable-policy>
-      </div>
-    </div>
+    <presentable-editor :data="presentableData" @onSaveEnd="savePresentableEnd"></presentable-editor>
   </section>
 </template>
 

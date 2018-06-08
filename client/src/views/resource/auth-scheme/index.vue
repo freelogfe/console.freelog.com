@@ -41,7 +41,8 @@
         </div>
 
         <div class="rt-side">
-          <el-button class="ft-btn gray-btn" type="text" @click="tmpSaveAndQuitHandler" v-show="isInitStatus">暂存退出</el-button>
+          <el-button class="ft-btn gray-btn" type="text" @click="tmpSaveAndQuitHandler" v-show="isInitStatus">暂存退出
+          </el-button>
           <el-button class="ft-btn deep-color-btn" type="primary" round @click="saveSchemeHandler">
             {{isInitStatus?'签约并发布':'更新授权方案'}}
           </el-button>
@@ -58,7 +59,7 @@
 </script>
 
 <style lang="less" scoped>
-  @import "../create/footer.less";
+  @import "../../../styles/footer.less";
   @import "index.less";
 </style>
 

@@ -24,5 +24,5 @@
 
 <style lang="less" scoped>
   @import "index.less";
-  @import "footer.less";
+  @import "../../../styles/footer.less";
 </style>

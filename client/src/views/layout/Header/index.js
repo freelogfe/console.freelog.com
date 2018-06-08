@@ -1,5 +1,6 @@
 import {mapGetters} from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
+import NodeDataLoader from '@/data/node/loader'
 
 export default {
   name: 'fl-header',
@@ -17,7 +18,7 @@ export default {
       session: 'session',
       nodeSession: 'nodeSession'
     }),
-    pageTitle(){
+    pageTitle() {
       return (this.$route.meta && this.$route.meta.title) || ''
     }
   },
@@ -40,13 +41,9 @@ export default {
   },
   methods: {
     loadNodeList() {
-      return this.$services.nodes.get({
-        params: {
-          ownerUserId: this.session.user.userId,
-          pageSize: 1e2
-        }
-      }).then((res) => {
-        return res.getData()
+      return NodeDataLoader.onloadNodeList({
+        ownerUserId: this.session.user.userId,
+        pageSize: 1e2
       })
     },
     listenWindowVisibility() {

@@ -1,7 +1,7 @@
 import {cloneDeep, uniqBy} from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import ResourceAuthScheme from './auth-scheme.vue'
-import DataLoader from './data'
+import SchemeDataLoader from '@/data/scheme/loader'
 
 //intersectionWith
 function getUUID() {
@@ -51,7 +51,7 @@ export default {
         this.resourceDetail = depData;
       })
       .then(() => {
-        DataLoader.loadSchemesForResource(this.resourceId).then((authSchemes) => {
+        SchemeDataLoader.onloadSchemesForResource(this.resourceId, {policyStatus: 2}).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach((scheme) => {
               if (scheme.status === PUBLISH_STATUS.PUBLISHED) {
@@ -97,7 +97,31 @@ export default {
       if (oldScheme) {
         newScheme = Object.assign(newScheme, oldScheme);
       }
-      return DataLoader.initAuthScheme(newScheme)
+      return this.initAuthScheme(newScheme)
+    },
+    initAuthScheme(scheme) {
+
+      scheme = scheme || {}
+      const DefaultScheme = {
+        policyText: '',
+        selectedPolicy: {},
+        selectedScheme: {},
+        checked: false,
+        selected: false,
+        authSchemeName: '未命名的授权方案',
+        bubbleResources: [],
+        dutyStatements: [],
+        authSchemes: [],  //当前资源的授权点列表
+        dependencies: [] //授权点管理的资源集合
+      };
+
+      Object.keys(DefaultScheme).forEach((key) => {
+        if (!scheme[key]) {
+          scheme[key] = DefaultScheme[key]
+        }
+      });
+
+      return scheme
     },
     changeDepsHandler(detail) {
       switch (detail.action) {
@@ -119,7 +143,7 @@ export default {
       data.checked = false
       data.selected = false
       data.authSchemes = []
-      DataLoader.loadSchemesForResource(data.resourceId).then((list) => {
+      SchemeDataLoader.onloadSchemesForResource(data.resourceId).then((list) => {
         if (list.length) {
           data.authSchemes = list
         }
@@ -142,7 +166,7 @@ export default {
         for (var i = 0, len = deps.length; i < len; i++) {
           let dep = deps[i];
           if (dep.resourceId === data.oldResource.resourceId) {
-            DataLoader.loadSchemesForResource(data.newResource.resourceId).then(() => {
+            SchemeDataLoader.onloadSchemesForResource(data.newResource.resourceId).then(() => {
               deps.splice(i, 1, data.newResource)
             })
             break;
@@ -224,21 +248,16 @@ export default {
     },
     getDutyStateMents(schemeData) {
       var dutyStatements = [];
-      schemeData.dependencies.forEach((dep) => {
-        if (dep.selectedScheme && dep.selected) {
+      if (schemeData.willDutyStatements) {
+        schemeData.willDutyStatements.forEach(dep => {
           dutyStatements.push({
             resourceId: dep.resourceId,
             authSchemeId: dep.selectedScheme.authSchemeId,
             policySegmentId: dep.selectedScheme.selectedPolicy.segmentId,
             serialNumber: dep.selectedScheme.serialNumber
           });
-
-          if (dep.selectedScheme.dependencies && dep.selectedScheme.dependencies.length) {
-            dutyStatements = dutyStatements.concat(this.getDutyStateMents(dep.selectedScheme))
-          }
-        }
-      })
-
+        })
+      }
       return dutyStatements
     },
     updateAuthScheme(data, schemeData) {
@@ -282,9 +301,19 @@ export default {
               var data = this.resolveSchemeData(schemeData)
               console.log('submit', data)
               if (!schemeData.authSchemeId) {
-                this.createAuthScheme(data).then(resolve).catch(reject)
+                this.createAuthScheme(data).then(res => {
+                  schemeData.authSchemeId = res.authSchemeId;
+                  // schemeData.policy = res.policy bug
+                  // Object.assign(schemeData, res)
+
+                  resolve(res)
+                }).catch(reject)
               } else {
-                this.updateAuthScheme(data, schemeData).then(resolve).catch(reject)
+                this.updateAuthScheme(data, schemeData).then(res => {
+                  // schemeData.policy = res.policy bug
+                  // Object.assign(schemeData, res)
+                  resolve(res)
+                }).catch(reject)
               }
             }).catch(reject)
         }).catch(reject)
@@ -318,12 +347,12 @@ export default {
           });
 
           //统计删除的
-          schemeData.policy.forEach(p => {
-            if (!existed[p.segmentId]) {
-              data.policies.removePolicySegments = data.policies.removePolicySegments || []
-              data.policies.removePolicySegments.push(p.segmentId)
-            }
-          })
+          // schemeData.policy.forEach(p => {
+          //   if (!existed[p.segmentId]) {
+          //     data.policies.removePolicySegments = data.policies.removePolicySegments || []
+          //     data.policies.removePolicySegments.push(p.segmentId)
+          //   }
+          // })
         }
       } else {
         data.resourceId = this.resourceDetail.resourceId
@@ -340,7 +369,6 @@ export default {
           policies.length && (data.policies = policies)
         }
       }
-
       var dutyStatements = this.getDutyStateMents(schemeData)
       if (dutyStatements.length) {
         data.dutyStatements = dutyStatements

@@ -6,12 +6,12 @@
         <li class="presentable-item" :class="{active: currentPresentable.index===index}"
             @click="changePresentableHandler(presentable, index)"
             v-for="(presentable, index) in presentableList">
-          <i class="dot"></i><span class="p-title">think of what you'd like to say, add a tune and you will see, just how easy it can be</span>
+          <i class="dot"></i><span class="p-title">{{presentable.presentableName}}</span>
         </li>
       </ul>
     </div>
     <div class="presentable-detail-container">
-      <component is="presentable-detail" :detail="currentPresentable"></component>
+      <component is="presentable-detail" :detail="currentPresentable.detail"></component>
     </div>
   </section>
 </template>

@@ -33,7 +33,7 @@
                           @change="changePolicy(scheme, policy)"
                           v-for="(policy, index) in scheme.policy">
                   <span class="policy-name">{{policy.policyName}}</span>
-                  <pre class="policy-segment-text">{{policy.segmentText}}</pre>
+                  <pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>
                 </el-radio>
               </el-radio-group>
             </div>

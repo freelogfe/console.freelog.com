@@ -22,12 +22,59 @@ function createLoader(loader) {
   }
 }
 
+//多个缓存loader的创建
+function createCacheLoaders(loaderFn) {
+  var loaders = {}
+  return function (params) {
+    let id;
+    if (typeof params !== 'string') {
+      try {
+        id = JSON.stringify(params)
+      } catch (e) {
+        //todo 确保缓存的唯一性
+      }
+    } else {
+      id = params
+    }
+
+    if (!id) {
+      return loaderFn(id)
+    }
+
+    let loader = loaders[id];
+    if (!loader) {
+      loader = loaders[id] = createLoader(function (callback) {
+        loaderFn(params).then(callback)
+      })
+    }
+
+    return new Promise((resolve) => {
+      loader(function (info) {
+        resolve(info)
+      })
+    })
+  }
+}
+
+
+function promisifyLoader(loader) {
+  var handler = createLoader(loader)
+  return function () {
+    return new Promise((resolve) => {
+      handler(resolve)
+    })
+  }
+}
 
 export {
-  createLoader
+  createLoader,
+  createCacheLoaders,
+  promisifyLoader
 }
 
 
 export default {
-  createLoader
+  createLoader,
+  createCacheLoaders,
+  promisifyLoader
 }

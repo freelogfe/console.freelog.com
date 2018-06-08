@@ -4,6 +4,7 @@ policy更新后，后续签订的policy按新的来，已签约过的按更新�
 import {mapGetters} from 'vuex'
 import AuthSchemeDetail from './auth-scheme/index.vue'
 import {loadDetail} from '@/data/resource/loader'
+import NodeDataLoader from '@/data/node/loader'
 
 export default {
   name: 'resource-detail',
@@ -16,11 +17,13 @@ export default {
       },
       showAuthSchemes: false,
       animateCls: 'slideOutRight',
-      showNodesPanel: false,
+      showOptionsDialog: false,
       selectedNode: '',
       nodes: [],
+      selectedNodes: [],
       contentTransform: 'none',
-      selectedPolicy: {}
+      selectedPolicy: {},
+      showEdit: false
     }
   },
   computed: Object.assign({
@@ -41,6 +44,9 @@ export default {
       loadDetail(this.resourceId).then((res) => {
         res._filesize = this.humanizeSize(res.systemMeta.fileSize)
         this.resourceDetail.resourceInfo = res
+        if (this.session && this.session.user) {
+          this.showEdit = (res.userId === this.session.user.userId)
+        }
       });
       this.isFavorResource().then((isFavor) => {
         this.resourceDetail.isFavor = isFavor
@@ -131,45 +137,70 @@ export default {
       if (this.nodes.length) {
         return Promise.resolve(this.nodes)
       }
-      return this.$services.nodes.get({
-        params: {
-          ownerUserId: this.session.user.userId,
-          pageSize: 1e2
-        }
-      }).then((res) => {
-        if (res.data.errcode === 0) {
-          return res.getData().dataList
+
+      return NodeDataLoader.onloadNodeList().then(data => {
+        if (data && data.dataList) {
+          return data.dataList
         } else {
-          throw new Error(res)
+          return []
         }
-      })
+      });
     },
     showNodeOptions() {
       return new Promise((resolve, reject) => {
         this.loadNodes().then((nodes) => {
           this.nodes = nodes
-          this.showNodesPanel = true
+          this.showOptionsDialog = true
           resolve(nodes)
         }).catch(reject)
       })
     },
     getResourceAuthHandler() {
-      if (this.selectedPolicy.policy) {
-        this.showNodeOptions().catch(this.$error.showErrorMessage)
-      } else {
-        this.showAuthSchemeHandler()
-      }
+      this.showNodeOptions().catch(this.$error.showErrorMessage)
+      //
+      // if (this.selectedPolicy.policy) {
+      //   this.showNodeOptions().catch(this.$error.showErrorMessage)
+      // } else {
+      //   this.showAuthSchemeHandler()
+      // }
     },
-    cancelAuthHandler() {
-      this.showNodesPanel = false
+    hideOptionsDialogHandler() {
+      this.showOptionsDialog = false
     },
     confirmAuthHandler() {
-      this.showNodesPanel = false
+      this.hideOptionsDialogHandler()
+      if (this.selectedNodes.length) {
+        var promises = this.selectedNodes.map(nodeId => {
+          return this.createPresentable(nodeId)
+        });
+
+        Promise.all(promises).then((list) => {
+          console.log(list)
+          this.$message.success('获取成功')
+        }).catch(this.$error.showErrorMessage)
+      }
+    },
+    createPresentable(nodeId) {
+      var resourceInfo = this.resourceDetail.resourceInfo
+      return this.$services.presentables.post({
+        nodeId: nodeId,
+        presentableName: resourceInfo.resourceName,
+        resourceId: resourceInfo.resourceId
+      }).then(res => {
+        if (res.data.errcode !== 0) {
+          return Promise.reject(res.data.msg)
+        } else {
+          return res.getData()
+        }
+      })
     },
     selectPolicyHandler(scheme, policy) {
       this.selectedPolicy.scheme = scheme;
       this.selectedPolicy.policy = policy
       console.log(this.selectedPolicy)
+    },
+    editDetailHandler() {
+      this.$router.push(`/resource/edit/${this.resourceId}`)
     }
   }
 }

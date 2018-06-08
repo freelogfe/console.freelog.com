@@ -29,7 +29,6 @@ export default {
     searchHandler() {
       this.showInput = true
       this.$emit('search', this.input);
-      console.log(this.input)
     }
   }
 }

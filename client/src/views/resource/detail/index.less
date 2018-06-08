@@ -8,6 +8,49 @@
   .res-detail-content {
     transition: all @showSchemeAnimateTime;
   }
+
+  .opts-content-wrap {
+    padding: 0 40px;
+    color: #333;
+
+    .opts-bd-title {
+      font-size: 19px;
+      margin-bottom: 5px;
+    }
+
+    .opts-container {
+      border-bottom: 1px solid #D8D8D8;
+      padding: 15px 0;
+    }
+    .node-opts {
+      max-height: 150px;
+      overflow: scroll;
+    }
+
+    .select-target-header {
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #D8D8D8;
+    }
+
+    .select-target-bd {
+      .node-opt-item {
+        display: block;
+        padding-bottom: 12px;
+        margin: 0;
+      }
+    }
+  }
+
+  .dialog-footer {
+    text-align: right;
+    margin-top: 20px;
+    .deep-color-btn {
+      background-color: #333333;
+      padding: 8px 50px;
+      border-radius: 30px;
+    }
+  }
 }
 
 .res-detail-aside {
@@ -17,6 +60,9 @@
   right: 0;
   overflow: scroll;
   width: 430px;
+  .active-aside-status {
+    background-color: #f5f5f5;
+  }
 
   .auth-schems-img-icon {
     width: 30px;
@@ -26,14 +72,12 @@
     animation-duration: @showSchemeAnimateTime;
     animation-fill-mode: both;
     height: 100%;
-    padding-bottom: 180px;
+    //padding-bottom: 60px;
   }
 
   .scheme-contract-status-wrap {
-    bottom: 75px;
+    bottom: 55px;
     opacity: 0;
-    //transition: all .8s;
-    //z-index: -9;
     position: relative;
     width: 0;
     animation-duration: @showSchemeAnimateTime;
@@ -118,13 +162,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 15px 0;
+  padding: 9px 0;
   background-color: white;
   z-index: 9;
   border-top: 1px solid #ccc;
   .res-detail-ft-content {
     width: @contentWidth;
     margin: auto;
+    height: 36px;
+    line-height: 36px;
   }
 
   .preview-btn {
@@ -143,6 +189,8 @@
   .preview-btn,
   .favor-btn {
     color: #333333;
+    padding: 0;
+    font-weight: normal;
   }
 }
 

@@ -30,7 +30,6 @@ export const nodeItemRoute = {
     requiresAuth: true,
     title: ':nodeId节点' //:key 可动态通过route.params上的k-v进行替换
   },
-  redirect: '/node/:nodeId/presentables',
   children: [
     {
       path: 'presentables',
@@ -61,7 +60,7 @@ export const nodeItemRoute = {
       },
       hidden: true,
       component: Views.container,
-      redirect: '/node/:nodeId/presentables',
+      redirect: '/node/:nodeId/presentable',
       children: [
         {
           path: ':presentableId',
@@ -74,7 +73,7 @@ export const nodeItemRoute = {
           component: Views.presentableDetail,
         },
         {
-          path: ':presentableId/schemes',
+          path: ':presentableId/scheme_detail',
           // beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
@@ -135,7 +134,7 @@ export default {
     title: '节点管理系统'
   },
   component: Views.container,
-  redirect: '/node/list',
+  redirect: '/',
   children: [
     {
       path: 'create',
@@ -168,24 +167,6 @@ export default {
         title: '节点列表'
       },
       component: Views.nodeList
-    },
-    {
-      path: 'detail/:nodeId',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '节点详情'
-      },
-      component: Views.nodeDetail
-    },
-    {
-      path: 'login',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '节点登录'
-      },
-      component: Views.nodeLogin
     },
     {
       path: 'policy_tpl/list',
@@ -227,6 +208,15 @@ export default {
           component: Views.policyTplDetail
         }
       ]
+    },
+    {
+      path: ':nodeId',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '节点详情'
+      },
+      component: Views.nodeDetail
     },
     nodeItemRoute,
   ]

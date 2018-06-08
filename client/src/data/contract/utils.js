@@ -8,7 +8,7 @@ function format(contract) {
   if (!contract) return
 
   if (contract.policySegment) {
-    contract._segmentText =  compiler.beautify(contract.policySegment.segmentText)
+    contract._segmentText =  compiler.beautify(contract.policySegment.segmentText).trim()
   }
   contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
   contract.forUsers = contract.policySegment.users.map((user) => {
@@ -18,17 +18,17 @@ function format(contract) {
     }
   })
 
-  if (contract.partyOne) {
-    userLoader.loadDetail(contract.partyOne).then((userInfo) => {
-      Vue.set(contract, 'partyOneInfo', userInfo)
-    })
-  }
-
-  if (contract.partyTwo) {
-    nodeLoader.loadDetail(contract.partyTwo).then((nodeInfo) => {
-      Vue.set(contract, 'partyTwoInfo', nodeInfo)
-    })
-  }
+  // if (contract.partyOne) {
+  //   userLoader.onloadUserInfo(contract.partyOne).then((userInfo) => {
+  //     Vue.set(contract, 'partyOneInfo', userInfo)
+  //   })
+  // }
+  //
+  // if (contract.partyTwo) {
+  //   nodeLoader.onloadNodeDetail(contract.partyTwo).then((nodeInfo) => {
+  //     Vue.set(contract, 'partyTwoInfo', nodeInfo)
+  //   })
+  // }
   return contract
 }
 

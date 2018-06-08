@@ -1,4 +1,5 @@
 import {ContractService} from '@/services'
+import {createLoader, createCacheLoaders} from '@/lib/utils'
 
 function loadDetail(id) {
   return ContractService.get(id).then((res) => {
@@ -6,10 +7,15 @@ function loadDetail(id) {
   })
 }
 
+
+const onloadContractDetail = createCacheLoaders(loadDetail)
+
 export {
-  loadDetail
+  loadDetail,
+  onloadContractDetail
 }
 
 export default {
-  loadDetail
+  loadDetail,
+  onloadContractDetail
 }

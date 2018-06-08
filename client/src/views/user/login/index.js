@@ -57,9 +57,10 @@ export default {
             storage.set('loginName', data.loginName)
             var redirect = this.$route.query.redirect;
             if (isSafeUrl(redirect)) {
-              self.$router.replace(redirect)
+              location.replace(redirect)
+              // self.$router.replace(redirect)
             } else {
-              self.$router.replace('/node/list')
+              self.$router.replace('/')
             }
             self.loading = false
           })

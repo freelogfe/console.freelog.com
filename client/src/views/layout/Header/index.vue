@@ -43,7 +43,7 @@
                 </div>
                 <ul class="my-node-list">
                   <li class="node-item hover" :key="node.nodeId" v-for="node in nodeList">
-                    <router-link :to="'/node/detail/'+node.nodeId" class="nav-link">{{node.nodeName}}</router-link>
+                    <router-link :to="'/node/'+node.nodeId" class="nav-link">{{node.nodeName}}</router-link>
                   </li>
                 </ul>
               </li>

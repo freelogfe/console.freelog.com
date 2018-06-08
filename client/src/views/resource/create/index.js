@@ -1,15 +1,11 @@
 import BaseResourceCreator from './resource/index.vue'
-import AuthSchemeCreator from '../auth-scheme/index.vue'
-
 import ResourceLoader from '@/data/resource/loader'
-
 import {storage} from '@/lib'
 
 export default {
   name: 'resource-creator',
   components: {
-    BaseResourceCreator,
-    AuthSchemeCreator
+    BaseResourceCreator
   },
   data() {
     return {
@@ -30,7 +26,7 @@ export default {
       if (this.$refs.inputArea.nextHandler) {
         this.$refs.inputArea.nextHandler(this.data).then((detail) => {
           console.log(detail)
-          if (detail){
+          if (detail) {
             Object.assign(this.resourceDetail, detail)
           }
           callback()

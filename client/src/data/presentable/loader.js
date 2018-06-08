@@ -1,4 +1,6 @@
 import {PresentablesService} from '@/services'
+import {createLoader, createCacheLoaders} from '@/lib/utils'
+
 
 function loadDetail(pid) {
   return PresentablesService.get(pid).then((res) => {
@@ -6,10 +8,14 @@ function loadDetail(pid) {
   })
 }
 
+const onloadPresentableDetail = createCacheLoaders(loadDetail)
+
 export {
-  loadDetail
+  loadDetail,
+  onloadPresentableDetail
 }
 
 export default {
-  loadDetail
+  loadDetail,
+  onloadPresentableDetail
 }

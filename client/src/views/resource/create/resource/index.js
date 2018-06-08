@@ -1,15 +1,19 @@
 import ResourceMetaInfo from '../../meta/index.vue'
 import {storage} from '@/lib'
 import CONFIG from '@/config/index'
-import DescriptionEditor from 'vue-wangeditor'
+import RichEditor from '@/components/RichEditor/index.vue'
 
 const {RESOURCE_TYPES} = CONFIG
+const EDIT_MODES = {
+  creator: 'creator',
+  editor: 'editor'
+}
 
 export default {
   name: 'base-resource-creator',
   components: {
     ResourceMetaInfo,
-    DescriptionEditor
+    RichEditor
   },
   data() {
     const validateResourceType = (rule, value, callback) => {
@@ -65,7 +69,9 @@ export default {
         data: {}
       },
       valid: false,
-      meta: '{}'
+      meta: '{}',
+      editMode: EDIT_MODES.creator,
+      editorConfig: {}
     }
   },
   props: {
@@ -77,13 +83,23 @@ export default {
     }
   },
 
-  computed: {},
+  computed: {
+    showCreatorInputItem() {
+      return this.editMode === EDIT_MODES.creator
+    }
+  },
 
   watch: {
     data() {
       if (this.data.resourceId) {
+        console.log(this.data)
+
+        this.editMode = EDIT_MODES.editor
+        Object.assign(this.formData, this.data)
         this.formData.widgetName = this.data.systemMeta.widgetName || ''
-        Object.assign(this.formatData, this.data)
+        if (this.data.previewImages.length) {
+          this.formData.previewImage = this.data.previewImages[0]
+        }
         if (this.data.meta) {
           try {
             this.meta = JSON.stringify(this.data.meta)
@@ -96,7 +112,6 @@ export default {
   },
   mounted() {
     this.resourceTypeChange(this.formData.resourceType)
-    console.log(this.$refs.editor)
   },
   methods: {
     resourceTypeChange(type) {
@@ -158,12 +173,20 @@ export default {
     previewImageChangeHandler(file, fileList) {
       this.fileLimitValidator(file, fileList)
     },
-    imgUploadSuccessHandler(fid, res) {
-      var editor =  this.$refs.editor;
+    validateImageHandler(file) {
+      if (!/\.(jpg|png|gif|tiff|webp)$/.test(file.name)) {
+        this.$message.error('不支持的图片类型')
+        return false
+      }
 
+      return true
+    },
+    imgUploadSuccessHandler(fid, res) {
+      var editor = this.$refs.editor;
+      console.log(arguments)
       try {
         res = JSON.parse(res)
-      } catch (err){
+      } catch (err) {
         res = {}
         console.error(err)
       }
@@ -193,22 +216,13 @@ export default {
     },
     packUploadData() {
       var $uploader = this.$refs.upload;
-      var uploadData = $uploader.data;
+      var uploadData = $uploader.data || {};
       var formData = this.formData;
       var metaData;
-      const INPUT_KEYS = ['resourceName', 'resourceType', 'previewImage']
+      const INPUT_KEYS = ['resourceType']
+      const UPDATE_KEYS = ['resourceName']
+      var keys = UPDATE_KEYS
 
-      INPUT_KEYS.forEach(key => {
-        if (formData[key]) {
-          uploadData[key] = formData[key]
-        }
-      });
-
-
-      var desc = this.$refs.editor.getHtml()
-      if (desc) {
-        uploadData.description = desc
-      }
 
       //包装meta数据
       try {
@@ -220,22 +234,43 @@ export default {
       if (this.formData.widgetName) {
         metaData.widgetName = this.formData.widgetName;
       }
-      uploadData.meta = JSON.stringify(metaData)
+
+      if (this.editMode === EDIT_MODES.creator) {
+        keys = keys.concat(INPUT_KEYS)
+        uploadData.meta = JSON.stringify(metaData)
+        uploadData.previewImage = formData.previewImage
+      } else {
+        uploadData.previewImages = [formData.previewImage]
+        uploadData.meta = metaData
+      }
+
+      var desc = this.$refs.editor.getHtml()
+      if (desc) {
+        uploadData.description = desc
+      }
+
+      keys.forEach(key => {
+        if (formData[key]) {
+          uploadData[key] = formData[key]
+        }
+      });
       console.log(uploadData)
+      return uploadData
     },
     isChanged() {
-      return (this.data.resourceName !== this.formData.resourceName) ||
-        (JSON.stringify(this.data.meta) !== this.meta)
+      //todo 待优化
+      return true
     },
     nextHandler() {
       return new Promise((resolve, reject) => {
         this.validate()
           .then(() => {
-            this.packUploadData();
+            var data = this.packUploadData();
+
             if (!this.data.resourceId) {
-              this.createResource().then(resolve).catch(reject)
+              this.createResource(data).then(resolve).catch(reject)
             } else if (this.isChanged()) {
-              this.updateResource().then(resolve).catch(reject)
+              this.updateResource(data).then(resolve).catch(reject)
             } else {
               resolve()
             }
@@ -260,11 +295,9 @@ export default {
         }
       })
     },
-    updateResource() {
-      return this.$services.resource.put(this.data.resourceId, {
-        resourceName: this.formData.resourceName,
-        meta: JSON.parse(this.meta)
-      }).then((res) => {
+    updateResource(data) {
+      console.log(data)
+      return this.$services.resource.put(this.data.resourceId, data).then((res) => {
         if (res.data.ret !== 0 || res.data.errcode !== 0) {
           return Promise.reject(res)
         }

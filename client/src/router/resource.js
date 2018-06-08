@@ -24,6 +24,16 @@ export default {
       component: Views.resourceCreator,
     },
     {
+      path: 'edit/:resourceId',
+      hidden: true,
+      meta: {
+        requiresAuth: true,
+        title: '更新资源',
+        type: 'resource'
+      },
+      component: Views.resourceEditor,
+    },
+    {
       path: 'list',
       meta: {
         requiresAuth: true,

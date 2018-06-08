@@ -66,9 +66,9 @@ body {
   -webkit-box-orient: vertical;
 }
 
+@dotSize: 4px;
 
-@dotSize: 10px;
-
+//默认待处理
 .dot {
   display: inline-block;
   &:after {
@@ -76,33 +76,38 @@ body {
     border-radius: 50%;
     height: @dotSize;
     width: @dotSize;
-    background-color: #f23e5c;
+    background-color: white;
     display: inline-block;
     vertical-align: top;
-    margin-top: 6px;
+    margin-top: 5px;
+    border: @dotSize solid #F46284;
   }
 }
 
+//明确上抛
 .active-status-0 {
   .dot {
     &:after {
-      background-color: #f23e5c
+      background-color: #F46284;
     }
   }
 }
 
+//处理中
 .active-status-1 {
   .dot {
     &:after {
-      background-color: #FFC033
+      border-color: #89D1AC
     }
   }
 }
 
+//完全解决
 .active-status-2 {
   .dot {
     &:after {
-      background-color: #66bc35
+      border-color: #89D1AC;
+      background-color: #89D1AC
     }
   }
 }

@@ -1,3 +1,7 @@
+import SchemeLoader from '@/data/scheme/loader'
+import resourceCompiler from '@freelog/resource-policy-compiler'
+
+
 function generateAlpha(num) {
   num = num || 26;
   var alphas = []
@@ -12,108 +16,6 @@ export default {
   name: 'auth-scheme-detail',
   data() {
     return {
-      schemeDetail: {
-        "authSchemeId": "5af54b5011e88909c8b58d6a",
-        "authSchemeName": "方案1",
-        "resourceId": "2b0e51145bd40943e75511efdce36cfceb2eeada",
-        "dependCount": 0,
-        "statementState": 1,
-        "policy": [
-          {
-            "segmentId": "397c06bd49dcb3712437890c9cdf8b222",
-            "policyName": "新的方案A",
-            "segmentText": "for public: in <initial> : terminate",
-            "users": [
-              {
-                "userType": "group",
-                "users": [
-                  "public"
-                ]
-              }
-            ],
-            "fsmDescription": [
-              {
-                "currentState": "<initial>"
-              }
-            ],
-            "activatedStates": [
-              "<initial>"
-            ],
-            "initialState": "<initial>",
-            "terminateState": "terminate"
-          },
-          {
-            "segmentId": "397c06bd49cb3712437890c9cadf8b222",
-            "policyName": "新的方案B",
-            "segmentText": "for public: in <initial> : terminate",
-            "users": [
-              {
-                "userType": "group",
-                "users": [
-                  "public"
-                ]
-              }
-            ],
-            "fsmDescription": [
-              {
-                "currentState": "<initial>"
-              }
-            ],
-            "activatedStates": [
-              "<initial>"
-            ],
-            "initialState": "<initial>",
-            "terminateState": "terminate"
-          },
-          {
-            "segmentId": "397c06bdd49cb3712437890c9cdf8b222",
-            "policyName": "新的方案C",
-            "segmentText": "for public: in <initial> : terminate",
-            "users": [
-              {
-                "userType": "group",
-                "users": [
-                  "public"
-                ]
-              }
-            ],
-            "fsmDescription": [
-              {
-                "currentState": "<initial>"
-              }
-            ],
-            "activatedStates": [
-              "<initial>"
-            ],
-            "initialState": "<initial>",
-            "terminateState": "terminate"
-          }
-        ],
-        "policyText": "",
-        "languageType": "freelog_policy_lang",
-        "bubbleResources": [
-          {
-            "resourceId": "0b8edaf2061fe5280a358ecb09e0818c4c989a1b",
-            "resourceName": "我的资源0b8edaf2061fe5280a358ecb09e0818c4c989a1b"
-          }
-        ],
-        "dutyStatements": [
-          {
-            "resourceId": "0bee49c19387521a79aeff78504425dde0ee4897",
-            "authSchemeId": "5ae95be038d3b4258c1a607a",
-            "policySegmentId": "054632645eb66c4d5ac93892a9cfd51b",
-            "serialNumber": "5ae95be038d3b4258c1a6079",
-            "resourceName": "我的资源5ae95be038d3b4258c1a6079"
-          }
-        ],
-        "statementCoverageRate": 0,
-        "associatedContracts": [],
-        "contractCoverageRate": 0,
-        "userId": 10026,
-        "serialNumber": "5af54b5011e88909c8b58d69",
-        "status": 0,
-        dependencies: []
-      },
       curChoice: 0,
       choices: [],
       selectedPolicy: '',
@@ -143,9 +45,10 @@ export default {
   },
   methods: {
     init() {
-      this.loadPolicies().then((data) => {
-        this.schemes = this.formatSchemes(data);
-      }).catch(this.$error.showErrorMessage)
+      SchemeLoader.onloadSchemesForResource(this.resource.resourceId)
+        .then((data) => {
+          this.schemes = this.formatSchemes(data);
+        }).catch(this.$error.showErrorMessage)
     },
     changePolicy(scheme, policy) {
       this.selectedCallback && this.selectedCallback(scheme, policy)
@@ -159,10 +62,15 @@ export default {
       });
 
       schemes.forEach((scheme) => {
-        scheme.dutyStatements.forEach((res) => {
-          res.done = true
-        });
-        scheme.dependencies = scheme.bubbleResources.concat(scheme.dutyStatements)
+        scheme.dependencies = scheme.bubbleResources
+        scheme.policy.forEach(p => {
+          try {
+            p._fmtSegmentText = resourceCompiler.beautify(p.segmentText)
+            console.log(p._fmtSegmentText)
+          } catch (e) {
+            p._fmtSegmentText = p.segmentText
+          }
+        })
       });
 
       return schemes;

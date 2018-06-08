@@ -2,11 +2,11 @@
   <div class="res-intro-wrapper">
     <div class="user-avatar">
       <img class="resource-author-img"
-           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb_dez7L9rZGrxliWIWRzbH6H0u0BMePCrTB6wVbLtcfrAMKII"
+           src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg"
            alt="">
     </div>
     <div class="res-content">
-      <p class="res-name">{{resource.resourceName}}{{resource.resourceName}}{{resource.resourceName}}</p>
+      <p class="res-name">{{resource.resourceName}}</p>
       <slot></slot>
       <div class="res-origin">
         <span class="res-author">by: {{resource.userName || resource.resourceId}}</span>
