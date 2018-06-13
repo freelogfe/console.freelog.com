@@ -25,6 +25,31 @@
     .node-opts {
       max-height: 150px;
       overflow: scroll;
+
+      .checkbox-item {
+        cursor: pointer;
+      }
+
+      .node-opt-selected {
+        color: #ccc;
+        pointer-events: none;
+      }
+      .node-opt-check-status {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        vertical-align: text-bottom;
+        margin-right: 6px;
+      }
+
+      .checked-opt {
+        background-image: url('../../../assets/img/icons/checked.png');
+      }
+      .unchecked-opt {
+        background-image: url('../../../assets/img/icons/unchecked.png');
+      }
     }
 
     .select-target-header {
@@ -173,19 +198,17 @@
     line-height: 36px;
   }
 
-  .preview-btn {
-    margin-right: 15px;
-  }
-
   .auth-btn {
     float: right;
     margin-right: 15px;
     background-color: #333333;
     border-radius: 32px;
-    padding: 10px 40px;
+    padding: 10px 50px;
     color: white;
   }
-
+  .detail-ft-btn {
+    margin-right: 50px;
+  }
   .preview-btn,
   .favor-btn {
     color: #333333;

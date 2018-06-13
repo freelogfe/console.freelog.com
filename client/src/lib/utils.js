@@ -66,15 +66,30 @@ function promisifyLoader(loader) {
   }
 }
 
+function loopForBreak(array, fn) {
+  var flag = false
+  for (var i = 0; i < array.length; i++) {
+    let item = array[i]
+    if (fn(item, i)) {
+      flag = true
+      break;
+    }
+  }
+
+  return flag
+}
+
 export {
   createLoader,
   createCacheLoaders,
-  promisifyLoader
+  promisifyLoader,
+  loopForBreak
 }
 
 
 export default {
   createLoader,
   createCacheLoaders,
-  promisifyLoader
+  promisifyLoader,
+  loopForBreak
 }

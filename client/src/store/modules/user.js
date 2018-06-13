@@ -35,6 +35,7 @@ const user = {
       } else {
         promise = axios.get('/v1/userinfos/current')
       }
+
       return promise.then(res => {
         if (res.data.errcode === 0) {
           commit(types.CHANGE_SESSION, {user: res.data.data});
@@ -48,7 +49,6 @@ const user = {
     [types.CHECK_USER_SESSION]({commit, getters}) {
       var session = getters.session || sessionStore.get('user_session')
       var authInfo = (session && session.user)
-
       if (!authInfo || !authInfo.userId) {
         authInfo = cookieStore.get('authInfo')
         var jwt = authInfo.split('.')

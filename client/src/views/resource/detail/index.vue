@@ -56,15 +56,15 @@
 
     <div class="res-detail-ft">
       <div class="res-detail-ft-content">
-        <el-button type="text" class="preview-btn" @click="previewHandler">
+        <el-button type="text" class="preview-btn detail-ft-btn" @click="previewHandler">
           <img class="img-icon" src="../../../assets/img/icons/preview.png"
                alt="预览">预览
         </el-button>
-        <el-button type="text" class="favor-btn" @click="favorHandler">
+        <el-button type="text" class="favor-btn detail-ft-btn" @click="favorHandler">
           <img class="img-icon" src="../../../assets/img/icons/favor.png"
                alt="收藏">{{resourceDetail.isFavor?'已收藏':'收藏至我的资源库'}}
         </el-button>
-        <el-button type="text" class="favor-btn" @click="editDetailHandler" v-if="showEdit">
+        <el-button type="text" class="favor-btn detail-ft-btn" @click="editDetailHandler" v-if="showEdit">
           <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
         </el-button>
         <el-button class="auth-btn" circle @click="getResourceAuthHandler">获取授权</el-button>
@@ -80,14 +80,13 @@
         <div class="select-target-bd">
           <h4 class="opts-bd-title">获取资源授权至节点：</h4>
           <div class="opts-container">
-            <el-checkbox-group
-              v-model="selectedNodes"
-              class="node-opts"
-              :min="1">
-              <el-checkbox class="node-opt-item" v-for="node in nodes" :label="node.nodeId" :key="node.nodeId">
+            <ul class="checkbox-group node-opts">
+              <li class="checkbox-item" v-for="node in nodes" :class="{'node-opt-selected': node.selected}" @click="nodeOptCheckHandler(node)">
+                <i class="node-opt-check-status checked-opt" v-if="node.checked"></i>
+                <i class="node-opt-check-status unchecked-opt" v-else></i>
                 {{node.nodeName}}
-              </el-checkbox>
-            </el-checkbox-group>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="dialog-footer">

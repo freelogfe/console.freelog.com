@@ -1,9 +1,12 @@
 .contract-list-wrapper {
   padding-top: 60px;
   color: #333333;
-  width: 430px;
+  //width: 430px;
   background-color: white;
 
+  .presentable-name {
+    font-size: 14px;
+  }
   .contract-list-title {
     font-size: 18px;
     margin-bottom: 35px;
@@ -13,10 +16,16 @@
     }
   }
 
-  .contract-item {
-    padding: 0 35px;
-    margin-bottom: 15px;
+  .contract-list {
+    margin-top: 15px;
+  }
 
+  .contract-item,
+  .presentable-item {
+    padding: 0 35px;
+    margin-bottom: 10px;
+  }
+  .contract-item {
     &:hover {
       background-color: #F5F5F5;
     }

@@ -1,9 +1,11 @@
-import FreelogTags from '@/components/Tags/index.vue'
+import TagsEditor from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from "@/config/resource";
 import PresentablePolicy from '@/components/policyEditor/index.vue'
 import compiler from '@freelog/presentable-policy-compiler'
 import {cloneDeep} from 'lodash'
+import CONFIG from '@/config/index'
 
+const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
 
 export default {
   name: 'presentable-editor',
@@ -18,11 +20,12 @@ export default {
         presentableName: '',
         policy: [],
         userDefinedTags: []
-      }
+      },
+      userDefinedTags: []
     }
   },
   components: {
-    FreelogTags,
+    TagsEditor,
     PresentablePolicy
   },
   props: {
@@ -35,15 +38,21 @@ export default {
       this.initView()
     }
   },
+  computed: {
+    isValidPolicy() {
+      return this.inputData.policy.some(p => {
+        return p.status === 1
+      })
+    }
+  },
   mounted() {
     this.initView()
   },
   methods: {
     initView() {
       if (this.data.presentableId) {
-        Object.keys(this.inputData).forEach(k => {
-          this.inputData[k] = this.data[k]
-        })
+        Object.assign(this.inputData, this.data)
+        this.userDefinedTags = this.inputData.userDefinedTags
       }
     },
     validatePolicyHandler(detail) {
@@ -54,17 +63,17 @@ export default {
     changePolicyHandler() {
 
     },
+    formatPresentable(presentable) {
+      presentable._statusInfo = STATUS_TIPS[presentable.status]
+      presentable.isReady = (presentable.status & 3) === 3
+    },
     savePresentableHandler() {
       var policies = this.$refs.editor.getChangeData()
       var param = {
         // isOnline
         presentableName: this.inputData.presentableName
       };
-
-      if (this.inputData.userDefinedTags.length) {
-        param.userDefinedTags = this.inputData.userDefinedTags
-      }
-
+      param.userDefinedTags = this.userDefinedTags
       if (Object.keys(policies).length) {
         param.policies = policies
       }
@@ -73,6 +82,8 @@ export default {
         .then((res) => {
           if (res.data.errcode === 0) {
             var data = res.getData()
+            Object.assign(this.data, data)
+            this.formatPresentable(this.data)
             this.$emit('onSaveEnd', data)
             this.$message.success('更新成功')
           } else {

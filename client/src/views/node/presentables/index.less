@@ -1,26 +1,12 @@
 .presentables-wrapper {
   display: flex;
-  height: 100%;
 
   .presentable-list-container {
     flex-basis: 430px;
-
+    overflow: scroll;
+    max-height: 100vh;
     .dot {
       float: left;
-      &:after {
-        content: ' ';
-        display: inline-block;
-        border-radius: 50%;
-        width: 7px;
-        height: 7px;
-        background-color: #F06565;
-      }
-
-      &.done {
-        &:after {
-          background-color: #9BCB39;
-        }
-      }
     }
 
     h4 {
@@ -35,10 +21,33 @@
     }
 
     .presentable-item {
-      padding: 15px 50px;
+      padding: 15px 30px;
       cursor: pointer;
+
+      &.active-status-2 {
+        .dot, .p-title {
+          opacity: .3;
+        }
+
+        .node-res-status-switch {
+          display: inline-block;
+        }
+      }
+      &.is-presentable-online {
+        .dot, .p-title {
+          opacity: 1;
+        }
+      }
+
       &:hover {
         background-color: #F5F5F5;
+      }
+
+      .node-res-status-switch {
+        display: none;
+        float: right;
+        position: relative;
+        z-index: 1;
       }
 
       &.active {
@@ -51,12 +60,13 @@
         display: block;
         font-size: 14px;
         padding-left: 25px;
+        padding-right: 80px;
       }
     }
   }
 
   .presentable-detail-container {
     flex: auto;
-    height: 100%;
+    background-color: #FAFAFA;
   }
 }

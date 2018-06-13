@@ -2,7 +2,7 @@
   <div class="auth-scheme-tree-wrap">
     <div class="view-mode-tabs" :class="['active-mode-'+viewMode]">
       <el-button type="text" class="mode-btn" @click="changeViewMode('list')">
-        <el-badge :value="dutyStatements.length" class="badge-num">
+        <el-badge :value="unsignPolicyList.length" class="badge-num">
           <span>待签约列表</span>
         </el-badge>
       </el-button>
@@ -12,7 +12,7 @@
     <div class="auth-dep-list-wrap" v-show="viewMode==='list'">
       <h4 class="policy-input-title"><i class="el-icon-question"></i>待签约列表</h4>
       <el-collapse accordion>
-        <el-collapse-item :name="duty.resourceId" v-for="duty in dutyStatements" :key="duty.authSchemeId"
+        <el-collapse-item :name="duty.resourceId" v-for="duty in unsignPolicyList" :key="duty.authSchemeId"
                           class="duty-resource">
           <template slot="title">
             <h4>{{duty.resourceName}}</h4>

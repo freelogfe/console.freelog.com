@@ -61,14 +61,11 @@
   import {intersectionBy, unionBy, differenceBy} from 'lodash'
   import ResourceLoader from '@/data/resource/loader'
   import PolicyEditor from '@/components/policyEditor/index.vue'
+  import {SCHEME_STATUS} from '@/config/scheme'
+
   import resourceCompiler from '@freelog/resource-policy-compiler'
   import CONFIG from '@/config/index'
 
-  const DEPENDENCY_STATUS = {
-    NONE: 0, //未解决
-    SOME: 1, //解决部分
-    ALL: 2 //全部解决
-  }
   export default {
     name: 'resource-auth-scheme',
     components: {
@@ -122,6 +119,7 @@
           if (dutyResourceMap[dep.resourceId]) {
             dep.checked = true
           }
+          dep.activeStatus = SCHEME_STATUS.UNHANDLE
           this.checkResourceActiveStatus(dep)
         });
 
@@ -135,11 +133,12 @@
           intersectDeps = intersectionBy(allResources, dep.dependenciesTree, key);
           intersectDeps = differenceBy(intersectDeps, this.dutyStatements, key)
           if (intersectDeps.length) {
-            dep.activeStatus = DEPENDENCY_STATUS.SOME
+            dep.activeStatus = SCHEME_STATUS.SOME
           } else {
-            dep.activeStatus = DEPENDENCY_STATUS.ALL
+            dep.activeStatus = SCHEME_STATUS.ALL
           }
         } else {
+          dep.activeStatus = SCHEME_STATUS.UNHANDLE
           return false
         }
       },

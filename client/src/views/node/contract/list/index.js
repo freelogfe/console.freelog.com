@@ -7,7 +7,8 @@ export default {
   data() {
     return {
       contractList: [],
-      query: ''
+      query: '',
+      presentables: []
     }
   },
   components: {
@@ -16,22 +17,55 @@ export default {
 
   mounted() {
     var self = this;
-    var loader = this.loader()
+    // var loader = this.loader()
+    this.loadPresentables({nodeId: this.$route.params.nodeId})
+      .then(presentables => {
+        var presentableIds = presentables.map(p => {
+          return p.presentableId
+        })
 
-    return loader({}).then(list => {
-      this.contractList = list
-      console.log('contracts', list)
-    })
+        if (presentableIds.length) {
+          this.loadContractInfos(presentableIds).then(data => {
+            data.forEach(p => {
+              var contractIds = [];
+              var resourceIds = [];
+              var contractsMap = {}
+              p.contracts = p.contracts.filter(contract => {
+                resourceIds.push(contract.resourceId)
+                contractIds.push(contract.contractId)
+                contractsMap[contract.contractId] = contract
+                ContractUtils.format(contract)
+                if (contract.isMasterContract) {
+                  p.masterContract = contract
+                } else {
+                  return contract
+                }
+              });
+            })
+            this.presentables = data
+          })
+        }
+      })
   },
   methods: {
-    querySearchAsync() {
-
+    loadContractsDetail(contractIds) {
+      return this.$axios.get(`v1/contracts/contractRecords`, {
+        params: {
+          contractIds: contractIds.join(',')
+        }
+      }).then(res => {
+        return res.getData()
+      })
     },
-    handleSelectSearchItem() {
-
-    },
-    queryHandler() {
-      this.$message.warning('待开发')
+    loadContractInfos(presentableIds) {
+      return this.$axios.get(`v1/presentables/contractInfos`, {
+        params: {
+          nodeId: this.$route.params.nodeId,
+          presentableIds: presentableIds.join(',')
+        }
+      }).then(res => {
+        return res.getData()
+      })
     },
     loadResourceData(resIds) {
       return this.$axios.get('/v1/resources/list', {
@@ -58,15 +92,7 @@ export default {
       contracts.forEach((contract) => {
         var item = dataMap[contract.resourceId] || null;
 
-        if (item && item.presentableId) {
-          Object.assign(contract, {
-            presentableDetail: item
-          })
-        } else if (item) {
-          Object.assign(contract, {
-            resourceDetail: item
-          })
-        }
+        this.$set(contract, 'resourceDetail', item)
       })
     },
     loader() {

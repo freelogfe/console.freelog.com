@@ -2,6 +2,8 @@ import {cloneDeep, uniqBy} from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import ResourceAuthScheme from './auth-scheme.vue'
 import SchemeDataLoader from '@/data/scheme/loader'
+import {loopForBreak} from '@/lib/utils'
+import {SCHEME_STATUS} from '@/config/scheme'
 
 //intersectionWith
 function getUUID() {
@@ -258,6 +260,8 @@ export default {
             serialNumber: dep.selectedScheme.serialNumber
           });
         })
+      } else {
+        dutyStatements = null
       }
       return dutyStatements
     },
@@ -370,7 +374,10 @@ export default {
           policies.length && (data.policies = policies)
         }
       }
-      data.dutyStatements = this.getDutyStateMents(schemeData)
+      var dutyStatements = this.getDutyStateMents(schemeData)
+      if (dutyStatements) {
+        data.dutyStatements = dutyStatements
+      }
       return data
     },
     backToResourceInfoHandler() {
@@ -380,8 +387,8 @@ export default {
       var scheme = this.tabsSchemeMap[this.curTabName]
       this.nextHandler(scheme).then(() => {
         if (scheme.status === 0) {
-          return this.signScheme().then(() => {
-            this.$message.success('操作成功')
+          return this.createSchemeContracts(scheme).then(() => {
+            this.$message.success('创建成功')
             // this.$router.push('/')
           })
         } else {
@@ -389,8 +396,35 @@ export default {
         }
       }).catch(this.$error.showErrorMessage)
     },
-    signScheme() {
-      var scheme = this.tabsSchemeMap[this.curTabName]
+    validateSchemeOptions(scheme) {
+      var flag = true;
+      console.log('validateSchemeOptions')
+      console.log(scheme)
+      loopForBreak(scheme.dependencies, (dep) => {
+        console.log(dep)
+        if (flag === false || dep.activeStatus === undefined || dep.activeStatus === SCHEME_STATUS.UNHANDLE) {
+          flag = false
+          return true
+        }
+      });
+
+      if (flag) {
+        loopForBreak(scheme.dependencies, (dep) => {
+          flag = this.validateSchemeOptions(dep)
+          if (flag === false) {
+            return true
+          }
+        });
+      }
+
+      return flag;
+    },
+    createSchemeContracts(scheme) {
+      if (!this.validateSchemeOptions(scheme)) {
+        return Promise.reject('有资源未选择授权策略')
+      }
+
+      // return Promise.reject('error')
       return this.$axios.put(`/v1/resources/authSchemes/batchSignContracts/${scheme.authSchemeId}`).then(res => {
         if (res.data.errcode === 0) {
           return res.getData()
@@ -401,6 +435,8 @@ export default {
     },
     tmpSaveAndQuitHandler() {
       var scheme = this.tabsSchemeMap[this.curTabName]
+      console.log('scheme', scheme)
+
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')
         // this.$router.push('/resource/list')

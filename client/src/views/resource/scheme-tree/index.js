@@ -5,12 +5,8 @@ import PolicyEditor from '@/components/policyEditor/index.vue'
 import resourceCompiler from '@freelog/resource-policy-compiler'
 import ResourceIntroInfo from '../intro/index.vue'
 import SchemeDetail from '../detail/auth-scheme/index.vue'
+import {SCHEME_STATUS} from '@/config/scheme'
 
-const DEPENDENCY_STATUS = {
-  NONE: 0, //未解决
-  SOME: 1, //解决部分
-  ALL: 2 //全部解决
-}
 export default {
   name: 'resource-scheme-tree',
   components: {
@@ -71,7 +67,13 @@ export default {
       unwatch()
     })
   },
-  computed: {},
+  computed: {
+    unsignPolicyList() {
+      return this.dutyStatements.filter(duty => {
+        return !duty.contractId
+      })
+    }
+  },
   watch: {
     resourceId(newResId, oldResId) {
       if (oldResId) {
@@ -100,7 +102,6 @@ export default {
   },
   methods: {
     fillDutyStatements() {
-
       this.contracts.forEach(contract => {
         var rid = contract.resourceId
         this.dutyResourceMap[rid] = contract
@@ -165,9 +166,9 @@ export default {
         intersectDeps = intersectionBy(allResources, dep.dependenciesTree, key);
         intersectDeps = differenceBy(intersectDeps, this.dutyStatements, key)
         if (intersectDeps.length) {
-          activeStatus = DEPENDENCY_STATUS.SOME
+          activeStatus = SCHEME_STATUS.SOME
         } else {
-          activeStatus = DEPENDENCY_STATUS.ALL
+          activeStatus = SCHEME_STATUS.ALL
         }
 
         // this.$set(dep, 'activeStatus', status)
@@ -178,6 +179,7 @@ export default {
           })
         }
       } else {
+        dep.activeStatus = SCHEME_STATUS.UNHANDLE
         return false
       }
     },
@@ -307,18 +309,18 @@ export default {
         var bubbleResources = resource.selectedScheme.bubbleResources
         if (bubbleResources.length) {
           var cnt = 0
-          activeStatus = DEPENDENCY_STATUS.SOME
+          activeStatus = SCHEME_STATUS.SOME
           bubbleResources.forEach((res) => {
             var duty = this.dutyResourceMap[res.resourceId]
-            if (duty && (duty.activeStatus === DEPENDENCY_STATUS.ALL)) {
+            if (duty && (duty.activeStatus === SCHEME_STATUS.ALL)) {
               cnt++
             }
           });
           if (cnt === bubbleResources.length) {
-            activeStatus = DEPENDENCY_STATUS.ALL
+            activeStatus = SCHEME_STATUS.ALL
           }
         } else {
-          activeStatus = DEPENDENCY_STATUS.ALL
+          activeStatus = SCHEME_STATUS.ALL
         }
       }
       resource.activeStatus = activeStatus
@@ -343,7 +345,7 @@ export default {
       var selectedDeps = []
 
       deps.forEach(dep => {
-        if (dep.selected || dep.activeStatus === DEPENDENCY_STATUS.ALL || dep.activeStatus === DEPENDENCY_STATUS.SOME) {
+        if (dep.selected || dep.activeStatus === SCHEME_STATUS.ALL || dep.activeStatus === SCHEME_STATUS.SOME) {
           selectedDeps.push(dep)
         }
       });

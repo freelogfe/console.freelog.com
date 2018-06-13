@@ -9,14 +9,15 @@ function format(contract) {
 
   if (contract.policySegment) {
     contract._segmentText =  compiler.beautify(contract.policySegment.segmentText).trim()
+    contract.forUsers = contract.policySegment.users.map((user) => {
+      return {
+        users: user.users.join('、'),
+        type: user.userType
+      }
+    })
   }
+
   contract.statusInfo = CONTRACT_STATUS_COLORS[contract.status]
-  contract.forUsers = contract.policySegment.users.map((user) => {
-    return {
-      users: user.users.join('、'),
-      type: user.userType
-    }
-  })
 
   // if (contract.partyOne) {
   //   userLoader.onloadUserInfo(contract.partyOne).then((userInfo) => {

@@ -3,8 +3,8 @@
     <h4 class="res-title">{{resource.resourceName}}</h4>
     <div class="res-intro-detail">
       <div class="res-intro-bd">
-        <span class="res-type">#{{resource.resourceType}}</span> <span
-        class="res-size">{{resource._fileSize}}</span>
+        <span class="res-type">#{{resource.resourceType}}</span>
+        <!--<span class="res-size">{{resource._fileSize}}</span>-->
         <span class="res-desc">{{resource.resourceDesc}}{{resource.resourceId}}</span>
       </div>
       <div class="res-intro-ft">

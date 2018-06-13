@@ -17,7 +17,7 @@
       @keyup.enter.native="handleInputConfirm"
       @blur="handleInputConfirm">
     </el-input>
-    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ {{actionText}}</el-button>
+    <el-button v-else class="button-new-tag" size="small" @click="showInput"><i class="el-icon-plus"></i> {{actionText}}</el-button>
   </div>
 </template>
 
@@ -37,6 +37,7 @@
     line-height: 30px;
     padding-top: 0;
     padding-bottom: 0;
+    border-radius: 4px;
   }
   .input-new-tag {
     width: 90px;

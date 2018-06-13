@@ -147,8 +147,15 @@ export default {
       this.editingIndex = index
     },
     switchPolicyStatusHandler(policy, index) {
-      policy.disabled = !policy.disabled
-      // this.policyList.splice(index, 1)
+      if (policy.policySegmentId) {
+        policy.disabled = !policy.disabled
+      } else {
+        this.$confirm('确定删除当前未保存策略？')
+          .then(() => {
+            this.policyList.splice(index, 1)
+          }).catch(() => {
+        })
+      }
     },
     getChangeData() {
       var policies = {}

@@ -8,11 +8,15 @@ import store from './store'
 import plugins from './plugins'
 import 'element-ui/lib/theme-chalk/index.css'
 import './styles/element-ui.less'
+import VueLazyload from 'vue-lazyload'
 
 sync(store, router, {moduleName: 'route'})
 
 Vue.use(ElementUI);
 Vue.use(plugins)
+Vue.use(VueLazyload, {
+  lazyComponent: true
+});
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

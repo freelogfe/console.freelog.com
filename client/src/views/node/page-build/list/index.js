@@ -1,3 +1,6 @@
+import ResourceDataLoader from '@/data/resource/loader'
+
+
 const PAGE_BUILD_STATUS = {
   show: 1,
   hide: 2
@@ -15,10 +18,7 @@ export default {
     this.loader()
       .then(this.format.bind(this))
       .then((data) => {
-        this.pagebuildList = data.map((item, index) => {
-          item.index = index
-          return item
-        });
+        this.pagebuildList = data;
         console.log(this.pagebuildList)
       })
   },
@@ -34,14 +34,14 @@ export default {
         var presentables = res.getData()
         var promises = [];
         presentables.forEach((p) => {
-          var promise = self.$services.resource.get(p.resourceId).then((resourceRes) => {
-            p.resourceDetail = resourceRes.getData()
+          var promise = ResourceDataLoader.onloadResourceDetail(p.resourceId).then((resourceDetail) => {
+            p.resourceDetail = resourceDetail
             if (p.resourceDetail.previewImages.length) {
               p.resourceDetail._previewImage = p.resourceDetail.previewImages[0]
             } else {
-              p.resourceDetail._previewImage = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1527660657079&di=44f93c3efc9bf6e81a4996ae1e10b886&imgtype=0&src=http%3A%2F%2Fgb.cri.cn%2Fmmsource%2Fimages%2F2014%2F04%2F08%2F90%2F13642159619414055870.jpg'
+              // p.resourceDetail._previewImage = ''
             }
-            return resourceRes
+            return resourceDetail
           })
           promises.push(promise)
         })
@@ -52,16 +52,30 @@ export default {
       })
     },
     format(pagebuildList) {
-      pagebuildList.forEach((item) => {
-        item.statusInfo = (item.status === PAGE_BUILD_STATUS.show) ? {
+      pagebuildList.forEach((item, index) => {
+        item.index = index
+        if (item.status === PAGE_BUILD_STATUS.show) {
+          this.currentIndex = index
+        }
+
+        this.formatPageBuild(item)
+      })
+      return pagebuildList
+    },
+    formatPageBuild(pb) {
+      if (pb.status === PAGE_BUILD_STATUS.show) {
+        pb.statusInfo = {
           desc: '默认展示',
           type: 'success'
-        } : {
+        }
+      } else {
+        pb.statusInfo = {
           desc: '不展示',
           type: 'info'
         }
-      })
-      return pagebuildList
+      }
+
+      return pb
     },
     updateStatus() {
       this.pagebuildList.forEach((item) => {
@@ -69,23 +83,26 @@ export default {
       })
     },
     setDefaultPageBuildHandler(presentable, status) {
-      status = status || PAGE_BUILD_STATUS.show
+      if (!status) {
+        //toggle
+        status = (presentable.status === PAGE_BUILD_STATUS.show) ? PAGE_BUILD_STATUS.hide : PAGE_BUILD_STATUS.show
+      }
+
       var param = {
         nodeId: parseInt(this.$route.params.nodeId),
         status: status
       }
-      this.changePageBuildShowStatus(presentable, param)
+      return this.changePageBuildShowStatus(presentable, param)
     },
     changePageBuildShowStatus(presentable, param) {
-      this.$services.pagebuild.put(presentable.id, param)
+      return this.$services.pagebuild.put(presentable.id, param)
         .then((res) => {
           if (res.data.errcode === 0) {
             if (param.status === PAGE_BUILD_STATUS.show) {
               this.updateStatus()
             }
             presentable.status = param.status
-            this.format(this.pagebuildList)
-            this.$message.success('设置成功')
+            this.formatPageBuild(presentable)
           } else {
             throw new Error(res.data.msg)
           }
@@ -98,7 +115,15 @@ export default {
       })
     },
     changePageBuildHandler(pagebuild) {
-      this.currentIndex = pagebuild.index
+      this.setDefaultPageBuildHandler(pagebuild).then(() => {
+        this.currentIndex = pagebuild.status === PAGE_BUILD_STATUS.show ? pagebuild.index : ''
+      });
+    },
+    addNewPageBuildHandler() {
+      this.$message.warning('还没开发呀呀呀')
+    },
+    gotoResourceDetailHandler(pagebuild) {
+      this.$router.push(`/resource/detail/${pagebuild.resourceId}`)
     }
   }
 }

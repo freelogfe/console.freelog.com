@@ -37,6 +37,7 @@ instance.interceptors.response.use(response => {
 
     if ([28, 30].indexOf(data.errcode) > -1 && location.pathname !== loginPath) {
       loginPath += '?redirect=' + encodeURIComponent(location.href)
+
       location.replace(loginPath)
       //replace执行存在延迟
       return new Promise((resolve) => {

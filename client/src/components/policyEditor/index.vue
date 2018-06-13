@@ -11,7 +11,10 @@
             <i class="fl-icon fl-icon-revert-hover"></i>
           </el-button>
           <div class="policy-name-input-item">
-            <input type="text" class="policy-name-input" :disabled="policy.disabled" v-model="policy.policyName">
+            <div class="policy-name-input-placeholder">
+              <pre class="policy-name-pre">{{policy.policyName}}</pre>
+              <input type="text" class="policy-name-input" :disabled="policy.disabled" v-model="policy.policyName">
+            </div>
           </div>
         </div>
         <div class="policy-content-input-wrap" :class="{'policy-editing':editingIndex===index}">
@@ -37,21 +40,29 @@
               </li>
             </ul>
           </div>
-          <textarea
-            :disabled="!!policy.policySegmentId"
-            class="policy-content-input"
-            spellcheck="false"
-            placeholder="请输入策略"
-            @change="changePolicyText(policy)"
-            @focus="focusInputHandler($event, index)"
-            v-model="policy.policyText"></textarea>
+          <div class="policy-content-input-padding">
+            <pre v-if="policy.policySegmentId" class="policy-text">{{policy.policyText}}</pre>
+            <template v-else>
+              <pre class="input-placeholder">{{policy.policyText}}</pre>
+              <textarea
+                class="policy-content-input"
+                spellcheck="false"
+                placeholder="请输入策略"
+                @change="changePolicyText(policy)"
+                @focus="focusInputHandler($event, index)"
+                v-model="policy.policyText"></textarea>
+            </template>
+          </div>
         </div>
       </div>
     </div>
     </div>
 
     <div class="add-policy-wrap">
-      <el-button type="text" class="add-policy-btn" @click="addNewPolicy"><i class="el-icon-plus"></i>添加授权策略</el-button>
+      <el-button type="text"
+                 class="add-policy-btn"
+                 @click="addNewPolicy"><i class="el-icon-plus"></i>添加授权策略
+      </el-button>
     </div>
     <div>
       <el-button type="primary"

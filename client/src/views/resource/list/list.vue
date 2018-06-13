@@ -1,16 +1,22 @@
 <template>
   <div class="resource-items">
-    <ul>
-      <li class="resource-item" v-for="resource in resources">
-        <resource-item :resource="resource"></resource-item>
-      </li>
-    </ul>
+    <lazy-list-view :list="resources" :height="90" :fetch="fetchData">
+      <template slot-scope="scope">
+        <resource-item :resource="scope.data"></resource-item>
+      </template>
+    </lazy-list-view>
+    <!--<ul>-->
+    <!--<li class="resource-item" v-for="resource in resources">-->
+    <!--<resource-item :resource="resource"></resource-item>-->
+    <!--</li>-->
+    <!--</ul>-->
   </div>
 </template>
 
 <script>
   import ResourceItem from '../list-item/index.vue'
   import {onloadUserInfo} from '@/data/user/loader'
+  import LazyListView from '@/components/LazyListView/index.vue'
 
   export default {
     name: 'resource-items',
@@ -37,7 +43,7 @@
         this.initView()
       }
     },
-    components: {ResourceItem},
+    components: {ResourceItem, LazyListView},
     mounted() {
       this.initView();
     },
@@ -55,43 +61,54 @@
           default:
             break;
         }
+      },
+      fetchData(page) {
+        console.log('fetchData', page)
+        var pageSize = 10;
 
-        if (this.loader) {
-          this.loader().then((data) => {
-            this.resources = data.dataList
+        if (!this.loader) {
+          return Promise.resolve({
+            canLoadMore: false,
+            dataList: []
           })
         }
+        return this.loader({page: page}).then((data) => {
+          this.resources = this.resources.concat(data.dataList)
+          if (data.dataList.length < pageSize) {
+            data.canLoadMore = false
+          }
+          return data
+        });
       },
       getSelfResourcesLoader() {
-        return (param) => {
-          //test
-          param = {
-            pageSize: 1e2
-          }
-          if (typeof param === 'object') {
-            param = {
-              params: param
-            }
-          }
+        return this.createResourceLoader((param) => {
           return this.$services.resource.get(param || {}).then((res) => {
             return res.getData()
           })
-        }
+        });
       },
-      getFavorResourcesLoader(param) {
-        return (param) => {
-          //test
-          param = {
-            pageSize: 1e2
-          }
-          if (typeof param === 'object') {
-            param = {
-              params: param
-            }
-          }
+      getFavorResourcesLoader() {
+        return this.createResourceLoader((param) => {
           return this.$services.collections.get(param || {}).then((res) => {
             return res.getData()
           })
+        });
+      },
+      createResourceLoader(loader) {
+        return (param) => {
+          param = param || {
+            pageSize: 10,
+            page: 1
+          };
+          if (typeof param === 'object') {
+            param = {
+              params: Object.assign({
+                pageSize: 10,
+                page: 1
+              }, param)
+            }
+          }
+          return loader(param)
         }
       },
       getAllResourcesLoader(param) {

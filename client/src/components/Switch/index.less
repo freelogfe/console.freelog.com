@@ -1,0 +1,49 @@
+.switch-container {
+  height: 24px;
+  width: 70px;
+  border-radius: 12px;
+  line-height: 24px;
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+
+  &.active-switch {
+    background: #89D1AC;
+    border: 1px solid #89D1AC;
+    .switch-label {
+      color: white;
+      padding-right: 18px;
+    }
+
+    .switch-mesh {
+      border-color: #89D1AC;
+      left: 46px;
+    }
+  }
+
+  &.inactive-switch {
+    background: #FAFAFA;
+    border: 1px solid #CCCCCC;
+    .switch-mesh {
+      border-color: #CCCCCC;
+      left: -1px;
+    }
+
+    .switch-label {
+      color: #CCCCCC;
+      padding-left: 18px;
+    }
+  }
+
+  .switch-mesh {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid #CCCCCC;
+    position: absolute;
+    left: -1px;
+    transition: left .5s;
+  }
+}

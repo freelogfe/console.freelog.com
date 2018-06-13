@@ -1,8 +1,15 @@
 <template>
   <section class="presentable-detail-wrapper">
     <resource-intro-info class="res-intro-info" :resource="presentableData.resourceInfo">
-      <div class="presentable-auth-intro" @click="gotoSchemeDetailHandler">
-        <i class="dot"></i> 授权方案A/授权策略1 <i class="el-icon-edit"></i>
+      <div class="presentable-auth-intro"
+           :class="{'active-status-2':presentableData.scheme}"
+           @click="gotoSchemeDetailHandler">
+        <i class="dot"></i>
+        <span v-if="presentableData.scheme && presentableData.scheme.selectedPolicy">
+          {{presentableData.scheme.authSchemeName}}/{{presentableData.scheme.selectedPolicy.policyName}}
+        </span>
+        <span v-else>未选择授权方案</span>
+        <i class="el-icon-edit"></i>
       </div>
     </resource-intro-info>
 
@@ -22,7 +29,6 @@
 
 <style>
   .presentable-detail-wrapper .presentable-input-info .presentable-name-input > input {
-    margin-left: 29px;
     border: none;
     background-color: transparent;
     padding: 0;

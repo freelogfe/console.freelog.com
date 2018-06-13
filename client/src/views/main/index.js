@@ -1,4 +1,5 @@
 import ListItem from '@/views/resource/list-item/index.vue'
+import LazyListView from '@/components/LazyListView/index.vue'
 
 export default {
   name: 'index-main-view',
@@ -9,7 +10,8 @@ export default {
     }
   },
   components: {
-    ListItem
+    ListItem,
+    LazyListView
   },
 
   mounted() {
@@ -33,6 +35,16 @@ export default {
 
       this.$refs.resourceList.$emit('reload', {
         keyWords: encodeURIComponent(this.query)
+      })
+    },
+    fetchData(page) {
+      return this.loader({
+        page: page
+      }).then(data => {
+        if (data.dataList.length < 10) {
+          data.canLoadMore = false
+        }
+        return data
       })
     },
     loader(param) {

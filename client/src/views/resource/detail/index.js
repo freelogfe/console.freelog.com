@@ -20,7 +20,6 @@ export default {
       showOptionsDialog: false,
       selectedNode: '',
       nodes: [],
-      selectedNodes: [],
       contentTransform: 'none',
       selectedPolicy: {},
       showEdit: false
@@ -47,10 +46,17 @@ export default {
         if (this.session && this.session.user) {
           this.showEdit = (res.userId === this.session.user.userId)
         }
+      }).catch(err => {
+        this.$router.push('/')
+        // this.$error.showErrorMessage(err)
       });
+
       this.isFavorResource().then((isFavor) => {
         this.resourceDetail.isFavor = isFavor
-      })
+      }).catch(err => {
+        console.warn(err)
+        // this.$error.showErrorMessage(err)
+      });
     },
     isFavorResource() {
       return this.$services.collections.get(this.resourceId).then((res) => {
@@ -138,13 +144,34 @@ export default {
         return Promise.resolve(this.nodes)
       }
 
-      return NodeDataLoader.onloadNodeList().then(data => {
-        if (data && data.dataList) {
-          return data.dataList
-        } else {
-          return []
+      return Promise.all([this.loadResourceOwners(), NodeDataLoader.onloadNodeList()]).then(res => {
+        var resourceOwners = res[0];
+        var nodeList = res[1].dataList || []
+        var ownersMap = {}
+        resourceOwners.forEach(item => {
+          ownersMap[item.nodeId] = item
+        })
+
+        nodeList.map(node => {
+          node.checked = !!ownersMap[node.nodeId]
+          if (node.checked) {
+            node._presentable = ownersMap[node.nodeId]
+            node.selected = true
+          }
+          return node
+        })
+
+        return nodeList
+      })
+    },
+    loadResourceOwners() {
+      return this.$axios.get(`/v1/presentables/resourceSubordinateNodes`, {
+        params: {
+          resourceId: this.resourceId
         }
-      });
+      }).then(res => {
+        return res.getData()
+      })
     },
     showNodeOptions() {
       return new Promise((resolve, reject) => {
@@ -169,8 +196,15 @@ export default {
     },
     confirmAuthHandler() {
       this.hideOptionsDialogHandler()
-      if (this.selectedNodes.length) {
-        var promises = this.selectedNodes.map(nodeId => {
+      var selectedNodes = []
+      this.nodes.forEach(node => {
+        if (node.checked) {
+          selectedNodes.push(node.nodeId)
+        }
+      })
+
+      if (selectedNodes.length) {
+        var promises = selectedNodes.map(nodeId => {
           return this.createPresentable(nodeId)
         });
 
@@ -201,6 +235,11 @@ export default {
     },
     editDetailHandler() {
       this.$router.push(`/resource/edit/${this.resourceId}`)
+    },
+    nodeOptCheckHandler(node) {
+      console.log(node)
+      node.checked = !node.checked
+      this.$forceUpdate()
     }
   }
 }
