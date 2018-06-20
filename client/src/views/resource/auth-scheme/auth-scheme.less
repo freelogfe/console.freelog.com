@@ -1,8 +1,24 @@
 .auth-scheme-section {
   background-color: #fafafa;
+
+  .del-res-icon {
+    display: none;
+    margin-left: 6px;
+  }
   .dep-item {
     margin-bottom: 20px;
     cursor: pointer;
+    &:hover {
+      .del-res-icon {
+        display: inline-block;
+      }
+    }
+  }
+
+  .dialog-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
   }
 
   .resource-name {
@@ -104,5 +120,9 @@
         }
       }
     }
+  }
+
+  .add-resource-input {
+    //padding: 0 30px;
   }
 }

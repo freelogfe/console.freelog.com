@@ -1,10 +1,10 @@
 .presentables-wrapper {
-  display: flex;
 
   .presentable-list-container {
-    flex-basis: 430px;
     overflow: scroll;
     max-height: 100vh;
+    width: 430px;
+    float: left;
     .dot {
       float: left;
     }
@@ -12,7 +12,7 @@
     h4 {
       font-size: 19px;
       margin-top: 65px;
-      margin-left: 50px;
+      margin-left: 45px;
       margin-bottom: 18px;
       .el-icon-question {
         margin-right: 12px;
@@ -21,7 +21,7 @@
     }
 
     .presentable-item {
-      padding: 15px 30px;
+      padding: 15px 45px;
       cursor: pointer;
 
       &.active-status-2 {
@@ -63,10 +63,22 @@
         padding-right: 80px;
       }
     }
+
+    .add-presentable-btn {
+      i {
+        margin-right: 10px;
+      }
+      color: #999999;
+      font-size: 14px;
+    }
   }
 
   .presentable-detail-container {
-    flex: auto;
     background-color: #FAFAFA;
+    margin-left: 430px;
+    width: auto;
+    .presentable-detail-content {
+      background-color: #FAFAFA;
+    }
   }
 }

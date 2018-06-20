@@ -35,7 +35,7 @@ const scrollBehavior = (to, from, savedPosition) => {
   }
 }
 
-export default new Router({
+var router = new Router({
   mode: 'history',
   scrollBehavior,
   routes: [
@@ -105,4 +105,9 @@ export default new Router({
       }]
     }
   ]
+});
+
+router.beforeEach((to,from, next)=>{
+  next()
 })
+export default router

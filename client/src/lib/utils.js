@@ -1,3 +1,5 @@
+import {cloneDeep} from 'lodash'
+
 function createLoader(loader) {
   var loading = false;
   var handles = [];
@@ -23,7 +25,7 @@ function createLoader(loader) {
 }
 
 //多个缓存loader的创建
-function createCacheLoaders(loaderFn) {
+function createCacheLoaders(loaderFn, shouldCloned) {
   var loaders = {}
   return function (params) {
     let id;
@@ -49,8 +51,8 @@ function createCacheLoaders(loaderFn) {
     }
 
     return new Promise((resolve) => {
-      loader(function (info) {
-        resolve(info)
+      loader(function (data) {
+        resolve(shouldCloned ? cloneDeep(data) :data)
       })
     })
   }

@@ -25,8 +25,7 @@ export default {
     executeNext(callback) {
       if (this.$refs.inputArea.nextHandler) {
         this.$refs.inputArea.nextHandler(this.data).then((detail) => {
-          console.log(detail)
-          if (detail) {
+          if (detail && detail.resourceId) {
             Object.assign(this.resourceDetail, detail)
           }
           callback()

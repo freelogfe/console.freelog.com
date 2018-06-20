@@ -14,21 +14,13 @@
                           @change="changePresentableOnlineHandler(presentable)"
                           active-text="上线"
                           inactive-text="下线"></freelog-switch>
-          <!--<el-switch-->
-          <!--class="node-res-status-switch"-->
-          <!--v-model="presentable.isOnlineChecked"-->
-          <!--@change="changePresentableOnlineHandler(presentable)"-->
-          <!--active-text="上线"-->
-          <!--inactive-text="下线"-->
-          <!--active-color="#13ce66"-->
-          <!--inactive-color="#E6E6E6">-->
-          <!--</el-switch>-->
           <span class="p-title">{{presentable.presentableName}}</span>
         </li>
+        <li class="presentable-item add-presentable-btn"><i class="el-icon-plus"></i>添加节点资源</li>
       </ul>
     </div>
-    <div class="presentable-detail-container">
-      <component is="presentable-detail" :detail="currentPresentable.detail"></component>
+    <div class="presentable-detail-container" v-show="currentPresentable.detail.presentableId">
+      <component class="presentable-detail-content" is="presentable-detail" :detail="currentPresentable.detail"></component>
     </div>
   </section>
 </template>

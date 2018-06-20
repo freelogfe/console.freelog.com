@@ -1,95 +1,124 @@
 <template>
   <div class="base-resource-wrap" :class="['resource-edit-mode-'+editMode]">
-    <div class="step-title">资源基础信息</div>
-
     <el-form :model="formData" label-width="0" :rules="rules" ref="createForm">
+      <el-form-item>
+        <div class="uploader-wrapper">
+          <div class="resource-thumbnail-input" v-if="shouldShowThumbnailInput">
+            <el-upload
+              v-show="!uploaderStates.thumbnail.isUploading"
+              class="resource-thumbnail-uploader"
+              drag
+              ref="thumbnailUploader"
+              action="/api/v1/resources/upoladPreviewImage"
+              :data="uploader.data"
+              :headers="uploader.headers"
+              :on-error="errorHandler"
+              :on-change="previewImageChangeHandler"
+              :on-success="imageUploadSuccessHandler"
+              :before-upload="validateImageHandler"
+              :on-progress="uploadProgressHandler"
+              :show-file-list="false"
+              :auto-upload="true">
+              <img v-if="formData.previewImage" :src="formData.previewImage" style="height: 100%;" alt="">
+              <template v-else>
+                <i class="el-icon-plus"></i>
+                <div class="resource-file-tip">
+                  <p>资源预览图</p>
+                  <p class="resource-file-sub-tip">800X600</p>
+                </div>
+              </template>
+            </el-upload>
+            <div class="thumbnail-upload-state" v-show="uploaderStates.thumbnail.isUploading">
+              <p>资源预览图</p>
+              <div>
+                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>
+                <el-progress
+                  style="margin-right: 20px;"
+                  :stroke-width="10"
+                  :percentage="uploaderStates.thumbnail.percentage"
+                  color="#333333"></el-progress>
+              </div>
+            </div>
+          </div>
+          <div class="resource-file-input">
+            <div class="resource-file-uploader-wrap" v-show="shouldShowResourceUploader === true">
+              <el-upload
+                v-if="showCreatorInputItem"
+                class="resource-file-uploader"
+                drag
+                ref="resourceUploader"
+                action="/api/v1/resources/uploadResourceFile"
+                :multiple="false"
+                :data="{resourceType: formData.resourceType}"
+                :headers="uploader.headers"
+                :before-upload="beforeUploadHandler"
+                :on-error="errorHandler"
+                :on-change="fileChangeHandler"
+                :on-success="successHandler"
+                :show-file-list="false"
+                :on-progress="uploadProgressHandler"
+                :auto-upload="true">
+                <i class="el-icon-plus"></i>
+                <div class="resource-file-tip">
+                  <p>资源文件</p>
+                  <p class="resource-file-sub-tip">拖拽或点击上传，最大不超过50M</p>
+                </div>
+              </el-upload>
+              <el-select
+                v-if="!uploaderStates.resource.isUploading"
+                :disabled="!showCreatorInputItem"
+                v-model="formData.resourceType"
+                allow-create
+                filterable
+                @change="resourceTypeChange"
+                class="resource-type"
+                placeholder="资源类型">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="resource-upload-state" v-show="shouldShowResourceUploader === false">
+              <div class="resource-type-desc">资源文件类型：{{formData.resourceType}}</div>
+              <div>
+                <i class="el-icon-circle-close"  @click="clearUploaderHandler('resource')"></i>
+                <el-progress
+                  v-if="!shouldShowResourceUploader"
+                  class="resource-file-progress"
+                  :stroke-width="10"
+                  :percentage="uploaderStates.resource.percentage"
+                  color="#333333"></el-progress>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-form-item>
       <el-form-item prop="resourceName">
-        <el-input v-model="formData.resourceName" class="resource-name"></el-input>
-        <el-select
-          :disabled="!showCreatorInputItem"
-          v-model="formData.resourceType"
-          allow-create
-          filterable
-          @change="resourceTypeChange"
-          class="resource-type"
-          placeholder="资源类型">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+        <input type="text" v-model="formData.resourceName" class="input-item resource-name" placeholder="资源标题">
       </el-form-item>
       <el-form-item prop="widgetName" v-show="formData.resourceType === ResourceTypes.widget">
-        <el-input v-model="formData.widgetName"
-                  style="width: 95%"
-                  clearable
-                  :disabled="!showCreatorInputItem"
-                  placeholder="widget名称">
-        </el-input>
+        <input type="text" v-model="formData.widgetName"
+               class="input-item widget-name"
+               :disabled="!showCreatorInputItem"
+               placeholder="widget名称">
       </el-form-item>
-      <el-form-item v-if="showCreatorInputItem">
-        <el-upload
-          class="upload-container"
-          drag
-          ref="upload"
-          action="/api/v1/resources"
-          :data="uploader.data"
-          :headers="uploader.headers"
-          :on-error="errorHandler"
-          :on-change="fileChangeHandler"
-          :on-success="successHandler"
-          :auto-upload="false">
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip" style="color:#DE3A3A">上传后不可更改，文件大小不得超过50MB</div>
-        </el-upload>
-      </el-form-item>
-      <el-form-item prop="previewImage">
-        <h4>资源预览图</h4>
-        <el-input v-model="formData.previewImage" style="margin-bottom: 9px;" placeholder="资源预览图"></el-input>
-        <el-upload
-          class="upload-container"
-          drag
-          ref="upload"
-          action="/api/v1/resources/upoladPreviewImage"
-          :headers="uploader.headers"
-          :on-error="errorHandler"
-          :on-change="previewImageChangeHandler"
-          :on-success="imageUploadSuccessHandler"
-          :before-upload="validateImageHandler"
-          :auto-upload="true">
-          <img v-if="formData.previewImage" :src="formData.previewImage" style="height: 100%;" alt="">
-          <i v-else class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip" style="color:#DE3A3A">图片不超过3MB,宽高不超过4096px,只支持jpg、png、gif、webp格式</div>
-        </el-upload>
-      </el-form-item>
-      <!--<el-form-item prop="description">-->
-      <!--<h4>资源描述</h4>-->
-      <!--<description-editor  id="editor" class="res-desc-editor"-->
-      <!--ref="editor"-->
-      <!--width="100%"-->
-      <!--@load="imgUploadSuccessHandler"-->
-      <!--placeholder="资源描述"></description-editor>-->
-      <!--</el-form-item>-->
       <el-form-item prop="description">
-        <h4>资源描述</h4>
         <rich-editor class="res-desc-editor"
                      ref="editor"
                      width="100%"
                      v-model="formData.description"
                      :config="editorConfig"
                      @load="imgUploadSuccessHandler"
-                     placeholder="资源描述"></rich-editor>
+                     placeholder="请输入资源描述"></rich-editor>
+      </el-form-item>
+      <el-form-item>
+        <h4 class="step-title">资源meta信息</h4>
+        <resource-meta-info v-model="meta" @validate="checkMetaValid" placeholder="资源meta信息"></resource-meta-info>
       </el-form-item>
     </el-form>
-
-    <div class="resource-meta">
-      <div class="step-title">资源meta信息</div>
-      <resource-meta-info v-model="meta" @validate="checkMetaValid"></resource-meta-info>
-    </div>
   </div>
 </template>
 
@@ -101,4 +130,8 @@
 
 <style lang="less" scoped>
   @import "index.less";
+</style>
+
+<style lang="less">
+  @import "reset-el.less";
 </style>

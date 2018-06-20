@@ -50,7 +50,7 @@ export default {
       schemes: [],
       dutyStatements: [],
       bubbleResources: [],
-      viewMode: 'tree', //tree or list
+      viewMode: 'list', //tree or list
       currentAuthNodeIndex: -1,
       dutyResourceMap: {},
       resourcesMap: {},
@@ -60,10 +60,12 @@ export default {
   mounted() {
     this.initView()
       .then(this.fillDutyStatements.bind(this))
+      .then(() => {
+        this.changeViewMode(this.viewMode)
+      })
 
     var unwatch = this.$watch('contracts', () => {
       this.fillDutyStatements()
-      console.log('change contracts', this.contracts)
       unwatch()
     })
   },
@@ -86,6 +88,7 @@ export default {
         }
       }
       this.initView()
+      this.changeViewMode('tree')
     },
     resource(newRes, oldRes) {
       if (oldRes) {
@@ -98,6 +101,7 @@ export default {
         }
       }
       this.initView()
+      this.changeViewMode('tree')
     }
   },
   methods: {
@@ -116,7 +120,6 @@ export default {
     },
     initView() {
       var resourceId = this.resourceId || this.resource.resourceId
-
       if (!resourceId) {
         return Promise.resolve()
       }
@@ -154,7 +157,7 @@ export default {
           }
           this.schemes = []
           this.pushSchemeDep(resource)
-        })
+        });
       }
     },
     checkResourceActiveStatus(dep) {
@@ -193,6 +196,7 @@ export default {
     },
     changeViewMode(mode) {
       this.viewMode = mode
+
       if (mode === 'list') {
         this.hideLineArrow(this.$el);
         this.showUnSignedPolicyList();
@@ -201,19 +205,70 @@ export default {
       }
     },
     showUnSignedPolicyList() {
+      var rids = []
+      var schemeRids = []
       this.dutyStatements.forEach((duty) => {
+        rids.push(duty.resourceId);
         this.onSetResourceDetail(duty)
-
         if (!duty.selectedScheme) {
-          this.loadResourceSchemes(this.resourcesMap[duty.resourceId]).then(res => {
-            this.haveSelectedScheme(this.resourcesMap[duty.resourceId])
-          })
+          schemeRids.push(duty.resourceId)
         }
       });
+
+      if (rids.length) {
+        this.loadResourcesDetail(rids)
+      }
+
+      if (schemeRids.length) {
+        SchemeDataLoader.loadAuthSchemes({
+          resourceIds: schemeRids,
+          // authSchemeStatus: 1, //todo
+          // policyStatus: 1
+        }).then((schemes) => {
+          var resources = []
+          schemes.forEach(scheme => {
+            var resource = this.resourcesMap[scheme.resourceId]
+            if (resource.schemes) {
+              resource.schemes.push(scheme);
+            } else {
+              resource.schemes = [scheme];
+              resources.push(resource)
+            }
+          });
+
+          resources.forEach(res => {
+            this.resolveResourceSchemes(res);
+            this.haveSelectedScheme(res)
+          })
+        }).then(() => {
+          this.$nextTick(() => {
+            this.$forceUpdate()
+          })
+        })
+      }
+    },
+    loadResourcesDetail(rids) {
+      if (rids.length) {
+        return ResourceLoader.loadResources(rids).then(list => {
+          if (list && list.length) {
+            list.forEach(res => {
+              this.onSetResourceDetail(res)
+            })
+          }
+        })
+      }
     },
     changePolicy(resource, scheme, policy) {
-      scheme.selectedPolicy = {...policy}
-      scheme.selectedPolicySegmentId = scheme.selectedPolicy.segmentId
+      if (scheme.selectedPolicySegmentId) {
+        scheme.selectedPolicy = {...policy}
+      }
+      this.$forceUpdate()
+    },
+    changeSchemePolicyHandler(scheme, policy) {
+      if (scheme.selectedPolicy.segmentId && scheme.selectedPolicySegmentId) {
+        scheme.selectedPolicy = {}
+        scheme.selectedPolicySegmentId = ''
+      }
       this.$forceUpdate()
     },
     computeLineArrow(target, _from) {
@@ -304,7 +359,7 @@ export default {
       var activeStatus;
 
       if (!resource.selectedScheme || !resource.selectedScheme.authSchemeId) {
-        activeStatus = ''
+        activeStatus = resource.isResolved === false ? SCHEME_STATUS.NONE : SCHEME_STATUS.UNHANDLE
       } else {
         var bubbleResources = resource.selectedScheme.bubbleResources
         if (bubbleResources.length) {
@@ -324,6 +379,7 @@ export default {
         }
       }
       resource.activeStatus = activeStatus
+      // this.$set(resource, 'activeStatus', activeStatus)
       this.$forceUpdate()
     },
     updatePrevSchemesActiveStatus(resource) {
@@ -356,10 +412,10 @@ export default {
         let msg = selectedDeps.map(dep => {
           return dep.resourceName
         }).join('、')
-        return this.$confirm(`取消当前资源的选择会导致后续资源的策略都取消，已选择后续的资源：${msg}，确定吗？`, {})
+        return this.$confirm(`取消当前资源的选择会导致后续资源选择的策略都取消，确定吗？`, {})
       }
     },
-    selectAuthScheme(resource, scheme, panelIndex) {
+    selectAuthSchemeHandler(resource, scheme, panelIndex) {
       if (resource.selectedScheme &&
         resource.selectedScheme.authSchemeId === scheme.authSchemeId) {
         this.checkResourceCancelable(resource)
@@ -458,13 +514,17 @@ export default {
       dep.schemes = []
       //获取已发布的授权点列表 {authSchemeStatus: 1}
       return SchemeDataLoader.onloadSchemesForResource(dep.resourceId).then((schemes) => {
-        dep.schemes = this.formatSchemes(schemes)
-        if (!this.haveSelectedScheme(dep)) {
-          dep.activeScheme = dep.schemes[0]
-        }
-        this.checkResourceActiveStatus(dep)
-        return dep
+        dep.schemes = schemes
+        return this.resolveResourceSchemes(dep);
       })
+    },
+    resolveResourceSchemes(dep) {
+      this.formatSchemes(dep.schemes)
+      if (!this.haveSelectedScheme(dep)) {
+        dep.activeScheme = dep.schemes[0]
+      }
+      this.checkResourceActiveStatus(dep)
+      return dep
     },
     pushSchemeDep(dep) {
       if (!this.resourcesMap[dep.resourceId]) {
@@ -493,15 +553,12 @@ export default {
       }
     },
     onSetResourceDetail(dep) {
-      if (!this.resourcesMap[dep.resourceId]) {
-        this.resourcesMap[dep.resourceId] = dep
-      }
-
-      if (!dep.updateDate) {
-        ResourceLoader.onloadResourceDetail(dep.resourceId).then((detail) => {
-          Object.assign(dep, detail)
-          return dep
-        });
+      var rid = dep.resourceId;
+      var resource = this.resourcesMap[rid]
+      if (!resource) {
+        this.resourcesMap[rid] = dep
+      } else if (dep.updateDate && !resource.updateDate) {
+        Object.assign(resource, dep)
       }
     },
     revertDependencyPanels(dep) {
@@ -536,15 +593,19 @@ export default {
     formatSchemes(schemes) {
       var resourcesMap = this.resourcesMap;
       schemes.forEach((scheme) => {
+        var rids = []
         scheme.dependencies = scheme.bubbleResources.map(res => {
           let resourceId = res.resourceId
           if (resourcesMap[resourceId]) {
             return resourcesMap[resourceId]
           } else {
             this.onSetResourceDetail(res);
+            rids.push(res.resourceId)
             return res
           }
         });
+
+        rids.length && this.loadResourcesDetail(rids);
         if (scheme.selectedPolicySegmentId === undefined) {
           scheme.selectedPolicy = {}
           scheme.selectedPolicySegmentId = ''
@@ -588,6 +649,25 @@ export default {
         }
       });
       return this.dutyStatements
+    },
+    hideSchemeArrow(scheme) {
+      var $line = this.$el.querySelector(`.js-line-${scheme.authSchemeId}`);
+      $line.style.display = 'none'
+    },
+    toggleResolveResource(resource, index) {
+      if (resource.isResolved === undefined) {
+        this.$set(resource, 'isResolved', false)
+      } else {
+        resource.isResolved = !resource.isResolved
+      }
+
+      if (resource.isResolved === false) {
+        this.updateSchemeList(index)
+        this.hideSchemeArrow(resource.activeScheme)
+        resource.activeScheme.activeResource = null
+        resource.selectedScheme.authSchemeId && this.selectAuthSchemeHandler(resource, resource.selectedScheme, index)
+      }
+      this.updateResourceActiveStatus(resource)
     }
   }
 }

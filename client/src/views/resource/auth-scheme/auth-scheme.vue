@@ -8,12 +8,10 @@
               @click="changeResourceScheme(dep, index, $event)"
               class="dep-item"
               :class="['active-status-'+dep.activeStatus]">
-            <!--<el-checkbox class="select-box" v-model="dep.checked"-->
-                         <!--:disabled="detail.isPublished"></el-checkbox>-->
             <div class="resource-name" :class="{active:dep.active}">
               <p>
                 <i class="dot"></i>{{dep.resourceName}}
-                <i class="el-icon-edit" @click="editDepResource(dep)"></i>
+                <i class="del-res-icon el-icon-error" @click="deleteDepResource(dep)"></i>
               </p>
             </div>
           </li>
@@ -40,17 +38,19 @@
                           style="margin-left: 480px;"></resource-scheme-tree>
     <el-dialog
       :visible.sync="showEditDepResource"
-      width="30%"
+      width="840px"
       :close-on-click-modal="false"
       center>
-      <div>
-        <el-input v-model="curEditDepResourceId" placeholder="输入您要添加的资源ID"></el-input>
-      </div>
-      <div slot="footer" class="dialog-footer clearfix">
-        <el-button class="del-btn" @click="deleteDepResource">删除</el-button>
-        <el-button @click="changeDepResource" class="ft-btn">确 定</el-button>
-        <el-button @click="resetDepResourceEditor" class="ft-btn">取 消</el-button>
-      </div>
+      <p slot="title" class="dialog-title">添加资源</p>
+      <search-resource class="add-resource-input" @add="changeDepResource"></search-resource>
+      <!--<div>-->
+        <!--<el-input v-model="curEditDepResourceId" placeholder="输入您要添加的资源ID"></el-input>-->
+      <!--</div>-->
+      <!--<div slot="footer" class="dialog-footer clearfix">-->
+        <!--<el-button class="del-btn" @click="deleteDepResource">删除</el-button>-->
+        <!--<el-button @click="changeDepResource" class="ft-btn">确 定</el-button>-->
+        <!--<el-button @click="resetDepResourceEditor" class="ft-btn">取 消</el-button>-->
+      <!--</div>-->
     </el-dialog>
   </div>
 </template>
@@ -62,7 +62,7 @@
   import ResourceLoader from '@/data/resource/loader'
   import PolicyEditor from '@/components/policyEditor/index.vue'
   import {SCHEME_STATUS} from '@/config/scheme'
-
+  import SearchResource from '../search/index.vue'
   import resourceCompiler from '@freelog/resource-policy-compiler'
   import CONFIG from '@/config/index'
 
@@ -70,7 +70,8 @@
     name: 'resource-auth-scheme',
     components: {
       PolicyEditor,
-      ResourceSchemeTree
+      ResourceSchemeTree,
+      SearchResource
     },
     props: {
       updateCallback: {
@@ -93,16 +94,17 @@
         editActionType: '',
         currentEditDepResource: {},
         curEditDepResourceId: '',
-        curDepResourceId: '',
         curDepResource: {}
       }
     },
     mounted() {
-      console.log(this.detail)
+      console.log('mounted',this.detail)
       this.initDependencies(this.detail.scheme);
     },
     computed: {},
-    watch: {},
+    watch: {
+
+    },
     methods: {
       initDependencies(scheme) {
         let dependencies = scheme.dependencies
@@ -116,9 +118,6 @@
         }
         this.bubbleResources = scheme.bubbleResources;
         dependencies.forEach((dep) => {
-          if (dutyResourceMap[dep.resourceId]) {
-            dep.checked = true
-          }
           dep.activeStatus = SCHEME_STATUS.UNHANDLE
           this.checkResourceActiveStatus(dep)
         });
@@ -176,25 +175,22 @@
         this.currentEditDepResource = {}
         this.showEditDepResource = false
       },
-      changeDepResource() {
+      changeDepResource(resource) {
+        if (!resource || !resource.resourceId) {return}
+
+        this.curEditDepResourceId = resource.resourceId
         var currentEditDepResource = this.currentEditDepResource
-        if (currentEditDepResource.resourceId === this.curEditDepResourceId) {
+        if (currentEditDepResource.resourceId === resource.resourceId) {
           return
         }
-        ResourceLoader.loadDetail(this.curEditDepResourceId)
-          .then((data) => {
-            var params = {}
-            if (currentEditDepResource.resourceId) {
-              params.oldResource = currentEditDepResource;
-              params.newResource = this.formatResource(data);
-            } else {
-              params = data
-            }
-            this.emitEditEvent(params)
-          })
-          .catch((err) => {
-            this.$message.error('查询不到该资源')
-          })
+        var params = {}
+        if (currentEditDepResource.resourceId) {
+          params.oldResource = currentEditDepResource;
+          params.newResource = this.formatResource(resource);
+        } else {
+          params = resource
+        }
+        this.emitEditEvent(params)
       },
       emitEditEvent(data) {
         this.$emit('change', {
@@ -203,24 +199,18 @@
         })
         this.resetDepResourceEditor()
       },
-      deleteDepResource() {
+      deleteDepResource(resource) {
         this.editActionType = 'delete'
         this.$confirm('确定删除该依赖资源?', {
           type: 'warning',
         }).then(() => {
           this.emitEditEvent({
-            resourceId: this.curEditDepResourceId
+            resourceId: resource.resourceId
           })
         }).catch(() => {
         })
 
       },
-//      selectDependency(dep) {
-//        if (!dep.selectedScheme.authSchemeId) {
-//          this.$message.warning('必须先选择该资源的任一个授权方案')
-//          dep.checked = false
-//        }
-//      },
       updateData() {
         this.updateCallback({
           id: this.detail.id,
@@ -229,7 +219,6 @@
       },
       formatResource(res) {
         Object.assign(res, {
-          checked: false,
           selectSegment: '',
           authSchemeId: '',
           serialNumber: ''
@@ -238,7 +227,6 @@
       },
       changeResourceScheme(dep, index, ev) {
         this.curDepResource = dep
-        this.curDepResourceId = dep.resourceId
         var curTarget = ev.currentTarget
         var parentNode = this.getParent(curTarget, '.dep-list-inner')
         var target = parentNode.querySelector('.line-arrow')

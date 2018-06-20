@@ -1,6 +1,6 @@
 import CONFIG from '@/config/index'
 import PresentableDetail from '../presentable/detail/index.vue'
-import FreelogSwitch  from '@/components/Switch/index.vue'
+import FreelogSwitch from '@/components/Switch/index.vue'
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
 export default {
@@ -10,7 +10,7 @@ export default {
       query: '',
       presentableList: [],
       currentPresentable: {
-        index: 0,
+        index: -1,
         detail: {}
       },
     }
@@ -19,24 +19,33 @@ export default {
     PresentableDetail,
     FreelogSwitch
   },
+  watch: {
+    $route() {
+      this.initView(this.$route.params.nodeId)
+    }
+  },
 
   mounted() {
-    if (this.$route.params.nodeId) {
-      this.loadPresentables({nodeId: this.$route.params.nodeId})
-        .then(this.formatHandler.bind(this))
-        .then((list) => {
-          this.presentableList = list
-          if (list.length) {
-            this.currentPresentable.detail = this.presentableList[0]
-          }
-        })
-    } else {
-      this.$message.error('缺失节点ID参数');
-    }
+    this.initView(this.$route.params.nodeId)
   },
   methods: {
     queryHandler() {
       this.$message.warning('待开发')
+    },
+    initView(nodeId) {
+      if (nodeId) {
+        Object.assign(this.currentPresentable, {
+          index: -1,
+          detail: {}
+        })
+        this.loadPresentables({nodeId: nodeId})
+          .then(this.formatHandler.bind(this))
+          .then((list) => {
+            this.presentableList = list
+          })
+      } else {
+        this.$message.error('缺失节点ID参数');
+      }
     },
     formatHandler(list) {
       list.forEach((item) => {

@@ -27,8 +27,12 @@
     </div>
     <div class="auth-scheme-wrap" v-show="viewMode==='tree'">
       <div class="auth-scheme-list-wrap" :key="panelIndex" v-for="(resource,panelIndex) in schemes">
+        <el-button class="unhandle-res-btn" :class="{'is-unresolved': resource.isResolved===false}" @click="toggleResolveResource(resource, panelIndex)">不处理此资源</el-button>
+        <li :class="['active-status-'+resource.activeStatus]">
+          <p><i class="dot"></i>{{resource.resourceName||resource.resourceId}}</p>
+        </li>
         <resource-intro-info :resource="resource"></resource-intro-info>
-        <div class="res-auth-schemes-wrap" v-if="resource.schemes">
+        <div class="res-auth-schemes-wrap" :class="{'is-unresolved': resource.isResolved===false}" v-if="resource.schemes">
           <h4 class="res-auth-schemes-title">授权方案</h4>
           <div class="res-auth-schemes">
             <ul class="scheme-tabs-header" v-if="resource.schemes.length> 1">
@@ -57,7 +61,9 @@
                   <div class="policy-content">
                     <el-radio-group v-if="scheme.policy.length"
                                     v-model="scheme.selectedPolicySegmentId">
-                      <el-radio class="policy-radio" :label="policy.segmentId" :key="index"
+                      <el-radio class="policy-radio" :label="policy.segmentId"
+                                :key="index"
+                                @click.native="changeSchemePolicyHandler(scheme, policy)"
                                 @change="changePolicy(resource, scheme, policy)"
                                 v-for="(policy, index) in scheme.policy">
                         <span :class="{'selected-segment': policy.selected}">{{policy.policyName}}</span>
@@ -68,7 +74,7 @@
                       <el-button type="primary" round
                                  :class="{selected: resource.selectedScheme && resource.selectedScheme.authSchemeId === scheme.authSchemeId}"
                                  class="policy-select-btn"
-                                 @click="selectAuthScheme(resource, scheme, panelIndex)">
+                                 @click="selectAuthSchemeHandler(resource, scheme, panelIndex)">
                         <i class="el-icon-fa-check"></i>预选
                       </el-button>
                     </div>
@@ -98,22 +104,5 @@
 </style>
 
 <style lang="less">
-  .auth-scheme-tree-wrap {
-
-  .el-collapse {
-    border: none;
-  }
-
-  .el-collapse-item__header {
-    height: auto;
-    background-color: transparent;
-    line-height: 25px;
-    padding-bottom: 10px;
-  }
-
-  .el-collapse-item__arrow {
-    display: none;
-  }
-
-  }
+ @import "el-reset.less";
 </style>

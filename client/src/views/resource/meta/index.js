@@ -1,14 +1,17 @@
 import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
 
 var throttle = require('lodash/throttle');
-
+require('codemirror/theme/idea.css')
 export default {
   name: 'resource-meta-info',
   data() {
     var cmOpts = Object.assign({}, codeMirrorOptions)
     Object.assign(cmOpts, {
       mode: 'application/json',
-      viewportMargin: Infinity
+      viewportMargin: Infinity,
+      theme: 'idea',
+      lineNumbers: false,
+      gutters: []
     })
     return {
       errorMsg: '',

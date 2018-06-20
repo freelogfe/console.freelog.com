@@ -60,18 +60,18 @@ img {
 /*
 	TODO think about hanlding inheritence differently, maybe letting IE6 fail a bit...
 */
-address,
-caption,
-cite,
-code,
-dfn,
-em,
-strong,
-th,
-var {
-  font-style:normal;
-  font-weight:normal;
-}
+/*address,*/
+/*caption,*/
+/*cite,*/
+/*code,*/
+/*dfn,*/
+/*em,*/
+/*strong,*/
+/*th,*/
+/*var {*/
+  /*font-style:normal;*/
+  /*font-weight:normal;*/
+/*}*/
 
 ol,
 ul {
@@ -124,4 +124,22 @@ legend {
 /*==========我是分割线=============*/
 a {
   text-decoration: none;
+}
+
+
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.17em;
+}
+
+h5 {
+  font-size: .83em;
+}
+h6 {
+  font-size: .67em;
 }

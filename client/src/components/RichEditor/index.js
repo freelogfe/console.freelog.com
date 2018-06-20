@@ -1,13 +1,69 @@
-import Wangeditor from 'wangeditor'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.bubble.css'
+import {quillEditor, Quill} from 'vue-quill-editor'
+// import {container, ImageExtend, QuillWatch} from 'quill-image-extend-module'
+// var ColorClass = Quill.import('attributors/class/color');
+// var SizeStyle = Quill.import('attributors/style/size');
+// Quill.register(ColorClass, true);
+// Quill.register(SizeStyle, true);
+// Quill.register('modules/ImageExtend', ImageExtend)
 
-
-//配置参考：https://www.kancloud.cn/wangfupeng/wangeditor2/113961
+//https://quilljs.com/docs/modules/toolbar/
 export default {
   name: 'fl-rich-editor',
 
   data() {
+    var self = this;
     return {
-      editor: null
+      editor: null,
+      showImgUploader: false,
+      content: '',
+      editorOption: {
+        // some quill options
+        placeholder: this.placeholder,
+        modules: {
+          // ImageExtend: {
+          //   loading: false,
+          //   name: 'img',
+          //   action: '/api/v1/resources/upoladPreviewImage',
+          //   response: (res) => {
+          //     res.ret = 1;
+          //     if (res.ret === 0 && res.errcode === 0) {
+          //       return res.data
+          //     } else {
+          //       this.$message.error(res.msg)
+          //       return ''
+          //     }
+          //   }
+          // },
+          toolbar: {
+            container: [
+              ['bold', 'italic', 'underline', 'strike'],
+              ['blockquote', 'code-block'],
+              [{'list': 'ordered'}, {'list': 'bullet'}],
+              [{ 'size': ['small', false, 'large', 'huge'] }],
+              // [{'script': 'sub'}, {'script': 'super'}],
+              // [{'indent': '-1'}, {'indent': '+1'}],
+              // [{'direction': 'rtl'}],
+              // [{'header': [1, 2, 3, 4, 5, 6, false]}],
+              [{'color': []}, {'background': []}],
+              // [{'font': []}],
+              // [{'align': []}],
+              // ['clean'],
+              ['link', 'image', 'video']
+            ],
+            handlers: {
+              'image': function () {
+                self.showImgUploader = true
+                self.uploadImgState = {
+                  cursorIndex: this.quill.selection.savedRange.index
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
 
@@ -23,63 +79,67 @@ export default {
       default() {
         return {}
       }
-    }
+    },
+    placeholder: String
   },
 
-  watch: {
-    value(newVal, oldVal) {
-      this.setHtml(newVal)
-    }
-  },
+  watch: {},
 
   mounted() {
     this.createEditor()
-  },
-
-  methods: {
-    createEditor() {
-      var self = this;
-      var editor = new Wangeditor(this.$refs.$editor)
-      editor.config.onchange = (html) => {
-        this.value = html
-        this.$emit('input', this.value)
-        this.$emit('change', html)
-      };
-
-      Object.assign(editor.config.uploadImgFns, {
-        onload(resultText, xhr) {
-          let originalName = self.editor.uploadImgOriginalName || ''
-          self.$emit('load', originalName, resultText)
-        },
-        ontimeout(xhr) {
-          self.$emit('timeout', xhr)
-        },
-        onerror(xhr) {
-          self.$emit('error', xhr)
+    if (this.$route.params.resourceId) {
+      var unwatch = this.$watch('value', ()=>{
+        if (this.value) {
+          this.content = this.value
         }
-      });
-
-      Object.assign(editor.config, {
-        uploadImgUrl: '/api/v1/resources/upoladPreviewImage',
-      }, this.config);
-      editor.create();
-      this.editor = editor
+        unwatch()
+      })
+    }
+  },
+  components: {
+    'quill-rich-editor': quillEditor
+  },
+  methods: {
+    uploadImageSuccessHandler(res, file) {
+      this.$emit('load', {file, data: res})
+      this.resetImgUploaderState()
+    },
+    uploadImageErrorHandler() {
+      this.resetImgUploaderState()
+    },
+    resetImgUploaderState() {
+      this.$refs.imgUploader.clearFiles()
+      this.uploadImgState.cursorIndex = ''
+      this.showImgUploader = false
+    },
+    createEditor() {
+      this.editor = this.$refs.richEditor.quill;
+      this.setHtml(this.value || '')
     },
     getHtml() {
-      return this.editor.$txt.html()
+      return this.content
     },
     setHtml(html) {
       if (this.editor) {
-        this.editor.$txt.html(html)
+        this.editor.setContents(html)
       } else {
         console.warn('还未创建编辑器')
       }
     },
     insertImg(url) {
-      this.editor.command(null, 'insertHtml', `<img src="${url}" style="max-width:100%;"/>`)
+      this.editor.insertEmbed(this.uploadImgState.cursorIndex, 'image', url)
     },
     getEditor() {
       return this.editor
+    },
+    onEditorBlur(quill) {
+    },
+    onEditorFocus(quill) {
+    },
+    onEditorReady(quill) {
+    },
+    onEditorChange({quill, html, text}) {
+      this.$emit('input', html)
     }
   }
 }

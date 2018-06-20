@@ -1,13 +1,13 @@
 <template>
-  <div class="resource-item-info" @click="gotoDetail(resource)">
+  <div class="resource-item-info" @click="gotoDetail(resource)" :class="['resource-item-theme-type-'+type]">
     <h4 class="res-title">{{resource.resourceName}}</h4>
     <div class="res-intro-detail">
       <div class="res-intro-bd">
         <span class="res-type">#{{resource.resourceType}}</span>
-        <!--<span class="res-size">{{resource._fileSize}}</span>-->
         <span class="res-desc">{{resource.resourceDesc}}{{resource.resourceId}}</span>
       </div>
       <div class="res-intro-ft">
+        <span class="res-type">#{{resource.resourceType}}</span>
         <span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>
         <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
       </div>
@@ -32,13 +32,14 @@
         default() {
           return {}
         }
+      },
+      type: {
+        type: String,
+        default: 'list'
       }
     },
 
     watch: {
-//      resource() {
-//        this.format(this.resource)
-//      }
     },
 
     mounted() {

@@ -108,7 +108,6 @@ export default {
         policyText: '',
         selectedPolicy: {},
         selectedScheme: {},
-        checked: false,
         selected: false,
         authSchemeName: '未命名的授权方案',
         bubbleResources: [],
@@ -142,7 +141,6 @@ export default {
     },
     addDependencies(data) {
       this.resourceDetail.dependencies.push(cloneDeep(data))
-      data.checked = false
       data.selected = false
       data.authSchemes = []
       SchemeDataLoader.onloadSchemesForResource(data.resourceId).then((list) => {

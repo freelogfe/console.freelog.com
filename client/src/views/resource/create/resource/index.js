@@ -65,13 +65,28 @@ export default {
       uploader: {
         headers: {
           method: 'POST'
-        },
-        data: {}
+        }
       },
       valid: false,
       meta: '{}',
       editMode: EDIT_MODES.creator,
-      editorConfig: {}
+      editorConfig: {},
+      percentage: 0,
+      currentUploader: '',
+      uploaderStates: {
+        resource: {
+          percentage: 0,
+          isUploaded: false,
+          isUploading: false,
+          name: ''
+        },
+        thumbnail: {
+          percentage: 0,
+          isUploaded: false,
+          isUploading: false,
+          name: ''
+        }
+      }
     }
   },
   props: {
@@ -86,14 +101,18 @@ export default {
   computed: {
     showCreatorInputItem() {
       return this.editMode === EDIT_MODES.creator
+    },
+    shouldShowResourceUploader() {
+      return !(this.uploaderStates.resource.isUploading || this.uploaderStates.resource.isUploaded)
+    },
+    shouldShowThumbnailInput() {
+      return this.formData.resourceType === RESOURCE_TYPES.pageBuild
     }
   },
 
   watch: {
     data() {
       if (this.data.resourceId) {
-        console.log(this.data)
-
         this.editMode = EDIT_MODES.editor
         Object.assign(this.formData, this.data)
         this.formData.widgetName = this.data.systemMeta.widgetName || ''
@@ -123,50 +142,67 @@ export default {
     errorHandler(err) {
       this.loading = false
       var errMsg
-      switch (err.status) {
-        case 400:
-          errMsg = '不支持的文件类型'
-          break;
-        case 401:
-          errMsg = '权限未经验证'
-          break;
-        default:
-          errMsg = err.message
+      var error
+
+      if (err.errcode !== undefined) {
+        error = {error: err.msg}
+      } else {
+        switch (err.status) {
+          case 400:
+            errMsg = '不支持的文件类型'
+            break;
+          case 401:
+            errMsg = '权限未经验证'
+            break;
+          default:
+            errMsg = err.message
+        }
+        error = {error: errMsg}
       }
 
-      this.$emit('uploadEnd', {error: errMsg})
-      this.$refs.upload.fileList = [] //reset
+      this.$emit('uploadEnd', error)
+      this.$refs.resourceUploader.fileList = [] //reset clearFiles
     },
-    successHandler(res) {
+    successHandler(res, file) {
       this.loading = false
-
       if (res.ret !== 0 || res.errcode !== 0) {
         //reset
-        this.$refs.upload.uploadFiles.forEach((file) => {
-          file.status = 'ready'
-        });
-
+        this.$refs.resourceUploader.clearFiles()
+        this.uploaderStates.resource.isUploading = false;
+        this.uploaderStates.resource.percentage = 0;
+        this.$message.error(res.msg)
         this.$emit('uploadEnd', {error: res.msg})
       } else {
+        this.uploaderStates.resource.sha1 = res.data.sha1
+        this.uploaderStates.resource.isUploaded = true
+        this.uploaderStates.resource.percentage = 100
+        this.autoSetFormData(file)
         this.$emit('uploadEnd', res.data)
+      }
+    },
+    autoSetFormData(file) {
+      var fileName = file.name.split('.', 2)[0]
+      if (!this.formData.widgetName && this.formData.resourceType === RESOURCE_TYPES.widget) {
+        this.formData.widgetName = fileName
+      }
+
+      if (!this.formData.resourceName) {
+        this.formData.resourceName = fileName
       }
     },
     fileChangeHandler(file, fileList) {
       if (this.fileLimitValidator(file, fileList)) {
-        var fileName = file.name.split('.', 2)[0]
-        if (!this.formData.widgetName && this.formData.resourceType === RESOURCE_TYPES.widget) {
-          this.formData.widgetName = fileName
-        }
 
-        if (!this.formData.resourceName) {
-          this.formData.resourceName = fileName
-        }
       }
     },
     imageUploadSuccessHandler(res) {
+      this.uploaderStates.thumbnail.isUploading = false
       if (res.errcode === 0) {
         this.formData.previewImage = res.data
+        this.uploaderStates.thumbnail.isUploaded = true
+        this.uploaderStates.thumbnail.percentage = 100
       } else {
+        this.uploaderStates.thumbnail.percentage = 0
         this.$error.showErrorMessage(res.msg)
       }
     },
@@ -179,28 +215,81 @@ export default {
         return false
       }
 
+      this.resetUploaderState(this.uploaderStates.thumbnail)
       return true
     },
-    imgUploadSuccessHandler(fid, res) {
-      var editor = this.$refs.editor;
-      console.log(arguments)
-      try {
-        res = JSON.parse(res)
-      } catch (err) {
-        res = {}
-        console.error(err)
+    clearUploaderHandler(uploader) {
+      var $uploader
+      var uploaderState = this.uploaderStates[uploader]
+      if (uploader === 'resource') {
+        $uploader = this.$refs.resourceUploader
+      } else {
+        $uploader = this.$refs.thumbnailUploader
       }
-      if (res.data) {
-        editor.insertImg(res.data)
+
+      $uploader.clearFiles()
+      $uploader.abort(uploaderState.file)
+      Object.assign(uploaderState, {
+        sha1: '',
+        name: '',
+        isUploading: false,
+        isUploaded: false,
+        percentage: 0
+      });
+    },
+    beforeUploadHandler(file) {
+      this.resetUploaderState(this.uploaderStates.resource, file);
+    },
+    resetUploaderState(uploader, file) {
+      Object.assign(uploader, {
+        file: file,
+        name: (file && file.name) || '',
+        isUploading: true,
+        isUploaded: false,
+        percentage: 0
+      });
+    },
+    imgUploadSuccessHandler(detail) {
+      var data = detail.data;
+      var editor = this.$refs.editor;
+      if (data.errcode === 0) {
+        editor.insertImg(data.data)
+      } else {
+        this.$message.error(data.msg)
       }
     },
     validate() {
       return new Promise((resolve, reject) => {
+        var reourceUploader = this.uploaderStates.resource
         this.$refs.createForm.validate((valid, err) => {
           if (valid) {
+            if (this.editMode === EDIT_MODES.creator) {
+              var errMsg;
+              if (!reourceUploader.sha1) {
+                errMsg = '未上传资源文件'
+              } else if (!reourceUploader.isUploaded) {
+                errMsg = '资源文件正在上传中，等上传完再点击创建';
+              }
+
+              if (errMsg) {
+                return reject(errMsg);
+              }
+            }
+
+            try {
+              JSON.parse(this.meta)
+            } catch (err) {
+              console.error(err)
+              return reject(`meta格式有误: ${err}`)
+            }
+
             resolve()
           } else {
-            reject(err)
+            var msg = Object.keys(err).map(key => {
+              var item = err[key]
+              return item.message
+            })
+            reject(msg.join('，'))
           }
         })
       })
@@ -215,20 +304,18 @@ export default {
       return true
     },
     packUploadData() {
-      var $uploader = this.$refs.upload;
-      var uploadData = $uploader.data || {};
+      var reourceUploader = this.uploaderStates.resource
+      var uploadData = {};
       var formData = this.formData;
       var metaData;
       const INPUT_KEYS = ['resourceType']
       const UPDATE_KEYS = ['resourceName']
       var keys = UPDATE_KEYS
 
-
       //包装meta数据
       try {
         metaData = JSON.parse(this.meta)
       } catch (err) {
-        console.error(err)
         metaData = {}
       }
       if (this.formData.widgetName) {
@@ -237,13 +324,13 @@ export default {
 
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
-        uploadData.meta = JSON.stringify(metaData)
-        uploadData.previewImage = formData.previewImage
+        uploadData.sha1 = reourceUploader.sha1
+        formData.previewImage && (uploadData.previewImage = formData.previewImage)
       } else {
-        uploadData.previewImages = [formData.previewImage]
-        uploadData.meta = metaData
+        formData.previewImage && (uploadData.previewImages = [formData.previewImage]);
       }
 
+      uploadData.meta = metaData
       var desc = this.$refs.editor.getHtml()
       if (desc) {
         uploadData.description = desc
@@ -266,7 +353,6 @@ export default {
         this.validate()
           .then(() => {
             var data = this.packUploadData();
-
             if (!this.data.resourceId) {
               this.createResource(data).then(resolve).catch(reject)
             } else if (this.isChanged()) {
@@ -277,32 +363,42 @@ export default {
           }).catch(reject)
       })
     },
-    createResource() {
+    createResource(data) {
       return new Promise((resolve, reject) => {
-        var $uploader = this.$refs.upload;
+        var $uploader = this.$refs.resourceUploader;
         if ($uploader.uploadFiles.length > 0) {
-          this.loading = true
-          this.$once('uploadEnd', (detail) => {
-            if (detail.error) {
-              reject(detail.error)
+          this.$services.resource.post(data).then(res => {
+            if (res.data.ret !== 0 || res.data.errcode !== 0) {
+              reject(res.data.msg)
             } else {
-              resolve(detail)
+              resolve(res.data.data)
             }
-          });
-          $uploader.submit()
+          })
         } else {
           reject('无上传文件')
         }
       })
     },
     updateResource(data) {
-      console.log(data)
       return this.$services.resource.put(this.data.resourceId, data).then((res) => {
         if (res.data.ret !== 0 || res.data.errcode !== 0) {
           return Promise.reject(res)
         }
         return res.getData()
       })
+    },
+    uploadProgressHandler(event, file, fileList) {
+      var uploaderStates = this.uploaderStates;
+      var uploader
+      if (uploaderStates.resource.name === file.name) {
+        uploader = uploaderStates.resource
+      } else if (uploaderStates.thumbnail.name === file.name) {
+        uploader = uploaderStates.thumbnail
+      }
+
+      if (uploader) {
+        uploader.percentage = file.percentage
+      }
     }
   }
 }

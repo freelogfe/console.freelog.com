@@ -8,7 +8,7 @@ function loadDetail(pid) {
   })
 }
 
-const onloadPresentableDetail = createCacheLoaders(loadDetail)
+const onloadPresentableDetail = createCacheLoaders(loadDetail, true)
 
 export {
   loadDetail,

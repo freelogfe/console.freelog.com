@@ -1,5 +1,11 @@
 import {createLoader, createCacheLoaders} from '@/lib/utils'
+import {cloneDeep, uniqBy} from 'lodash'
+
 import axios from '@/lib/axios'
+
+
+var cachedResourceSchemes = {}
+var cachedSchemes = {}
 
 /**
  * @param params
@@ -8,19 +14,43 @@ import axios from '@/lib/axios'
  * @returns {*}
  */
 function loadAuthSchemes(params) {
+  var resourceIds = []
   if (params.resourceIds && params.resourceIds.length) {
-    params.resourceIds = params.resourceIds.join(',')
+    params.resourceIds.forEach(rid => {
+      resourceIds.push(rid)
+      if (!cachedResourceSchemes[rid]) {
+        cachedResourceSchemes[rid] = []
+      }
+    });
+    params.resourceIds = resourceIds.join(',')
   }
 
   if (params.authSchemeIds && params.authSchemeIds.length) {
     params.authSchemeIds = params.authSchemeIds.join(',')
   }
 
+
   return axios.get(`/v1/resources/authSchemes`, {
     params: params
   }).then((res) => {
     if (res.data.errcode === 0) {
-      return res.getData()
+      var list = res.getData()
+      list.forEach(scheme => {
+        if (!cachedSchemes[scheme.authSchemeId]) {
+          cachedSchemes[scheme.authSchemeId] = scheme
+        }
+
+        if (params.resourceIds) {
+          cachedResourceSchemes[scheme.resourceId].push(scheme)
+        }
+      });
+
+      if (resourceIds.length) {
+        resourceIds.forEach(rid => {
+          cachedResourceSchemes[rid] = uniqBy(cachedResourceSchemes[rid], 'authSchemeId')
+        })
+      }
+      return cloneDeep(list)
     } else {
       return Promise.reject(res.data.msg)
     }
@@ -28,6 +58,10 @@ function loadAuthSchemes(params) {
 }
 
 function loadSchemeDetail(authSchemeId, params) {
+  if (cachedSchemes[authSchemeId]) {
+    return Promise.resolve(cloneDeep(cachedSchemes[scheme.authSchemeId]))
+  }
+
   params = params || {}
   return axios.get(`/v1/resources/authSchemes/${authSchemeId}`, {
     params: params
@@ -40,7 +74,6 @@ function loadSchemeDetail(authSchemeId, params) {
   })
 }
 
-
 const onloadSchemeDetail = createCacheLoaders(function (id) {
   return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
     if (Array.isArray(scheme)) {
@@ -48,15 +81,19 @@ const onloadSchemeDetail = createCacheLoaders(function (id) {
     }
     return scheme
   })
-})
+}, true)
 
 
 const loadSchemesForResource = createCacheLoaders(function (params) {
   return loadAuthSchemes(params)
-})
+}, true)
 
 
 function onloadSchemesForResource(id, params) {
+  if (cachedResourceSchemes[id] && !params) {
+    return Promise.resolve(cloneDeep(cachedResourceSchemes[id]))
+  }
+
   params = params || {}
   params.resourceIds = [id]
 

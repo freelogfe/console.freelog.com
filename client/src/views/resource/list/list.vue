@@ -5,11 +5,6 @@
         <resource-item :resource="scope.data"></resource-item>
       </template>
     </lazy-list-view>
-    <!--<ul>-->
-    <!--<li class="resource-item" v-for="resource in resources">-->
-    <!--<resource-item :resource="resource"></resource-item>-->
-    <!--</li>-->
-    <!--</ul>-->
   </div>
 </template>
 

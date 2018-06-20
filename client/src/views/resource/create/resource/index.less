@@ -1,27 +1,135 @@
 .base-resource-wrap {
   width: 720px;
   margin: auto;
+
+  .input-item {
+    width: 100%;
+    border: none;
+    outline: none;
+  }
   .resource-name {
-    width: 64.5%;
+    font-size: 24px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .widget-name {
+    height: 20px;
+    line-height: 20px;
   }
 
   .resource-type {
-    width: 30%;
+    flex-basis: 120px;
+    margin-right: 50px;
   }
 
   .step-title {
-    margin-bottom: 20px;
     font-weight: 600;
     font-size: 20px;
   }
 
   .res-desc-editor {
-    height: 400px;
+    position: relative;
   }
 
   &.resource-edit-mode-editor {
     .res-file-uploader {
       display: none;
+    }
+  }
+
+  .uploader-wrapper {
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #d9d9d9;
+    font-size: 14px;
+    color: #333;
+
+    .el-icon-circle-close {
+      float: right;
+      color: #CCCCCC;
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    .resource-upload-state {
+      padding-left: 45px;
+      padding-right: 45px;
+      .resource-type-desc {
+        text-align: left;
+        padding-left: 5px;
+      }
+
+      .resource-file-progress {
+        padding-right: 30px;
+      }
+    }
+
+    .resource-file-tip {
+      flex: auto;
+      line-height: 20px;
+      text-align: left;
+      .resource-file-sub-tip {
+        color: #999999;
+      }
+    }
+    .el-icon-plus {
+      font-size: 25px;
+      color: #333333;
+      flex-basis: 20px;
+    }
+
+    .resource-thumbnail-input {
+      flex-basis: 185px;
+      height: 100%;
+      border-right: 1px dashed #d9d9d9;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+
+      .thumbnail-upload-state {
+        padding-left: 25px;
+        padding-right: 15px;
+        width: 100%;
+      }
+
+      .resource-thumbnail-uploader {
+        height: 100%;
+        width: 100%;
+      }
+
+      .el-icon-plus {
+        margin-left: 30px;
+      }
+
+      .resource-file-tip {
+        padding-left: 25px;
+      }
+    }
+    .resource-file-input {
+      flex: auto;
+
+      .resource-file-uploader-wrap {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+      }
+
+      .resource-file-tip {
+        padding-left: 40px;
+      }
+      .el-icon-plus {
+        padding-left: 50px;
+      }
+
+      .resource-file-uploader {
+        flex: auto;
+        height: 100%;
+      }
     }
   }
 }
