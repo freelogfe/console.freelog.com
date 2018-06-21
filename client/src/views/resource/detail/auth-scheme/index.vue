@@ -1,6 +1,12 @@
 <template>
   <section class="auth-scheme-detail-container">
-    <h3 class="nav-title">授权方案</h3>
+    <h3 class="nav-title">授权方案<i class="el-icon-edit"
+                                 v-if="resource.isOwner"
+                                 @click="gotoResourceSchemeDetailHandler"></i>
+      <el-button type="text" class="hide-btn" @click="hideAuthSchemeHandler" v-if="!resource.isOwner">
+        <i class="el-icon-close"></i>
+      </el-button>
+    </h3>
     <div class="auth-scheme-content">
       <div class="tabs-header">
         <el-radio-group class="tab-radio-group"
@@ -38,6 +44,15 @@
               </el-radio-group>
             </div>
           </div>
+          <div class="scheme-contract-status-wrap"
+               v-if="resource.isOwner">
+            <div class="contract-status-btn-wrap">
+              <el-button class="scheme-contract-status-btn"
+                         :class="['contract-status-'+scheme._contractStatusInfo.status+'-btn']">
+                {{scheme._contractStatusInfo.desc}}
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -54,33 +69,7 @@
   @import "index.less";
 </style>
 
-
 <style lang="less">
-  .auth-scheme-detail-container {
-
-  .el-radio-button, .el-radio-button__inner {
-    width: 100%;
-  }
-
-  .is-active {
-
-  .el-radio-button__inner {
-    background-color: white !important;;
-  }
-
-  }
-
-  .el-radio-button__inner {
-    background-color: #F5F5F5 !important;
-    color: #333 !important;;
-    border-color: #CCCCCC !important;;
-    box-shadow: -1px 0 0 0 #CCCCCC !important;
-  }
-
-  .el-radio + .el-radio {
-    margin-left: 0;
-  }
-
-  }
+  @import "el-reset.less";
 
 </style>

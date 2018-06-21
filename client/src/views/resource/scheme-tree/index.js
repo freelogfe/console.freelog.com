@@ -46,15 +46,18 @@ export default {
     }
   },
   data() {
+    var isNodeDetail = !!this.$route.params.nodeId
     return {
+      isNodeDetail: isNodeDetail,
       schemes: [],
       dutyStatements: [],
       bubbleResources: [],
-      viewMode: 'list', //tree or list
+      viewMode:isNodeDetail ? 'tree' : 'list', //tree or list
       currentAuthNodeIndex: -1,
       dutyResourceMap: {},
       resourcesMap: {},
-      resourceSchemesCache: {}
+      resourceSchemesCache: {},
+      parentResource: null
     }
   },
   mounted() {
@@ -100,6 +103,7 @@ export default {
           this.resourceSchemesCache[oldRes.resourceId].schemes = this.schemes
         }
       }
+      this.parentResource = newRes
       this.initView()
       this.changeViewMode('tree')
     }
@@ -174,7 +178,6 @@ export default {
           activeStatus = SCHEME_STATUS.ALL
         }
 
-        // this.$set(dep, 'activeStatus', status)
         dep.activeStatus = activeStatus
         if (dep.selectedScheme && dep.selectedScheme.authSchemeId) {
           dep.selectedScheme.dependencies.forEach(res => {
@@ -187,10 +190,11 @@ export default {
       }
     },
     formatPolicyText(segmentText) {
-      var fmtText = segmentText
+      var fmtText
       try {
         fmtText = resourceCompiler.beautify(segmentText);
       } catch (err) {
+        fmtText = segmentText
       }
       return fmtText
     },
@@ -378,8 +382,11 @@ export default {
           activeStatus = SCHEME_STATUS.ALL
         }
       }
+
+      if (this.parentResource && this.parentResource.resourceId === resource.resourceId) {
+        this.$emit('updateResource', resource)
+      }
       resource.activeStatus = activeStatus
-      // this.$set(resource, 'activeStatus', activeStatus)
       this.$forceUpdate()
     },
     updatePrevSchemesActiveStatus(resource) {

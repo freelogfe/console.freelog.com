@@ -138,7 +138,6 @@ export default {
         contractType: '2',
         targetId: formData.resource.resourceId,
         segmentId: formData.selectedPolicy.segmentId,
-        serialNumber: formData.data.serialNumber,
         partyTwo: nodeId
       };
 

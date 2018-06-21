@@ -12,6 +12,20 @@ function generateAlpha(num) {
   return alphas
 }
 
+const ContractStates = [{
+  status: 0,
+  desc: '未完成'
+},{
+  status: 1,
+  desc: '已发布'
+},{
+  status: 2,
+  desc: '合约待执行'
+},{
+  status: 3,
+  desc: '发布'
+},]
+
 export default {
   name: 'auth-scheme-detail',
   data() {
@@ -47,7 +61,9 @@ export default {
     init() {
       SchemeLoader.onloadSchemesForResource(this.resource.resourceId)
         .then((data) => {
-          this.schemes = this.formatSchemes(data);
+          if (data.length) {
+            this.schemes = this.formatSchemes(data);
+          }
         }).catch(this.$error.showErrorMessage)
     },
     changePolicy(scheme, policy) {
@@ -61,12 +77,12 @@ export default {
         }
       });
 
-      schemes.forEach((scheme) => {
+      schemes.forEach((scheme,i) => {
         scheme.dependencies = scheme.bubbleResources
+        scheme._contractStatusInfo = ContractStates[i]
         scheme.policy.forEach(p => {
           try {
             p._fmtSegmentText = resourceCompiler.beautify(p.segmentText)
-            console.log(p._fmtSegmentText)
           } catch (e) {
             p._fmtSegmentText = p.segmentText
           }
@@ -87,6 +103,12 @@ export default {
           throw new Error(res)
         }
       })
+    },
+    gotoResourceSchemeDetailHandler() {
+      this.$router.push(`/resource/detail/${this.resource.resourceId}/auth_schemes`);
+    },
+    hideAuthSchemeHandler(){
+      this.$emit('close')
     }
   }
 }

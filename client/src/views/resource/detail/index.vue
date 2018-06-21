@@ -1,37 +1,26 @@
 <template>
-  <section class="res-detail-wrap">
+  <section class="res-detail-wrap" :class="{'owner-resource': isOwnerResource}">
+    <div class="op-btns">
+      <el-button type="text"
+                 v-if="!showAuthSchemes"
+                 @click="showAuthSchemeHandler"
+                 class="show-btn">
+        <img class="auth-schems-img-icon" src="../../../assets/img/icons/scheme.png" alt="授权方案">
+      </el-button>
+    </div>
     <div class="res-detail-aside" :class="{'active-aside-status':showAuthSchemes}">
-      <div class="op-btns">
-        <el-button type="text" class="hide-btn" @click="hideAuthSchemeHandler" v-if="showAuthSchemes">
-          <i class="el-icon-close"></i>
-        </el-button>
-        <el-button type="text"
-                   @click="showAuthSchemeHandler"
-                   class="show-btn"
-                   v-else>
-          <img class="auth-schems-img-icon" src="../../../assets/img/icons/scheme.png" alt="授权方案">
-        </el-button>
-      </div>
       <auth-scheme-detail class="auth-scheme-detail"
                           :selectedCallback="selectPolicyHandler"
-                          :class="animateCls"
+                          @close="hideAuthSchemeHandler"
                           :resource="resourceDetail.resourceInfo"
                           v-show="showAuthSchemes"></auth-scheme-detail>
-
-      <!--<div class="scheme-contract-status-wrap" :class="{'show-status-btn':showAuthSchemes}">-->
-      <!--<div class="contract-status-btn-wrap">-->
-      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">发布</el-button>-->
-      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">合约待执行</el-button>-->
-      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">未发布</el-button>-->
-      <!--<el-button class="scheme-contract-status-btn publish-scheme-btn">已发布</el-button>  -->
-      <!--</div>-->
-      <!--</div>-->
     </div>
 
-    <div class="res-detail-content" :style="{transform: contentTransform}">
+    <div class="res-detail-content" ref="detailContent" :style="{transform: contentTransform}">
       <div class="res-detail-hd clearfix">
         <div class="res-author-avatar">
-          <img src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg" alt="">
+          <img src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg"
+               alt="">
         </div>
         <div class="res-digest">
           <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
@@ -64,7 +53,7 @@
           <img class="img-icon" src="../../../assets/img/icons/favor.png"
                alt="收藏">{{resourceDetail.isFavor?'已收藏':'收藏至我的资源库'}}
         </el-button>
-        <el-button type="text" class="favor-btn detail-ft-btn" @click="editDetailHandler" v-if="showEdit">
+        <el-button type="text" class="edit-btn detail-ft-btn" @click="editDetailHandler">
           <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
         </el-button>
         <el-button class="auth-btn" circle @click="getResourceAuthHandler">获取授权</el-button>
@@ -81,7 +70,8 @@
           <h4 class="opts-bd-title">获取资源授权至节点：</h4>
           <div class="opts-container">
             <ul class="checkbox-group node-opts">
-              <li class="checkbox-item" v-for="node in nodes" :class="{'node-opt-selected': node.selected}" @click="nodeOptCheckHandler(node)">
+              <li class="checkbox-item" v-for="node in nodes" :class="{'node-opt-selected': node.selected}"
+                  @click="nodeOptCheckHandler(node)">
                 <i class="node-opt-check-status checked-opt" v-if="node.checked"></i>
                 <i class="node-opt-check-status unchecked-opt" v-else></i>
                 {{node.nodeName}}

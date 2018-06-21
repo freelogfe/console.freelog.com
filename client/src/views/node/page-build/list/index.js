@@ -115,9 +115,19 @@ export default {
       })
     },
     changePageBuildHandler(pagebuild) {
-      this.setDefaultPageBuildHandler(pagebuild).then(() => {
-        this.currentIndex = pagebuild.status === PAGE_BUILD_STATUS.show ? pagebuild.index : ''
-      });
+      var msg;
+      if (pagebuild.status === PAGE_BUILD_STATUS.show) {
+        msg = '确定取消使用该页面?'
+      } else {
+        msg = '确定选用该页面?'
+      }
+
+      this.$confirm(msg)
+        .then(()=>{
+          this.setDefaultPageBuildHandler(pagebuild).then(() => {
+            this.currentIndex = pagebuild.status === PAGE_BUILD_STATUS.show ? pagebuild.index : ''
+          });
+        }).catch(()=>{})
     },
     addNewPageBuildHandler() {
       this.$message.warning('还没开发呀呀呀')

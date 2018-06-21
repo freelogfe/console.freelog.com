@@ -1,12 +1,53 @@
-@dotSize: 10px;
-
 .auth-scheme-detail-container {
   background-color: #F5F5F5;
   padding: 45px 30px;
 
+  .scheme-contract-status-wrap {
+    bottom: 55px;
+    position: fixed;
+    width: 340px;
+    opacity: 1;
+    z-index: 9;
+    .contract-status-btn-wrap {
+      padding: 10px 45px;
+      background-color: #F5F5F5;
+    }
+
+    .scheme-contract-status-btn {
+      width: 100%;
+    }
+
+    .contract-status-2-btn {
+      background-color: #F46284;
+      color: white;
+    }
+
+    .contract-status-1-btn {
+      background-color: #9BCB39;
+      color: white;
+    }
+  }
+
   .nav-title {
     margin-bottom: 12px;
     padding: 0 6px;
+    font-size: 18px;
+    .el-icon-edit {
+      padding-left: 10px;
+      cursor: pointer;
+    }
+
+    .hide-btn {
+      color: black;
+      float: right;
+      padding: 0;
+      margin-top: 3px;
+      i {
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+
   }
   .tab-radio-group {
     display: flex;
@@ -14,6 +55,9 @@
 
   .tabs-content {
     padding: 0 6px;
+    .tab-panel {
+      margin-bottom: 60px;
+    }
     .dep-item {
       margin-bottom: 15px;
     }
@@ -50,25 +94,10 @@
   }
 
   .dot {
-    display: inline-block;
+    //display: inline-block;
     padding: 0 13px;
     &:after {
-      content: '';
-      border-radius: 50%;
-      height: @dotSize;
-      width: @dotSize;
       background-color: #f23e5c;
-      display: inline-block;
-      vertical-align: top;
-      margin-top: 6px;
-    }
-
-    &.selected:after {
-      background-color: #FFC033
-    }
-
-    &.done:after {
-      background-color: #66bc35
     }
   }
 }

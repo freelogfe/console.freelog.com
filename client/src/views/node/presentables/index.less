@@ -1,10 +1,11 @@
+@containerWidth: 430px;
 .presentables-wrapper {
-
+  display: flex;
   .presentable-list-container {
     overflow: scroll;
     max-height: 100vh;
-    width: 430px;
-    float: left;
+    flex-basis: @containerWidth;
+    min-width: @containerWidth;
     .dot {
       float: left;
     }
@@ -75,8 +76,7 @@
 
   .presentable-detail-container {
     background-color: #FAFAFA;
-    margin-left: 430px;
-    width: auto;
+    flex: 1;
     .presentable-detail-content {
       background-color: #FAFAFA;
     }

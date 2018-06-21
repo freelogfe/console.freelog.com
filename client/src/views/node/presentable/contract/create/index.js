@@ -203,8 +203,7 @@ export default {
           var policy = tabData.data.policy[tabData.selected]
           selectedContracts.push({
             resourceId: tabData.resourceId,
-            segmentId: policy.segmentId,
-            serialNumber: tabData.data.serialNumber
+            segmentId: policy.segmentId
           })
         }
       })
@@ -239,7 +238,6 @@ export default {
           contractType: '2',
           targetId: param.resourceId,
           segmentId: param.segmentId,
-          serialNumber: param.serialNumber,
           partyTwo: nodeId
         })
       }

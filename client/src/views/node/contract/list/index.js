@@ -1,6 +1,8 @@
 import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
 import DataLoader from '@/data'
+import ContractDetail from '../../presentable/contract/detail/index.vue'
+import contract from "../../../../services/contract";
 
 export default {
   name: 'node-contracts',
@@ -8,11 +10,13 @@ export default {
     return {
       contractList: [],
       query: '',
-      presentables: []
+      presentables: [],
+      currentContract: {}
     }
   },
   components: {
-    TableView
+    TableView,
+    ContractDetail
   },
 
   mounted() {
@@ -162,6 +166,20 @@ export default {
         path: `/node/${this.$route.params.nodeId}/presentable/detail#contract`,
         query: query
       })
+    },
+    showContractDetailHandler(contract) {
+      if (!contract || !contract.contractId){
+        this.$message.warning('未创建合同')
+        return
+      }
+      this.$services.contract.get(contract.contractId)
+        .then(res=>{
+          var data = res.getData();
+          console.log(data)
+          // this.currentContract = data
+          this.$set(this, 'currentContract', data)
+          this.$forceUpdate()
+        })
     },
     activateContractHandler(contract) {
       this.$axios.get(`/v1/contracts/initial`, {

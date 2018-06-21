@@ -3,6 +3,20 @@
   //padding: 0 20px;
   height: 100%;
   position: relative;
+
+  .unhandle-res-btn {
+    display: none;
+  }
+
+  &.node-presentable-scheme-wrap {
+
+  }
+
+  &.resource-scheme-wrap {
+    .unhandle-res-btn {
+      display: block;
+    }
+  }
   .view-mode-tabs {
     position: fixed;
     top: 140px;
@@ -71,7 +85,7 @@
     position: relative;
     &.is-unresolved {
       opacity: .3;
-      &:before{
+      &:before {
         content: ' ';
         position: absolute;
         top: 0;

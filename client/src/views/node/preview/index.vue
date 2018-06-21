@@ -1,6 +1,6 @@
 <template>
-  <section class="node-detail-container">
-    NodePreviewer
+  <section class="node-preview-container">
+    <div class="center">待实现</div>
   </section>
 </template>
 

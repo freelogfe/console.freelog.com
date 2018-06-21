@@ -29,7 +29,6 @@ function loadAuthSchemes(params) {
     params.authSchemeIds = params.authSchemeIds.join(',')
   }
 
-
   return axios.get(`/v1/resources/authSchemes`, {
     params: params
   }).then((res) => {

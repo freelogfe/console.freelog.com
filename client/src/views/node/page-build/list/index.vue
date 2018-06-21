@@ -4,14 +4,14 @@
     <ul class="pb-list">
       <li class="pb-item" v-for="item in pagebuildList" :class="{selected: item.index === currentIndex}">
         <div class="pb-item-wrap">
-          <div class="pb-thumbnail-wrap" @click="gotoResourceDetailHandler(item)">
+          <div class="pb-thumbnail-wrap" @click="changePageBuildHandler(item)">
             <img :src="item.resourceDetail._previewImage" alt="">
           </div>
-          <div class="pb-item-content">
+          <div class="pb-item-content"  @click="gotoResourceDetailHandler(item)">
             <h4 class="pb-title">{{item.presentableName}}</h4>
             <div class="pb-desc">
-              <i class="el-icon-circle-check-outline pb-select-btn" @click="changePageBuildHandler(item)"></i>
-              <p v-html="item.resourceDetail.intro" @click="gotoResourceDetailHandler(item)"></p>
+              <!--<i class="el-icon-circle-check-outline pb-select-btn" @click="changePageBuildHandler(item)"></i>-->
+              <p v-html="item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro" @click="gotoResourceDetailHandler(item)"></p>
             </div>
           </div>
         </div>
@@ -20,18 +20,6 @@
         <div class="add-pb-area" @click="addNewPageBuildHandler">
           <i class="el-icon-plus"></i>
         </div>
-        <!--<div class="pb-item-wrap">-->
-          <!--<div class="pb-thumbnail-wrap">-->
-            <!--<img :src="item.resourceDetail._previewImage" alt="">-->
-          <!--</div>-->
-          <!--<div class="pb-item-content">-->
-            <!--<h4 class="pb-title">{{item.presentableName}}</h4>-->
-            <!--<div class="pb-desc">-->
-              <!--<i class="el-icon-circle-check-outline pb-select-btn" @click="changePageBuildHandler(item)"></i>-->
-              <!--<p v-html="item.resourceDetail.intro"></p>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
       </li>
     </ul>
   </section>

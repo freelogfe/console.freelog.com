@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-scheme-tree-wrap">
+  <div class="auth-scheme-tree-wrap" :class="[isNodeDetail?'node-presentable-scheme-wrap':'resource-scheme-wrap']">
     <div class="view-mode-tabs" :class="['active-mode-'+viewMode]">
       <el-button type="text" class="mode-btn" @click="changeViewMode('list')">
         <el-badge :value="unsignPolicyList.length" class="badge-num">
@@ -21,18 +21,18 @@
             </div>
           </template>
           <pre class="policy-segment-text"
-               v-if="duty.selectedScheme">{{duty.selectedScheme.selectedPolicy.segmentText}}</pre>
+               v-if="duty.selectedScheme">{{formatPolicyText(duty.selectedScheme.selectedPolicy.segmentText)}}</pre>
         </el-collapse-item>
       </el-collapse>
     </div>
     <div class="auth-scheme-wrap" v-show="viewMode==='tree'">
       <div class="auth-scheme-list-wrap" :key="panelIndex" v-for="(resource,panelIndex) in schemes">
-        <el-button class="unhandle-res-btn" :class="{'is-unresolved': resource.isResolved===false}" @click="toggleResolveResource(resource, panelIndex)">不处理此资源</el-button>
-        <li :class="['active-status-'+resource.activeStatus]">
-          <p><i class="dot"></i>{{resource.resourceName||resource.resourceId}}</p>
-        </li>
+        <el-button class="unhandle-res-btn" :class="{'is-unresolved': resource.isResolved===false}"
+                   @click="toggleResolveResource(resource, panelIndex)">不处理此资源
+        </el-button>
         <resource-intro-info :resource="resource"></resource-intro-info>
-        <div class="res-auth-schemes-wrap" :class="{'is-unresolved': resource.isResolved===false}" v-if="resource.schemes">
+        <div class="res-auth-schemes-wrap" :class="{'is-unresolved': resource.isResolved===false}"
+             v-if="resource.schemes">
           <h4 class="res-auth-schemes-title">授权方案</h4>
           <div class="res-auth-schemes">
             <ul class="scheme-tabs-header" v-if="resource.schemes.length> 1">
@@ -104,5 +104,5 @@
 </style>
 
 <style lang="less">
- @import "el-reset.less";
+  @import "el-reset.less";
 </style>

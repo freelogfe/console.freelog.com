@@ -33,6 +33,7 @@ function format(contract) {
   return contract
 }
 
+
 export default {
   format
 }

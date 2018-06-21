@@ -62,7 +62,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '编辑资源详情',
+        title: '资源详情',
         type: 'resource'
       },
       component: Views.resourceDetail

@@ -35,6 +35,7 @@
     <resource-scheme-tree :resource="curDepResource"
                           :contracts="dutyStatements"
                           @update="updateDepResourceSchemesHandler"
+                          @updateResource="updateResourceHandler"
                           style="margin-left: 480px;"></resource-scheme-tree>
     <el-dialog
       :visible.sync="showEditDepResource"
@@ -44,12 +45,12 @@
       <p slot="title" class="dialog-title">添加资源</p>
       <search-resource class="add-resource-input" @add="changeDepResource"></search-resource>
       <!--<div>-->
-        <!--<el-input v-model="curEditDepResourceId" placeholder="输入您要添加的资源ID"></el-input>-->
+      <!--<el-input v-model="curEditDepResourceId" placeholder="输入您要添加的资源ID"></el-input>-->
       <!--</div>-->
       <!--<div slot="footer" class="dialog-footer clearfix">-->
-        <!--<el-button class="del-btn" @click="deleteDepResource">删除</el-button>-->
-        <!--<el-button @click="changeDepResource" class="ft-btn">确 定</el-button>-->
-        <!--<el-button @click="resetDepResourceEditor" class="ft-btn">取 消</el-button>-->
+      <!--<el-button class="del-btn" @click="deleteDepResource">删除</el-button>-->
+      <!--<el-button @click="changeDepResource" class="ft-btn">确 定</el-button>-->
+      <!--<el-button @click="resetDepResourceEditor" class="ft-btn">取 消</el-button>-->
       <!--</div>-->
     </el-dialog>
   </div>
@@ -98,13 +99,11 @@
       }
     },
     mounted() {
-      console.log('mounted',this.detail)
+      console.log('mounted', this.detail)
       this.initDependencies(this.detail.scheme);
     },
     computed: {},
-    watch: {
-
-    },
+    watch: {},
     methods: {
       initDependencies(scheme) {
         let dependencies = scheme.dependencies
@@ -176,7 +175,9 @@
         this.showEditDepResource = false
       },
       changeDepResource(resource) {
-        if (!resource || !resource.resourceId) {return}
+        if (!resource || !resource.resourceId) {
+          return
+        }
 
         this.curEditDepResourceId = resource.resourceId
         var currentEditDepResource = this.currentEditDepResource
@@ -220,8 +221,7 @@
       formatResource(res) {
         Object.assign(res, {
           selectSegment: '',
-          authSchemeId: '',
-          serialNumber: ''
+          authSchemeId: ''
         });
         return res;
       },
@@ -261,6 +261,10 @@
       },
       updateDepResourceSchemesHandler(data) {
         this.detail.scheme.willDutyStatements = data
+      },
+      updateResourceHandler(resource) {
+        this.curDepResource.activeStatus = resource.activeStatus
+        this.$forceUpdate()
       }
     }
   }

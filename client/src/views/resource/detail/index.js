@@ -16,18 +16,16 @@ export default {
         isFavor: false
       },
       showAuthSchemes: false,
-      animateCls: 'slideOutRight',
       showOptionsDialog: false,
       selectedNode: '',
       nodes: [],
       contentTransform: 'none',
-      selectedPolicy: {},
-      showEdit: false
+      selectedPolicy: {}
     }
   },
   computed: Object.assign({
-    send: function () {
-      return this.valid
+    isOwnerResource: function () {
+      return this.resourceDetail.resourceInfo.isOwner
     }
   }, mapGetters({
     session: 'session'
@@ -42,9 +40,15 @@ export default {
     init() {
       loadDetail(this.resourceId).then((res) => {
         res._filesize = this.humanizeSize(res.systemMeta.fileSize)
-        this.resourceDetail.resourceInfo = res
+
         if (this.session && this.session.user) {
-          this.showEdit = (res.userId === this.session.user.userId)
+          res.isOwner = (res.userId === this.session.user.userId)
+        } else {
+          res.isOwner = false
+        }
+        this.resourceDetail.resourceInfo = res
+        if (res.isOwner) {
+          this.showAuthSchemes = true
         }
       }).catch(err => {
         this.$router.push('/')
@@ -82,17 +86,13 @@ export default {
       return number + unit;
     },
     showAuthSchemeHandler() {
-      this.animateCls = 'slideInRight'
       this.showAuthSchemes = true
-      this.contentTransform = 'translate(-250px, 0)'
+      this.transformLeft = Math.min(250, Math.max(this.$refs.detailContent.offsetLeft - 20, 0));
+      this.contentTransform = `translate(-${this.transformLeft}px, 0)`
     },
     hideAuthSchemeHandler() {
-      this.animateCls = 'slideOutRight'
       this.contentTransform = 'none'
-
-      setTimeout(() => {
-        this.showAuthSchemes = false
-      }, 7e2);
+      this.showAuthSchemes = false
     },
     previewHandler() {
       this.$message.warning('还没开发')

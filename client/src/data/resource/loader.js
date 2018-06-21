@@ -47,7 +47,6 @@ function loadResources(resourceIds) {
   })
 }
 
-
 const onloadResourceDetail = createCacheLoaders(function (resourceId) {
   if (cachedResources[resourceId]) {
     return Promise.resolve(cachedResources[resourceId])
