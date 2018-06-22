@@ -17,7 +17,7 @@ export default {
         nodeName: NodeCreationRule.nodeName
       },
       nav: {
-        content: 'node-contracts'
+        content: 'node-presentables'
       },
       domainSuffix: /\.testfreelog\.com$/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
       NAV_TABS: [

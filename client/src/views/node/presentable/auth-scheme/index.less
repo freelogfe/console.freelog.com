@@ -3,3 +3,129 @@
 
   }
 }
+
+.del-res-icon {
+  display: none;
+  margin-left: 6px;
+}
+
+.dep-item {
+  margin-bottom: 20px;
+  cursor: pointer;
+  &:hover {
+    .del-res-icon {
+      display: inline-block;
+    }
+  }
+}
+
+.dialog-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.resource-name {
+  display: inline-block;
+  max-width: 90%;
+
+  .el-icon-edit {
+    color: #999999;
+    margin-left: 6px;
+  }
+}
+
+.select-box {
+  vertical-align: top;
+}
+
+.dep-list-wrap {
+  width: 480px;
+  background-color: white;
+  float: left;
+  position: relative;
+  .dep-list-inner {
+    padding: 50px 12px 20px 70px;
+  }
+}
+
+.el-icon-question {
+  color: #f5e2c6;
+  background-color: #fcab68;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.dot {
+  padding: 0 13px;
+}
+
+.policy-input-title {
+  margin-bottom: 15px;
+  font-size: 16px;
+  .el-icon-question {
+    margin-right: 9px;
+  }
+}
+
+.line-arrow {
+  display: none;
+  height: 1px;
+  background-color: black;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  .circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid black;
+    position: absolute;
+    right: -12px;
+    top: -5px;
+  }
+}
+
+.active {
+  .line-arrow {
+    display: inline-block;
+  }
+}
+
+.add-dep-resource-btn {
+  color: #CCCCCC;
+  margin-left: 30px;
+}
+
+.dialog-footer {
+  .del-btn {
+    background-color: #CCCCCC;
+    border: 1px solid #666666;
+    color: white;
+    float: left;
+  }
+  .ft-btn {
+    float: right;
+  }
+}
+
+&.is-publish {
+  .add-dep-resource-btn {
+    display: none;
+  }
+
+  .dep-list-inner {
+    .resource-name {
+      .el-icon-edit {
+        display: none;
+      }
+    }
+  }
+}
+
+.add-resource-input {
+  //padding: 0 30px;
+}

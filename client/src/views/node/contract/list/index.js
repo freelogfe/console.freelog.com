@@ -168,12 +168,12 @@ export default {
       })
     },
     showContractDetailHandler(contract) {
-      if (!contract || !contract.contractId){
-        this.$message.warning('未创建合同')
+      if (!contract || !contract.contractId) {
+        // this.$message.warning('未创建合同')
         return
       }
       this.$services.contract.get(contract.contractId)
-        .then(res=>{
+        .then(res => {
           var data = res.getData();
           console.log(data)
           // this.currentContract = data
@@ -198,6 +198,9 @@ export default {
           this.$error.showErrorMessage(res.data.msg)
         }
       })
+    },
+    resolveContractCreatorLink(presentable) {
+      return `/node/${this.$route.params.nodeId}/presentable/${presentable.presentableId}/scheme_detail`
     }
   }
 }

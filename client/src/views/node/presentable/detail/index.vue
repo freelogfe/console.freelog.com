@@ -8,7 +8,7 @@
         <span v-if="presentableData.scheme && presentableData.scheme.selectedPolicy">
           {{presentableData.scheme.authSchemeName}}/{{presentableData.scheme.selectedPolicy.policyName}}
         </span>
-        <span v-else>未选择授权方案</span>
+        <span v-else>未选择授权方案及授权策略</span>
         <i class="el-icon-edit"></i>
       </div>
     </resource-intro-info>

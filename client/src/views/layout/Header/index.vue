@@ -37,7 +37,7 @@
                 </router-link>
               </li>
               <li class="my-profile-item">
-                <div><img class="tool-icon" src="../../../assets/img/icons/node.png" alt="">节点
+                <div style="padding: 12px;"><img class="tool-icon" src="../../../assets/img/icons/node.png" alt="">节点
                   <router-link to="/node/create" class="nav-link create-node-btn"><i class="el-icon-plus"></i>
                   </router-link>
                 </div>

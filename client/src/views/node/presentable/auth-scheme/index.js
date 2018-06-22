@@ -1,20 +1,22 @@
 import ResourceSchemeTree from '@/views/resource/scheme-tree/index.vue'
 import PresentableDataLoader from '@/data/presentable/loader'
 import SchemeDataLoader from '@/data/scheme/loader'
+import ResourceIntroInfo from '../../../resource/intro/index.vue'
 
 export default {
   name: 'presentable-scheme-detail',
   components: {
-    ResourceSchemeTree
+    ResourceSchemeTree,
+    ResourceIntroInfo
   },
   data() {
     var params = this.$route.params
-    params.resourceId = this.$route.query.resourceId
     return {
       isInitStatus: false,
       params: params,
       presentableDetail: {
-        contracts: []
+        contracts: [],
+        schemes: []
       },
       cachedContractsMap: {}
     }
@@ -29,6 +31,7 @@ export default {
       if (!params.presentableId) {
         return
       }
+
       PresentableDataLoader.onloadPresentableDetail(params.presentableId).then(data => {
         if (data && data.contracts) {
           this.isInitStatus = !data.contracts.length
@@ -38,9 +41,18 @@ export default {
             cachedContractsMap[this.getSchemeContractKey(item)] = item
             return cachedContractsMap
           }, this.cachedContractsMap);
-          console.log(this.cachedContractsMap)
+
+
+          // this.loadPresentableSchemes(data.resourceId)
+          // console.log(this.cachedContractsMap)
         }
       });
+    },
+    loadPresentableSchemes(resourceId) {
+      SchemeDataLoader.onloadSchemesForResource(resourceId).then(schemes => {
+        console.log(schemes)
+        this.presentableDetail.schemes = schemes;
+      })
     },
     getSchemeContractKey(item) {
       return `${item.authSchemeId}_${item.policySegmentId}`
@@ -110,6 +122,21 @@ export default {
           this.$error.showErrorMessage(res)
         }
       })
+    },
+    switchSchemeHandler(resource, scheme, index, panelIndex){
+
+    },
+    selectResourceHandler(dep, scheme, panelIndex, $event){
+
+    },
+    changePolicy(resource, scheme, policy){
+
+    },
+    changeSchemePolicyHandler(scheme, policy){
+
+    },
+    selectAuthSchemeHandler(resource, scheme, panelIndex){
+
     }
   }
 }

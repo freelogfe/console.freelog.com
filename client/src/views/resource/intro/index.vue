@@ -9,8 +9,8 @@
       <p class="res-name">{{resource.resourceName}}</p>
       <slot></slot>
       <div class="res-origin">
-        <span class="res-author">by: {{resource.userName || resource.resourceId}}</span>
-        <span class="res-date">{{resource.updateDate|fmtDate}}</span>
+        <span class="res-author">by: {{resource.userName}}</span>
+        <span class="res-date">{{resource.updateDate|fmtDate('YYYY-MM-DD')}}</span>
       </div>
       <div>
         <a target="_blank" class="more-detail-link" :href="'/resource/detail/'+ resource.resourceId">查看更多>></a>

@@ -15,7 +15,7 @@
           </clip-board>
         </div>
       </div>
-      <nav>
+      <nav class="node-detail-nav-wrap">
         <ul class="nav-list">
           <li class="nav-item" :class="{active: nav.content===navItem.name}" @click="changePanelHandler(navItem.name)"
               v-for="navItem in NAV_TABS">{{navItem.title}}
@@ -25,7 +25,7 @@
 
       <div class="node-status-info">
         <p>节点状态：</p>
-        <el-button>未发布</el-button>
+        <el-button class="node-status-btn">未发布</el-button>
       </div>
     </div>
     <div class="right-side-wrap">

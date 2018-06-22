@@ -41,6 +41,7 @@
       :visible.sync="showEditDepResource"
       width="840px"
       :close-on-click-modal="false"
+      top="10vh"
       center>
       <p slot="title" class="dialog-title">添加资源</p>
       <search-resource class="add-resource-input" @add="changeDepResource"></search-resource>

@@ -4,7 +4,7 @@
     <div class="res-intro-detail">
       <div class="res-intro-bd">
         <span class="res-type">#{{resource.resourceType}}</span>
-        <span class="res-desc">{{resource.resourceDesc}}{{resource.resourceId}}</span>
+        <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
       </div>
       <div class="res-intro-ft">
         <span class="res-type">#{{resource.resourceType}}</span>

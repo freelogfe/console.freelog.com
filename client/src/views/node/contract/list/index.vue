@@ -11,7 +11,7 @@
               合同ID： {{presentable.masterContract.contractId}}
             <el-button @click="activateContractHandler(contract)" type="text">激活</el-button>
             </span>
-            <span v-else>未创建合同</span></div>
+            <span v-else><router-link :to="resolveContractCreatorLink(presentable)">未创建合同</router-link></span></div>
           <ul class="contract-list">
             <li class="contract-item" v-for="contract in presentable.contracts"
                 @click="showContractDetailHandler(contract)">

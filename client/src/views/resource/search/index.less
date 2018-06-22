@@ -3,12 +3,28 @@
     margin-bottom: 35px;
   }
 
+  .search-resource-list {
+    max-height: 400px;
+  }
+
   .add-resource-btn {
     float: right;
     background-color: #333333;
     color: white;
     border-radius: 20px;
-    border-radius: 20px;
     margin-top: 25px;
+  }
+}
+
+
+@media only screen and (max-height: 700px) {
+  .search-resource-wrap .search-resource-list {
+    max-height: 300px;
+  }
+}
+
+@media only screen and (min-height: 800px) {
+  .search-resource-wrap .search-resource-list {
+    max-height: 500px;
   }
 }

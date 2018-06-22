@@ -64,6 +64,7 @@ export default {
       }
       return this.loader({page: page}).then((data) => {
         this.favorResources = this.favorResources.concat(data.dataList)
+        data.dataList = data.dataList.concat(data.dataList).concat(data.dataList)
         if (data.dataList.length < pageSize) {
           data.canLoadMore = false
         }
@@ -72,6 +73,11 @@ export default {
     },
     searchDataHandler(page) {
       var pageSize = 10;
+
+      if (!this.searchInput) {
+        return Promise.resolve({canLoadMore: false})
+      }
+
       return this.$services.g_Resources.get({
         params: {
           keyWords: encodeURIComponent(this.searchInput)

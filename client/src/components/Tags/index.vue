@@ -38,6 +38,7 @@
     padding-top: 0;
     padding-bottom: 0;
     border-radius: 4px;
+    background-color: transparent;
   }
   .input-new-tag {
     width: 90px;

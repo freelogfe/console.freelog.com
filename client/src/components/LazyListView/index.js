@@ -49,7 +49,7 @@ export default {
             } else if (self.canLoadMore !== false) {
               self.fetch(index++).then((data) => {
                 self.canLoadMore = data.canLoadMore
-                self.scrollHandler(data.dataList)
+                self.scrollHandler(data.dataList || [])
                 if (self.canLoadMore === false) {
                   return Promise.reject()
                 }

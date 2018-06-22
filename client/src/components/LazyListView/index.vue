@@ -1,6 +1,6 @@
 <template>
   <div class="fl-lazy-list-view" ref="listView">
-    <ul :style="{
+    <ul v-if="previewList.length" :style="{
       paddingTop: lineTopHeight +'px',
       paddingBottom: lineBottomHeight +'px'
     }">
@@ -8,6 +8,7 @@
         <slot :data="item"></slot>
       </li>
     </ul>
+    <slot name="empty" v-if="previewList.length === 0"></slot>
 
     <slot name="loading">
       <div class="load-more-gif" ref="loading">loading...</div>
@@ -22,6 +23,6 @@
 </script>
 
 <style lang="less" scoped>
-@import "index.less";
+  @import "index.less";
 </style>
 

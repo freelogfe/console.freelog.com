@@ -1,6 +1,6 @@
 <template>
   <div class="presentable-auth-scheme-wrap">
-    <resource-scheme-tree :resourceId="params.resourceId"
+    <resource-scheme-tree :resourceId="presentableDetail.resourceId"
                           :contracts="presentableDetail.contracts"
                           class="presentable-auth-scheme-tree"
                           ref="schemeTree"></resource-scheme-tree>

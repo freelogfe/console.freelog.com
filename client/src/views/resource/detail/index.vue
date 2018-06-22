@@ -25,11 +25,11 @@
         <div class="res-digest">
           <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
           <div class="res-origin-info">
+            <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
             <span class="res-author-name">by: {{resourceDetail.resourceInfo.userName}}</span>
             <span class="res-update-time">最近更新时间： {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
           </div>
           <div class="res-type-info">
-            <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
             <!--<span class="res-file-size">{{resourceDetail.resourceInfo._filesize}}</span>-->
           </div>
         </div>

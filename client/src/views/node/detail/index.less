@@ -4,9 +4,13 @@
   width: @leftSideWidth;
   padding-top: 50px;
   position: fixed;
-  height: 100%;
   border-right: 1px solid #eee;
   z-index: 1;
+  overflow: scroll;
+  bottom: 0;
+  top: 60px;
+  display: flex;
+  flex-flow: column;
   .node-info-wrap {
     margin-left: 72px;
     margin-bottom: 25px;
@@ -25,6 +29,12 @@
       width: 15px;
     }
   }
+
+  .node-detail-nav-wrap {
+    overflow: scroll;
+    flex: 1;
+    margin-bottom: 100px;
+  }
   .nav-item {
     padding-left: 72px;
     font-size: 14px;
@@ -42,11 +52,16 @@
 
   .node-status-info {
     position: absolute;
-    bottom: 110px;
+    bottom: 0;
     right: 0;
     left: 0;
     background: white;
     padding: 15px 72px;
+    .node-status-btn {
+      background-color: #333333;
+      color: white;
+      width: 100%;
+    }
     p {
       margin-bottom: 6px;
     }
@@ -55,10 +70,10 @@
 
 .right-side-wrap {
   margin-left: @leftSideWidth;
-  overflow: scroll;
-  position: absolute;
-  top: 0;
-  left: 0;
+  //overflow: scroll;
+  //position: absolute;
+  //top: 0;
+  //left: 0;
   //bottom: 0;
-  right: 0;
+  //right: 0;
 }
