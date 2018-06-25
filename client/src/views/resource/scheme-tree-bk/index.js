@@ -52,7 +52,7 @@ export default {
       schemes: [],
       dutyStatements: [],
       bubbleResources: [],
-      viewMode: isNodeDetail ? 'tree' : 'list', //tree or list
+      viewMode:isNodeDetail ? 'tree' : 'list', //tree or list
       currentAuthNodeIndex: -1,
       dutyResourceMap: {},
       resourcesMap: {},
@@ -201,7 +201,6 @@ export default {
     changeViewMode(mode) {
       this.viewMode = mode
 
-      this.$emit('changeMode', mode)
       if (mode === 'list') {
         this.hideLineArrow(this.$el);
         this.showUnSignedPolicyList();
@@ -282,7 +281,7 @@ export default {
 
         target.style.top = (_from.offsetTop + 10) + 'px'
         target.style.left = (_from.offsetLeft + fromRect.width + 5) + 'px'
-        target.style.right = '-10px'
+        target.style.right = '6px'
         target.style.display = 'block'
       })
     },
@@ -628,14 +627,12 @@ export default {
       })
     },
     showLineArrows() {
-      var resources = this.schemes.slice(0, -1);
-      resources.forEach((resource) => {
-        if (resource.activeScheme) {
-          var $lines = this.$el.querySelectorAll(`.js-line-${resource.activeScheme.authSchemeId}`);
-          $lines.forEach(($line) => {
-            $line.style.display = 'block'
-          })
-        }
+      var schemes = this.schemes.slice(0, -1);
+      schemes.forEach((scheme) => {
+        var $lines = this.$el.querySelectorAll(`.js-line-${scheme.authSchemeId}`);
+        $lines.forEach(($line) => {
+          $line.style.display = 'block'
+        })
       })
     },
     switchSchemeHandler(resource, scheme, index, panelIndex) {

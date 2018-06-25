@@ -1,9 +1,10 @@
 <template>
   <div class="presentable-auth-scheme-wrap">
-    <resource-scheme-tree :resourceId="presentableDetail.resourceId"
-                          :contracts="presentableDetail.contracts"
-                          class="presentable-auth-scheme-tree"
-                          ref="schemeTree"></resource-scheme-tree>
+    <resource-scheme-tree
+      v-if="presentableDetail.resourceInfo"
+      :resource="presentableDetail.resourceInfo"
+      class="presentable-auth-scheme-tree"
+      ref="schemeTree"></resource-scheme-tree>
     <div class="ft clearfix">
       <div class="rt-side">
         <el-button class="ft-btn deep-color-btn" type="primary" round @click="saveSchemeHandler">
@@ -27,11 +28,14 @@
 
 <style lang="less">
   .presentable-auth-scheme-wrap {
-    .presentable-auth-scheme-tree {
-      .auth-scheme-list-wrap:first-child {
-        background: white;
-      }
-    }
+
+  .presentable-auth-scheme-tree {
+
+  .auth-scheme-list-wrap:first-child {
+    background: white;
+  }
+
+  }
   }
 
 </style>

@@ -246,21 +246,47 @@ export default {
           }
         })
     },
-    getDutyStateMents(schemeData) {
-      var dutyStatements = [];
-
-      if (schemeData.willDutyStatements) {
-        schemeData.willDutyStatements.forEach(dep => {
-          dutyStatements.push({
-            resourceId: dep.resourceId,
-            authSchemeId: dep.selectedScheme.authSchemeId,
-            policySegmentId: dep.selectedScheme.selectedPolicy.segmentId
-          });
-        })
-      } else {
-        dutyStatements = null
+    getDutyStateMents(deps) {
+      var data = {
+        dutyStatements: [],
+        bubbleResources: [],
+        unhandles: []
       }
-      return dutyStatements
+      loopForBreak(deps, (dep) => {
+        switch (dep.activeStatus) {
+          case SCHEME_STATUS.NONE:
+            data.bubbleResources.push({resourceId: dep.resourceId})
+            break;
+          case SCHEME_STATUS.SOME:
+          case SCHEME_STATUS.ALL:
+            console.log(dep)
+            data.dutyStatements.push({
+              resourceId: dep.resourceId,
+              authSchemeId: dep.selectedScheme.authSchemeId,
+              policySegmentId: dep.selectedScheme.selectedPolicy.segmentId
+            });
+            break;
+          case SCHEME_STATUS.UNHANDLE:
+            data.unhandles.push(dep)
+            break;
+          default:
+            data.unhandles.push(dep)
+        }
+
+        let nextDeps = (dep.selectedScheme && dep.selectedScheme.dependencies)
+        if (nextDeps && nextDeps.length) {
+          let result = this.getDutyStateMents(nextDeps)
+          Object.keys(result).forEach(key => {
+            data[key] = data[key].concat(result[key]);
+          })
+        }
+
+        if (data.unhandles.length) {
+          return true;
+        }
+      });
+
+      return data
     },
     updateAuthScheme(data, schemeData) {
       return this.$services.authSchemes.put(schemeData.authSchemeId, data)
@@ -371,9 +397,16 @@ export default {
           policies.length && (data.policies = policies)
         }
       }
-      var dutyStatements = this.getDutyStateMents(schemeData)
-      if (dutyStatements) {
-        data.dutyStatements = dutyStatements
+      var schemeSelections = this.getDutyStateMents(schemeData.dependencies)
+      if (schemeSelections.unhandles.length) {
+        throw new Error('有资源未选择授权策略')
+      } else {
+        if (schemeSelections.dutyStatements.length) {
+          data.dutyStatements = schemeSelections.dutyStatements
+        }
+        if (schemeSelections.bubbleResources.length) {
+          data.bubbleResources = schemeSelections.bubbleResources
+        }
       }
       return data
     },
@@ -384,14 +417,10 @@ export default {
       var scheme = this.tabsSchemeMap[this.curTabName]
       this.nextHandler(scheme).then(() => {
         if (scheme.status === 0) {
-          if (!this.validateSchemeOptions(scheme.dependencies)) {
-            return Promise.reject('有资源未选择授权策略')
-          } else {
-            return this.createSchemeContracts(scheme).then(() => {
-              this.$message.success('创建成功')
-              this.$router.push('/')
-            })
-          }
+          return this.createSchemeContracts(scheme).then(() => {
+            this.$message.success('创建成功')
+            // this.$router.push('/')
+          })
         } else {
           this.$message.success('操作成功')
         }
@@ -437,7 +466,7 @@ export default {
 
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')
-        this.$router.push('/resource/list')
+        // this.$router.push('/resource/list')
       }).catch(this.$error.showErrorMessage)
     },
     deleteAuthSchemeHandler(tab) {

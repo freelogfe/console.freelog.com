@@ -1,6 +1,7 @@
 import ResourceSchemeTree from '@/views/resource/scheme-tree/index.vue'
 import PresentableDataLoader from '@/data/presentable/loader'
 import SchemeDataLoader from '@/data/scheme/loader'
+import ResourceDataLoader from '@/data/resource/loader'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
 
 export default {
@@ -35,14 +36,18 @@ export default {
       PresentableDataLoader.onloadPresentableDetail(params.presentableId).then(data => {
         if (data && data.contracts) {
           this.isInitStatus = !data.contracts.length
-          this.presentableDetail = data
 
           data.contracts.slice(0).reduce((cachedContractsMap, item) => {
             cachedContractsMap[this.getSchemeContractKey(item)] = item
             return cachedContractsMap
           }, this.cachedContractsMap);
 
-
+          ResourceDataLoader.onloadResourceDetail(data.resourceId).then(detail => {
+            console.log('detail', detail)
+            Object.assign(data.resourceInfo, detail)
+            data.resourceInfo.contracts = data.contracts
+            this.presentableDetail = data
+          })
           // this.loadPresentableSchemes(data.resourceId)
           // console.log(this.cachedContractsMap)
         }
@@ -123,19 +128,19 @@ export default {
         }
       })
     },
-    switchSchemeHandler(resource, scheme, index, panelIndex){
+    switchSchemeHandler(resource, scheme, index, panelIndex) {
 
     },
-    selectResourceHandler(dep, scheme, panelIndex, $event){
+    selectResourceHandler(dep, scheme, panelIndex, $event) {
 
     },
-    changePolicy(resource, scheme, policy){
+    changePolicy(resource, scheme, policy) {
 
     },
-    changeSchemePolicyHandler(scheme, policy){
+    changeSchemePolicyHandler(scheme, policy) {
 
     },
-    selectAuthSchemeHandler(resource, scheme, panelIndex){
+    selectAuthSchemeHandler(resource, scheme, panelIndex) {
 
     }
   }

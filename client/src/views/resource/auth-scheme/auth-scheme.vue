@@ -27,16 +27,17 @@
           <h4 class="policy-input-title"><i class="el-icon-question"></i>授权方案策略</h4>
           <policy-editor v-model="detail.scheme" :showValidate="false" @change="changePolicyHandler"></policy-editor>
         </div>
-        <div class="line-arrow">
+        <div class="line-arrow" ref="arrowLine">
           <i class="circle"></i>
         </div>
       </div>
     </div>
     <resource-scheme-tree :resource="curDepResource"
                           :contracts="dutyStatements"
+                          @changeMode="changeModeHandler"
                           @update="updateDepResourceSchemesHandler"
                           @updateResource="updateResourceHandler"
-                          style="margin-left: 480px;"></resource-scheme-tree>
+                          style="margin-left: 430px;"></resource-scheme-tree>
     <el-dialog
       :visible.sync="showEditDepResource"
       width="840px"
@@ -112,9 +113,9 @@
         scheme.dutyStatements.forEach((res) => {
           dutyResourceMap[res.resourceId] = res
         });
+        this.dutyStatements = scheme.dutyStatements
 
         if (!this.detail.isPublished) {
-          this.dutyStatements = scheme.dutyStatements
         }
         this.bubbleResources = scheme.bubbleResources;
         dependencies.forEach((dep) => {
@@ -127,6 +128,7 @@
       checkResourceActiveStatus(dep) {
         const key = 'resourceId'
         var intersectDeps = intersectionBy(this.dutyStatements, [dep], key);
+
         if (intersectDeps.length) {
           var allResources = unionBy(this.bubbleResources, this.dutyStatements, key)
           intersectDeps = intersectionBy(allResources, dep.dependenciesTree, key);
@@ -137,8 +139,8 @@
             dep.activeStatus = SCHEME_STATUS.ALL
           }
         } else {
-          dep.activeStatus = SCHEME_STATUS.UNHANDLE
-          return false
+          intersectDeps = intersectionBy(this.detail.scheme.bubbleResources, [dep], key);
+          dep.activeStatus = intersectDeps.length ? SCHEME_STATUS.NONE : SCHEME_STATUS.UNHANDLE
         }
       },
       addDepResource() {
@@ -229,8 +231,7 @@
       changeResourceScheme(dep, index, ev) {
         this.curDepResource = dep
         var curTarget = ev.currentTarget
-        var parentNode = this.getParent(curTarget, '.dep-list-inner')
-        var target = parentNode.querySelector('.line-arrow')
+        var target = this.$refs.arrowLine;
         this.computeLineArrow(target, curTarget.querySelector('.resource-name'))
       },
       getParent(el, selector) {
@@ -266,6 +267,14 @@
       updateResourceHandler(resource) {
         this.curDepResource.activeStatus = resource.activeStatus
         this.$forceUpdate()
+      },
+      changeModeHandler(mode) {
+        var target = this.$refs.arrowLine;
+        if (mode === 'list') {
+          target.style.display = 'none'
+        } else if (this.curDepResource.resourceId) {
+          target.style.display = 'block'
+        }
       }
     }
   }

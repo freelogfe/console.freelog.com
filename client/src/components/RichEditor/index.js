@@ -1,13 +1,8 @@
+// https://github.com/surmon-china/vue-quill-editor/blob/master/src/editor.vue
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import {quillEditor, Quill} from 'vue-quill-editor'
-// import {container, ImageExtend, QuillWatch} from 'quill-image-extend-module'
-// var ColorClass = Quill.import('attributors/class/color');
-// var SizeStyle = Quill.import('attributors/style/size');
-// Quill.register(ColorClass, true);
-// Quill.register(SizeStyle, true);
-// Quill.register('modules/ImageExtend', ImageExtend)
 
 //https://quilljs.com/docs/modules/toolbar/
 export default {
@@ -23,26 +18,12 @@ export default {
         // some quill options
         placeholder: this.placeholder,
         modules: {
-          // ImageExtend: {
-          //   loading: false,
-          //   name: 'img',
-          //   action: '/api/v1/resources/upoladPreviewImage',
-          //   response: (res) => {
-          //     res.ret = 1;
-          //     if (res.ret === 0 && res.errcode === 0) {
-          //       return res.data
-          //     } else {
-          //       this.$message.error(res.msg)
-          //       return ''
-          //     }
-          //   }
-          // },
           toolbar: {
             container: [
               ['bold', 'italic', 'underline', 'strike'],
               ['blockquote', 'code-block'],
               [{'list': 'ordered'}, {'list': 'bullet'}],
-              [{ 'size': ['small', false, 'large', 'huge'] }],
+              [{'size': ['small', false, 'large', 'huge']}],
               // [{'script': 'sub'}, {'script': 'super'}],
               // [{'indent': '-1'}, {'indent': '+1'}],
               // [{'direction': 'rtl'}],
@@ -88,7 +69,7 @@ export default {
   mounted() {
     this.createEditor()
     if (this.$route.params.resourceId) {
-      var unwatch = this.$watch('value', ()=>{
+      var unwatch = this.$watch('value', () => {
         if (this.value) {
           this.content = this.value
         }

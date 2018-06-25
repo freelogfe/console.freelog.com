@@ -1,8 +1,10 @@
-.auth-scheme-tree-wrap {
+@leftSideWidth: 430px;
+.scheme-group-wrapper {
   background-color: #fafafa;
   //padding: 0 20px;
-  height: 100%;
   position: relative;
+  margin-left: @leftSideWidth;
+
 
   .unhandle-res-btn {
     display: none;
@@ -224,30 +226,8 @@
   }
 
   .auth-scheme-list-wrap {
-    width: 430px;
+    width: @leftSideWidth;
     border-right: 1px solid #f0f0f0;
-    position: relative;
-    padding: 50px 15px 30px 30px;
-    .res-intro-wrapper {
-      padding-top: 15px;
-    }
-
-    .unhandle-res-btn {
-      &.is-unresolved {
-        background-color: #F46284;
-        color: white;
-        &:hover {
-          background-color: #F46284;
-          color: white;
-        }
-      }
-
-      &:hover {
-        background-color: #EEEEEE;
-        color: #333333;
-        border-color: #EEEEEE;
-      }
-    }
   }
 
   .el-icon-question {
