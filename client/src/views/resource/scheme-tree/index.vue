@@ -30,7 +30,7 @@
         <el-button class="unhandle-res-btn" :class="{'is-unresolved': resource.isResolved===false}"
                    @click="toggleResolveResource(resource, panelIndex)">不处理此资源
         </el-button>
-        <resource-intro-info :resource="resource"></resource-intro-info>
+        <resource-intro-info :resource="resource.resourceInfo"></resource-intro-info>
         <div class="res-auth-schemes-wrap" :class="{'is-unresolved': resource.isResolved===false}"
              v-if="resource.schemes">
           <h4 class="res-auth-schemes-title">授权方案</h4>
@@ -63,10 +63,15 @@
                                     v-model="scheme.selectedPolicySegmentId">
                       <el-radio class="policy-radio" :label="policy.segmentId"
                                 :key="index"
-                                @click.native="changeSchemePolicyHandler(scheme, policy)"
+                                :disabled="policy.isAuth!==true"
+                                @click.native="resetSchemePolicyHandler(resource, scheme, policy)"
                                 @change="changePolicy(resource, scheme, policy)"
                                 v-for="(policy, index) in scheme.policy">
-                        <span :class="{'selected-segment': policy.selected}">{{policy.policyName}}</span>
+                        <el-tooltip content="不在授权范围内" placement="top" effect="light" v-if="!policy.isAuth">
+                          <span :class="{'selected-segment': policy.selected}">{{policy.policyName}}</span>
+                        </el-tooltip>
+                        <span :class="{'selected-segment': policy.selected}"
+                              v-if="policy.isAuth">{{policy.policyName}}</span>
                         <pre class="policy-segment-text">{{formatPolicyText(policy.segmentText)}}</pre>
                       </el-radio>
                     </el-radio-group>

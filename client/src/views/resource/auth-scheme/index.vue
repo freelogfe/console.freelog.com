@@ -7,7 +7,7 @@
           v-for="(item, index) in tabs"
           :key="index"
           :name="item.name">
-          <span slot="label">
+          <span slot="label" :class="['scheme-title-status-'+item.data.scheme.status]">
             <i class="el-icon-circle-check-outline" :class="{published: item.data.isPublished}"></i>
             <el-button class="auth-name" type="text">
             <input type="text"
@@ -16,7 +16,8 @@
                    @keydown="inputDownHandler"
                    @keyup.enter="handleInputConfirm">
           </el-button>
-            <i class="el-icon-delete" @click="deleteAuthSchemeHandler(item)"></i>
+            <i class="el-icon-delete" @click="deleteAuthSchemeHandler(item)" v-show="item.data.scheme.authSchemeId"></i>
+            <i class="el-icon-circle-close" @click="deleteAuthSchemeHandler(item)" v-show="!item.data.scheme.authSchemeId"></i>
           </span>
 
           <lazy-component>

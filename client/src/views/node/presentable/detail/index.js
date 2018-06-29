@@ -101,7 +101,8 @@ export default {
       })
     },
     savePresentableEnd(data) {
-      this.presentableData = {...data}
+      console.log(data)
+      Object.assign(this.presentableData, data)
     }
   }
 }

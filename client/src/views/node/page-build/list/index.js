@@ -1,4 +1,5 @@
 import ResourceDataLoader from '@/data/resource/loader'
+import SearchResource from '../../../resource/search/index.vue'
 
 
 const PAGE_BUILD_STATUS = {
@@ -11,9 +12,11 @@ export default {
     return {
       pagebuildList: [],
       PAGE_BUILD_STATUS: PAGE_BUILD_STATUS,
-      currentIndex: 1
+      currentIndex: 1,
+      showSearchResource: false
     }
   },
+  components: {SearchResource},
   mounted() {
     this.loader()
       .then(this.format.bind(this))
@@ -36,11 +39,6 @@ export default {
         presentables.forEach((p) => {
           var promise = ResourceDataLoader.onloadResourceDetail(p.resourceId).then((resourceDetail) => {
             p.resourceDetail = resourceDetail
-            if (p.resourceDetail.previewImages.length) {
-              p.resourceDetail._previewImage = p.resourceDetail.previewImages[0]
-            } else {
-              // p.resourceDetail._previewImage = ''
-            }
             return resourceDetail
           })
           promises.push(promise)
@@ -73,6 +71,13 @@ export default {
           desc: '不展示',
           type: 'info'
         }
+      }
+
+      var resourceDetail = pb.resourceDetail;
+      if (resourceDetail.previewImages.length) {
+        pb.resourceDetail._previewImage = resourceDetail.previewImages[0]
+      } else {
+        resourceDetail._previewImage = ''
       }
 
       return pb
@@ -123,17 +128,39 @@ export default {
       }
 
       this.$confirm(msg)
-        .then(()=>{
+        .then(() => {
           this.setDefaultPageBuildHandler(pagebuild).then(() => {
             this.currentIndex = pagebuild.status === PAGE_BUILD_STATUS.show ? pagebuild.index : ''
           });
-        }).catch(()=>{})
+        }).catch(() => {
+      })
     },
     addNewPageBuildHandler() {
-      this.$message.warning('还没开发呀呀呀')
+      this.showSearchResource = true
+      // this.$message.warning('还没开发呀呀呀')
     },
     gotoResourceDetailHandler(pagebuild) {
       this.$router.push(`/resource/detail/${pagebuild.resourceId}`)
+    },
+    addResourceHandler(resource) {
+      this.createPresentable({
+        nodeId: this.$route.params.nodeId,
+        presentableName: resource.resourceName,
+        resourceId: resource.resourceId
+      }).then(presentable => {
+        presentable.resourceDetail = Object.assign({}, resource);
+        this.pagebuildList.push(this.formatPageBuild(presentable))
+        this.showSearchResource = false
+      }).catch(this.$error.showErrorMessage);
+    },
+    createPresentable(data) {
+      return this.$services.presentables.post(data).then(res => {
+        if (res.data.errcode !== 0) {
+          return Promise.reject(res.data.msg)
+        } else {
+          return res.getData()
+        }
+      })
     }
   }
 }

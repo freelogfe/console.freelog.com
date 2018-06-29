@@ -7,8 +7,43 @@
     background-color: white;
     min-width: @listWidth;
     flex-basis: @listWidth;
-    .presentable-name {
+    overflow: scroll;
+    height: 100vh;
+    .dot {
+      margin-right: 9px;
     }
+
+    //明确上抛
+    .contract-status-1,
+    .contract-status-4,
+    .contract-status-5,
+    .contract-status-6 {
+      .dot {
+        &:after {
+          background-color: #F46284;
+        }
+      }
+    }
+
+    //处理中
+    .contract-status-2 {
+      .dot {
+        &:after {
+          border-color: #89D1AC
+        }
+      }
+    }
+
+    //完全解决
+    .contract-status-3 {
+      .dot {
+        &:after {
+          border-color: #89D1AC;
+          background-color: #89D1AC
+        }
+      }
+    }
+
     .contract-list-title {
       font-size: 18px;
       margin-bottom: 35px;
@@ -19,24 +54,28 @@
     }
 
     .contract-list {
-      margin-top: 15px;
     }
 
-    .contract-item,
     .presentable-item {
       margin-bottom: 10px;
     }
 
     .presentable-name {
       padding-left: 35px;
+      padding-top: 5px;
+      padding-bottom: 5px;
     }
     .contract-item {
-      padding-left: 60px;
+      padding-left: 65px;
+      padding-top: 5px;
+      padding-bottom: 5px;
     }
     .contract-item,
     .presentable-name {
       font-size: 14px;
       padding-right: 15px;
+      cursor: pointer;
+
       &:hover {
         background-color: #F5F5F5;
       }

@@ -10,7 +10,7 @@ import {Message} from 'element-ui';
 
 const instance = axios.create({
   baseURL: '/api/',
-  timeout: 5e3,
+  timeout: 1e4, //10s
   // crossdomain: true,
   // withCredentials: true,
   headers: {

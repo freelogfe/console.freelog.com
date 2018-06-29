@@ -60,7 +60,8 @@ export default {
                 this.enableEditDependency = false
               }
               this.createTab(scheme)
-            })
+            });
+            this.setActiveTab(0)
           } else {
             this.createTab()
           }
@@ -102,7 +103,6 @@ export default {
       return this.initAuthScheme(newScheme)
     },
     initAuthScheme(scheme) {
-
       scheme = scheme || {}
       const DefaultScheme = {
         policyText: '',
@@ -175,7 +175,6 @@ export default {
       })
     },
     updateData(detail) {
-
     },
     addTab(scheme) {
       let newTabName = scheme.authSchemeId || getUUID();
@@ -259,12 +258,13 @@ export default {
             break;
           case SCHEME_STATUS.SOME:
           case SCHEME_STATUS.ALL:
-            console.log(dep)
-            data.dutyStatements.push({
-              resourceId: dep.resourceId,
-              authSchemeId: dep.selectedScheme.authSchemeId,
-              policySegmentId: dep.selectedScheme.selectedPolicy.segmentId
-            });
+            if (dep.selectedScheme) {
+              data.dutyStatements.push({
+                resourceId: dep.resourceId,
+                authSchemeId: dep.selectedScheme.authSchemeId,
+                policySegmentId: dep.selectedScheme.selectedPolicy.segmentId
+              });
+            }
             break;
           case SCHEME_STATUS.UNHANDLE:
             data.unhandles.push(dep)
@@ -298,13 +298,13 @@ export default {
           }
         })
     },
-    updateDependenciesMeta() {
+    updateDependenciesMeta(schemeData) {
       if (!this.resourceDepChanged) {
         return Promise.resolve()
       }
       return this.$services.resource.put(this.resourceDetail.resourceId, {
         meta: {
-          dependencies: this.resourceDetail.dependencies.map((dep) => {
+          dependencies: schemeData.dependencies.map((dep) => {
             return dep.resourceId
           })
         }
@@ -323,7 +323,7 @@ export default {
       // console.log(data)
       // return Promise.resolve()
       return new Promise((resolve, reject) => {
-        this.updateDependenciesMeta().then(() => {
+        this.updateDependenciesMeta(schemeData).then(() => {
           this.validate()
             .then(() => {
               var data = this.resolveSchemeData(schemeData)
@@ -332,8 +332,7 @@ export default {
                 this.createAuthScheme(data).then(res => {
                   schemeData.authSchemeId = res.authSchemeId;
                   // schemeData.policy = res.policy bug
-                  // Object.assign(schemeData, res)
-
+                  Object.assign(schemeData, res)
                   resolve(res)
                 }).catch(reject)
               } else {
@@ -397,15 +396,18 @@ export default {
           policies.length && (data.policies = policies)
         }
       }
-      var schemeSelections = this.getDutyStateMents(schemeData.dependencies)
-      if (schemeSelections.unhandles.length) {
-        throw new Error('有资源未选择授权策略')
-      } else {
-        if (schemeSelections.dutyStatements.length) {
-          data.dutyStatements = schemeSelections.dutyStatements
-        }
-        if (schemeSelections.bubbleResources.length) {
-          data.bubbleResources = schemeSelections.bubbleResources
+
+      if (schemeData.status !== PUBLISH_STATUS.PUBLISHED) {
+        var schemeSelections = this.getDutyStateMents(schemeData.dependencies)
+        if (schemeSelections.unhandles.length) {
+          throw new Error('有资源未选择授权策略')
+        } else {
+          if (schemeSelections.dutyStatements.length) {
+            data.dutyStatements = schemeSelections.dutyStatements
+          }
+          if (schemeSelections.bubbleResources.length) {
+            data.bubbleResources = schemeSelections.bubbleResources
+          }
         }
       }
       return data
@@ -414,12 +416,19 @@ export default {
       this.$router.push(`/resource/detail/${this.$route.params.resourceId}`)
     },
     saveSchemeHandler() {
-      var scheme = this.tabsSchemeMap[this.curTabName]
-      this.nextHandler(scheme).then(() => {
+      var curTabName = this.curTabName;
+      var scheme = this.tabsSchemeMap[curTabName]
+      this.nextHandler(scheme).then(schemeDetail => {
+        scheme.policy = schemeDetail.policy
         if (scheme.status === 0) {
-          return this.createSchemeContracts(scheme).then(() => {
+          return this.createSchemeContracts(scheme).then((res) => {
+            scheme.status = SCHEME_STATUS.PUBLISHED
+            this.curTabName = '';
+            this.$nextTick(() => {
+              this.curTabName = curTabName
+            })
             this.$message.success('创建成功')
-            // this.$router.push('/')
+            // this.$router.push(`/resource/detail/${scheme.resourceId}`)
           })
         } else {
           this.$message.success('操作成功')
@@ -481,9 +490,10 @@ export default {
 
       })
     },
-    setActiveTab() {
+    setActiveTab(index) {
       if (this.tabs.length) {
-        this.curTabName = this.tabs[this.tabs.length - 1].name
+        index = index === undefined ? (this.tabs.length - 1) : index
+        this.curTabName = this.tabs[index].name
       }
     },
     deleteTabById(tabId) {

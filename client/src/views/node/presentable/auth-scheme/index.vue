@@ -1,7 +1,7 @@
 <template>
   <div class="presentable-auth-scheme-wrap">
     <resource-scheme-tree
-      v-if="presentableDetail.resourceInfo"
+      :contracts="presentableDetail.resourceInfo.contracts"
       :resource="presentableDetail.resourceInfo"
       class="presentable-auth-scheme-tree"
       ref="schemeTree"></resource-scheme-tree>

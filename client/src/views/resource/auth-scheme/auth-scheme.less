@@ -108,7 +108,7 @@
     }
   }
 
-  &.is-publish {
+  &.scheme-status-1 {
     .add-dep-resource-btn {
       display: none;
     }
@@ -120,6 +120,30 @@
         }
       }
     }
+  }
+
+  &.scheme-status-4 {
+    .del-res-icon,
+    .add-dep-resource-btn {
+      display: none !important;
+    }
+
+    .policy-input-wrap {
+      position: relative;
+      &:before {
+        display: block;
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, .3);
+        bottom: 0;
+        z-index: 2;
+        border-radius: 4px;
+      }
+    }
+
   }
 
   .add-resource-input {

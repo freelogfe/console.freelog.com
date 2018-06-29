@@ -5,7 +5,7 @@
       <li class="pb-item" v-for="item in pagebuildList" :class="{selected: item.index === currentIndex}">
         <div class="pb-item-wrap">
           <div class="pb-thumbnail-wrap" @click="changePageBuildHandler(item)">
-            <img :src="item.resourceDetail._previewImage" alt="">
+            <img :src="item.resourceDetail._previewImage" alt="预览图">
           </div>
           <div class="pb-item-content"  @click="gotoResourceDetailHandler(item)">
             <h4 class="pb-title">{{item.presentableName}}</h4>
@@ -22,6 +22,16 @@
         </div>
       </li>
     </ul>
+
+    <el-dialog
+      :visible.sync="showSearchResource"
+      width="840px"
+      :close-on-click-modal="false"
+      top="10vh"
+      center>
+      <p slot="title" class="dialog-title">添加资源</p>
+      <search-resource class="add-resource-input" @add="addResourceHandler" :searchScope="{resourceType:'page_build'}"></search-resource>
+    </el-dialog>
   </section>
 </template>
 

@@ -18,6 +18,11 @@
         <el-form-item label="合同详情">
           <contract-content :data="formatContractDetail" @execute="executeContractHandler"></contract-content>
         </el-form-item>
+        <el-form-item label="激活合同"
+                      v-if="contractDetail.status === 1" class="flex-grid">
+          <el-button @click="activateContractHandler(contractDetail)"
+                     size="small">立即激活</el-button>
+        </el-form-item>
       </contract-detail-info>
     </div>
   </section>

@@ -16,12 +16,23 @@
                           inactive-text="下线"></freelog-switch>
           <span class="p-title">{{presentable.presentableName}}</span>
         </li>
-        <li class="presentable-item add-presentable-btn"><i class="el-icon-plus"></i>添加节点资源</li>
+        <li class="presentable-item add-presentable-btn" @click="showSearchResourceHandler"><i class="el-icon-plus"></i>添加节点资源</li>
       </ul>
     </div>
     <div class="presentable-detail-container" v-show="currentPresentable.detail.presentableId">
       <component class="presentable-detail-content" is="presentable-detail" :detail="currentPresentable.detail"></component>
     </div>
+
+    <el-dialog
+      :visible.sync="showSearchResource"
+      width="840px"
+      :close-on-click-modal="false"
+      :before-close="beforeCloseDialogHandler"
+      top="10vh"
+      center>
+      <p slot="title" class="dialog-title">添加资源</p>
+      <search-resource class="add-resource-input" @add="addResourceHandler"></search-resource>
+    </el-dialog>
   </section>
 </template>
 

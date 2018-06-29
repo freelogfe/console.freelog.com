@@ -4,6 +4,28 @@
   height: 100%;
   position: relative;
 
+  &.scheme-tree-status-4 {
+    .unhandle-res-btn {
+      display: none !important;
+    }
+
+    .policy-wrap {
+      position: relative;
+      &:before {
+        display: block;
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, .3);
+        bottom: 0;
+        z-index: 1;
+        border-radius: 4px;
+      }
+    }
+  }
+
   .unhandle-res-btn {
     display: none;
   }

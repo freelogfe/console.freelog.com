@@ -8,9 +8,9 @@ export default (Vue, options) => {
 
 
   Vue.filter('fmtDate', function (value, frm) {
-    if (!value) return 'YYYY/MM/DD'
+    if (!value) return ''
     var date = new Date(value)
-    frm = frm || ''
+    frm = frm || 'YYYY/MM/DD'
     return format(date, frm)
   })
 

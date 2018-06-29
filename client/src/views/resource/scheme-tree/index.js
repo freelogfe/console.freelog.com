@@ -43,7 +43,19 @@ export default {
       default() {
         return []
       }
-    }
+    },
+    bubbleResources: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    config: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
   },
   data() {
     var isNodeDetail = !!this.$route.params.nodeId
@@ -51,7 +63,7 @@ export default {
       isNodeDetail: isNodeDetail,
       schemes: [],
       dutyStatements: [],
-      bubbleResources: [],
+      // bubbleResources: [],
       viewMode: isNodeDetail ? 'tree' : 'list', //tree or list
       currentAuthNodeIndex: -1,
       dutyResourceMap: {},
@@ -66,11 +78,6 @@ export default {
       .then(() => {
         this.changeViewMode(this.viewMode)
       })
-
-    var unwatch = this.$watch('contracts', () => {
-      this.fillDutyStatements()
-      unwatch()
-    })
   },
   computed: {
     unsignPolicyList() {
@@ -94,6 +101,9 @@ export default {
       this.changeViewMode('tree')
     },
     resource(newRes, oldRes) {
+      if (newRes && oldRes && (newRes.resourceId === oldRes.resourceId)) {
+        return;
+      }
       if (oldRes) {
         if (!this.resourceSchemesCache[oldRes.resourceId]) {
           this.resourceSchemesCache[oldRes.resourceId] = {
@@ -103,9 +113,17 @@ export default {
           this.resourceSchemesCache[oldRes.resourceId].schemes = this.schemes
         }
       }
-      this.parentResource = newRes
+
+      if (newRes.resourceId) {
+        this.parentResource = newRes
+      } else {
+        this.parentResource = {}
+      }
       this.initView()
-      this.changeViewMode('tree')
+        .then(this.fillDutyStatements.bind(this))
+        .then(() => {
+          this.changeViewMode('tree')
+        })
     }
   },
   methods: {
@@ -116,8 +134,10 @@ export default {
       });
       this.dutyStatements = this.contracts
       this.schemes.forEach(dep => {
+        this.onSetResourceDetail(dep)
         this.haveSelectedScheme(dep)
         this.checkResourceActiveStatus(dep)
+        return dep.resourceId
       });
 
       this.$forceUpdate()
@@ -125,6 +145,7 @@ export default {
     initView() {
       var resourceId = this.resourceId || this.resource.resourceId
       if (!resourceId) {
+        this.schemes = []
         return Promise.resolve()
       }
 
@@ -138,7 +159,7 @@ export default {
         var promise;
         if (this.resource && this.resource.resourceId)
           promise = Promise.all([
-            SchemeDataLoader.onloadSchemesForResource(resourceId)
+            this.loadSchemesForResource(resourceId)
           ]).then(res => {
             var resource = this.resource
             resource.schemes = this.formatSchemes(res[0])
@@ -147,7 +168,7 @@ export default {
         else {
           promise = Promise.all([
             ResourceLoader.onloadResourceDetail(resourceId),
-            SchemeDataLoader.onloadSchemesForResource(resourceId)
+            this.loadSchemesForResource(resourceId)
           ]).then(res => {
             var resource = res[0]
             resource.schemes = this.formatSchemes(res[1])
@@ -163,6 +184,44 @@ export default {
           this.pushSchemeDep(resource)
         });
       }
+    },
+    loadSchemesForResource(resourceId) {
+      return SchemeDataLoader.onloadSchemesForResource(resourceId)
+        .then((schemes) => {
+          var authSchemeIds = schemes.map(scheme => {
+            return scheme.authSchemeId
+          });
+
+          if (!authSchemeIds.length) {
+            return schemes
+          }
+          var params = {
+            authSchemeIds: authSchemeIds.join(',')
+          }
+
+          if (this.$route.params.nodeId) {
+            params.nodeId = this.$route.params.nodeId
+          }
+
+          return this.$axios.get('/v1/auths/authSchemeIdentityAuth', {
+            params: params
+          }).then(res => {
+            var list = res.getData();
+            var authsMap = {};
+            list.forEach(schemeAuths => {
+              schemeAuths.policy.forEach(auth => {
+                authsMap[`${schemeAuths.authSchemeId}_${auth.segmentId}`] = (auth.authResult && auth.authResult.isAuth)
+              })
+            });
+
+            schemes.forEach(scheme => {
+              scheme.policy.forEach(p => {
+                p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`]
+              })
+            });
+            return schemes
+          })
+        })
     },
     checkResourceActiveStatus(dep) {
       const key = 'resourceId'
@@ -185,7 +244,12 @@ export default {
           })
         }
       } else {
-        dep.activeStatus = SCHEME_STATUS.UNHANDLE
+        intersectDeps = intersectionBy(this.bubbleResources, [dep], key);
+        if (intersectDeps.length) {
+          dep.isResolved = false
+        } else {
+          dep.activeStatus = SCHEME_STATUS.UNHANDLE
+        }
         return false
       }
     },
@@ -220,10 +284,6 @@ export default {
         }
       });
 
-      if (rids.length) {
-        this.loadResourcesDetail(rids)
-      }
-
       if (schemeRids.length) {
         SchemeDataLoader.loadAuthSchemes({
           resourceIds: schemeRids,
@@ -252,14 +312,13 @@ export default {
         })
       }
     },
+    showPublishEditErrorTip() {
+      this.$message.warning('已发布授权点，当前操作不可执行')
+    },
     loadResourcesDetail(rids) {
       if (rids.length) {
         return ResourceLoader.loadResources(rids).then(list => {
-          if (list && list.length) {
-            list.forEach(res => {
-              this.onSetResourceDetail(res)
-            })
-          }
+          return list
         })
       }
     },
@@ -269,10 +328,11 @@ export default {
       }
       this.$forceUpdate()
     },
-    changeSchemePolicyHandler(scheme, policy) {
+    resetSchemePolicyHandler(resource, scheme, policy) {
       if (scheme.selectedPolicy.segmentId && scheme.selectedPolicySegmentId) {
         scheme.selectedPolicy = {}
         scheme.selectedPolicySegmentId = ''
+        this.resetSelectedScheme(resource)
       }
       this.$forceUpdate()
     },
@@ -349,15 +409,14 @@ export default {
         this.resetSelectedScheme(resource)
       }
 
-      if (!resource.selected) {
-        this.dutyResourceMap[resource.resourceId] = resource
-        resource.selected = true
-        resource.selectedScheme = scheme
-        if (scheme.selectedPolicy) {
-          scheme.selectedPolicySegmentId = scheme.selectedPolicy.segmentId
-          this.dutyStatements.push(resource)
-        }
+      if (scheme.selectedPolicy) {
+        scheme.selectedPolicySegmentId = scheme.selectedPolicy.segmentId
       }
+
+      this.dutyResourceMap[resource.resourceId] = resource
+      resource.selected = true
+      resource.selectedScheme = scheme
+      this.dutyStatements.push(resource)
       this.updateResourceActiveStatus(resource)
     },
     updateResourceActiveStatus(resource) {
@@ -383,11 +442,10 @@ export default {
           activeStatus = SCHEME_STATUS.ALL
         }
       }
-
+      resource.activeStatus = activeStatus
       if (this.parentResource && this.parentResource.resourceId === resource.resourceId) {
         this.$emit('updateResource', resource)
       }
-      resource.activeStatus = activeStatus
       this.$forceUpdate()
     },
     updatePrevSchemesActiveStatus(resource) {
@@ -424,6 +482,10 @@ export default {
       }
     },
     selectAuthSchemeHandler(resource, scheme, panelIndex) {
+      if (this.config.isPublished) {
+        return this.showPublishEditErrorTip()
+      }
+
       if (resource.selectedScheme &&
         resource.selectedScheme.authSchemeId === scheme.authSchemeId) {
         this.checkResourceCancelable(resource)
@@ -498,6 +560,7 @@ export default {
             dep.selectedScheme = scheme
             dep.selected = true
             Object.assign(duty, dep)
+            console.log('haveSelectedScheme', duty.policySegmentId)
             scheme.selectedPolicySegmentId = duty.policySegmentId
             for (var j = 0; j < scheme.policy.length; j++) {
               if (scheme.policy[j].segmentId === duty.policySegmentId) {
@@ -521,7 +584,7 @@ export default {
       }
       dep.schemes = []
       //获取已发布的授权点列表 {authSchemeStatus: 1}
-      return SchemeDataLoader.onloadSchemesForResource(dep.resourceId).then((schemes) => {
+      return this.loadSchemesForResource(dep.resourceId).then((schemes) => {
         dep.schemes = schemes
         return this.resolveResourceSchemes(dep);
       })
@@ -550,7 +613,7 @@ export default {
         }
       }
 
-      if (!this.haveSelectedScheme(dep)) {
+      if (!dep.activeScheme && !this.haveSelectedScheme(dep)) {
         dep.activeIndex = 0
         dep.activeScheme = dep.schemes[0]
       }
@@ -565,8 +628,12 @@ export default {
       var resource = this.resourcesMap[rid]
       if (!resource) {
         this.resourcesMap[rid] = dep
-      } else if (dep.updateDate && !resource.updateDate) {
-        Object.assign(resource, dep)
+      }
+
+      if (!dep.resourceInfo) {
+        ResourceLoader.onloadResourceDetail(rid).then(detail => {
+          this.$set(dep, 'resourceInfo', detail);
+        })
       }
     },
     revertDependencyPanels(dep) {
@@ -613,7 +680,6 @@ export default {
           }
         });
 
-        rids.length && this.loadResourcesDetail(rids);
         if (scheme.selectedPolicySegmentId === undefined) {
           scheme.selectedPolicy = {}
           scheme.selectedPolicySegmentId = ''
@@ -665,6 +731,10 @@ export default {
       $line.style.display = 'none'
     },
     toggleResolveResource(resource, index) {
+      if (this.config.isPublished) {
+        return this.showPublishEditErrorTip()
+      }
+
       if (resource.isResolved === undefined) {
         this.$set(resource, 'isResolved', false)
       } else {

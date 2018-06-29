@@ -20,7 +20,10 @@
           </lazy-list-view>
         </el-tab-pane>
         <el-tab-pane label="搜索资源" name="search">
-          <lazy-list-view :list="searchResources" class="search-resource-list" :height="90" :fetch="searchDataHandler">
+          <lazy-list-view :list="searchResources"
+                          ref="searchView"
+                          class="search-resource-list"
+                          :height="90" :fetch="searchDataHandler">
             <template slot-scope="scope">
               <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">添加</el-button>
               <resource-item :resource="scope.data" type="search" style="margin-right: 80px;"></resource-item>

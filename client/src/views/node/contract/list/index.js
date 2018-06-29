@@ -1,7 +1,7 @@
 import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
 import DataLoader from '@/data'
-import ContractDetail from '../../presentable/contract/detail/index.vue'
+import ContractDetail from '../detail/index.vue'
 import contract from "../../../../services/contract";
 
 export default {
@@ -180,24 +180,6 @@ export default {
           this.$set(this, 'currentContract', data)
           this.$forceUpdate()
         })
-    },
-    activateContractHandler(contract) {
-      this.$axios.get(`/v1/contracts/initial`, {
-        params: {
-          contractIds: contract.contractId
-        }
-      }).then(res => {
-        if (res.data.errcode === 0) {
-          this.$message.success('成功激活合同')
-          this.loadContracts(contract.contractId).then(res => {
-            Object.assign(contract, res.getData());
-            ContractUtils.format(contract)
-            this.$forceUpdate()
-          })
-        } else {
-          this.$error.showErrorMessage(res.data.msg)
-        }
-      })
     },
     resolveContractCreatorLink(presentable) {
       return `/node/${this.$route.params.nodeId}/presentable/${presentable.presentableId}/scheme_detail`

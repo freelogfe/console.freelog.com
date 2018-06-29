@@ -17,7 +17,14 @@ export default {
     ResourceList,
     LazyListView
   },
-  props: {},
+  props: {
+    searchScope: {
+      type: Object,
+      default(){
+        return {}
+      }
+    }
+  },
 
   watch: {},
   mounted() {
@@ -64,7 +71,6 @@ export default {
       }
       return this.loader({page: page}).then((data) => {
         this.favorResources = this.favorResources.concat(data.dataList)
-        data.dataList = data.dataList.concat(data.dataList).concat(data.dataList)
         if (data.dataList.length < pageSize) {
           data.canLoadMore = false
         }
@@ -79,14 +85,12 @@ export default {
       }
 
       return this.$services.g_Resources.get({
-        params: {
+        params: Object.assign({
           keyWords: encodeURIComponent(this.searchInput)
-        }
+        }, this.searchScope)
       }).then(res => {
         var data = res.getData() || {}
-        console.log(res.data)
         if (res.errcode === 0) {
-          // this.searchResources = res.data.dataList
           this.searchResources = this.searchResources.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
@@ -99,7 +103,8 @@ export default {
     },
     searchHandler() {
       this.activeName = 'search';
-      this.searchResources = []
+      this.searchResources = [];
+      this.$refs.searchView.refresh()
     }
   }
 }

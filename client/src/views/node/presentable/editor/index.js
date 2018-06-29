@@ -82,8 +82,9 @@ export default {
         .then((res) => {
           if (res.data.errcode === 0) {
             var data = res.getData()
-            Object.assign(this.data, data)
-            this.formatPresentable(this.data)
+            delete data.resourceInfo
+            Object.assign(this.inputData, data)
+            this.formatPresentable(this.inputData)
             this.$emit('onSaveEnd', data)
             this.$message.success('更新成功')
           } else {

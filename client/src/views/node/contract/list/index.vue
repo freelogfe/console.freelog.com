@@ -5,17 +5,20 @@
 
       <ul class="presentable-list">
         <li class="presentable-item" v-for="presentable in presentables">
-          <div class="presentable-name" @click="showContractDetailHandler(presentable.masterContract)">
-            {{presentable.presentableName}}
+          <div class="presentable-name"
+               :class="[presentable.masterContract?('contract-status-'+presentable.masterContract.status):'']"
+               @click="showContractDetailHandler(presentable.masterContract)">
+            <i class="dot"></i>{{presentable.presentableName}}
             <span v-if="presentable.masterContract">
               合同ID： {{presentable.masterContract.contractId}}
-            <el-button @click="activateContractHandler(contract)" type="text">激活</el-button>
+            <!--<el-button @click="activateContractHandler(presentable.masterContract)" type="text">激活</el-button>-->
             </span>
             <span v-else><router-link :to="resolveContractCreatorLink(presentable)">未创建合同</router-link></span></div>
-          <ul class="contract-list">
+          <ul class="contract-list" v-if="presentable.contracts.length">
             <li class="contract-item" v-for="contract in presentable.contracts"
+                :class="['contract-status-'+contract.status]"
                 @click="showContractDetailHandler(contract)">
-              <div>合同ID： {{contract.contractId}}<el-button @click="activateContractHandler(contract)" type="text">激活</el-button></div>
+              <div><i class="dot"></i>合同ID： {{contract.contractId}}</div>
               <div v-if="contract.resourceDetail">
                 <div>{{contract.resourceDetail.resourceName}}</div>
                 <div>资源ID: {{contract.resourceDetail.resourceId}}</div>

@@ -1,13 +1,15 @@
 import CONFIG from '@/config/index'
 import PresentableDetail from '../presentable/detail/index.vue'
 import FreelogSwitch from '@/components/Switch/index.vue'
+import SearchResource from '../../resource/search/index.vue'
+import {presentable} from "../../../components/policyEditor/defaultPolicyTpls";
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
 export default {
   name: 'presentables',
   data() {
     return {
-      query: '',
+      showSearchResource: false,
       presentableList: [],
       currentPresentable: {
         index: -1,
@@ -17,7 +19,8 @@ export default {
   },
   components: {
     PresentableDetail,
-    FreelogSwitch
+    FreelogSwitch,
+    SearchResource
   },
   watch: {
     $route() {
@@ -85,6 +88,31 @@ export default {
         presentable.isOnlineChecked = false
         this.$error.showErrorMessage(err)
       })
-    }
+    },
+    showSearchResourceHandler() {
+      this.showSearchResource = true
+    },
+    beforeCloseDialogHandler() {
+      this.showSearchResource = false
+    },
+    addResourceHandler(resource) {
+      this.createPresentable({
+        nodeId: this.$route.params.nodeId,
+        presentableName: resource.resourceName,
+        resourceId: resource.resourceId
+      }).then(presentable => {
+        this.presentableList.push(presentable)
+        this.showSearchResource = false
+      }).catch(this.$error.showErrorMessage);
+    },
+    createPresentable(data) {
+      return this.$services.presentables.post(data).then(res => {
+        if (res.data.errcode !== 0) {
+          return Promise.reject(res.data.msg)
+        } else {
+          return res.getData()
+        }
+      })
+    },
   }
 }

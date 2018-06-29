@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-scheme-section clearfix" :class="{'is-publish':detail.isPublished}">
+  <div class="auth-scheme-section clearfix" :class="['scheme-status-' + detail.scheme.status]">
     <div class="dep-list-wrap">
       <div class="dep-list-inner">
         <h4 class="policy-input-title"><i class="el-icon-question"></i>资源依赖列表</h4>
@@ -34,6 +34,9 @@
     </div>
     <resource-scheme-tree :resource="curDepResource"
                           :contracts="dutyStatements"
+                          :bubbleResources="bubbleResources"
+                          :config="config"
+                          :class="['scheme-tree-status-' + detail.scheme.status]"
                           @changeMode="changeModeHandler"
                           @update="updateDepResourceSchemesHandler"
                           @updateResource="updateResourceHandler"
@@ -42,18 +45,11 @@
       :visible.sync="showEditDepResource"
       width="840px"
       :close-on-click-modal="false"
+      :before-close="beforeCloseDialogHandler"
       top="10vh"
       center>
       <p slot="title" class="dialog-title">添加资源</p>
       <search-resource class="add-resource-input" @add="changeDepResource"></search-resource>
-      <!--<div>-->
-      <!--<el-input v-model="curEditDepResourceId" placeholder="输入您要添加的资源ID"></el-input>-->
-      <!--</div>-->
-      <!--<div slot="footer" class="dialog-footer clearfix">-->
-      <!--<el-button class="del-btn" @click="deleteDepResource">删除</el-button>-->
-      <!--<el-button @click="changeDepResource" class="ft-btn">确 定</el-button>-->
-      <!--<el-button @click="resetDepResourceEditor" class="ft-btn">取 消</el-button>-->
-      <!--</div>-->
     </el-dialog>
   </div>
 </template>
@@ -97,7 +93,10 @@
         editActionType: '',
         currentEditDepResource: {},
         curEditDepResourceId: '',
-        curDepResource: {}
+        curDepResource: {},
+        config: {
+          isPublished: false
+        }
       }
     },
     mounted() {
@@ -115,7 +114,10 @@
         });
         this.dutyStatements = scheme.dutyStatements
 
-        if (!this.detail.isPublished) {
+        if (this.detail.isPublished) {
+          Object.assign(this.config, {
+            isPublished: true
+          })
         }
         this.bubbleResources = scheme.bubbleResources;
         dependencies.forEach((dep) => {
@@ -151,15 +153,11 @@
           this.showEditDepDisabled()
         }
       },
-      editDepResource(dep) {
-        if (this.canEditDep()) {
-          this.showEditDepResource = true
-          this.currentEditDepResource = dep
-          this.curEditDepResourceId = dep.resourceId
-          this.editActionType = 'modify'
-        } else {
-          this.showEditDepDisabled()
-        }
+      beforeCloseDialogHandler(){
+        this.curEditDepResourceId = ''
+        this.editActionType = ''
+        this.currentEditDepResource = {}
+        this.showEditDepResource = false
       },
       canEditDep() {
         return this.detail.enableEditDependency
@@ -172,10 +170,9 @@
         })
       },
       resetDepResourceEditor() {
-        this.curEditDepResourceId = ''
-        this.editActionType = ''
-        this.currentEditDepResource = {}
-        this.showEditDepResource = false
+        // this.curEditDepResourceId = ''
+        // this.editActionType = ''
+        // this.currentEditDepResource = {}
       },
       changeDepResource(resource) {
         if (!resource || !resource.resourceId) {
@@ -204,16 +201,23 @@
         this.resetDepResourceEditor()
       },
       deleteDepResource(resource) {
-        this.editActionType = 'delete'
-        this.$confirm('确定删除该依赖资源?', {
-          type: 'warning',
-        }).then(() => {
-          this.emitEditEvent({
-            resourceId: resource.resourceId
+        if (this.canEditDep()) {
+          this.editActionType = 'delete'
+          this.$confirm('确定删除该依赖资源?', {
+            type: 'warning',
+          }).then(() => {
+            if (this.curDepResource && this.curDepResource.resourceId === resource.resourceId) {
+              this.curDepResource = {}
+            }
+            this.hideArrowLine()
+            this.emitEditEvent({
+              resourceId: resource.resourceId
+            })
+          }).catch(() => {
           })
-        }).catch(() => {
-        })
-
+        } else {
+          this.showEditDepDisabled()
+        }
       },
       updateData() {
         this.updateCallback({
@@ -268,10 +272,14 @@
         this.curDepResource.activeStatus = resource.activeStatus
         this.$forceUpdate()
       },
+      hideArrowLine(){
+        var target = this.$refs.arrowLine;
+        target.style.display = 'none'
+      },
       changeModeHandler(mode) {
         var target = this.$refs.arrowLine;
         if (mode === 'list') {
-          target.style.display = 'none'
+          this.hideArrowLine()
         } else if (this.curDepResource.resourceId) {
           target.style.display = 'block'
         }

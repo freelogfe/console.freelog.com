@@ -30,40 +30,60 @@ export default {
       lineBottomHeight: 0,
       previewList: [],
       displayCount: 0,
-      canLoadMore: true
+      canLoadMore: true,
+      index: 1
     }
   },
   mounted() {
     // this.handleScroll();
     this.initView()
   },
+  beforeDestroy() {
+    this.disconnect()
+  },
   methods: {
     initView() {
-      var index = 1
       var self = this;
-      var observer = new IntersectionObserver(
+      self.$refs.loading.classList.remove('hide')
+      self.observer = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.intersectionRatio <= 0) {
               return
             } else if (self.canLoadMore !== false) {
-              self.fetch(index++).then((data) => {
-                self.canLoadMore = data.canLoadMore
-                self.scrollHandler(data.dataList || [])
-                if (self.canLoadMore === false) {
-                  return Promise.reject()
-                }
-              }).catch(() => {
-                observer.unobserve(self.$refs.loading);
-                self.$refs.loading.remove()
-              });
+              self.load().catch(() => {
+                self.observer.unobserve(self.$refs.loading);
+                self.$refs.loading.classList.add('hide')
+              })
             }
           });
-        },{
+        }, {
           rootMargin: '50px 0px'
         });
 
-      observer.observe(this.$refs.loading)
+      self.observer.observe(this.$refs.loading)
+    },
+    load() {
+      var self = this
+      return self.fetch(self.index++).then((data) => {
+        self.canLoadMore = data.canLoadMore
+        self.scrollHandler(data.dataList || [])
+        if (self.canLoadMore === false) {
+          return Promise.reject()
+        }
+      });
+    },
+    disconnect() {
+      if (this.observer) {
+        this.observer.disconnect()
+      }
+    },
+    refresh() {
+      this.canLoadMore = true
+      this.previewList = [];
+      this.index = 1;
+      this.disconnect()
+      this.initView()
     },
     scrollHandler(list) {
       this.previewList = this.previewList.concat(list);

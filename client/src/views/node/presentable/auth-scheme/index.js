@@ -17,7 +17,8 @@ export default {
       params: params,
       presentableDetail: {
         contracts: [],
-        schemes: []
+        schemes: [],
+        resourceInfo: {}
       },
       cachedContractsMap: {}
     }
@@ -104,7 +105,7 @@ export default {
           break;
         }
       }
-
+console.log(targetResource)
       if (targetResource) {
         if (targetResource.activeStatus === 2) {
           console.log('contracts', contracts)

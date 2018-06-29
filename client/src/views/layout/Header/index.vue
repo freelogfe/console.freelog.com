@@ -41,7 +41,7 @@
                   <router-link to="/node/create" class="nav-link create-node-btn"><i class="el-icon-plus"></i>
                   </router-link>
                 </div>
-                <ul class="my-node-list">
+                <ul class="my-node-list" v-if="nodeList.length">
                   <li class="node-item hover" :key="node.nodeId" v-for="node in nodeList">
                     <router-link :to="'/node/'+node.nodeId" class="nav-link">{{node.nodeName}}</router-link>
                   </li>

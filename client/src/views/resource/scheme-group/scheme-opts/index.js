@@ -175,8 +175,6 @@ export default {
       return Promise.resolve()
     },
     resetSelectedScheme() {
-      // this.deleteFromDutyStateMents(resource)
-      // this.cancelBackSchemes(resource)
       this.resource.selectedScheme = null
       this.selected = false
       this.selectedAuthSchemeId = ''

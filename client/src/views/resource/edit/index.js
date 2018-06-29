@@ -10,6 +10,7 @@ export default {
   name: 'resource-detail-edit',
   data() {
     return {
+      isDev: process.env.NODE_ENV === 'development',
       resourceDetail: {}
     }
   },

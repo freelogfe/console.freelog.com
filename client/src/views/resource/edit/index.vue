@@ -1,5 +1,19 @@
 <template>
   <section class="resource-detail-edit-wrap">
+    <div class="update-res-file" v-if="isDev">
+      <el-upload
+        class="upload-container"
+        drag
+        ref="upload"
+        :data="{meta: '{}'}"
+        :with-credentials="true"
+        :action="'/api/v1/resources/updateResourceContext/'+resourceDetail.resourceId"
+        :auto-upload="true">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
+      </el-upload>
+    </div>
     <resource-inputs :data="resourceDetail" ref="inputArea"></resource-inputs>
     <div class="ft clearfix">
       <div class="rt-side">

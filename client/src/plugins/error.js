@@ -7,6 +7,7 @@ export default Vue => {
         return
       }
 
+      console.error(err)
       var msg
       if (typeof err === 'string') {
         msg = err
