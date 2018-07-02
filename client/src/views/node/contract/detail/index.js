@@ -94,9 +94,9 @@ export default {
       }).then(res => {
         if (res.data.errcode === 0) {
           this.$message.success('成功激活合同')
-          this.loadContractDetail(contract.contractId).then(res => {
-            Object.assign(contract, res.getData());
-            ContractUtils.format(contract)
+          this.loadContractDetail(contract.contractId).then(contractDetail => {
+            Object.assign(contract, contractDetail);
+            Object.assign(this.formatContractDetail, ContractUtils.format(contract))
             this.$forceUpdate()
           })
         } else {

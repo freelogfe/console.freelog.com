@@ -123,6 +123,7 @@ console.log(targetResource)
     updatePresentableSchemes(data) {
       return this.$services.presentables.put(this.params.presentableId, data).then(res => {
         if (res.data.errcode === 0) {
+          this.isInitStatus = !res.data.data.contracts.length
           this.$message.success('更新成功');
         } else {
           this.$error.showErrorMessage(res)
