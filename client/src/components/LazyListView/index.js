@@ -37,6 +37,7 @@ export default {
   mounted() {
     // this.handleScroll();
     this.initView()
+    this.$on('reload', this.refresh.bind(this))
   },
   beforeDestroy() {
     this.disconnect()

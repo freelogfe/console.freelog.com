@@ -181,7 +181,12 @@ export default {
       }
     },
     autoSetFormData(file) {
-      var fileName = file.name.split('.', 2)[0]
+      var fileName = file.name.split('.');
+
+      if (fileName.length > 1) {
+        fileName.pop()
+      }
+      fileName = fileName.join('.')
       if (!this.formData.widgetName && this.formData.resourceType === RESOURCE_TYPES.widget) {
         this.formData.widgetName = fileName
       }

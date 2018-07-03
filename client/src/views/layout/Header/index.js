@@ -126,6 +126,9 @@ export default {
           }, 20)
         })
         .catch(this.$error.showErrorMessage)
+    },
+    searchHandler(qs) {
+      this.$router.push({path: '/',query: {q: qs}})
     }
   }
 }

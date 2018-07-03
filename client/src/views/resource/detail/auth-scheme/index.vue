@@ -34,14 +34,21 @@
           <div class="policy-options" v-if="scheme.policy">
             <h3 style="margin-bottom: 15px;color: #333333;">授权策略</h3>
             <div class="policy-content">
-              <el-radio-group v-model="selectedPolicy">
-                <el-radio class="policy-radio" :label="policy.segmentId" :key="index"
-                          @change="changePolicy(scheme, policy)"
-                          v-for="(policy, index) in scheme.policy">
-                  <span class="policy-name">{{policy.policyName}}</span>
+              <el-collapse>
+                <el-collapse-item :title="policy.policyName" :name="index" :key="index"
+                                  v-for="(policy, index) in scheme.policy">
                   <pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>
-                </el-radio>
-              </el-radio-group>
+                </el-collapse-item>
+              </el-collapse>
+
+              <!--<el-radio-group v-model="selectedPolicy">-->
+                <!--<el-radio class="policy-radio" :label="policy.segmentId" :key="index"-->
+                          <!--@change="changePolicy(scheme, policy)"-->
+                          <!--v-for="(policy, index) in scheme.policy">-->
+                  <!--<span class="policy-name">{{policy.policyName}}</span>-->
+                  <!--<pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>-->
+                <!--</el-radio>-->
+              <!--</el-radio-group>-->
             </div>
           </div>
           <div class="scheme-contract-status-wrap"
@@ -61,7 +68,6 @@
 
 <script>
   import AuthSchemeDetail from './index'
-
   export default AuthSchemeDetail
 </script>
 

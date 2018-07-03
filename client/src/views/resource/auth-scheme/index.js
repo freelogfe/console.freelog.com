@@ -428,7 +428,7 @@ export default {
               this.curTabName = curTabName
             })
             this.$message.success('创建成功')
-            // this.$router.push(`/resource/detail/${scheme.resourceId}`)
+            this.$router.push(`/resource/detail/${scheme.resourceId}`)
           })
         } else {
           this.$message.success('操作成功')
@@ -475,7 +475,7 @@ export default {
 
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')
-        // this.$router.push('/resource/list')
+        this.$router.push(`/resource/detail/${scheme.resourceId}`)
       }).catch(this.$error.showErrorMessage)
     },
     deleteAuthSchemeHandler(tab) {

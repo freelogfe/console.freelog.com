@@ -8,7 +8,8 @@ function loadDetail(id) {
 }
 
 
-const onloadContractDetail = createCacheLoaders(loadDetail)
+// const onloadContractDetail = createCacheLoaders(loadDetail)
+const onloadContractDetail = loadDetail
 
 export {
   loadDetail,

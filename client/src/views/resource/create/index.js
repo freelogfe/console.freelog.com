@@ -36,13 +36,14 @@ export default {
     },
     create2QuitHandler() {
       this.executeNext(() => {
+        var detail = this.resourceDetail
         if (this.$route.params.resourceId) {
           this.$message.success('资源更新成功')
         } else {
           this.$message.success('资源创建成功')
         }
         setTimeout(() => {
-          this.$router.push('/resource/list')
+          this.$router.push(`/resource/detail/${detail.resourceId}`)
         }, 5e2)
       })
     },

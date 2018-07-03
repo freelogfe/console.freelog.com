@@ -6,18 +6,12 @@
     <!--</el-input>-->
 
     <div class="main-content-wrap">
-      <lazy-list-view  class="resource-list" :list="resourceList" :height="90" :fetch="fetchData">
+      <lazy-list-view  class="resource-list" ref="resourceList" :list="resourceList" :height="90" :fetch="fetchData">
         <template slot-scope="scope">
           <!--<resource-item class="res-item" :resource="scope.data"></resource-item>-->
           <list-item class="res-item" :resource="scope.data"></list-item>
         </template>
       </lazy-list-view>
-      <!---->
-      <!--<ul class="resource-list">-->
-        <!--<li class="res-item" v-for="resource in resourceList">-->
-          <!--<list-item :resource="resource"></list-item>-->
-        <!--</li>-->
-      <!--</ul>-->
     </div>
   </section>
 </template>

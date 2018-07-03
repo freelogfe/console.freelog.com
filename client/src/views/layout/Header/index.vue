@@ -7,7 +7,7 @@
     <nav class="toolbar">
       <ul class="navbar-menu">
         <li class="nav-right-menu-item">
-          <search-input></search-input>
+          <search-input @search="searchHandler"></search-input>
           <!--<el-button type="text"><i class="el-icon-search"></i></el-button>-->
         </li>
         <li class="nav-right-menu-item">

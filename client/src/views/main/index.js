@@ -14,10 +14,18 @@ export default {
     LazyListView
   },
 
+  watch: {
+    '$route.query': function () {
+      this.query = this.$route.query.q || ''
+      this.queryHandler()
+    }
+  },
+
   mounted() {
-    this.loader().then(data => {
-      this.resourceList = data.dataList
-    })
+    var qs = this.$route.query;
+    if (qs.q) {
+      this.query = qs.q;
+    }
   },
   methods: {
     autoQueryHandler() {
@@ -38,9 +46,13 @@ export default {
       })
     },
     fetchData(page) {
-      return this.loader({
+      var query = {
         page: page
-      }).then(data => {
+      }
+      if (this.query) {
+        query.keyWords = this.query
+      }
+      return this.loader(query).then(data => {
         if (data.dataList.length < 10) {
           data.canLoadMore = false
         }
@@ -56,7 +68,6 @@ export default {
           params: param
         }
       }
-
       return this.$services.g_Resources.get(param || {}).then(res => {
         return res.getData()
       })

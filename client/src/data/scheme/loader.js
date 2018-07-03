@@ -72,26 +72,37 @@ function loadSchemeDetail(authSchemeId, params) {
     }
   })
 }
+//
+// const onloadSchemeDetail = createCacheLoaders(function (id) {
+//   return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
+//     if (Array.isArray(scheme)) {
+//       scheme = scheme[0]
+//     }
+//     return scheme
+//   })
+// }, true)
 
-const onloadSchemeDetail = createCacheLoaders(function (id) {
+
+const onloadSchemeDetail = function (id) {
   return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
     if (Array.isArray(scheme)) {
       scheme = scheme[0]
     }
     return scheme
   })
-}, true)
-
-
-const loadSchemesForResource = createCacheLoaders(function (params) {
+};
+// const loadSchemesForResource = createCacheLoaders(function (params) {
+//   return loadAuthSchemes(params)
+// }, true)
+const loadSchemesForResource = function (params) {
   return loadAuthSchemes(params)
-}, true)
+}
 
 
 function onloadSchemesForResource(id, params) {
-  if (cachedResourceSchemes[id] && !params) {
-    return Promise.resolve(cloneDeep(cachedResourceSchemes[id]))
-  }
+  // if (cachedResourceSchemes[id] && !params) {
+  //   return Promise.resolve(cloneDeep(cachedResourceSchemes[id]))
+  // }
 
   params = params || {}
   params.resourceIds = [id]

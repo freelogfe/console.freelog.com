@@ -10,7 +10,8 @@ function loadDetail(nodeId) {
   })
 }
 
-const onloadNodeDetail = createCacheLoaders(loadDetail)
+// const onloadNodeDetail = createCacheLoaders(loadDetail)
+const onloadNodeDetail = loadDetail
 
 const onloadNodeList = promisifyLoader(function (callback) {
   var params = {
