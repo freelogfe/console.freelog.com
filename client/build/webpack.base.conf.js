@@ -21,6 +21,11 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
+  //性能分析
+  profile: true,
+  parallelism:1,
+  recordsPath: path.join(__dirname, 'records.json'),
+  //性能分析end
   node: {
     module: "empty",
     fs: "empty"

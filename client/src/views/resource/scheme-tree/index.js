@@ -123,7 +123,10 @@ export default {
         .then(this.fillDutyStatements.bind(this))
         .then(() => {
           this.changeViewMode('tree')
-        })
+        }).catch((err) => {
+        this.schemes = []
+        this.$error.showErrorMessage(err)
+      })
     }
   },
   methods: {
@@ -186,7 +189,10 @@ export default {
       }
     },
     loadSchemesForResource(resourceId) {
-      return SchemeDataLoader.onloadSchemesForResource(resourceId)
+      return SchemeDataLoader.onloadSchemesForResource(resourceId, {
+        authSchemeStatus: 1,
+        policyStatus: 1
+      })
         .then((schemes) => {
           var authSchemeIds = schemes.map(scheme => {
             return scheme.authSchemeId
@@ -287,8 +293,8 @@ export default {
       if (schemeRids.length) {
         SchemeDataLoader.loadAuthSchemes({
           resourceIds: schemeRids,
-          // authSchemeStatus: 1, //todo
-          // policyStatus: 1
+          authSchemeStatus: 1,
+          policyStatus: 1
         }).then((schemes) => {
           var resources = []
           schemes.forEach(scheme => {
@@ -326,6 +332,7 @@ export default {
       if (scheme.selectedPolicySegmentId) {
         scheme.selectedPolicy = {...policy}
       }
+
       this.$forceUpdate()
     },
     resetSchemePolicyHandler(resource, scheme, policy) {
@@ -560,8 +567,7 @@ export default {
             dep.selectedScheme = scheme
             dep.selected = true
             Object.assign(duty, dep)
-            console.log('haveSelectedScheme', duty.policySegmentId)
-            scheme.selectedPolicySegmentId = duty.policySegmentId
+            scheme.selectedPolicySegmentId = duty.selectedScheme.selectedPolicySegmentId || duty.policySegmentId
             for (var j = 0; j < scheme.policy.length; j++) {
               if (scheme.policy[j].segmentId === duty.policySegmentId) {
                 scheme.selectedPolicy = scheme.policy[j]

@@ -57,7 +57,7 @@
                 </ul>
 
                 <div class="policy-wrap" v-if="scheme.policy">
-                  <h3 style="margin-bottom: 15px;">授权策略:</h3>
+                  <h3 style="margin-bottom: 15px;">授权策略: </h3>
                   <div class="policy-content">
                     <el-radio-group v-if="scheme.policy.length"
                                     v-model="scheme.selectedPolicySegmentId">

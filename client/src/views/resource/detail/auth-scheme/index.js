@@ -79,7 +79,7 @@ export default {
 
       schemes.forEach((scheme,i) => {
         scheme.dependencies = scheme.bubbleResources
-        scheme._contractStatusInfo = ContractStates[i]
+        // scheme._contractStatusInfo = ContractStates[i]
         scheme.policy.forEach(p => {
           try {
             p._fmtSegmentText = resourceCompiler.beautify(p.segmentText)

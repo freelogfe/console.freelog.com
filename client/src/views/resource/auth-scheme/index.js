@@ -1,4 +1,4 @@
-import {cloneDeep, uniqBy} from 'lodash'
+import {cloneDeep, uniqBy, intersectionBy} from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import ResourceAuthScheme from './auth-scheme.vue'
 import SchemeDataLoader from '@/data/scheme/loader'
@@ -140,6 +140,13 @@ export default {
       this.resourceDepChanged = true
     },
     addDependencies(data) {
+      var insec = intersectionBy(this.resourceDetail.dependencies, [data], 'resourceId');
+
+      if (insec.length) {
+        this.$message.warning('重复添加资源')
+        return;
+      }
+
       this.resourceDetail.dependencies.push(cloneDeep(data))
       data.selected = false
       data.authSchemes = []
@@ -250,7 +257,7 @@ export default {
         dutyStatements: [],
         bubbleResources: [],
         unhandles: []
-      }
+      };
       loopForBreak(deps, (dep) => {
         switch (dep.activeStatus) {
           case SCHEME_STATUS.NONE:
@@ -318,7 +325,7 @@ export default {
     },
     nextHandler(schemeData) {
       console.log('schemeData', schemeData)
-
+      //
       // var data = this.resolveSchemeData(schemeData)
       // console.log(data)
       // return Promise.resolve()
@@ -402,12 +409,8 @@ export default {
         if (schemeSelections.unhandles.length) {
           throw new Error('有资源未选择授权策略')
         } else {
-          if (schemeSelections.dutyStatements.length) {
-            data.dutyStatements = schemeSelections.dutyStatements
-          }
-          if (schemeSelections.bubbleResources.length) {
-            data.bubbleResources = schemeSelections.bubbleResources
-          }
+          data.dutyStatements = uniqBy(schemeSelections.dutyStatements, 'resourceId')
+          data.bubbleResources = uniqBy(schemeSelections.bubbleResources, 'resourceId')
         }
       }
       return data
