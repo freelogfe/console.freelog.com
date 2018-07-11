@@ -22,7 +22,7 @@ export default {
   mounted() {
     var self = this;
     // var loader = this.loader()
-    this.loadPresentables({nodeId: this.$route.params.nodeId})
+    this.loadPresentables({nodeId: this.$route.params.nodeId, isOnline: 2})
       .then(presentables => {
         var presentableIds = presentables.map(p => {
           return p.presentableId

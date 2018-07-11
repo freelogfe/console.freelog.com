@@ -41,7 +41,7 @@ export default {
           index: -1,
           detail: {}
         })
-        this.loadPresentables({nodeId: nodeId})
+        this.loadPresentables({nodeId: nodeId, isOnline: 2})
           .then(this.formatHandler.bind(this))
           .then((list) => {
             this.presentableList = list
