@@ -11,6 +11,9 @@ function loadDetail(userId) {
 
 function loadLoginUserInfo() {
   var authInfo = cookieStore.get('authInfo')
+  if (!authInfo) {
+    return {}
+  }
   var jwt = authInfo.split('.')
   var userInfo = atob(jwt[1])
   try {
