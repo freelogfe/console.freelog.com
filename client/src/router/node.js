@@ -3,24 +3,6 @@ import {nprogress} from '../lib'
 
 import Views from '@/views'
 
-function requireNodeLogin(to, from, next) {
-  store.dispatch('checkNode')
-    .then(nodeInfo => {
-      if (nodeInfo) {
-        if (/:nodeId/.test(to.path)) {
-          var copyTo = Object.assign({}, to)
-          copyTo.path = to.path.replace(':nodeId', nodeInfo.nodeId)
-          copyTo.fullPath = to.fullPath.replace(':nodeId', nodeInfo.nodeId)
-          next(copyTo)
-        } else {
-          next()
-        }
-      } else {
-        next({path: '/node/login', query: {redirect: to.fullPath}})
-      }
-    })
-}
-
 //节点操作相关的页面
 export const nodeItemRoute = {
   path: ':nodeId',
@@ -33,7 +15,6 @@ export const nodeItemRoute = {
   children: [
     {
       path: 'presentables',
-      beforeEnter: requireNodeLogin,
       meta: {
         requiresAuth: true,
         title: 'presentables',
@@ -43,7 +24,6 @@ export const nodeItemRoute = {
     },
     {
       path: 'contracts',
-      beforeEnter: requireNodeLogin,
       meta: {
         requiresAuth: true,
         title: '资源合同',
@@ -64,7 +44,6 @@ export const nodeItemRoute = {
       children: [
         {
           path: ':presentableId',
-          // beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: '节点资源详情',
@@ -74,7 +53,6 @@ export const nodeItemRoute = {
         },
         {
           path: ':presentableId/scheme_detail',
-          // beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: '资源依赖授权管理',
@@ -84,7 +62,6 @@ export const nodeItemRoute = {
         },
         {
           path: 'detail',
-          beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: '节点资源详情',
@@ -94,7 +71,6 @@ export const nodeItemRoute = {
         },
         {
           path: 'create',
-          beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: '创建presentable',
@@ -114,7 +90,6 @@ export const nodeItemRoute = {
       children: [
         {
           path: 'pagebuilds',
-          beforeEnter: requireNodeLogin,
           meta: {
             requiresAuth: true,
             title: 'PageBuild管理',
@@ -147,20 +122,6 @@ export default {
     },
     {
       path: 'list',
-      beforeEnter: (to, from, next) => {
-        var nodeId = store.getters.nodeSession && store.getters.nodeSession.nodeId
-        if (!isNaN(parseInt(nodeId))) {
-          var target = `/node/${nodeId}/presentables`
-          if (from.fullPath !== target) {
-            next({path: target})
-          } else {
-            next(false)
-            nprogress.done()
-          }
-        } else {
-          next()
-        }
-      },
       meta: {
         requiresAuth: true,
         type: 'node',

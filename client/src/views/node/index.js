@@ -1,7 +1,6 @@
 const nodeCreator = resolve => require.ensure([], () => resolve(require('./create/index.vue')), 'node')
 const nodeList = resolve => require.ensure([], () => resolve(require('./list/index.vue')), 'node')
 const nodeDetail = resolve => require.ensure([], () => resolve(require('./detail/index.vue')), 'node')
-const nodeLogin = resolve => require.ensure([], () => resolve(require('./login/index.vue')), 'node')
 const nodeResourceList = resolve => require.ensure([], () => resolve(require('./resource/list/index.vue')), 'node')
 const nodeResourceDetail = resolve => require.ensure([], () => resolve(require('./resource/detail/index.vue')), 'node')
 
@@ -19,7 +18,6 @@ export default {
   nodeCreator,
   nodeList,
   nodeDetail,
-  nodeLogin,
   nodeResourceList,
   nodeResourceDetail,
   presentableCreator,
