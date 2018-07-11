@@ -1,9 +1,8 @@
 import ResourceMetaInfo from '../../meta/index.vue'
 import {storage} from '@/lib'
-import CONFIG from '@/config/index'
+import {RESOURCE_TYPES} from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 
-const {RESOURCE_TYPES} = CONFIG
 const EDIT_MODES = {
   creator: 'creator',
   editor: 'editor'

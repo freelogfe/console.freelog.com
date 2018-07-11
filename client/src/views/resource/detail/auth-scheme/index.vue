@@ -51,15 +51,15 @@
               <!--</el-radio-group>-->
             </div>
           </div>
-          <div class="scheme-contract-status-wrap"
-               v-if="resource.isOwner">
-            <div class="contract-status-btn-wrap">
-              <el-button class="scheme-contract-status-btn"
-                         :class="['contract-status-'+scheme._contractStatusInfo.status+'-btn']">
-                {{scheme._contractStatusInfo.desc}}
-              </el-button>
-            </div>
-          </div>
+          <!--<div class="scheme-contract-status-wrap"-->
+               <!--v-if="resource.isOwner">-->
+            <!--<div class="contract-status-btn-wrap">-->
+              <!--<el-button class="scheme-contract-status-btn"-->
+                         <!--:class="['contract-status-'+scheme._contractStatusInfo.status+'-btn']">-->
+                <!--{{scheme._contractStatusInfo.desc}}-->
+              <!--</el-button>-->
+            <!--</div>-->
+          <!--</div>-->
         </div>
       </div>
     </div>
