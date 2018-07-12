@@ -2,7 +2,7 @@
 const getters = {
   session: state=> state.user.session,
   sidebar: state=> state.sidebar,
-  nodeSession: state=> state.node.nodeSession,
+  nodes: state=> state.node.nodes,
   serverTime: state=> +new Date() //mock
 }
 

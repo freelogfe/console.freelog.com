@@ -1,46 +1,54 @@
 import {storage} from '@/lib'
+import NodeDataLoader from '@/data/node/loader'
 
 const types = {
   CHECK_NODE: 'checkNode',
-  DELETE_NODE: 'deleteNode',
-  CHANGE_NODE: 'changeNode'
+  CHANGE_NODE: 'changeNode',
+  ADD_NODE: 'addNode',
+  LOAD_NODES: 'loadNodes'
 };
 
 const node = {
   state: {
-    nodeSession: storage.get('nodeSession') || {
-      nodeId: ':nodeId'
-    }
+    nodes: []
   },
 
   mutations: {
-    [types.DELETE_NODE](state) {
-      state.nodeSession = {
-        nodeId: ':nodeId'
-      }
-      storage.remove('nodeSession')
-    },
     [types.CHANGE_NODE](state, data) {
-      state.nodeSession = data
-      storage.set('nodeSession', data)
-    }
+    },
+    [types.ADD_NODE](state, data) {
+      state.nodes.push(data)
+    },
+    [types.LOAD_NODES](state, data) {
+      state.nodes = data
+    },
   },
 
   actions: {
     [types.CHECK_NODE]({commit, getters}) {
       return new Promise((resolve, reject) => {
-        if (getters.nodeSession && getters.nodeSession.nodeDomain) {
-          resolve(getters.nodeSession)
+        resolve(null)
+      })
+    },
+    [types.LOAD_NODES]({commit, getters}) {
+      return new Promise((resolve) => {
+        var userId = getters.session.user && getters.session.user.userId;
+        if (userId) {
+          NodeDataLoader.onloadNodeList({
+            ownerUserId: userId,
+            pageSize: 1e2
+          }).then(data => {
+            var nodes = data.dataList
+            commit(types.LOAD_NODES, nodes)
+            resolve(nodes)
+          })
         } else {
           resolve(null)
         }
       })
     },
-    [types.DELETE_NODE]({commit, getters}) {
-      commit(types.DELETE_NODE)
-      return new Promise((resolve) => {
-        setTimeout(resolve, 10)
-      })
+    [types.ADD_NODE]({commit, getters}, node) {
+      commit(types.ADD_NODE, node)
     },
     [types.CHANGE_NODE]({commit}, data) {
       commit(types.CHANGE_NODE, data)

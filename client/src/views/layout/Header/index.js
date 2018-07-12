@@ -1,6 +1,5 @@
 import {mapGetters} from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
-import NodeDataLoader from '@/data/node/loader'
 
 export default {
   name: 'fl-header',
@@ -8,15 +7,14 @@ export default {
   data() {
     return {
       navRoutes: [],
-      isSideBarOpen: true,
-      nodeList: []
+      isSideBarOpen: true
     }
   },
   computed: {
     ...mapGetters({
       sidebar: 'sidebar',
       session: 'session',
-      nodeSession: 'nodeSession'
+      nodes: 'nodes'
     }),
     pageTitle() {
       return (this.$route.meta && this.$route.meta.title) || ''
@@ -30,22 +28,11 @@ export default {
   created() {
     this.listenWindowVisibility()
     this.resolveRouter();
-    if (this.session.user && this.session.user.userId) {
-      this.loadNodeList().then((data) => {
-        this.nodeList = data.dataList;
-      })
-    }
+    this.$store.dispatch('loadNodes')
   },
-
   mounted() {
   },
   methods: {
-    loadNodeList() {
-      return NodeDataLoader.onloadNodeList({
-        ownerUserId: this.session.user.userId,
-        pageSize: 1e2
-      })
-    },
     listenWindowVisibility() {
       var self = this
       var hidden = 'hidden';

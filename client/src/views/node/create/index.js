@@ -53,6 +53,7 @@ export default {
             this.$message.error(responseData.msg)
           } else {
             self.$message.success('节点创建成功')
+            this.$store.dispatch('addNode', responseData.data)
             setTimeout(() => {
               self.$router.push({path: `/node/${responseData.data.nodeId}`})
             }, 1e3)

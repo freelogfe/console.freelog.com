@@ -11,9 +11,6 @@ export default {
   },
 
   components: {ResourceDetailInfo},
-  computed: mapGetters({
-    nodeSession: 'nodeSession'
-  }),
   mounted() {
     var resourceId = this.$route.params.resourceId
     if (resourceId) {
@@ -49,17 +46,7 @@ export default {
       })
     },
     gotoCreateContract(resource) {
-      var query = {
-        resourceName: resource.resourceName,
-        resourceType: resource.resourceType,
-        resourceId: resource.resourceId
-      }
 
-      var nodeId = this.nodeSession.nodeId
-      this.$router.push({
-        path: `/node/${nodeId}/presentable/create`,
-        query: query
-      })
     },
   }
 }
