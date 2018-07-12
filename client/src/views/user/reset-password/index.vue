@@ -6,7 +6,7 @@
       <!--</h1>-->
       <el-alert v-if="error" :title="error.title" type="warning" :description="error.message" show-icon/>
     </header>
-    <el-form class="login-form" auto-complete="off" :model="model" :rules="rules" ref="formRef" label-width="80px">
+    <el-form class="login-form" auto-complete="off" :model="model" :rules="rules" ref="formRef" label-width="60px">
       <h2 class="heading">找回密码</h2>
       <el-form-item prop="loginName" label="账号">
         <el-input type="text" v-model="model.loginName" placeholder="手机号或邮箱"></el-input>
@@ -24,6 +24,7 @@
                    @click="submit('formRef')">{{ loading ? '验证中...' : '立即验证' }}
         </el-button>
       </el-form-item>
+      
     </el-form>
     <!--<footer class="login-footer">-->
     <!--<a href="/">返回到 freelog.com</a>-->
@@ -44,7 +45,7 @@
     -moz-border-radius: 5px;
     background-clip: padding-box;
     margin: 180px auto;
-    width: 350px;
+    width: 350px; height: 300px;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
