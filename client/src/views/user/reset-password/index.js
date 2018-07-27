@@ -39,16 +39,23 @@ export default {
         this.error = null
         this.loading = true
 
-        this.$services.other.resetPassword(this.model).then(() => {
-          var redirect = this.$route.query.redirect;
-          if (!redirect || !isSafeUrl(redirect)) {
-            redirect = '/'
+        this.$services.other.resetPassword(this.model).then((res) => {
+          if (res.data.errcode === 0) {
+            var redirect = this.$route.query.redirect;
+            if (!redirect || !isSafeUrl(redirect)) {
+              redirect = '/'
+            }
+            this.$router.replace(redirect)
+          } else {
+            this.error = {title: '', message: res.data.msg}
           }
-          this.$router.replace(redirect)
           this.loading = false
         }).catch(err => {
           this.loading = false
           this.error = {title: '发生错误', message: '出现异常，请稍后再试！'}
+
+
+
           switch (err.response && err.response.status) {
             case 401:
               this.error.message = '用户名或密码错误！'
