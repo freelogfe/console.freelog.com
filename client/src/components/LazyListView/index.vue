@@ -9,7 +9,6 @@
       </li>
     </ul>
     <slot name="empty" v-if="previewList.length === 0"></slot>
-
     <slot name="loading">
       <div class="load-more-gif" ref="loading">loading...</div>
     </slot>

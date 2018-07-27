@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-tag
+      class="user-defined-tag"
       :key="tag"
       v-for="tag in tags"
       closable
@@ -28,7 +29,10 @@
 </script>
 
 <style lang="less" scoped>
-
+  .user-defined-tag,
+  .input-new-tag{
+    margin-bottom: 10px;
+  }
   .el-tag + .el-tag {
     margin-left: 10px;
   }

@@ -1,5 +1,6 @@
 import {storage} from '@/lib'
 import {isSafeUrl} from '@/lib/security'
+import {validateLoginName} from '../validator'
 
 export default {
   name: 'reset-password',
@@ -9,7 +10,7 @@ export default {
     const rules = {
       loginName: [
         {required: true, message: '请输入用户名', trigger: 'blur'},
-        {min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur'}
+        {validator: validateLoginName, trigger: 'blur'}
       ],
       verifyCode: [
         {required: true, message: '请输入验证码', trigger: 'blur'}

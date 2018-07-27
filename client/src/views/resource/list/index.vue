@@ -22,7 +22,7 @@
       <div class="right-tool-bar-wrap">
         <ul class="tool-bars">
           <li class="tool-item">
-            <search-input></search-input>
+            <search-input @search="searchHandler"></search-input>
           </li>
         </ul>
       </div>

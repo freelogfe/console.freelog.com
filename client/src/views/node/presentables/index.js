@@ -2,7 +2,6 @@ import CONFIG from '@/config/index'
 import PresentableDetail from '../presentable/detail/index.vue'
 import FreelogSwitch from '@/components/Switch/index.vue'
 import SearchResource from '../../resource/search/index.vue'
-import {presentable} from "../../../components/policyEditor/defaultPolicyTpls";
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
 export default {
@@ -51,12 +50,18 @@ export default {
       }
     },
     formatHandler(list) {
+      if (!list || !list.length) {
+        return []
+      }
       list.forEach((item) => {
-        item.isOnlineChecked = !!item.isOnline
-        item._statusInfo = STATUS_TIPS[item.status]
-        item.isReady = (item.status & 3) === 3
+        this.resolvePresentable(item)
       })
       return list
+    },
+    resolvePresentable(item) {
+      item.isOnlineChecked = !!item.isOnline
+      item._statusInfo = STATUS_TIPS[item.status]
+      item.isReady = (item.status & 3) === 3
     },
     loadPresentables(param) {
       return this.$services.presentables.get({params: param}).then((res) => {
@@ -114,5 +119,10 @@ export default {
         }
       })
     },
+    updatePresentableHandler(presentable) {
+      var curPresentable = this.currentPresentable.detail
+      Object.assign(curPresentable, presentable);
+      this.resolvePresentable(curPresentable)
+    }
   }
 }

@@ -26,6 +26,9 @@ export default {
     },
     editAuthNode(resource) {
       this.$router.push({path: `/resource/detail/${resource.resourceId}/auth_schemes`})
+    },
+    searchHandler(query) {
+      this.$message.warning('未开发')
     }
   }
 }

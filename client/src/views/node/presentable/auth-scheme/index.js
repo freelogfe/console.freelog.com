@@ -93,10 +93,6 @@ export default {
           resource2schemeMap[dep.resourceId] = dep.authSchemeId
         }
       });
-      // console.log(this.presentableDetail)
-      // console.log('dutyStatements', dutyStatements)
-      // console.log('cachedContractsMap', cachedContractsMap)
-      // console.log('resource2schemeMap', resource2schemeMap)
 
       var targetResource;
       for (let i = 0; i < dutyStatements.length; i++) {
@@ -105,10 +101,9 @@ export default {
           break;
         }
       }
-console.log(targetResource)
+
       if (targetResource) {
         if (targetResource.activeStatus === 2) {
-          console.log('contracts', contracts)
           this.updatePresentableSchemes({
             contracts: contracts
           })
@@ -125,10 +120,23 @@ console.log(targetResource)
         if (res.data.errcode === 0) {
           this.isInitStatus = !res.data.data.contracts.length
           this.$message.success('更新成功');
+          this.gotoContractView(res.data.data)
         } else {
           this.$error.showErrorMessage(res)
         }
       })
+    },
+    gotoContractView(data) {
+      var query = {tab: 'node-contracts'}
+      for (var i = 0; i < data.contracts.length; i++) {
+        let contract = data.contracts[i]
+        if (contract.resourceId === this.presentableDetail.resourceId) {
+          query.contractId = contract.contractId
+          break;
+        }
+      }
+
+      this.$router.push({path: `/node/${this.params.nodeId}`, query: query})
     },
     switchSchemeHandler(resource, scheme, index, panelIndex) {
 

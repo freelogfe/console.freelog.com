@@ -21,7 +21,8 @@ export default {
 
   mounted() {
     var self = this;
-    // var loader = this.loader()
+    var query = this.$route.query;
+
     this.loadPresentables({nodeId: this.$route.params.nodeId, isOnline: 2})
       .then(presentables => {
         var presentableIds = presentables.map(p => {
@@ -38,7 +39,10 @@ export default {
                 resourceIds.push(contract.resourceId)
                 contractIds.push(contract.contractId)
                 contractsMap[contract.contractId] = contract
-                ContractUtils.format(contract)
+                ContractUtils.format(contract);
+                if (query.contractId) {
+                  this.showContractDetailHandler(contract)
+                }
                 if (contract.isMasterContract) {
                   p.masterContract = contract
                 } else {
@@ -134,7 +138,6 @@ export default {
           return Promise.all([this.loadResourceData(resourceIds)]).then((responses) => {
             var resourcesData = responses[0]
             self.mergeDataByResourceId(contracts, resourcesData)
-            // self.mergeDataByResourceId(contracts, presentables)
             console.log(contracts)
             return contracts
           })
@@ -172,17 +175,13 @@ export default {
         // this.$message.warning('未创建合同')
         return
       }
-      this.$services.contract.get(contract.contractId)
-        .then(res => {
-          var data = res.getData();
-          console.log(data)
-          // this.currentContract = data
-          this.$set(this, 'currentContract', data)
-          this.$forceUpdate()
-        })
+      this.currentContract = contract
     },
     resolveContractCreatorLink(presentable) {
       return `/node/${this.$route.params.nodeId}/presentable/${presentable.presentableId}/scheme_detail`
+    },
+    updateContractHandler(contract) {
+      Object.assign(this.currentContract, contract)
     }
   }
 }

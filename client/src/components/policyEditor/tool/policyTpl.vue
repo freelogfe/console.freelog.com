@@ -6,13 +6,13 @@
       </el-input>
     </div>
 
-    <el-tabs type="border-card">
-      <el-tab-pane label="示例模板">
+    <el-tabs type="border-card" v-model="currentTabName" @tab-click="tabClickHandler">
+      <el-tab-pane label="示例模板" name="official">
         <policy-tpl-list :list="defaultPolicyTpls"
                          :filter="filterHandler"
                          @select="selectPolicyTplHandler"></policy-tpl-list>
       </el-tab-pane>
-      <el-tab-pane label="我的模板">
+      <el-tab-pane label="我的模板" name="mine">
         <policy-tpl-list :list="policyTpls"
                          :filter="filterHandler"
                          @select="selectPolicyTplHandler"></policy-tpl-list>
@@ -24,11 +24,13 @@
 <script>
   import PolicyTplList from '@/components/policyTplSelector/index.vue'
   import defaultPolicyTpls from '../defaultPolicyTpls'
+  import {storage} from '@/lib'
 
   export default {
     name: 'policy-template-selector',
     data() {
       return {
+        currentTabName: storage.get('POLICY_TPL_ACTIVE_TAB_NAME') || 'official',
         policyTpls: [],
         queryPolicyTpl: '',
         defaultPolicyTpls: (this.$route.meta.type === 'node') ? defaultPolicyTpls.presentable : defaultPolicyTpls.resource
@@ -78,6 +80,9 @@
         return list.filter((tpl) => {
           return this.queryPolicyTpl ? tpl.name.indexOf(this.queryPolicyTpl) > -1 : true
         })
+      },
+      tabClickHandler(tab) {
+        storage.set('POLICY_TPL_ACTIVE_TAB_NAME', tab.name);
       }
     }
   }

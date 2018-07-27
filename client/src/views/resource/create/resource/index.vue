@@ -40,6 +40,7 @@
               </div>
             </div>
           </div>
+
           <div class="resource-file-input">
             <div class="resource-file-uploader-wrap" v-show="shouldShowResourceUploader === true">
               <el-upload

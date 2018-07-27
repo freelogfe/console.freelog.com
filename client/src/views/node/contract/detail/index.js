@@ -3,6 +3,7 @@ import LicenseEvent from './events/license/index.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
 import ContractContent from './content.vue'
 import ContractUtils from '@/data/contract/utils'
+import {onloadResourceDetail} from '@/data/resource/loader'
 
 let eventComponentMap = {
   transaction: {
@@ -23,11 +24,12 @@ export default {
       dialogTitle: '',
       showEventExecDialog: false,
 
+      contractDetail: {},
+      resourceDetail: {},
       account: '',
       options: [],
       password: '',
-      selectedContractEvent: '',
-      formatContractDetail: null
+      selectedContractEvent: ''
     }
   },
   components: {
@@ -37,14 +39,30 @@ export default {
     ContractContent
   },
   props: {
-    contractDetail: Object
+    // contractDetail: Object,
+    contractId: String
   },
   watch: {
-    contractDetail: 'formatData'
+    // contractDetail: 'formatData',
+    contractId: 'initContractDetail'
   },
   mounted() {
+    this.initContractDetail()
   },
   methods: {
+    initContractDetail() {
+      if (!this.contractId) {
+        return
+      }
+      this.loadContractDetail(this.contractId)
+        .then(contract => {
+          onloadResourceDetail(contract.resourceId)
+            .then(resInfo => {
+              this.resourceDetail = resInfo
+            })
+          this.contractDetail = ContractUtils.format(contract)
+        })
+    },
     handleCloseDialog(done) {
       this.closeDialogHandler()
       done()
@@ -62,7 +80,6 @@ export default {
     formatData() {
       var detail = Object.assign({}, this.contractDetail)
       detail = ContractUtils.format(detail)
-      this.formatContractDetail = detail
     },
     loadContractDetail(param) {
       return this.$services.contract.get(param || {})
@@ -96,8 +113,7 @@ export default {
           this.$message.success('成功激活合同')
           this.loadContractDetail(contract.contractId).then(contractDetail => {
             Object.assign(contract, contractDetail);
-            Object.assign(this.formatContractDetail, ContractUtils.format(contract))
-            this.$forceUpdate()
+            this.$emit('update', ContractUtils.format(contract))
           })
         } else {
           this.$error.showErrorMessage(res.data.msg)

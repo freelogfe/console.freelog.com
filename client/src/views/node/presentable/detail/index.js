@@ -101,8 +101,7 @@ export default {
       })
     },
     savePresentableEnd(data) {
-      console.log(data)
-      Object.assign(this.presentableData, data)
+      this.$emit('update', data)
     }
   }
 }

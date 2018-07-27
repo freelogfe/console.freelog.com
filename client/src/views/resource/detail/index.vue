@@ -29,9 +29,7 @@
             <span class="res-author-name">by: {{resourceDetail.resourceInfo.userName}}</span>
             <span class="res-update-time">最近更新时间： {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
           </div>
-          <div class="res-type-info">
-            <!--<span class="res-file-size">{{resourceDetail.resourceInfo._filesize}}</span>-->
-          </div>
+          <div class="res-type-info"></div>
         </div>
       </div>
       <div class="res-detail-bd">

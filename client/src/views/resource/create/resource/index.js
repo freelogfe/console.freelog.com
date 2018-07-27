@@ -16,7 +16,7 @@ export default {
   },
   data() {
     const validateResourceType = (rule, value, callback) => {
-      const NAME_REG = /^[a-z][0-9a-z_]{3,19}[^_]$/
+      const NAME_REG = /^[a-z]{1}[0-9a-z_]{2,19}[0-9a-z]{1}$/
 
       if (!NAME_REG.test(value)) {
         callback(new Error('命名格式有误，需满足' + NAME_REG.toString()));
@@ -28,9 +28,10 @@ export default {
 //      保持与web component中自定义标签名一致
     const validateWidgetName = (rule, value, callback) => {
       //格式为freelog-xxx-yyyy，最少4个字符
-      const NAME_REG = /^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/
+      const NAME_REG = /^freelog-[a-z0-9._-]{3,15}-[a-z0-9._-]{2,14}[a-z0-9]$/
+
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('/^freelog-[a-z0-9._-]{4,15}-[a-z0-9._-]{4,64}$/'));
+        callback(new Error('例如freelog-namespace-widgetname，namespace和widgetname至少3个字符'));
       } else {
         callback()
       }

@@ -4,6 +4,9 @@
       <template slot-scope="scope">
         <resource-item :resource="scope.data"></resource-item>
       </template>
+      <div slot="empty" class="empty-resource-tip">
+        {{type==='self'?'没有自制资源' :'未收藏资源'}}
+      </div>
     </lazy-list-view>
   </div>
 </template>
@@ -107,7 +110,6 @@
         }
       },
       getAllResourcesLoader(param) {
-        //test
         param = {
           pageSize: 1e2
         }
@@ -125,5 +127,8 @@
 </script>
 
 <style lang="less" scoped>
-
+  .empty-resource-tip {
+    font-size: 20px;
+    color: #999;
+  }
 </style>

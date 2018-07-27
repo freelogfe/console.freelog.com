@@ -3,7 +3,7 @@
     <el-input size="small" v-model="input"
               v-if="showInput"
               ref="input"
-              placeholder="请输入搜索内容"
+              placeholder="按回车进行搜索"
               :style="{width: width}"
               @blur="hideInputHandler"
               class="search-input"
@@ -23,6 +23,6 @@
 <style lang="less" scoped>
   i {
     color: #666;
+    font-size: 18px;
   }
-
 </style>

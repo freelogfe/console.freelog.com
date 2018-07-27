@@ -6,6 +6,7 @@ import NodePreview from '../preview/index.vue'
 import {NODE_STATUS} from '@/config/node'
 import nodeLoader from '@/data/node/loader'
 import ClipBoard from '@/components/clipboard/index.vue'
+import {mapGetters} from 'vuex'
 
 
 export default {
@@ -36,6 +37,25 @@ export default {
     NodePreview
   },
 
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$store.dispatch('loadNodes')
+        .then(nodes => {
+          var isValid = nodes.some(node => {
+            return node.nodeId == vm.$route.params.nodeId;
+          });
+
+          if (!isValid) {
+            vm.$router.push('/')
+          }
+        })
+    })
+  },
+  computed: {
+    ...mapGetters({
+      nodes: 'nodes'
+    })
+  },
   watch: {
     $route() {
       this.init(this.$route.params.nodeId)
@@ -51,6 +71,10 @@ export default {
   },
   methods: {
     init(nodeId) {
+      var query = this.$route.query;
+      if (query.tab && (this.NAV_TABS.some(tab => tab.name === query.tab))) {
+        this.nav.content = query.tab
+      }
       this.load(nodeId)
         .then((detail) => {
           detail.statusInfo = NODE_STATUS[detail.status]

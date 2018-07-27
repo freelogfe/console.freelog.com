@@ -20,7 +20,7 @@
       </ul>
     </div>
     <div class="presentable-detail-container" v-show="currentPresentable.detail.presentableId">
-      <component class="presentable-detail-content" is="presentable-detail" :detail="currentPresentable.detail"></component>
+      <component class="presentable-detail-content" is="presentable-detail" :detail="currentPresentable.detail" @update="updatePresentableHandler"></component>
     </div>
 
     <el-dialog
