@@ -13,24 +13,11 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
-  // devServer: {
-  //   hot: true,
-  //   contentBase: path.resolve(__dirname, "../dist"),
-  //   port: 3000,
-  //   host: "0.0.0.0",
-  //   publicPath: "/",
-  //   historyApiFallback: true,
-  //   disableHostCheck: true
-  // quiet: true, // necessary for FriendlyErrorsPlugin
-  // watchOptions: {
-  //   poll: config.dev.poll,
-  // }
-  // },
   optimization: {
     noEmitOnErrors: true,
   },
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+    rules: utils.styleLoaders({sourceMap: config.dev.cssSourceMap})
   },
   // cheap-module-eval-source-map is faster for development
   devtool: '#cheap-module-eval-source-map',
