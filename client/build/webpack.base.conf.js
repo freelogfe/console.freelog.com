@@ -3,10 +3,13 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const os = require('os')
+const cpus = os.cpus().length
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
+
 process.traceDeprecation = true;
 module.exports = {
   entry: {
@@ -41,8 +44,13 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        use: [
+          'thread-loader',
+          {
+            loader: 'vue-loader',
+            options: vueLoaderConfig
+          }
+        ]
       },
       {
         test: /\.js$/,
@@ -54,11 +62,17 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
-        }
+        use: [
+          "thread-loader",
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              name: utils.assetsPath('img/[name].[hash:7].[ext]')
+            }
+          }
+        ]
+
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
