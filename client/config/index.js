@@ -28,6 +28,10 @@ module.exports = {
       'https': 8443
     },
     autoOpenBrowser: true,
+    errorOverlay: true,
+    notifyOnErrors: true,
+    poll: false,
+
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     headers: {

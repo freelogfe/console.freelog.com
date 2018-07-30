@@ -2,29 +2,20 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
-var HappyPack = require('happypack');
-var os = require('os')
-var happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
-var isProduction = process.env.NODE_ENV === 'production'
-var cssOptions = {
-  sourceMap: isProduction
-    ? config.build.productionSourceMap
-    : config.dev.cssSourceMap,
-  extract: isProduction
-}
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
-
+process.traceDeprecation = true;
 module.exports = {
   entry: {
     app: './src/main.js'
   },
   //性能分析
-  profile: true,
-  parallelism:1,
-  recordsPath: path.join(__dirname, 'records.json'),
+  // profile: true,
+  // parallelism: 1,
+  // recordsPath: path.join(__dirname, 'records.json'),
   //性能分析end
   node: {
     module: "empty",
@@ -50,17 +41,17 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'happypack/loader?id=happyVue'
+        loader: 'vue-loader',
+        options: vueLoaderConfig
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader?id=happybabel',
+        use: [
+          "thread-loader",
+          'babel-loader',
+        ],
         include: [resolve('src'), resolve('test')]
       },
-      // {
-      //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-      //   loader: 'happypack/loader?id=image'
-      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -71,7 +62,11 @@ module.exports = {
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'happypack/loader?id=media',
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('media/[name].[hash:7].[ext]')
+        }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -84,84 +79,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new HappyPack({
-      id: 'happyVue',
-      loaders: [{loader: 'vue-loader', options: vueLoaderConfig}],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    new HappyPack({
-      id: 'happybabel',
-      loaders: ['babel-loader'],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    new HappyPack({
-      id: 'image',
-      loaders: [{
-        loader: 'url-loader',
-        options: {
-          limit: 1e4,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
-        }
-      }],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    new HappyPack({
-      id: 'media',
-      loaders: [{
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('media/[name].[hash:7].[ext]')
-        }
-      }],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    /**
-    * 会出现自定义字体无法decode的情况
-    * */
-    // new HappyPack({
-    //   id: 'fonts',
-    //   loaders: [{
-    //     loader: 'url-loader',
-    //     options: {
-    //       limit: 10000,
-    //       name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-    //     }
-    //   }],
-    //   threadPool: happyThreadPool,
-    //   verbose: false
-    // }),
-    new HappyPack({
-      id: 'css',
-      loaders: [{
-        loader: 'css-loader',
-        options: Object.assign({
-          minimize: isProduction,
-        }, cssOptions)
-      }],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    new HappyPack({
-      id: 'less',
-      loaders: [{
-        loader: 'less-loader',
-        options: {
-          sourceMap: cssOptions.sourceMap
-        }
-      }],
-      threadPool: happyThreadPool,
-      verbose: false
-    }),
-    new HappyPack({
-      id: 'style',
-      loaders: ['vue-style-loader'],
-      threadPool: happyThreadPool,
-      verbose: false
-    })
+    new VueLoaderPlugin()
   ]
 }
