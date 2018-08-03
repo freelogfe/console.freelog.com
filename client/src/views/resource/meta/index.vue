@@ -12,7 +12,7 @@
                 :options="editorOptions"
                 ref="codeMirror"
                 placeholder="描述资源meta信息的JSON数据"
-                @change="onCodeChange">
+                @input="onCodeChange">
     </codemirror>
   </section>
 </template>
@@ -24,6 +24,7 @@
 </script>
 
 <style lang="less">
+  /*@import "index.less";*/
 
 </style>
 

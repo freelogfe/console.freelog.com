@@ -1,5 +1,6 @@
 import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
 var throttle = require('lodash/throttle');
+import 'codemirror/mode/javascript/javascript';
 require('codemirror/theme/idea.css')
 
 export default {
@@ -7,12 +8,16 @@ export default {
   data() {
     var cmOpts = Object.assign({}, codeMirrorOptions)
     Object.assign(cmOpts, {
-      mode: 'application/json',
+      mode:  {
+        name: 'javascript',
+        json: true
+      },
       viewportMargin: Infinity,
       theme: 'idea',
       lineNumbers: false,
       gutters: []
     })
+
     return {
       errorMsg: '',
       editorOptions: cmOpts,
@@ -53,6 +58,7 @@ export default {
       this.$emit('input', this.data)
     },
     validateJSON() {
+
       try {
         if (this.data) {
           JSON.parse(this.data)

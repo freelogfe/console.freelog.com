@@ -1,5 +1,7 @@
 import {codemirror} from 'vue-codemirror'
 
+require('codemirror/lib/codemirror.css')
+
 require('codemirror/theme/dracula.css')
 require('codemirror/addon/fold/foldgutter.css')
 require('codemirror/addon/fold/foldgutter')
@@ -14,7 +16,6 @@ require('codemirror/keymap/sublime')
 require('codemirror/addon/search/match-highlighter')
 require('codemirror/addon/search/searchcursor')
 require('codemirror/addon/display/placeholder')
-
 
 
 export const codeMirrorOptions = {
