@@ -1,6 +1,7 @@
 import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
 var throttle = require('lodash/throttle');
 require('codemirror/theme/idea.css')
+
 export default {
   name: 'resource-meta-info',
   data() {

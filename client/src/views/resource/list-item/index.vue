@@ -10,6 +10,7 @@
         <span class="res-type">#{{resource.resourceType}}</span>
         <span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>
         <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+        <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
       </div>
     </div>
   </div>
@@ -18,6 +19,7 @@
 
 <script>
   import {onloadUserInfo} from '@/data/user/loader'
+  import {RESOURCE_STATUS} from '@/config/resource'
 
   export default {
     name: 'resource-info-item',
@@ -39,8 +41,7 @@
       }
     },
 
-    watch: {
-    },
+    watch: {},
 
     mounted() {
       this.format(this.resource)
@@ -51,6 +52,8 @@
         if (!this.resource.resourceId) {
           return
         }
+
+        resource._statusInfo = RESOURCE_STATUS[resource.status];
         resource._fileSize = this.humanizeSize(resource.systemMeta.fileSize)
         onloadUserInfo(resource.userId).then((userInfo) => {
           this.$set(resource, '_userInfo', userInfo)
@@ -71,7 +74,7 @@
         return number + unit;
       },
       gotoDetail(resource) {
-       this.$router.push(`/resource/detail/${resource.resourceId}`)
+        this.$router.push(`/resource/detail/${resource.resourceId}`)
       }
     }
   }
