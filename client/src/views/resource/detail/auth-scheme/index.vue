@@ -40,34 +40,59 @@
                   <pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>
                 </el-collapse-item>
               </el-collapse>
-
-              <!--<el-radio-group v-model="selectedPolicy">-->
-                <!--<el-radio class="policy-radio" :label="policy.segmentId" :key="index"-->
-                          <!--@change="changePolicy(scheme, policy)"-->
-                          <!--v-for="(policy, index) in scheme.policy">-->
-                  <!--<span class="policy-name">{{policy.policyName}}</span>-->
-                  <!--<pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>-->
-                <!--</el-radio>-->
-              <!--</el-radio-group>-->
             </div>
           </div>
-          <!--<div class="scheme-contract-status-wrap"-->
-               <!--v-if="resource.isOwner">-->
-            <!--<div class="contract-status-btn-wrap">-->
-              <!--<el-button class="scheme-contract-status-btn"-->
-                         <!--:class="['contract-status-'+scheme._contractStatusInfo.status+'-btn']">-->
-                <!--{{scheme._contractStatusInfo.desc}}-->
-              <!--</el-button>-->
-            <!--</div>-->
-          <!--</div>-->
+          <div class="scheme-contract-status-wrap"
+               v-if="resource.isOwner && scheme.showContracts">
+            <div class="contract-status-btn-wrap">
+              <el-button class="scheme-contract-status-btn"
+                         :class="['contract-status-'+scheme._contractStatusInfo.status+'-btn']"
+                         @click="showContractsHandler(scheme)">
+                资源合同详情
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+
+    <el-dialog width="800px"
+               :title="currentScheme.authSchemeName + '-依赖资源合同列表'"
+               :append-to-body="true"
+               :visible.sync="showDialog">
+      <div class="scheme-dialog-bd">
+        <el-table
+          :data="currentScheme.dutyStatements"
+          @expand-change="expandChangeHandler"
+          style="width: 100%">
+          <el-table-column type="expand">
+            <template slot-scope="props" v-if="props.row.inited">
+              <contract-detail :contractId="props.row.contractId"
+                               @update="updateContractHandler"></contract-detail>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="资源名称"
+            prop="resourceName">
+          </el-table-column>
+          <el-table-column
+            label="资源合同ID"
+            prop="contractId">
+          </el-table-column>
+          <el-table-column
+            label="授权方案ID"
+            prop="authSchemeId">
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
 <script>
   import AuthSchemeDetail from './index'
+
   export default AuthSchemeDetail
 </script>
 

@@ -1,5 +1,6 @@
 import SchemeLoader from '@/data/scheme/loader'
 import resourceCompiler from '@freelog/resource-policy-compiler'
+import ContractDetail from '../../../node/contract/detail/index.vue'
 
 
 function generateAlpha(num) {
@@ -15,13 +16,13 @@ function generateAlpha(num) {
 const ContractStates = [{
   status: 0,
   desc: '未完成'
-},{
+}, {
   status: 1,
   desc: '已发布'
-},{
+}, {
   status: 2,
   desc: '合约待执行'
-},{
+}, {
   status: 3,
   desc: '发布'
 },]
@@ -34,10 +35,12 @@ export default {
       choices: [],
       selectedPolicy: '',
       schemes: [],
-      inited: false
+      inited: false,
+      showDialog: false,
+      currentScheme: {}
     }
   },
-  components: {},
+  components: {ContractDetail},
   props: {
     selectedCallback: {
       type: Function
@@ -77,9 +80,11 @@ export default {
         }
       });
 
-      schemes.forEach((scheme,i) => {
+      schemes.forEach((scheme, i) => {
         scheme.dependencies = scheme.bubbleResources
-        // scheme._contractStatusInfo = ContractStates[i]
+        console.log(scheme)
+        scheme.showContracts = scheme.dutyStatements.length > 0
+        scheme._contractStatusInfo = ContractStates[i]
         scheme.policy.forEach(p => {
           try {
             p._fmtSegmentText = resourceCompiler.beautify(p.segmentText)
@@ -107,8 +112,27 @@ export default {
     gotoResourceSchemeDetailHandler() {
       this.$router.push(`/resource/detail/${this.resource.resourceId}/auth_schemes`);
     },
-    hideAuthSchemeHandler(){
+    hideAuthSchemeHandler() {
       this.$emit('close')
+    },
+    updateContractHandler(contract) {
+      var contracts = this.currentScheme.dutyStatements
+      for (let i = 0; i < contracts.length; i++) {
+        if (contracts[i].contractId === contract.contractId) {
+          Object.assign(contracts[i], contract);
+          break;
+        }
+      }
+    },
+    showContractsHandler(scheme) {
+      this.currentScheme = scheme
+      this.showDialog = true;
+    },
+    expandChangeHandler(row, expandedRows) {
+      var expanded = expandedRows.length > 0
+      if (expanded && !row.inited) {
+        row.inited = true
+      }
     }
   }
 }

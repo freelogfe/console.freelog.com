@@ -58,12 +58,9 @@
 
   import ResourceSchemeTree from '../scheme-tree/index.vue'
   import {intersectionBy, unionBy, differenceBy} from 'lodash'
-  import ResourceLoader from '@/data/resource/loader'
   import PolicyEditor from '@/components/policyEditor/index.vue'
   import {SCHEME_STATUS} from '@/config/scheme'
   import SearchResource from '../search/index.vue'
-  import resourceCompiler from '@freelog/resource-policy-compiler'
-  import CONFIG from '@/config/index'
 
   export default {
     name: 'resource-auth-scheme',

@@ -402,7 +402,7 @@ export default {
       }
 
       if (uploader) {
-        uploader.percentage = file.percentage
+        uploader.percentage = parseInt(file.percentage.toFixed())
       }
     }
   }

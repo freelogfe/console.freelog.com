@@ -21,7 +21,7 @@
             title=""
             style="padding: 0;"
             popper-class="nav-list-pop-wrap"
-            trigger="hover">
+            trigger="click">
             <span class="user-profile" slot="reference">
               <i class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
             </span>
