@@ -133,6 +133,9 @@ export default {
       if (expanded && !row.inited) {
         row.inited = true
       }
+    },
+    expandRowHandler(row) {
+      this.$refs.contractsTable.toggleRowExpansion(row)
     }
   }
 }
