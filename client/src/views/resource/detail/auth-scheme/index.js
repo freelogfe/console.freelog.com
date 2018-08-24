@@ -1,7 +1,7 @@
 import SchemeLoader from '@/data/scheme/loader'
 import resourceCompiler from '@freelog/resource-policy-compiler'
 import ContractDetail from '../../../node/contract/detail/index.vue'
-
+import {SCHEME_PUBLISH_STATUS} from '@/config/scheme'
 
 function generateAlpha(num) {
   num = num || 26;
@@ -73,16 +73,11 @@ export default {
       this.selectedCallback && this.selectedCallback(scheme, policy)
     },
     formatSchemes(schemes) {
-      this.choices = generateAlpha(schemes.length).map((alpha, index) => {
-        return {
-          index: index,
-          label: alpha
+      schemes = schemes.filter((scheme, i) => {
+        if (!this.resource.isOwner && SCHEME_PUBLISH_STATUS.DELETE === scheme.status) {
+          return false
         }
-      });
-
-      schemes.forEach((scheme, i) => {
         scheme.dependencies = scheme.bubbleResources
-        console.log(scheme)
         scheme.showContracts = scheme.dutyStatements.length > 0
         scheme._contractStatusInfo = ContractStates[i]
         scheme.policy.forEach(p => {
@@ -91,9 +86,15 @@ export default {
           } catch (e) {
             p._fmtSegmentText = p.segmentText
           }
-        })
+        });
+        return scheme
       });
-
+      this.choices = generateAlpha(schemes.length).map((alpha, index) => {
+        return {
+          index: index,
+          label: alpha
+        }
+      });
       return schemes;
     },
     loadPolicies() {
