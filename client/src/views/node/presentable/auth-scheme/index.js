@@ -65,23 +65,29 @@ export default {
     },
     saveSchemeHandler() {
       var dutyStatements = this.$refs.schemeTree.getDutyStatements()
-      var resource2schemeMap = {}
       var targetResourceId = this.presentableDetail.resourceId
       var cachedContractsMap = this.cachedContractsMap
       var contracts = [];
 
       dutyStatements.map(dep => {
         let selectedScheme = dep.selectedScheme
+        let contract = {
+          resourceId: dep.resourceId
+        };
+        var schemePolicy;
         if (selectedScheme) {
-          resource2schemeMap[dep.resourceId] = selectedScheme.authSchemeId
-          let selectedSegmentId = selectedScheme.selectedPolicy.segmentId
-          let contract = {
-            resourceId: dep.resourceId
-          };
-          let schemePolicy = {
+          schemePolicy = {
             authSchemeId: selectedScheme.authSchemeId,
-            policySegmentId: selectedSegmentId
+            policySegmentId: selectedScheme.selectedPolicy.segmentId
           };
+        } else if (dep.policySegmentId) {
+          schemePolicy = {
+            authSchemeId: dep.authSchemeId,
+            policySegmentId: dep.policySegmentId
+          };
+        }
+
+        if (schemePolicy) {
           let key = this.getSchemeContractKey(schemePolicy)
           if (cachedContractsMap[key]) {
             contract.contractId = cachedContractsMap[key].contractId
@@ -89,8 +95,6 @@ export default {
             Object.assign(contract, schemePolicy)
           }
           contracts.push(contract)
-        } else {
-          resource2schemeMap[dep.resourceId] = dep.authSchemeId
         }
       });
 

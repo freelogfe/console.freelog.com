@@ -385,12 +385,12 @@ export default {
       var start = false
       for (var i = resources.length - 1; i >= 0; i--) {
         let tmpRes = resources[i]
-        if (start) {
-          if (fn(tmpRes)) {
-            break;
-          }
-        } else if (res.resourceId === tmpRes.resourceId) {
+        if (res.resourceId === tmpRes.resourceId) {
           start = true
+        }
+
+        if (start && fn(tmpRes)) {
+          break;
         }
       }
     },
@@ -454,7 +454,8 @@ export default {
           activeStatus = SCHEME_STATUS.SOME
           bubbleResources.forEach((res) => {
             var duty = this.dutyResourceMap[res.resourceId]
-            if (duty && (duty.activeStatus === SCHEME_STATUS.ALL)) {
+            var resource = duty && this.resourcesMap[duty.resourceId]
+            if (duty && (resource.activeStatus === SCHEME_STATUS.ALL)) {
               cnt++
             }
           });
@@ -469,6 +470,7 @@ export default {
       if (this.parentResource && this.parentResource.resourceId === resource.resourceId) {
         this.$emit('updateResource', resource)
       }
+
       this.$forceUpdate()
     },
     updatePrevSchemesActiveStatus(resource) {
@@ -746,6 +748,7 @@ export default {
           Object.assign(res, detail)
         }
       });
+      console.log(this.dutyStatements)
       return this.dutyStatements
     },
     hideSchemeArrow(scheme) {
