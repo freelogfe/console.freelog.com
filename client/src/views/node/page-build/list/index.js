@@ -74,7 +74,7 @@ export default {
       }
 
       var resourceDetail = pb.resourceDetail;
-      if (resourceDetail.previewImages.length) {
+      if (resourceDetail.previewImages && resourceDetail.previewImages.length) {
         pb.resourceDetail._previewImage = resourceDetail.previewImages[0]
       } else {
         resourceDetail._previewImage = ''
