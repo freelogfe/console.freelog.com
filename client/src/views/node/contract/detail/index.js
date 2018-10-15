@@ -23,7 +23,7 @@ export default {
       eventComponent: '',
       dialogTitle: '',
       showEventExecDialog: false,
-
+      loading: true,
       contractDetail: {},
       resourceDetail: {},
       account: '',
@@ -39,11 +39,9 @@ export default {
     ContractContent
   },
   props: {
-    // contractDetail: Object,
     contractId: String
   },
   watch: {
-    // contractDetail: 'formatData',
     contractId: 'initContractDetail'
   },
   mounted() {
@@ -52,6 +50,7 @@ export default {
   methods: {
     initContractDetail() {
       if (!this.contractId) {
+        this.loading = false
         return
       }
       this.loadContractDetail(this.contractId)
@@ -61,6 +60,7 @@ export default {
               this.resourceDetail = resInfo
             })
           this.contractDetail = ContractUtils.format(contract)
+          this.loading = false
         })
     },
     handleCloseDialog(done) {

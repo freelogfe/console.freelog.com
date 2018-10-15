@@ -116,7 +116,8 @@ export default {
       })
     },
     changePanelHandler(content) {
-      this.nav.content = content
+      // this.nav.content = content
+      this.$router.push({query: {tab: content}})
     }
   }
 }

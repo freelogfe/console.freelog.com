@@ -10,8 +10,7 @@
           <div class="pb-item-content"  @click="gotoResourceDetailHandler(item)">
             <h4 class="pb-title">{{item.presentableName}}</h4>
             <div class="pb-desc">
-              <!--<i class="el-icon-circle-check-outline pb-select-btn" @click="changePageBuildHandler(item)"></i>-->
-              <p v-html="item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro+item.resourceDetail.intro" @click="gotoResourceDetailHandler(item)"></p>
+              <p v-html="item.resourceDetail.intro" @click="gotoResourceDetailHandler(item)"></p>
             </div>
           </div>
         </div>

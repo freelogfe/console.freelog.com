@@ -4,6 +4,7 @@ import ResourceAuthScheme from './auth-scheme.vue'
 import SchemeDataLoader from '@/data/scheme/loader'
 import {loopForBreak} from '@/lib/utils'
 import {SCHEME_STATUS} from '@/config/scheme'
+import ResourceLoader from '@/data/resource/loader'
 
 //intersectionWith
 function getUUID() {
@@ -50,9 +51,13 @@ export default {
         depData.dependencies.forEach((dep) => {
           rids.push(dep.resourceId)
         })
-        this.resourceDetail = depData;
+
+        return ResourceLoader.loadDetail(this.resourceId).then(detail => {
+          this.resourceDetail = Object.assign(detail, depData);
+        })
       })
       .then(() => {
+        console.log('this.resourceDetail', this.resourceDetail)
         SchemeDataLoader.onloadSchemesForResource(this.resourceId, {policyStatus: 2}).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach((scheme) => {
@@ -309,12 +314,14 @@ export default {
       if (!this.resourceDepChanged) {
         return Promise.resolve()
       }
+
+      var meta = Object.assign({
+        dependencies: schemeData.dependencies.map((dep) => {
+          return dep.resourceId
+        })
+      }, this.resourceDetail.meta);
       return this.$services.resource.put(this.resourceDetail.resourceId, {
-        meta: {
-          dependencies: schemeData.dependencies.map((dep) => {
-            return dep.resourceId
-          })
-        }
+        meta: meta
       }).then((res) => {
         if (res.data.errcode === 0) {
           return res;

@@ -13,7 +13,7 @@
                  :params="selectedContractEvent"></component>
     </el-dialog>
 
-    <div>
+    <div v-loading="loading">
       <el-form label-width="120px">
         <el-form-item label="资源名称" style="margin-bottom: 0">
           {{resourceDetail.resourceName}}

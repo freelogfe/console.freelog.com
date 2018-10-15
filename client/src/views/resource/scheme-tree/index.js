@@ -5,7 +5,8 @@ import PolicyEditor from '@/components/policyEditor/index.vue'
 import resourceCompiler from '@freelog/resource-policy-compiler'
 import ResourceIntroInfo from '../intro/index.vue'
 import SchemeDetail from '../detail/auth-scheme/index.vue'
-import {SCHEME_STATUS} from '@/config/scheme'
+import {SCHEME_STATUS, SCHEME_PUBLISH_STATUS} from '@/config/scheme'
+import {POLICY_STATUS} from '@/config/policy'
 
 export default {
   name: 'resource-scheme-tree',
@@ -97,6 +98,7 @@ export default {
           this.resourceSchemesCache[oldResId].schemes = this.schemes
         }
       }
+
       this.initView()
       this.changeViewMode('tree')
     },
@@ -104,7 +106,7 @@ export default {
       if (newRes && oldRes && (newRes.resourceId === oldRes.resourceId)) {
         return;
       }
-      if (oldRes) {
+      if (oldRes && oldRes.resourceId) {
         if (!this.resourceSchemesCache[oldRes.resourceId]) {
           this.resourceSchemesCache[oldRes.resourceId] = {
             schemes: this.schemes
@@ -131,11 +133,6 @@ export default {
   },
   methods: {
     fillDutyStatements() {
-      this.contracts.forEach(contract => {
-        var rid = contract.resourceId
-        this.dutyResourceMap[rid] = contract
-      });
-      this.dutyStatements = this.contracts
       this.schemes.forEach(dep => {
         this.onSetResourceDetail(dep)
         this.haveSelectedScheme(dep)
@@ -147,6 +144,7 @@ export default {
     },
     initView() {
       var resourceId = this.resourceId || this.resource.resourceId
+
       if (!resourceId) {
         this.schemes = []
         return Promise.resolve()
@@ -154,6 +152,13 @@ export default {
 
       var resourceSchemesCache = this.resourceSchemesCache
       var resourceCache = resourceSchemesCache[resourceId]
+
+      this.dutyStatements = this.contracts
+      this.contracts.forEach(contract => {
+        var rid = contract.resourceId
+        this.dutyResourceMap[rid] = contract
+      });
+
       if (resourceCache && resourceCache.schemes) {
         this.schemes = []
         this.pushSchemeDep(resourceCache.resource)
@@ -190,44 +195,55 @@ export default {
     },
     loadSchemesForResource(resourceId) {
       return SchemeDataLoader.onloadSchemesForResource(resourceId, {
-        authSchemeStatus: 1,
-        policyStatus: 1
-      })
-        .then((schemes) => {
-          var authSchemeIds = schemes.map(scheme => {
-            return scheme.authSchemeId
+        // authSchemeStatus: 1,
+        policyStatus: 2
+      }).then((schemes) => {
+        var authSchemeIds = schemes.map(scheme => {
+          return scheme.authSchemeId
+        });
+
+        if (!authSchemeIds.length) {
+          return schemes
+        }
+        var params = {
+          authSchemeIds: authSchemeIds.join(',')
+        }
+
+        if (this.$route.params.nodeId) {
+          params.nodeId = this.$route.params.nodeId
+        }
+
+        return this.$axios.get('/v1/auths/authSchemeIdentityAuth', {
+          params: params
+        }).then(res => {
+          var list = res.getData();
+          var authsMap = {};
+          var duty = this.dutyResourceMap[resourceId];
+          list.forEach(schemeAuths => {
+            schemeAuths.policy.forEach(auth => {
+              authsMap[`${schemeAuths.authSchemeId}_${auth.segmentId}`] = (auth.authResult && auth.authResult.isAuth)
+            })
           });
 
-          if (!authSchemeIds.length) {
-            return schemes
-          }
-          var params = {
-            authSchemeIds: authSchemeIds.join(',')
-          }
+          schemes = schemes.filter(scheme => {
+            //只展示已发布的和已选择的
+            var isPublished = scheme.status === SCHEME_PUBLISH_STATUS.PUBLISHED;
+            var isSelected = (duty && duty.authSchemeId === scheme.authSchemeId)
+            if (!isPublished && !isSelected) {
+              return
+            }
 
-          if (this.$route.params.nodeId) {
-            params.nodeId = this.$route.params.nodeId
-          }
-
-          return this.$axios.get('/v1/auths/authSchemeIdentityAuth', {
-            params: params
-          }).then(res => {
-            var list = res.getData();
-            var authsMap = {};
-            list.forEach(schemeAuths => {
-              schemeAuths.policy.forEach(auth => {
-                authsMap[`${schemeAuths.authSchemeId}_${auth.segmentId}`] = (auth.authResult && auth.authResult.isAuth)
-              })
+            scheme.policy = scheme.policy.filter(p => {
+              if ((isPublished && p.status === POLICY_STATUS.show) || duty.policySegmentId === p.segmentId) {
+                p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`];
+                return p;
+              }
             });
-
-            schemes.forEach(scheme => {
-              scheme.policy.forEach(p => {
-                p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`]
-              })
-            });
-            return schemes
-          })
+            return scheme
+          });
+          return schemes
         })
+      })
     },
     checkResourceActiveStatus(dep) {
       const key = 'resourceId'
@@ -369,12 +385,12 @@ export default {
       var start = false
       for (var i = resources.length - 1; i >= 0; i--) {
         let tmpRes = resources[i]
-        if (start) {
-          if (fn(tmpRes)) {
-            break;
-          }
-        } else if (res.resourceId === tmpRes.resourceId) {
+        if (res.resourceId === tmpRes.resourceId) {
           start = true
+        }
+
+        if (start && fn(tmpRes)) {
+          break;
         }
       }
     },
@@ -438,7 +454,8 @@ export default {
           activeStatus = SCHEME_STATUS.SOME
           bubbleResources.forEach((res) => {
             var duty = this.dutyResourceMap[res.resourceId]
-            if (duty && (duty.activeStatus === SCHEME_STATUS.ALL)) {
+            var resource = duty && this.resourcesMap[duty.resourceId]
+            if (duty && (resource.activeStatus === SCHEME_STATUS.ALL)) {
               cnt++
             }
           });
@@ -453,6 +470,7 @@ export default {
       if (this.parentResource && this.parentResource.resourceId === resource.resourceId) {
         this.$emit('updateResource', resource)
       }
+
       this.$forceUpdate()
     },
     updatePrevSchemesActiveStatus(resource) {
@@ -730,6 +748,7 @@ export default {
           Object.assign(res, detail)
         }
       });
+      console.log(this.dutyStatements)
       return this.dutyStatements
     },
     hideSchemeArrow(scheme) {
