@@ -105,8 +105,20 @@ export default {
       if (targetResource) {
         if (targetResource.activeStatus === 2) {
           this.updatePresentableSchemes({
-            contracts: contracts
+            contracts: filterSameContracts(contracts)
           })
+
+          function filterSameContracts (contracts){
+            var tempMap = new Map()
+            return contracts.filter(it =>{
+              if(tempMap.get(it.authSchemeId)){
+                return false
+              }else{
+                tempMap.set(it.authSchemeId, 1)
+                return true
+              }
+            })
+          }
         } else {
           this.$message.error('有资源未选择授权策略')
         }
