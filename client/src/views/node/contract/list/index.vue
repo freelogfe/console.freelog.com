@@ -6,7 +6,8 @@
       <ul class="presentable-list">
         <li class="presentable-item" v-for="presentable in presentables">
           <div class="presentable-name"
-               :class="[presentable.masterContract?('contract-status-'+presentable.masterContract.status):'']"
+               :class="[presentable.masterContract?('contract-status-'+presentable.masterContract.status):'',
+               {'current':currentContract.contractId===presentable.masterContract.contractId}]"
                @click="showContractDetailHandler(presentable.masterContract)">
             <i class="dot"></i>{{presentable.presentableName}}
             <span v-if="presentable.masterContract">
@@ -16,7 +17,7 @@
             <span v-else><router-link :to="resolveContractCreatorLink(presentable)">未创建合同</router-link></span></div>
           <ul class="contract-list" v-if="presentable.contracts.length">
             <li class="contract-item" v-for="contract in presentable.contracts"
-                :class="['contract-status-'+contract.status]"
+                :class="['contract-status-'+contract.status, {'current':currentContract.contractId===contract.contractId}]"
                 @click="showContractDetailHandler(contract)">
               <div><i class="dot"></i>子资源合同ID： {{contract.contractId}}</div>
               <div v-if="contract.resourceDetail">

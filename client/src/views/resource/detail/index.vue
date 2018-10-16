@@ -19,7 +19,7 @@
     <div class="res-detail-content" ref="detailContent" :style="{transform: contentTransform}">
       <div class="res-detail-hd clearfix">
         <div class="res-author-avatar">
-          <img src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg"
+          <img :src="`https://image.freelog.com/headImage/${resourceDetail.resourceInfo.userId}?x-oss-process=style/head-image`"
                alt="">
         </div>
         <div class="res-digest">

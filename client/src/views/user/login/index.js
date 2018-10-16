@@ -31,12 +31,27 @@ export default {
   },
   mounted() {
     var redirect = this.$route.query.redirect;
-    if (isSafeUrl(redirect)) {
-      this.signUpLink += `?redirect=${redirect}`
-    }
+
+
+    this.$store.dispatch('checkUserSession').then((isLogined) => {
+      if (isLogined) {
+        this.redirect()
+      } else if (isSafeUrl(redirect)) {
+        this.signUpLink += `?redirect=${redirect}`
+      }
+    })
+
   },
 
   methods: {
+    redirect() {
+      var redirect = this.$route.query.redirect;
+      if (isSafeUrl(redirect)) {
+        location.replace(redirect)
+      } else {
+        this.$router.replace('/')
+      }
+    },
     submit(ref) {
       var self = this;
       this.$refs[ref].validate(valid => {

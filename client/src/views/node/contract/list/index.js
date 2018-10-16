@@ -20,7 +20,6 @@ export default {
   },
 
   mounted() {
-    var self = this;
     var query = this.$route.query;
 
     this.loadPresentables({nodeId: this.$route.params.nodeId, isOnline: 2})
@@ -40,7 +39,7 @@ export default {
                 contractIds.push(contract.contractId)
                 contractsMap[contract.contractId] = contract
                 ContractUtils.format(contract);
-                if (query.contractId) {
+                if (query.contractId === contract.contractId) {
                   this.showContractDetailHandler(contract)
                 }
                 if (contract.isMasterContract) {
@@ -48,7 +47,7 @@ export default {
                 } else {
                   return contract
                 }
-              });
+              })
             })
             this.presentables = data
           })
@@ -122,9 +121,8 @@ export default {
           }
           var contracts = res.data.data.dataList
 
-          var contractIds = contracts.map((c) => {
+          contracts.forEach((c) => {
             ContractUtils.format(c)
-            return c.contractId
           })
 
           if (!contracts.length) {

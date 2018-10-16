@@ -1,6 +1,3 @@
-import store from '../store'
-import {nprogress} from '../lib'
-
 import Views from '@/views'
 
 //节点操作相关的页面
@@ -13,24 +10,6 @@ export const nodeItemRoute = {
     title: ':nodeId节点' //:key 可动态通过route.params上的k-v进行替换
   },
   children: [
-    {
-      path: 'presentables',
-      meta: {
-        requiresAuth: true,
-        title: 'presentables',
-        type: 'node'  //nav router type
-      },
-      component: Views.presentableList
-    },
-    {
-      path: 'contracts',
-      meta: {
-        requiresAuth: true,
-        title: '资源合同',
-        type: 'node'
-      },
-      component: Views.contractList
-    },
     {
       path: 'presentable',
       meta: {
@@ -59,44 +38,7 @@ export const nodeItemRoute = {
             type: 'node'
           },
           component: Views.presentableSchemeDetail
-        },
-        {
-          path: 'detail',
-          meta: {
-            requiresAuth: true,
-            title: '节点资源详情',
-            type: 'node'
-          },
-          component: Views.presentableDetail
-        },
-        {
-          path: 'create',
-          meta: {
-            requiresAuth: true,
-            title: '创建presentable',
-            type: 'node'
-          },
-          component: Views.presentableCreator
         }
-      ]
-    },
-    {
-      path: 'setting',
-      meta: {
-        requiresAuth: true,
-        title: '节点设置'
-      },
-      component: Views.container,
-      children: [
-        {
-          path: 'pagebuilds',
-          meta: {
-            requiresAuth: true,
-            title: 'PageBuild管理',
-            type: 'node'
-          },
-          component: Views.pagebuildList
-        },
       ]
     }
   ]

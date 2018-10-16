@@ -1,17 +1,5 @@
 <template>
   <section class="login-section">
-    <!--<image-crop-upload field="file"-->
-                       <!--@crop-success="cropSuccess"-->
-                       <!--@crop-upload-success="cropUploadSuccess"-->
-                       <!--@crop-upload-fail="cropUploadFail"-->
-                       <!--v-model="showImageCropUploader"-->
-                       <!--:width="300"-->
-                       <!--:height="300"-->
-                       <!--url="/api/profile"-->
-                       <!--:params="params"-->
-                       <!--:headers="headers"-->
-                       <!--img-format="png"-->
-    <!--&gt;</image-crop-upload>-->
     <el-form class="user-form" auto-complete="off" :model="userInfo" :rules="rules" ref="loginForm" label-width="100px">
       <el-form-item prop="userName" label="用户姓名">
         <el-input v-model="userInfo.userName" placeholder="请输入用户姓名"></el-input>

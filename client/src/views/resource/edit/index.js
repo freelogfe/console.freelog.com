@@ -25,6 +25,9 @@ export default {
     if (params.resourceId) {
       ResourceLoader.loadDetail(params.resourceId)
         .then((data) => {
+          if (data.userId !== this.session.user.userId) {
+            return this.$router.push('/')
+          }
           this.resourceDetail = data
         }).catch(this.$error.showErrorMessage)
     }

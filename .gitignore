@@ -9,8 +9,7 @@ run/
 .cache/
 
 node_modules
-npm-debug.log
-
+console.tar
 *.iml
 *.ipr
 *.iws

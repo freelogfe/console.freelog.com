@@ -7,7 +7,10 @@ export default {
   data() {
     return {
       navRoutes: [],
-      isSideBarOpen: true
+      isSideBarOpen: true,
+      domainPostfix: /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
+      isLoadAvatarError: false,
+      avatarUrl: ''
     }
   },
   computed: {
@@ -31,8 +34,19 @@ export default {
     this.$store.dispatch('loadNodes')
   },
   mounted() {
+    if (!this.session.user.userId) {
+      this.$store.dispatch('getCurrentUser').then(userInfo=>{
+        this.setAvatarUrl(userInfo.userId)
+      })
+    } else {
+      this.setAvatarUrl(this.session.user.userId)
+    }
   },
+
   methods: {
+    setAvatarUrl(userId){
+      this.avatarUrl = `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image`
+    },
     listenWindowVisibility() {
       var self = this
       var hidden = 'hidden';
@@ -116,6 +130,12 @@ export default {
     },
     searchHandler(qs) {
       this.$router.push({path: '/',query: {q: qs}})
+    },
+    gotoSetting(){
+
+    },
+    loadAvatarError(){
+      this.isLoadAvatarError = true
     }
   }
 }

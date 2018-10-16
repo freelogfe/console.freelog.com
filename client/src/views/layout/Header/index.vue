@@ -1,16 +1,16 @@
 <template>
   <header class="nav-header">
-    <div class="brand">
-      <router-link to="/">F</router-link>
+    <router-link to="/"  class="brand">
+      <i>F</i>
       <span class="page-title">{{pageTitle}}</span>
-    </div>
+    </router-link>
     <nav class="toolbar">
       <ul class="navbar-menu">
         <li class="nav-right-menu-item">
           <search-input @search="searchHandler"></search-input>
           <!--<el-button type="text"><i class="el-icon-search"></i></el-button>-->
         </li>
-        <li class="nav-right-menu-item">
+        <li class="nav-right-menu-item" hidden>
           <el-button type="text"><i class="el-icon-bell"></i></el-button>
           <el-badge value="1" class="badge-item"></el-badge>
         </li>
@@ -23,7 +23,12 @@
             popper-class="nav-list-pop-wrap"
             trigger="hover">
             <span class="user-profile" slot="reference">
-              <i class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
+                            <!--<i class="el-icon-fa-user-circle" :title="session.user.nickname"></i>-->
+
+              <i v-if="isLoadAvatarError" class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
+              <img v-else :src="avatarUrl"
+                   @error="loadAvatarError"
+                   alt="">
             </span>
             <ul class="my-profile-items">
               <li class="my-profile-item center hover">
@@ -48,8 +53,9 @@
                 </ul>
               </li>
               <li class="my-profile-item center hover">
-                <router-link to="/account/settings" class="nav-link"><i class="el-icon-setting tool-icon"></i>设置
-                </router-link>
+                <a class="nav-link" :href="`//www${domainPostfix}/profile`" target="_blank">
+                  <i class="el-icon-setting tool-icon"></i>设置
+                </a>
               </li>
               <li class="my-profile-item center hover" @click="logout">
                 <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出

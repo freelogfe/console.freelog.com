@@ -18,6 +18,7 @@ const user = {
 
   mutations: {
     [types.CHANGE_SESSION](state, data) {
+      console.log(data)
       Object.assign(state.session, data);
       sessionStore.set('user_session', state.session);
     },
@@ -49,21 +50,24 @@ const user = {
     [types.CHECK_USER_SESSION]({commit, getters}) {
       var session = getters.session || sessionStore.get('user_session')
       var authInfo = (session && session.user)
+      var userInfo = {}
       if (!authInfo || !authInfo.userId) {
-        authInfo = cookieStore.get('authInfo')
-        var jwt = authInfo.split('.')
-        var userInfo = atob(jwt[1])
-        try {
-          userInfo = JSON.parse(userInfo)
-        } catch (err) {
-          console.error(err)
-          userInfo = {}
+        authInfo = cookieStore.get('authInfo') || ''
+        if (authInfo) {
+          try {
+            var jwt = authInfo.split('.')
+            userInfo = atob(jwt[1])
+            userInfo = JSON.parse(userInfo)
+          } catch (err) {
+            console.error(err)
+            userInfo = {}
+          }
         }
       } else {
         userInfo = authInfo
       }
       return new Promise((resolve) => {
-        var logged = (!(!getters.session || getters.session.user.userId !== userInfo.userId))
+        var logged = (getters.session && userInfo.userId && getters.session.user.userId !== userInfo.userId)
         resolve(logged)
       })
     },

@@ -2,7 +2,7 @@
   <div class="res-intro-wrapper">
     <div class="user-avatar">
       <img class="resource-author-img"
-           src="//freelog-image.oss-cn-shenzhen.aliyuncs.com/preview/e9bb1c2d-33ce-4a65-93c1-87c88abb4188.jpg"
+           :src="`https://image.freelog.com/headImage/${resource.userId}?x-oss-process=style/head-image`"
            alt="">
     </div>
     <div class="res-content">
