@@ -46,6 +46,12 @@
           $dom.className = `${curClassName} ${className}`
         }
       },
+      highlightCurrentState (){
+        if(this.currentFsmState !== 'none') {
+          var $targDom = this.$el.querySelector(`.bp-s-${this.currentFsmState}`)
+          this.toggleClass($targDom, 'active')
+        }
+      },
       handlerProxy (event){
         const dataset = event.target.dataset
         const handlerName = dataset.handler
@@ -127,12 +133,11 @@
 
     },
     mounted() {
-      if(this.currentFsmState !== 'none') {
-        var $targDom = this.$el.querySelector(`.bp-s-${this.currentFsmState}`)
-        this.toggleClass($targDom, 'active')
-      }
-
+      this.highlightCurrentState()
     },
+    updated() {
+      this.highlightCurrentState()
+    }
   }
 </script>
 
