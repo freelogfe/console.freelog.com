@@ -1,5 +1,6 @@
 import resourcePolicyLangParser from '@freelog/resource-policy-lang'
-import presentableCompiler from '@freelog/presentable-policy-compiler'
+import {highlightPolicy} from '@freelog/resource-policy-lang/lib/presentablePolicyHighlight'
+
 
 import rules from '../rules'
 
@@ -38,13 +39,13 @@ export default {
     validatePolicy() {
       var tpl = this.data.template
       var isNodeType = (this.type === 'node')
-      var ret = isNodeType ? presentableCompiler.compile(tpl) : resourcePolicyLangParser.compile(tpl);
+      var ret = resourcePolicyLangParser.compile(tpl);
 
       if (ret.errorMsg) {
         this.$message.error(ret.errorMsg)
         return false
       } else {
-        this.data.template = isNodeType ? presentableCompiler.beautify(tpl) : resourcePolicyLangParser.beautify(tpl)
+        this.data.template = highlightPolicy(tpl)
         this.$message.success('校验通过')
         return true
       }

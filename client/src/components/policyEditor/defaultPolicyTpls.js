@@ -1,7 +1,9 @@
 export const resource = [
   {
-    template: `for nodes:
-    in <init> : terminate
+    template: `for public:
+initial:
+active
+terminate
   `,
     name: '免费'
   },
@@ -17,8 +19,9 @@ export const resource = [
 export const presentable = [
   {
     template: `for public:
-    in <init> : terminate
-  `,
+initial:
+active
+terminate`,
     name: '免费'
   },
   {

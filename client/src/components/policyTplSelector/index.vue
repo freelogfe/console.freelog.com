@@ -7,13 +7,6 @@
         prop="name"
         label="模板名称">
       </el-table-column>
-      <!--<el-table-column-->
-      <!--align="center"-->
-      <!--label="状态">-->
-      <!--<template slot-scope="scope">-->
-      <!--{{resolveStatus(scope.row.status)}}-->
-      <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column
         label=""
         align="center"

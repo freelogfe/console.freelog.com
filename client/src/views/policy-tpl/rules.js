@@ -1,5 +1,5 @@
 export const name = [
-  {min: 3, max: 40, message: '长度在 3 到 40 个字符', trigger: 'blur'},
+  {min: 2, max: 40, message: '长度在 2 到 40 个字符', trigger: 'blur'},
   {required: true, message: '模板描述必填', trigger: 'blur'}
 ]
 
