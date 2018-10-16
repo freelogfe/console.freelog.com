@@ -1,5 +1,5 @@
 import SchemeLoader from '@/data/scheme/loader'
-import resourceCompiler from '@freelog/resource-policy-compiler'
+import { highlightPolicy } from '@freelog/resource-policy-lang/lib/presentablePolicyHighlight'
 import ContractDetail from '../../../node/contract/detail/index.vue'
 import {SCHEME_PUBLISH_STATUS} from '@/config/scheme'
 
@@ -82,9 +82,9 @@ export default {
         scheme._contractStatusInfo = ContractStates[i]
         scheme.policy.forEach(p => {
           try {
-            p._fmtSegmentText = resourceCompiler.beautify(p.segmentText)
+            p._fmtSegmentText = highlightPolicy(p.policyText)
           } catch (e) {
-            p._fmtSegmentText = p.segmentText
+            p._fmtSegmentText = p.policyText
           }
         });
         return scheme

@@ -41,9 +41,9 @@
             </ul>
           </div>
           <div class="policy-content-input-padding">
-            <pre v-if="policy.policySegmentId" class="policy-text">{{policy.policyText}}</pre>
+            <div v-if="policy.policySegmentId" class="policy-text" v-html="policy.policyText"></div>
             <template v-else>
-              <pre class="input-placeholder">{{policy.policyText}}</pre>
+              <div class="input-placeholder">{{policy.policyText}}</div>
               <textarea
                 class="policy-content-input"
                 spellcheck="false"

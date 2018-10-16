@@ -13,9 +13,9 @@ export const CONTRACT_STATUS_TIPS = {
   '-1': '未创建合同',
   1: '未开始执行',
   2: '执行中',
-  3: '生效中',
-  4: '用户终止',
-  5: '系统终止',
+  3: '系统锁住',
+  4: '生效中',
+  5: '',
   6: '合同已终止'
 }
 
@@ -34,16 +34,16 @@ export const CONTRACT_STATUS_COLORS = {
     desc: '执行中'
   },
   3: {
+    type: 'info',
+    desc: '系统终止'
+  },
+  4: {
     type: 'success',
     desc: '生效中'
   },
-  4: {
-    type: 'info',
-    desc: '用户终止'
-  },
   5: {
     type: 'info',
-    desc: '系统终止'
+    desc: ''
   },
   6: {
     type: 'info',

@@ -13,11 +13,11 @@
       <i class="el-icon-refresh"
          :class="{'el-icon-loading': refreshing}"
          @click="refreshHandler"
-         v-if="showRefreshing && detail.status < 3"></i>
+         v-if="showRefreshing && detail.status < 4"></i>
     </el-form-item>
     <el-form-item label="状态机状态">
-      <el-tag :type="detail.status===3?'success':'warning'">
-        {{detail.fsmState}}
+      <el-tag :type="detail.status===4?'success':'warning'">
+        {{detail.contractClause.currentFsmState}}
       </el-tag>
     </el-form-item>
     <el-form-item label="甲方">
