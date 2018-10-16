@@ -108,6 +108,11 @@
       presentCountEvent(code, params, eventId) {},
       escrowExceedAmount(code, params, eventId) {
         console.log('run escrowExceedAmount - code, params, eventId --', code, params, eventId)
+        switch (params.currencyUnit) {
+          case 'feather': {
+            break
+          }
+        }
       },
       // 保证金没收
       escrowConfiscated(code, params, eventId){
