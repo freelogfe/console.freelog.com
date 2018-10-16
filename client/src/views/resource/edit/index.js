@@ -47,7 +47,7 @@ export default {
     },
     updateResourceHandler() {
       this.executeNext(detail => {
-        console.log(detail)
+        // console.log(detail)
         this.$message.success('更新成功')
       })
     }

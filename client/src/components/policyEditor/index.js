@@ -1,4 +1,5 @@
-import resourceCompiler from '@freelog/resource-policy-compiler'
+import resourceCompiler from '@freelog/resource-policy-lang'
+import {highlightPolicy} from '@freelog/resource-policy-lang/lib/presentablePolicyHighlight'
 import presentableCompiler from '@freelog/presentable-policy-compiler'
 
 import PolicyTemplateSelector from './tool/policyTpl.vue'
@@ -70,15 +71,15 @@ export default {
     fillPolicyList(list) {
       if (list.policy) {
         this.policyList = list.policy.map(p => {
-          var segmentText = p.segmentText
+          var policyText = p.policyText
           var _compiler = compiler[this.config.type];
-          var ret = _compiler.compile(segmentText)
+          var ret = _compiler.compile(policyText)
           if (!ret.errorMsg) {
-            segmentText = _compiler.beautify(segmentText);
+            policyText = highlightPolicy(policyText);
           }
           return {
             policyName: p.policyName || '',
-            policyText: segmentText,
+            policyText: policyText,
             policySegmentId: p.segmentId,
             disabled: p.status === 0
           }
@@ -93,7 +94,7 @@ export default {
       var _compiler = compiler[this.config.type];
       var ret = _compiler.compile(this.policyText)
       if (!ret.errorMsg) {
-        this.policyText = _compiler.beautify(this.policyText);
+        this.policyText = highlightPolicy(this.policyText);
         this.$emit('input', this.policyText)
         this.$emit('validate', {done: true})
       } else {

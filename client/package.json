@@ -14,7 +14,7 @@
     "@antv/g6": "^2.0.5-beta.6",
     "@freelog/presentable-policy-compiler": "0.0.11",
     "@freelog/resource-policy-compiler": "0.0.11",
-    "@freelog/resource-policy-lang": "0.0.13",
+    "@freelog/resource-policy-lang": "0.0.27",
     "axios": "^0.18.0",
     "codemirror": "^5.39.2",
     "date-fns": "^1.29.0",

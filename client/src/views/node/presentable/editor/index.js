@@ -1,7 +1,6 @@
 import TagsEditor from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from "@/config/resource";
 import PresentablePolicy from '@/components/policyEditor/index.vue'
-import compiler from '@freelog/presentable-policy-compiler'
 import {cloneDeep} from 'lodash'
 import CONFIG from '@/config/index'
 

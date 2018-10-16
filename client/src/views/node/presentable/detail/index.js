@@ -1,4 +1,3 @@
-import compiler from '@freelog/presentable-policy-compiler'
 import PresentablePolicy from '@/components/policyEditor/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
 import {RESOURCE_TYPES} from '@/config/resource'

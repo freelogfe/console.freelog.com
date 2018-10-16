@@ -37,7 +37,7 @@
               <el-collapse>
                 <el-collapse-item :title="policy.policyName" :name="index" :key="index"
                                   v-for="(policy, index) in scheme.policy">
-                  <pre class="policy-segment-text">{{policy._fmtSegmentText}}</pre>
+                  <div class="policy-segment-text" v-html="policy._fmtSegmentText"></div>
                 </el-collapse-item>
               </el-collapse>
             </div>
