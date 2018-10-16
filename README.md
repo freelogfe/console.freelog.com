@@ -1,51 +1,59 @@
-# freelog console system
+# bashboard
 
-## client
+> dashboard of freelog
 
-### 技术
+## features
 
-1. [vuejs](https://github.com/vuejs/vue)
-2. [elementUI](https://github.com/ElementUI/theme-default)
-3. [axios](https://github.com/axios/axios)
-4. [vuex](https://github.com/vuejs/vuex)
-5. [vue-router](https://github.com/vuejs/vue-router)
+- SPA
+- [Vue2](https://github.com/vuejs/vue)
+- [Webpack3](https://github.com/webpack/webpack)
+- [ElementUI](https://github.com/ElemeFE/element)
+- vuex
+- vue-router
+- axios
 
-### 目录结构
-    
-<pre>    
-    src
-    ├── App.vue 
-    ├── assets  静态资源，如图片
-    ├── components 公共vue组件
-    ├── lib  公共js库配置
-    ├── main.js
-    ├── plugins  Vue插件配置
-    ├── router  路由设计
-    ├── services   接口服务
-    ├── store
-    ├── styles  公共样式文件
-    └── views  所有页面
-</pre>    
+## Build Setup
 
-### 功能
+``` bash
+# install dependencies
+npm install
 
-todo
+# serve with hot reload at localhost:8080
+npm run dev
 
-### 开发&构建
+# build for production with minification
+npm run build
 
-** 启动开发服务器 **
-
-```sh
-$ npm run dev
+# build for production and view the bundle analyzer report
+npm run build --report
 ```
 
-** 构建代码发布 **
+## 开发
+
+### 开发一个页面
+- 创建vue file
+- 将vue实例在views/index.js输出
+- 在router目录下，添加对应的路由，导入对应的vue实例，将vue实例挂载到router的component上
+
+
+## 部署（临时方案）
+
+打包
 
 ```sh
 $ npm run build
+$ npm run pack
 ```
 
+构建打包后之后，将console.tar提交到服务器/data/web目录后，在服务器的/data/web目录下执行
 
-## server
+```sh
+$ sh extract.sh
+```
 
-todo
+### todo
+
+aliyun oss构建自动部署
+
+
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
