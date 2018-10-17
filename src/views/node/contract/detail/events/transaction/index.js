@@ -17,8 +17,7 @@ export default {
     this.$services.accounts.get().then(function (res) {
       self.options = res.data.data;
     })
-    this.queryOrder()
-      .then(this.checkOrderStatus.bind(this))
+    // this.queryOrder().then(this.checkOrderStatus.bind(this))
   },
   computed: {
     unitType() {
@@ -32,7 +31,7 @@ export default {
       //     break;
       //   }
       // }
-      return this.params.params[0].substr(0, 4)
+      return this.params.currencyUnit
     }
   },
   props: ['contractDetail', 'params'],
@@ -90,14 +89,15 @@ export default {
     },
     pay() {
       var self = this;
-      this.$services.pay.post({
-        "targetId": self.contractDetail.contractId,
-        "orderType": 1,
-        "fromAccountId": self.fromAccountId,
-        "toAccountId": self.params.params[0],
-        "amount": self.params.params[1],
-        "password": self.password
-      }).then((res) => {
+      this.$axios.post('/v1/contracts/events/payment', {
+        contractId: this.params.contractId,
+        eventId: this.params.eventId,
+        fromAccountId: this.fromAccountId,
+        amount: +this.params.amount.literal,
+        password: this.password
+      })
+      .then((res) => {
+        console.log('res ---', res)
         if (res.data.errcode === 0) {
           this.showError = false
           this.payResultHandler(res.data.data)
@@ -106,7 +106,10 @@ export default {
           this.showError = true
           this.$message.error(res.data.msg)
         }
-      }).catch(this.$error.showErrorMessage)
+      }).catch(e => {
+        console.log('e --', e)
+        this.$error.showErrorMessage(e)
+      })
     }
   }
 }

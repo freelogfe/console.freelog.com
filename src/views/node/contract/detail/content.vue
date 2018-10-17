@@ -108,6 +108,13 @@
       presentCountEvent(code, params, eventId) {},
       escrowExceedAmount(code, params, eventId) {
         console.log('run escrowExceedAmount - code, params, eventId --', code, params, eventId)
+        var options = Object.assign({}, params, {
+          type: 'transaction',
+          eventName: 'escrowExceedAmount',
+          eventId,
+          contractId: this.contractId
+        })
+        this.$emit('execute', options)
         switch (params.currencyUnit) {
           case 'feather': {
             break
@@ -155,7 +162,7 @@
 
     .bp-audience{ }
     .bp-declaration, .bp-state, .bp-s-row:not(:first-child){
-      padding-left: 3em;
+      padding-left: 1em;
     }
     .bp-state.active{
       background: #E3F0FF;

@@ -97,6 +97,7 @@ export default {
       })
     },
     executeContractHandler(params) {
+      console.log('params --', params)
       var eventComConfig = eventComponentMap[params.type]
       this.selectedContractEvent = params
       this.eventComponent = eventComConfig.type;
