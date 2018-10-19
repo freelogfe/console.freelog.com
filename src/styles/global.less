@@ -134,17 +134,22 @@ html body {
 
 // policy 高亮
 .beauty-poliycy-box{
+  display: inline-block;
   font-size: 14px; line-height: 1.6;
   color: #999;
+  overflow: hidden;
 
   .bp-audience{ }
   .bp-declaration, .bp-state, .bp-s-row:not(:first-child){
     padding-left: 1em;
   }
+
+
+
   .bp-state.active{
-    background: #E3F0FF;
+    margin-bottom: 5px;
     border: 1px solid #B3D7FF; border-radius: 20px;
-    color: #222;
+    color: #222; background: #E3F0FF;
   }
   .bp-state.active .bp-s-transition{
     color: #EE6723;

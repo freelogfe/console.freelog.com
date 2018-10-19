@@ -14,7 +14,7 @@ export default {
 
   methods: {
     loadLicenses() {
-      var promises = this.params.params.map((rid) => {
+      var promises = this.params.licenseIds.map((rid) => {
         return this.loadLicenseContent(rid)
       })
 
@@ -37,7 +37,7 @@ export default {
       this.$services.signingLicenses.post({
         contractId: this.contractDetail.contractId,
         eventId: this.params.eventId,
-        licenseIds: this.params.params,
+        licenseIds: this.params.licenseIds,
         nodeId: this.$route.params.nodeId
       }).then((res) => {
         if (res.data.errcode === 0) {

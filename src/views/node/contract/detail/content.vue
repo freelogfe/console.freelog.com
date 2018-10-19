@@ -28,6 +28,7 @@
         return this.contract.contractClause.fsmStates
       },
       currentFsmState (){
+        return 'auth'
         return this.contract.contractClause.currentFsmState
       },
       policyText (){
@@ -46,10 +47,12 @@
           $dom.className = `${curClassName} ${className}`
         }
       },
-      highlightCurrentState (){
+      highlightCurrentState (state){
         if(this.currentFsmState !== 'none') {
-          var $targDom = this.$el.querySelector(`.bp-s-${this.currentFsmState}`)
-          this.toggleClass($targDom, 'active')
+          var $currentDom = this.$el.querySelector('.bp-state.active')
+          var $targDom = this.$el.querySelector(`.bp-s-${state || this.currentFsmState}`)
+          $currentDom && this.toggleClass($currentDom, 'active')
+          $targDom && this.toggleClass($targDom, 'active')
         }
       },
       handlerProxy (event){
@@ -73,75 +76,89 @@
       },
       // 签约协议
       signingEvent(code, params, eventId ) {
-        this.$axios.post('/v1/contracts/events/signingLicenses', {
-          contractId: this.contractId,
+        console.log('run escrowExceedAmount - code, params, eventId --', code, params, eventId)
+        var options = Object.assign({}, params, {
+          type: 'signing',
           eventId,
-          licenseIds: parmas.licenseResourceId,
-          nodeId: window.__auth_info__.__auth_node_id__
+          licenseIds: params.licenseResourceId,
+          contractId: this.contractId
         })
-          .then(resp => {
-            if(resp.status === 200) {
-              if(resp.data.errcode === 0) {
-                console.log('license sign success!')
-              }else {
-                console.log(`license sign fail! error: ${resp.data.msg}`)
-              }
-            }else {
-              console.log('/v1/contracts/events/signingLicenses 请求失败！')
-            }
-          })
+        this.$emit('execute', options)
       },
       cycleEndEvent(code, params, eventId) {},
       // 交易事件
       transactionEvent(code, params, eventId) {
-        // this.$axios.post('',{
-        //   contractId: this.contractId,
-        //   eventId: params.eventId,
-        //   fromAccountId:"feth102dac4f6ab",
-        //   amount: params.amount,
-        //   "password":"012345"
-        // })
+        var options = Object.assign({}, params, {
+          type: 'transaction',
+          payType: 'transaction',
+          eventId,
+          amount: params.amount.literal,
+          contractId: this.contractId
+        })
+        this.$emit('execute', options)
       },
       settlementEvent(code, params, eventId) {},
       viewCountEvent(code, params, eventId) {},
       recontractCountEvent(code, params, eventId) {},
       presentCountEvent(code, params, eventId) {},
+      // 收取保证金 - 弹窗 - 支付
       escrowExceedAmount(code, params, eventId) {
         console.log('run escrowExceedAmount - code, params, eventId --', code, params, eventId)
+
         var options = Object.assign({}, params, {
           type: 'transaction',
-          eventName: 'escrowExceedAmount',
+          payType: 'escrowExceedAmount',
+          eventId,
+          amount: params.amount.literal,
+          contractId: this.contractId
+        })
+        this.$emit('execute', options)
+      },
+      // 保证金没收
+      escrowConfiscated(code, params, eventId){
+        var options = Object.assign({}, params, {
+          type: 'escrowConfiscated',
           eventId,
           contractId: this.contractId
         })
         this.$emit('execute', options)
-        switch (params.currencyUnit) {
-          case 'feather': {
-            break
-          }
-        }
+
       },
-      // 保证金没收
-      escrowConfiscated(code, params, eventId){
-        this.$axios('/v1/contracts/events/escrowConfiscated', {
-          contractId: this.contractId,
-          eventId,
-          toAccountId: params,
-        })
-          .then(resp => {
-            if(resp.status === 200) {
-              if(resp.data.errcode === 0) {
-                console.log('Escrow has been confiscated success!')
-              }else {
-                console.log(`Escrow has been confiscated fail! error: ${resp.data.msg}`)
-              }
-            }else {
-              console.log('/v1/contracts/events/escrowConfiscated 请求失败！')
-            }
+      // 保证金赎回
+      escrowRefunded (code, params, eventId){
+
+        this.$confirm('是否确定赎回保证金？')
+          .then(() => {
+            this.$axios.post('/v1/contracts/events/escrowRefunded', {
+              contractId: this.contractId,
+              eventId,
+            })
+              .then(resp => {
+                if(resp.status === 200) {
+                  if(resp.data.errcode === 0) {
+                    this.$emit('execute', {
+                      payType: 'escrowConfiscated',
+                      contractId: this.contractId,
+                      eventId
+                    })
+                    console.log('Escrow has been refunded success!')
+                  }else {
+                    console.log(`Escrow has been refunded fail! error: ${resp.data.msg}`)
+                  }
+                }else {
+                  console.log('/v1/contracts/events/escrowRefunded 请求失败！')
+                }
+              })
+              .catch(e => {
+
+              })
           })
       },
-      cycleEndEvent(transition) {},
-      customEvent(transition) {},
+      cycleEndEvent(code, params, eventId) {},
+
+      customEvent(code, params, eventId) {
+
+      },
 
     },
     mounted() {
@@ -155,30 +172,8 @@
 
 <style lang="less" type="text/less">
 
-  // policy 高亮
-  .beauty-poliycy-box{
-    font-size: 14px; line-height: 1.6;
-    color: #999;
 
-    .bp-audience{ }
-    .bp-declaration, .bp-state, .bp-s-row:not(:first-child){
-      padding-left: 1em;
-    }
-    .bp-state.active{
-      background: #E3F0FF;
-      border: 1px solid #B3D7FF; border-radius: 20px;
-      color: #222;
-    }
-    .bp-state.active .bp-s-transition{
-      color: #EE6723;
-    }
-
-    .bp-state .bp-s-event{
-      pointer-events: none;
-    }
-    .bp-state.active .bp-s-event{
-      display: inline-block; cursor: pointer; color: #3e94f3; pointer-events: auto;
-    }
-  }
 </style>
+
+
 

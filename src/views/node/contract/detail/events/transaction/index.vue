@@ -6,14 +6,6 @@
       type="warning">
     </el-alert>
 
-    <el-alert
-      v-if="showError"
-      title=""
-      type="warning">
-      未设置支付密码，<a href="//www.freelog.com/pages/account/security.html" style="color: #409EFF;
-" target="_blank">去设置</a>
-    </el-alert>
-
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
       <el-form-item label="合同ID">
         {{contractDetail.contractId}}
@@ -28,10 +20,10 @@
         {{params.contractAccountName}}
       </el-form-item>
       <el-form-item label="转账金额">
-        {{params.amount.literal}} {{unitType}}
+        {{params.amount}} {{unitType}}
       </el-form-item>
       <el-form-item label="转出账号">
-        <el-select v-model="fromAccountId" size="small" placeholder="请选择">
+        <el-select :loading="isLoadingAccount" loading-text="正在获取账户中..." v-model="fromAccountId" size="small" placeholder="请选择" @visible-change="selectVisibleChange">
           <el-option
             v-for="item in options"
             :key="item.accountId"

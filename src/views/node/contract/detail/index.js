@@ -1,5 +1,6 @@
 import TransactionEvent from './events/transaction/index.vue'
 import LicenseEvent from './events/license/index.vue'
+import EscrowConfiscated from './events/escrow/confiscate.vue'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
 import ContractContent from './content.vue'
 import ContractUtils from '@/data/contract/utils'
@@ -13,6 +14,10 @@ let eventComponentMap = {
   signing: {
     type: 'license-event',
     title: '签署'
+  },
+  escrowConfiscated: {
+    type: 'escrow-confiscated',
+    title: '保证金没收'
   }
 }
 
@@ -36,7 +41,8 @@ export default {
     TransactionEvent,
     LicenseEvent,
     ContractDetailInfo,
-    ContractContent
+    ContractContent,
+    EscrowConfiscated
   },
   props: {
     contractId: String
@@ -81,12 +87,14 @@ export default {
       var detail = Object.assign({}, this.contractDetail)
       detail = ContractUtils.format(detail)
     },
+    // 获取合同详情
     loadContractDetail(param) {
       return this.$services.contract.get(param || {})
         .then((res) => {
           return res.getData();
         }).catch(this.$error.showErrorMessage)
     },
+    // 更新合同
     updateContractDetail(detail) {
       this.loadContractDetail(this.contractDetail.contractId).then((contract) => {
         Object.assign(this.contractDetail, contract)
@@ -96,14 +104,26 @@ export default {
         }
       })
     },
+    // 执行合同
     executeContractHandler(params) {
       console.log('params --', params)
-      var eventComConfig = eventComponentMap[params.type]
-      this.selectedContractEvent = params
-      this.eventComponent = eventComConfig.type;
-      this.dialogTitle = eventComConfig.title
-      this.showEventExecDialog = true;
+      switch (params.type) {
+        case 'escrowConfiscated':
+        case 'signing':
+        case 'transaction': {
+          var eventComConfig = eventComponentMap[params.type]
+          this.selectedContractEvent = params
+          this.eventComponent = eventComConfig.type
+          this.dialogTitle = eventComConfig.title
+          this.showEventExecDialog = true
+          break
+        }
+        default: {
+          this.updateContractDetail()
+        }
+      }
     },
+    // 激活合同
     activateContractHandler(contract) {
       this.$axios.get(`/v1/contracts/initial`, {
         params: {

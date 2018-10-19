@@ -9,13 +9,14 @@ export default {
       password: '',
       tipMsg: '',
       order: {},
-      showError: false
+      showError: false,
+      isLoadingAccount: false,
     }
   },
   mounted() {
-    var self = this;
+    var self = this
     this.$services.accounts.get().then(function (res) {
-      self.options = res.data.data;
+      self.options = res.data.data
     })
     // this.queryOrder().then(this.checkOrderStatus.bind(this))
   },
@@ -36,6 +37,18 @@ export default {
   },
   props: ['contractDetail', 'params'],
   methods: {
+    selectVisibleChange(visible) {
+      if(visible && this.options.length === 0) {
+        this.isLoadingAccount = true
+        this.$services.accounts.get()
+          .then( res => {
+            this.options = res.data.data
+            this.isLoadingAccount = false
+          })
+
+      }
+    },
+    // 支付结果处理
     payResultHandler(result) {
       switch (result.status) {
         case 1:
@@ -51,6 +64,7 @@ export default {
           this.$message.info('未知的支付状态')
       }
     },
+    // 支付完成（即支付成功） 处理
     doneHandler(data) {
       if (this.order) {
         data = {
@@ -78,38 +92,55 @@ export default {
 
       this.tipMsg = msg
     },
+    // 查询支付订单状态
     queryOrder() {
-      return this.$services.orderInfo.get({
-        params: {
-          targetId: this.contractDetail.contractId
-        }
-      }).then((res) => {
-        return res.getData()
-      })
+      // return this.$services.orderInfo.get({
+      //   params: {
+      //     targetId: this.contractDetail.contractId
+      //   }
+      // }).then((res) => {
+      //   return res.getData()
+      // })
     },
+    // 支付
     pay() {
       var self = this;
-      this.$axios.post('/v1/contracts/events/payment', {
-        contractId: this.params.contractId,
-        eventId: this.params.eventId,
-        fromAccountId: this.fromAccountId,
-        amount: +this.params.amount.literal,
-        password: this.password
-      })
-      .then((res) => {
-        console.log('res ---', res)
-        if (res.data.errcode === 0) {
-          this.showError = false
-          this.payResultHandler(res.data.data)
-          this.doneHandler({shouldUpdate: true, data: res.data.data})
-        } else {
-          this.showError = true
-          this.$message.error(res.data.msg)
+      var promise = null
+      switch (this.params.payType) {
+        // 保证金支付
+        case 'escrowExceedAmount': {
+          promise = this.$axios.post('/v1/contracts/events/payment', {
+            contractId: this.params.contractId,
+            eventId: this.params.eventId,
+            fromAccountId: this.fromAccountId,
+            amount: +this.params.amount,
+            password: this.password
+          })
+          break
         }
-      }).catch(e => {
-        console.log('e --', e)
-        this.$error.showErrorMessage(e)
-      })
+        default: {}
+      }
+
+      if(promise !== null) {
+        promise
+          .then(res => {
+            console.log('res ---', res)
+            if (res.data.errcode === 0) {
+              this.showError = false
+              this.payResultHandler(res.data.data)
+              this.doneHandler({shouldUpdate: true, data: res.data.data})
+            } else {
+              this.showError = true
+              this.$message.error(res.data.msg)
+            }
+          })
+          .catch(e => {
+            this.$error.showErrorMessage(e)
+          })
+      }else {
+        console.error(`payType(${payType}) is wrong!`)
+      }
+
     }
   }
 }
