@@ -78,11 +78,15 @@ async function run() {
   const isDaily = gitBranchIs('daily')
   const env = (isProd && 'prod') || (isDaily && 'beta') || ''
 
-  if (env && build(env)) {
-    const spinner = ora('publish...').start();
-    await uploadDir(dist, isProd)
-    spinner.succeed(`publish to ${env} complete`)
-  }
+  const spinner = ora('publish...').start();
+  await uploadDir(dist, isProd)
+  spinner.succeed(`publish to ${env} complete`)
+  //
+  // if (env && build(env)) {
+  //   const spinner = ora('publish...').start();
+  //   await uploadDir(dist, isProd)
+  //   spinner.succeed(`publish to ${env} complete`)
+  // }
 }
 
 process.on('uncaughtException', function (err) {
