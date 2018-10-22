@@ -3,7 +3,6 @@ import {storage} from '@/lib'
 import {validateLoginName} from '../validator'
 import {isSafeUrl} from '@/lib/security'
 
-// import ImageCropUpload from 'vue-image-crop-upload';
 
 export default {
   name: 'user-setting',

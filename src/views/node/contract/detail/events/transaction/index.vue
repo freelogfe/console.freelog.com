@@ -6,16 +6,8 @@
       type="warning">
     </el-alert>
 
-    <el-alert
-      v-if="showError"
-      title=""
-      type="warning">
-      未设置支付密码，<a href="//www.freelog.com/pages/account/security.html" style="color: #409EFF;
-" target="_blank">去设置</a>
-    </el-alert>
-
     <el-form label-position="left" class="small-el-form" label-width="80px" :model="contractDetail">
-      <el-form-item label="contractId">
+      <el-form-item label="合同ID">
         {{contractDetail.contractId}}
       </el-form-item>
       <el-form-item label="甲方">
@@ -25,13 +17,13 @@
         {{contractDetail.partyTwo}}
       </el-form-item>
       <el-form-item label="转入账号">
-        {{params.params[0]}}
+        {{params.contractAccountName}}
       </el-form-item>
       <el-form-item label="转账金额">
-        {{params.params[1]|humanizeCurrency}} {{unitType}}
+        {{params.amount}} {{unitType}}
       </el-form-item>
       <el-form-item label="转出账号">
-        <el-select v-model="fromAccountId" size="small" placeholder="请选择">
+        <el-select :loading="isLoadingAccount" loading-text="正在获取账户中..." v-model="fromAccountId" size="small" placeholder="请选择" @visible-change="selectVisibleChange">
           <el-option
             v-for="item in options"
             :key="item.accountId"
@@ -41,7 +33,7 @@
         </el-select>
         <el-tooltip placement="top">
           <div slot="content">
-            <p><a style="color: white" href="//www.freelog.com/pages/account/create.html" target="_blank">没有账号？去添加一个</a></p>
+            <p><a style="color: white" href="//www.testfreelog.com/accounts" target="_blank">没有账号？去添加一个</a></p>
           </div>
           <i class="el-icon-question"></i>
         </el-tooltip>

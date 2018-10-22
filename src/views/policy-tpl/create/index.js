@@ -1,4 +1,4 @@
-import {highlight, compile} from '@freelog/resource-policy-lang'
+import {highlight, compile, beautify} from '@freelog/resource-policy-lang'
 
 
 import rules from '../rules'
@@ -43,7 +43,7 @@ export default {
         this.$message.error(ret.errorMsg)
         return false
       } else {
-        this.data.template = highlight(tpl)
+        this.data.template = beautify(tpl)
         this.$message.success('校验通过')
         return true
       }
