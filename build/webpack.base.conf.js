@@ -3,11 +3,20 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const os = require('os')
-const cpus = os.cpus().length
+var minimist = require('minimist')
+var argv = minimist(process.argv.slice(2));
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
+}
+
+var assetsPublicPath;
+var assetsDomain = '';
+if (process.env.NODE_ENV === 'production') {
+  assetsDomain = (argv.env ==='beta') ? config.build.assetsTestDomain : config.build.assetsDomain
+  assetsPublicPath = assetsDomain + config.build.assetsPublicPath
+} else {
+  assetsPublicPath = config.dev.assetsPublicPath
 }
 
 process.traceDeprecation = true;
@@ -27,9 +36,7 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

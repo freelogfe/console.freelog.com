@@ -18,7 +18,6 @@ const user = {
 
   mutations: {
     [types.CHANGE_SESSION](state, data) {
-      console.log(data)
       Object.assign(state.session, data);
       sessionStore.set('user_session', state.session);
     },

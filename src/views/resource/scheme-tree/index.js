@@ -748,7 +748,6 @@ export default {
           Object.assign(res, detail)
         }
       });
-      console.log(this.dutyStatements)
       return this.dutyStatements
     },
     hideSchemeArrow(scheme) {

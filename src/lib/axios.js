@@ -9,12 +9,11 @@ import store from '@/store'
 import {Message} from 'element-ui';
 
 const instance = axios.create({
-  baseURL: '/api/',
+  baseURL: window.location.origin.replace('console','qi'),
   timeout: 1e4, //10s
-  // crossdomain: true,
-  // withCredentials: true,
+  withCredentials: true,
   headers: {
-    'X-Requested-With': 'XMLHttpRequest'
+    // 'X-Requested-With': 'XMLHttpRequest'
   }
 });
 

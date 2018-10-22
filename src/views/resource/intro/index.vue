@@ -2,7 +2,7 @@
   <div class="res-intro-wrapper">
     <div class="user-avatar">
       <img class="resource-author-img"
-           :src="`https://image.freelog.com/headImage/${resource.userId}?x-oss-process=style/head-image`"
+           :src="avatarUrl"
            alt="">
     </div>
     <div class="res-content">
@@ -31,6 +31,16 @@
         type: Object,
         default() {
           return {}
+        }
+      }
+    },
+
+    computed: {
+      avatarUrl(){
+        if (this.resource.userId) {
+          return `https://image.freelog.com/headImage/${this.resource.userId}?x-oss-process=style/head-image`
+        } else {
+          return ''
         }
       }
     }

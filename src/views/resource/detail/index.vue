@@ -19,7 +19,7 @@
     <div class="res-detail-content" ref="detailContent" :style="{transform: contentTransform}">
       <div class="res-detail-hd clearfix">
         <div class="res-author-avatar">
-          <img :src="`https://image.freelog.com/headImage/${resourceDetail.resourceInfo.userId}?x-oss-process=style/head-image`"
+          <img :src="resolveAvatarUrl(resourceDetail)"
                alt="">
         </div>
         <div class="res-digest">

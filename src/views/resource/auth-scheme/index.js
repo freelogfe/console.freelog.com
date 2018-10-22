@@ -57,7 +57,6 @@ export default {
         })
       })
       .then(() => {
-        console.log('this.resourceDetail', this.resourceDetail)
         SchemeDataLoader.onloadSchemesForResource(this.resourceId, {policyStatus: 2}).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach((scheme) => {
@@ -336,7 +335,6 @@ export default {
           this.validate()
             .then(() => {
               var data = this.resolveSchemeData(schemeData)
-              console.log('submit', data)
               if (!schemeData.authSchemeId) {
                 this.createAuthScheme(data).then(res => {
                   schemeData.authSchemeId = res.authSchemeId;
@@ -442,8 +440,6 @@ export default {
     },
     validateSchemeOptions(dependencies) {
       var flag = true;
-      console.log('validateSchemeOptions')
-      console.log(dependencies)
       loopForBreak(dependencies, (dep) => {
         if (flag === false || dep.activeStatus === undefined || dep.activeStatus === SCHEME_STATUS.UNHANDLE) {
           flag = false
@@ -476,7 +472,6 @@ export default {
     },
     tmpSaveAndQuitHandler() {
       var scheme = this.tabsSchemeMap[this.curTabName]
-      console.log('scheme', scheme)
 
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')

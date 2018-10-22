@@ -61,7 +61,6 @@
         }
       },
       fetchData(page) {
-        console.log('fetchData', page)
         var pageSize = 10;
 
         if (!this.loader) {

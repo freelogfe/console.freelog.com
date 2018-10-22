@@ -53,7 +53,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.resource)
     this.targetNode = this.initResourceNode(this.resource)
   },
   computed: {
@@ -93,7 +92,6 @@ export default {
       return node
     },
     selectResourceHandler(resource) {
-      console.log(resource)
       var dutyResourceMap = this.dutyResourceMap
       var rid = resource.resourceId
       if (resource.selectedScheme) {

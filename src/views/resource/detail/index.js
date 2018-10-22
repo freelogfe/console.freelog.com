@@ -209,7 +209,6 @@ export default {
         });
 
         Promise.all(promises).then((list) => {
-          console.log(list)
           this.$message.success('获取成功')
         }).catch(this.$error.showErrorMessage)
       }
@@ -231,15 +230,16 @@ export default {
     selectPolicyHandler(scheme, policy) {
       this.selectedPolicy.scheme = scheme;
       this.selectedPolicy.policy = policy
-      console.log(this.selectedPolicy)
     },
     editDetailHandler() {
       this.$router.push(`/resource/edit/${this.resourceId}`)
     },
     nodeOptCheckHandler(node) {
-      console.log(node)
       node.checked = !node.checked
       this.$forceUpdate()
+    },
+    resolveAvatarUrl(resourceDetail){
+      return `https://image.freelog.com/headImage/${resourceDetail.resourceInfo.userId}?x-oss-process=style/head-image`
     }
   }
 }

@@ -97,7 +97,6 @@
       }
     },
     mounted() {
-      console.log('mounted', this.detail)
       this.initDependencies(this.detail.scheme);
     },
     computed: {},

@@ -2,7 +2,7 @@ import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
 import DataLoader from '@/data'
 import ContractDetail from '../detail/index.vue'
-import contract from "../../../../services/contract";
+import {loadDetail, loadResources} from '@/data/resource/loader'
 
 export default {
   name: 'node-contracts',
@@ -21,50 +21,52 @@ export default {
 
   mounted() {
     var query = this.$route.query;
-
-    this.loadPresentables({nodeId: this.$route.params.nodeId, isOnline: 2})
-      .then(presentables => {
-        var presentableIds = presentables.map(p => {
-          return p.presentableId
-        })
-
-        if (presentableIds.length) {
-          this.loadContractInfos(presentableIds).then(data => {
-            data.forEach(p => {
-              var contractIds = [];
-              var resourceIds = [];
-              var contractsMap = {}
-              p.contracts = p.contracts.filter(contract => {
-                resourceIds.push(contract.resourceId)
-                contractIds.push(contract.contractId)
-                contractsMap[contract.contractId] = contract
-                ContractUtils.format(contract);
-                if (query.contractId === contract.contractId) {
-                  this.showContractDetailHandler(contract)
-                }
-                if (contract.isMasterContract) {
-                  p.masterContract = contract
-                } else {
-                  return contract
-                }
-              })
-            })
-
-            console.log(data)
-            this.presentables = data
-          })
-        }
-      })
+    Object.assign(query, this.$route.params)
+    this.loadData(query)
   },
   methods: {
-    loadContractsDetail(contractIds) {
-      return this.$axios.get(`v1/contracts/contractRecords`, {
-        params: {
-          contractIds: contractIds.join(',')
-        }
-      }).then(res => {
-        return res.getData()
-      })
+    loadData(query) {
+      this.loadPresentables({nodeId: query.nodeId, isOnline: 2})
+        .then(presentables => {
+          var presentableIds = presentables.map(p => {
+            return p.presentableId
+          })
+
+          if (presentableIds.length) {
+            this.loadContractInfos(presentableIds).then(data => {
+              data.forEach(p => {
+                var contractIds = [];
+                var resourceIds = [];
+                var contractsMap = {}
+                p.contracts = p.contracts.filter(contract => {
+                  contract.resourceDetail = {}
+                  resourceIds.push(contract.resourceId)
+                  contractIds.push(contract.contractId)
+                  contractsMap[contract.contractId] = contract
+                  ContractUtils.format(contract)
+
+                  loadDetail(contract.resourceId).then(info => {
+                    contract.resourceDetail = info
+                  }).catch(this.$error.showErrorMessage)
+
+                  if (query.contractId === contract.contractId) {
+                    this.showContractDetailHandler(contract)
+                  }
+                  if (contract.isMasterContract) {
+                    p.masterContract = contract
+                  } else {
+                    return contract
+                  }
+                })
+              })
+
+              setTimeout(function () {
+                console.log(data)
+              }, 1e3)
+              this.presentables = data
+            })
+          }
+        })
     },
     loadContractInfos(presentableIds) {
       return this.$axios.get(`v1/presentables/contractInfos`, {
@@ -76,87 +78,8 @@ export default {
         return res.getData()
       })
     },
-    loadResourceData(resIds) {
-      return this.$axios.get('/v1/resources/list', {
-        params: {
-          resourceIds: resIds.join(',')
-        }
-      }).then(res => {
-        return res.getData()
-      })
-    },
-    loadContracts(param) {
-      return this.$services.contract.get(param || {}).then((res) => {
-        return res
-      }).catch(this.$error.showErrorMessage)
-    },
     loadPresentables(param) {
       return DataLoader.presentable.loadDetail({params: param}).catch(this.$error.showErrorMessage)
-    },
-    mergeDataByResourceId(contracts, data) {
-      var dataMap = {}
-      data.forEach((p) => {
-        dataMap[p.resourceId] = p
-      })
-      contracts.forEach((contract) => {
-        var item = dataMap[contract.resourceId] || null;
-
-        this.$set(contract, 'resourceDetail', item)
-      })
-    },
-    loader() {
-      const self = this;
-      return (param) => {
-        const nodeId = self.$route.params.nodeId
-        if (typeof param === 'object') {
-          Object.assign(param, {
-            partyTwo: nodeId,
-            contractType: 2
-          })
-          param = {
-            params: param
-          }
-        }
-        return self.loadContracts(param).then((res) => {
-          if (!res.data.data) {
-            return []
-          }
-          var contracts = res.data.data.dataList
-
-          contracts.forEach((c) => {
-            ContractUtils.format(c)
-          })
-
-          if (!contracts.length) {
-            return res
-          }
-          var resourceIds = contracts.map((c) => {
-            return c.resourceId
-          })
-
-
-          return Promise.all([this.loadResourceData(resourceIds)]).then((responses) => {
-            var resourcesData = responses[0]
-            self.mergeDataByResourceId(contracts, resourcesData)
-            console.log(contracts)
-            return contracts
-          })
-        })
-      }
-    },
-    handlePresentable(row) {
-      var nodeId = this.$route.params.nodeId
-      if (!row.presentableDetail) {
-        this.$router.push({
-          path: `/node/${nodeId}/presentable/detail#presentable`,
-          query: {contractId: row.contractId}
-        })
-      } else {
-        this.$router.push({
-          path: `/node/${nodeId}/presentable/detail`,
-          query: {presentableId: row.presentableDetail.presentableId}
-        })
-      }
     },
     previewHandler(row) {
       var query = {}
@@ -185,9 +108,7 @@ export default {
     },
     isActiveTab(presentable) {
       const curContractId = this.currentContract.contractId
-      console.log(curContractId, presentable.masterContract ?
-        (curContractId === presentable.masterContract.contractId) :
-        (curContractId === presentable.contractId))
+
       return curContractId && (presentable.masterContract ?
         (curContractId === presentable.masterContract.contractId) :
         (curContractId === presentable.contractId))

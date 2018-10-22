@@ -22,7 +22,6 @@ export default {
       .then(this.format.bind(this))
       .then((data) => {
         this.pagebuildList = data;
-        console.log(this.pagebuildList)
       })
   },
   methods: {

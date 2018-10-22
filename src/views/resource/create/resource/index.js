@@ -346,7 +346,6 @@ export default {
           uploadData[key] = formData[key]
         }
       });
-      console.log(uploadData)
       return uploadData
     },
     isChanged() {

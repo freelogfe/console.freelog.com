@@ -44,19 +44,15 @@ export default {
           }, this.cachedContractsMap);
 
           ResourceDataLoader.onloadResourceDetail(data.resourceId).then(detail => {
-            console.log('detail', detail)
             Object.assign(data.resourceInfo, detail)
             data.resourceInfo.contracts = data.contracts
             this.presentableDetail = data
           })
-          // this.loadPresentableSchemes(data.resourceId)
-          // console.log(this.cachedContractsMap)
         }
       });
     },
     loadPresentableSchemes(resourceId) {
       SchemeDataLoader.onloadSchemesForResource(resourceId).then(schemes => {
-        console.log(schemes)
         this.presentableDetail.schemes = schemes;
       })
     },

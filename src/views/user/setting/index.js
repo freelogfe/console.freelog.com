@@ -42,7 +42,6 @@ export default {
       .then((userInfo) => {
         this.loading = false
         this.userInfo = userInfo
-        console.log(userInfo)
       })
       .catch(() => {
         this.loading = false
