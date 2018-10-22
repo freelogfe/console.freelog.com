@@ -1,16 +1,21 @@
-logs/
-npm-debug.log
-node_modules/
-coverage/
-.idea/
-run/
 .DS_Store
-*.swp
-.cache/
-
 node_modules
-console.tar
-*.iml
-*.ipr
-*.iws
-*.log
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
