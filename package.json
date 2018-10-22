@@ -39,9 +39,14 @@
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
     "@vue/eslint-config-airbnb": "^3.0.5",
+    "ali-oss": "^6.0.1",
+    "consola": "^1.4.4",
     "husky": "^1.1.2",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.17"
+    "ora": "^3.0.0",
+    "user-home": "^2.0.0",
+    "vue-template-compiler": "^2.5.17",
+    "walk": "^2.3.14"
   }
 }
