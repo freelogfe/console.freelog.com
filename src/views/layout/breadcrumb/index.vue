@@ -7,8 +7,9 @@
 </template>
 
 <script>
-  import Breadcrumb from './index';
-  export default Breadcrumb;
+import Breadcrumb from './index'
+
+export default Breadcrumb
 </script>
 
 <style scoped lang="less">

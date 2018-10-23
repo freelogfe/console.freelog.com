@@ -57,30 +57,30 @@ export default {
       }
     },
     gotoCreateContract(resource) {
-      var query = {
+      const query = {
         resourceName: resource.resourceName,
         resourceType: resource.resourceType,
         resourceId: resource.resourceId
       }
 
       this.$router.push({
-        path: `/node/:nodeId/presentable/create`,
-        query: query
+        path: '/node/:nodeId/presentable/create',
+        query
       })
     },
     handleContact(resource) {
       switch (resource.status) {
         case 1:
-          this.$message.warning('该资源还没创建policy，无法创建合同');
-          break;
+          this.$message.warning('该资源还没创建policy，无法创建合同')
+          break
         case 2:
           this.gotoCreateContract(resource)
-          break;
+          break
         case 3:
-          this.$message.warning('该资源已被冻结');
-          break;
+          this.$message.warning('该资源已被冻结')
+          break
         default:
-          this.$message.warning('未知资源状态');
+          this.$message.warning('未知资源状态')
       }
     }
   }

@@ -23,8 +23,9 @@
 </template>
 
 <script>
-  import TableView from './index'
-  export default TableView
+import TableView from './index'
+
+export default TableView
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 import BaseResourceCreator from './resource/index.vue'
 import ResourceLoader from '@/data/resource/loader'
-import {storage} from '@/lib'
+import { storage } from '@/lib'
 
 export default {
   name: 'resource-creator',
@@ -13,7 +13,7 @@ export default {
     }
   },
   mounted() {
-    var params = this.$route.params
+    const params = this.$route.params
     if (params.resourceId) {
       ResourceLoader.loadDetail(params.resourceId)
         .then((data) => {
@@ -36,7 +36,7 @@ export default {
     },
     create2QuitHandler() {
       this.executeNext(() => {
-        var detail = this.resourceDetail
+        const detail = this.resourceDetail
         if (this.$route.params.resourceId) {
           this.$message.success('资源更新成功')
         } else {
@@ -48,7 +48,7 @@ export default {
       })
     },
     create2AddHandler() {
-      var detail = this.resourceDetail
+      const detail = this.resourceDetail
       this.executeNext(() => {
         detail.resourceId && this.$router.push(`/resource/detail/${detail.resourceId}/auth_schemes`)
       })

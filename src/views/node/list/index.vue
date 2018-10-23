@@ -51,9 +51,9 @@
 </template>
 
 <script>
-  import ResourceList from './index'
+import ResourceList from './index'
 
-  export default ResourceList
+export default ResourceList
 </script>
 
 <style lang="less" scoped>

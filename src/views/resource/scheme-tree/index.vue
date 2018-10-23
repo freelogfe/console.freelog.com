@@ -99,9 +99,9 @@
 </template>
 
 <script>
-  import SchemeTree from './index'
+import SchemeTree from './index'
 
-  export default SchemeTree
+export default SchemeTree
 </script>
 
 <style lang="less" scoped>

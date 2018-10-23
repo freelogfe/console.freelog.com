@@ -22,9 +22,9 @@
 </template>
 
 <script>
-  import NavMenu from './index';
+import NavMenu from './index'
 
-  export default NavMenu;
+export default NavMenu
 </script>
 
 <style scoped lang="less">

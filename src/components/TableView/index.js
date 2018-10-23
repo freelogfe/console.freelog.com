@@ -1,4 +1,4 @@
-import {sessionStore} from '@/lib/storage'
+import { sessionStore } from '@/lib/storage'
 
 export default {
   name: 'table-view',
@@ -36,11 +36,11 @@ export default {
     pageMeta: {
       type: Object,
       default() {
-        //记忆上一次查看的页码
-        var histroyPage = sessionStore.get(`PAGE_${this.$route.fullPath}_index`) || {}
+        // 记忆上一次查看的页码
+        const histroyPage = sessionStore.get(`PAGE_${this.$route.fullPath}_index`) || {}
         return Object.assign({
           pageSize: 10,
-          page: 1 //页码
+          page: 1 // 页码
         }, histroyPage)
       }
     }
@@ -53,7 +53,7 @@ export default {
   },
   mounted() {
     this.pageUrl = this.$route.fullPath
-    this.tableData = this.data;
+    this.tableData = this.data
     this.total = this.tableData.length
     this.load()
 
@@ -68,15 +68,15 @@ export default {
       if (this.loader) {
         this.loading = true
         this.loader(this.pageMeta).then((res) => {
-          var data = res.getData()
+          const data = res.getData()
           this.loading = false
           if (data) {
-            var dataList = data.dataList || data;
+            let dataList = data.dataList || data
             if (this.formatHandler) {
               dataList = this.formatHandler(dataList)
             }
-            this.tableData = dataList;
-            //分页数据
+            this.tableData = dataList
+            // 分页数据
             if (data.dataList) {
               this.total = data.totalItem
               this.pageMeta.page = data.page || 1
@@ -84,7 +84,7 @@ export default {
               this.total = dataList.length
             }
           } else {
-            this.$message.error(data.msg);
+            this.$message.error(data.msg)
           }
         }).catch((res) => {
           this.$message.warning('加载失败')
@@ -93,13 +93,13 @@ export default {
       }
     },
     handleSizeChange(val) {
-      var data = {pageSize: val}
-      this.load(data);
+      const data = { pageSize: val }
+      this.load(data)
       this.$emit('sizeChange', data)
     },
     handleCurrentChange(val) {
-      var data = {page: val}
-      this.load(data);
+      const data = { page: val }
+      this.load(data)
       this.$emit('pageChange', data)
     }
   }

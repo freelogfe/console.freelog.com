@@ -23,9 +23,9 @@
 </template>
 
 <script>
-  import FreelogTags from './index'
+import FreelogTags from './index'
 
-  export default FreelogTags
+export default FreelogTags
 </script>
 
 <style lang="less" scoped>

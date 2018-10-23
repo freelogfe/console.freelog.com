@@ -22,8 +22,8 @@ export default {
     }
   },
   watch: {
-    value: function (val) {
-      this.setCurrentValue(val);
+    value(val) {
+      this.setCurrentValue(val)
     }
   },
   mounted() {
@@ -31,27 +31,27 @@ export default {
   },
   methods: {
     setCurrentValue(value) {
-      this.tags = value;
+      this.tags = value
     },
     handleClose(tag) {
-      this.tags.splice(this.tags.indexOf(tag), 1);
+      this.tags.splice(this.tags.indexOf(tag), 1)
       console.log(this.tags)
-      this.$emit('input', this.tags);
+      this.$emit('input', this.tags)
     },
     showInput() {
-      this.inputVisible = true;
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus();
-      });
+      this.inputVisible = true
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
     },
     handleInputConfirm() {
-      let inputValue = this.inputValue;
+      const inputValue = this.inputValue
       if (inputValue) {
-        this.tags.push(inputValue);
-        this.$emit('input', this.tags);
+        this.tags.push(inputValue)
+        this.$emit('input', this.tags)
       }
-      this.inputVisible = false;
-      this.inputValue = '';
+      this.inputVisible = false
+      this.inputValue = ''
     }
   }
 }

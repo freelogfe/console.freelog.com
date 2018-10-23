@@ -8,19 +8,19 @@ export default {
   props: {
     active: {
       type: Number,
-      default(){
+      default() {
         return 0
       }
     },
     processStatus: {
       type: String,
-      default(){
+      default() {
         return 'finish'
       }
     },
     finishStatus: {
       type: String,
-      default(){
+      default() {
         return 'success'
       }
     }

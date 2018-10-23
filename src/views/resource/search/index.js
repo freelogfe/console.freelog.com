@@ -20,7 +20,7 @@ export default {
   props: {
     searchScope: {
       type: Object,
-      default(){
+      default() {
         return {}
       }
     }
@@ -39,18 +39,14 @@ export default {
       // this.searchResources = []
     },
     getFavorResourcesLoader() {
-      return this.createResourceLoader((param) => {
-        return this.$services.collections.get(param || {}).then((res) => {
-          return res.getData()
-        })
-      });
+      return this.createResourceLoader(param => this.$services.collections.get(param || {}).then(res => res.getData()))
     },
     createResourceLoader(loader) {
       return (param) => {
         param = param || {
           pageSize: 10,
           page: 1
-        };
+        }
         if (typeof param === 'object') {
           param = {
             params: Object.assign({
@@ -63,34 +59,34 @@ export default {
       }
     },
     fetchData(page) {
-      var pageSize = 10;
+      const pageSize = 10
       if (!this.loader) {
         return Promise.resolve({
           canLoadMore: false,
           dataList: []
         })
       }
-      return this.loader({page: page}).then((data) => {
+      return this.loader({ page }).then((data) => {
         this.favorResources = this.favorResources.concat(data.dataList)
         if (data.dataList.length < pageSize) {
           data.canLoadMore = false
         }
         return data
-      });
+      })
     },
     searchDataHandler(page) {
-      var pageSize = 10;
+      const pageSize = 10
 
       if (!this.searchInput) {
-        return Promise.resolve({canLoadMore: false})
+        return Promise.resolve({ canLoadMore: false })
       }
 
       return this.$services.g_Resources.get({
         params: Object.assign({
           keyWords: encodeURIComponent(this.searchInput)
         }, this.searchScope)
-      }).then(res => {
-        var data = res.getData() || {}
+      }).then((res) => {
+        const data = res.getData() || {}
         if (res.errcode === 0) {
           this.searchResources = this.searchResources.concat(data.dataList)
           if (data.dataList.length < pageSize) {
@@ -100,11 +96,11 @@ export default {
           data.canLoadMore = false
         }
         return data
-      });
+      })
     },
     searchHandler() {
-      this.activeName = 'search';
-      this.searchResources = [];
+      this.activeName = 'search'
+      this.searchResources = []
       this.$refs.searchView.refresh()
     }
   }

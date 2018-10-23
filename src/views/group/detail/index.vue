@@ -24,9 +24,9 @@
 </template>
 
 <script>
-  import GroupDetail from './index'
+import GroupDetail from './index'
 
-  export default GroupDetail
+export default GroupDetail
 </script>
 
 <style lang="less" scoped>

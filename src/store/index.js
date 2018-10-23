@@ -17,8 +17,10 @@ const strict = process.env.NODE_ENV !== 'production'
 // Object.assign(modules, {
 //   global
 // })
-const plugins = [];
+const plugins = []
 
-const store = new Vuex.Store({getters, modules, strict, plugins })
+const store = new Vuex.Store({
+  getters, modules, strict, plugins
+})
 
 export default store

@@ -1,32 +1,30 @@
-import {NodesService} from '@/services'
-import {createLoader, createCacheLoaders, promisifyLoader} from '@/lib/utils'
-import {loadLoginUserInfo} from '../user/loader'
+import { NodesService } from '@/services'
+import { createLoader, createCacheLoaders, promisifyLoader } from '@/lib/utils'
+import { loadLoginUserInfo } from '../user/loader'
 
-var userInfo = loadLoginUserInfo()
+const userInfo = loadLoginUserInfo()
 
 function loadDetail(nodeId) {
-  return NodesService.get(nodeId).then((res) => {
-    return res.getData()
-  })
+  return NodesService.get(nodeId).then(res => res.getData())
 }
 
 // const onloadNodeDetail = createCacheLoaders(loadDetail)
 const onloadNodeDetail = loadDetail
 
-const onloadNodeList = promisifyLoader(function (callback) {
+const onloadNodeList = promisifyLoader((callback) => {
   if (!userInfo.userId) {
     return callback({})
   }
-  var params = {
+  const params = {
     ownerUserId: userInfo.userId,
     pageSize: 1e2
-  };
+  }
   NodesService.get({
-    params: params
+    params
   }).then((res) => {
     callback(res.getData())
   })
-});
+})
 
 
 export {

@@ -61,9 +61,9 @@
 </template>
 
 <script>
-  import AuthSchemeCreator from './index'
+import AuthSchemeCreator from './index'
 
-  export default AuthSchemeCreator
+export default AuthSchemeCreator
 </script>
 
 <style lang="less" scoped>

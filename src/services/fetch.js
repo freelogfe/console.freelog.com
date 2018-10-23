@@ -1,7 +1,7 @@
-import {axios} from '@/lib'
+import { axios } from '@/lib'
 
 function Fetch(target, otherActions) {
-  this.target = target;
+  this.target = target
   Object.assign(this, otherActions)
 }
 
@@ -23,16 +23,16 @@ Fetch.prototype = {
     const url = `/${this.target}`
     return axios.post(url, options)
   },
-  //更新全部
+  // 更新全部
   put(id, options) {
     const url = `/${this.target}/${id}`
     return axios.put(url, options)
   },
-  //更新部分
+  // 更新部分
   patch(id, options) {
     const url = `/${this.target}/${id}`
     return axios.patch(url, options)
   }
-};
+}
 
 export default Fetch

@@ -22,9 +22,9 @@ export default {
   },
 
   mounted() {
-    var qs = this.$route.query;
+    const qs = this.$route.query
     if (qs.q) {
-      this.query = qs.q;
+      this.query = qs.q
     }
   },
   methods: {
@@ -46,13 +46,13 @@ export default {
       })
     },
     fetchData(page) {
-      var query = {
-        page: page
+      const query = {
+        page
       }
       if (this.query) {
         query.keyWords = this.query
       }
-      return this.loader(query).then(data => {
+      return this.loader(query).then((data) => {
         if (data.dataList.length < 10) {
           data.canLoadMore = false
         }
@@ -68,9 +68,7 @@ export default {
           params: param
         }
       }
-      return this.$services.g_Resources.get(param || {}).then(res => {
-        return res.getData()
-      })
+      return this.$services.g_Resources.get(param || {}).then(res => res.getData())
     }
   }
 }

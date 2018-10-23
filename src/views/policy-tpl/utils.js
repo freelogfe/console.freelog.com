@@ -12,7 +12,7 @@ export const PolicyTemplateTypes = {
     value: TYPES.node,
     desc: '用户策略模板'
   }
-};
+}
 
 
 export const PolicyTemplateStatus = {
@@ -24,7 +24,7 @@ export const PolicyTemplateStatus = {
     value: 1,
     desc: '已删除'
   }
-};
+}
 
 export function resolveType(type) {
   return PolicyTemplateTypes[type] ? PolicyTemplateTypes[type].desc : '策略模板'

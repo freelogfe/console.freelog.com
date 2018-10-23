@@ -2,44 +2,45 @@
  * https://github.com/axios/axios
  * https://github.com/superman66/vue-axios-github
  */
-//cors bug :https://github.com/axios/axios/issues/891
+// cors bug :https://github.com/axios/axios/issues/891
 
 import axios from 'axios'
 import store from '@/store'
-import {Message} from 'element-ui';
+import { Message } from 'element-ui'
 
 const instance = axios.create({
   baseURL: '/api/',
-  timeout: 1e4, //10s
+  timeout: 1e4, // 10s
   // crossdomain: true,
   // withCredentials: true,
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   }
-});
+})
 
-instance.interceptors.request.use(config => {
-    if (store.getters.session && store.getters.session.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-      config.headers.Authorization = store.getters.session.token;
+instance.interceptors.request.use(
+  (config) => {
+    if (store.getters.session && store.getters.session.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
+      config.headers.Authorization = store.getters.session.token
     }
 
-    return config;
+    return config
   },
-  err => {
-    return Promise.reject(err);
-  });
+  err => Promise.reject(err)
+)
 
 
-instance.interceptors.response.use(response => {
-    var errorMsg
-    var data = response.data;
-    var loginPath = '/user/login'
+instance.interceptors.response.use(
+  (response) => {
+    let errorMsg
+    const data = response.data
+    let loginPath = '/user/login'
 
     if ([28, 30].indexOf(data.errcode) > -1 && location.pathname !== loginPath) {
-      loginPath += '?redirect=' + encodeURIComponent(location.href)
+      loginPath += `?redirect=${encodeURIComponent(location.href)}`
 
       location.replace(loginPath)
-      //replace执行存在延迟
+      // replace执行存在延迟
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(response)
@@ -51,30 +52,30 @@ instance.interceptors.response.use(response => {
           throw new Error(data)
         }
         return data.data || data
-      };
-      return response
-    } else {
-      switch (response.status) {
-        case 401:
-          errorMsg = '未授权！'
-          break;
-        case 404:
-          errorMsg = 'forbidden-禁止访问'
-          break;
-        case 500:
-          errorMsg = '服务器内部异常，请稍后再试！'
-          break;
-        default:
-          errorMsg = data.msg
       }
-
-      response.errorMsg = errorMsg
-      return Promise.reject({response})
+      return response
     }
+    switch (response.status) {
+      case 401:
+        errorMsg = '未授权！'
+        break
+      case 404:
+        errorMsg = 'forbidden-禁止访问'
+        break
+      case 500:
+        errorMsg = '服务器内部异常，请稍后再试！'
+        break
+      default:
+        errorMsg = data.msg
+    }
+
+    response.errorMsg = errorMsg
+    return Promise.reject({ response })
   },
-  err => {
+  (err) => {
     err.response = err.response || {}
-    return Promise.reject(err);
-  });
+    return Promise.reject(err)
+  }
+)
 
 export default instance

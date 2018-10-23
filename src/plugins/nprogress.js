@@ -6,26 +6,25 @@
 import router from '../router'
 import { axios, nprogress } from '../lib'
 
-export default Vue => {
-
+export default (Vue) => {
   router.beforeEach((to, from, next) => {
     nprogress.start()
     next()
   })
 
-  router.afterEach(route => {
+  router.afterEach((route) => {
     nprogress.done()
   })
 
-  axios.interceptors.request.use(config => {
+  axios.interceptors.request.use((config) => {
     nprogress.start()
     return config
   })
 
-  axios.interceptors.response.use(response => {
+  axios.interceptors.response.use((response) => {
     nprogress.done()
     return response
-  }, err => {
+  }, (err) => {
     nprogress.done()
     return Promise.reject(err)
   })

@@ -24,7 +24,7 @@
                    @click="submit('formRef')">{{ loading ? '验证中...' : '立即验证' }}
         </el-button>
       </el-form-item>
-      
+
     </el-form>
     <!--<footer class="login-footer">-->
     <!--<a href="/">返回到 freelog.com</a>-->
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import ResetView from './index'
+import ResetView from './index'
 
-  export default ResetView
+export default ResetView
 </script>
 
 <style lang="less" scoped>

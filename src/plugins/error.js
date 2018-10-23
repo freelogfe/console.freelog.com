@@ -1,6 +1,6 @@
-import {Message} from 'element-ui';
+import { Message } from 'element-ui'
 
-export default Vue => {
+export default (Vue) => {
   const Error = {
     showErrorMessage: (err) => {
       if (!err) {
@@ -8,7 +8,7 @@ export default Vue => {
       }
 
       console.error(err)
-      var msg
+      let msg
       if (typeof err === 'string') {
         msg = err
       } else if (err.response && err.response.errorMsg) {

@@ -16,9 +16,9 @@
 </template>
 
 <script>
-  import LazyListView from './index.js'
+import LazyListView from './index.js'
 
-  export default LazyListView
+export default LazyListView
 </script>
 
 <style lang="less" scoped>

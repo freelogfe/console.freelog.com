@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  import HelpView from './index'
+import HelpView from './index'
 
-  export default HelpView
+export default HelpView
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
-import {storage} from '@/lib'
-import {validateLoginName} from '../validator'
-import {isSafeUrl} from '@/lib/security'
+import { storage } from '@/lib'
+import { validateLoginName } from '../validator'
+import { isSafeUrl } from '@/lib/security'
 
 
 export default {
@@ -9,53 +9,53 @@ export default {
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'))
       } else {
         if (this.model.checkPassword !== '') {
-          this.$refs.signupForm.validateField('checkPassword');
+          this.$refs.signupForm.validateField('checkPassword')
         }
-        callback();
+        callback()
       }
-    };
+    }
 
     const validateCheckPassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.model.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
 
     const rules = {
       loginName: [
-        {required: true, message: '请输入账号名', trigger: 'blur'},
-        {validator: validateLoginName, trigger: 'blur'}
+        { required: true, message: '请输入账号名', trigger: 'blur' },
+        { validator: validateLoginName, trigger: 'blur' }
       ],
       nickname: [
-        {required: true, message: '请输入昵称', trigger: 'blur'}
+        { required: true, message: '请输入昵称', trigger: 'blur' }
       ],
       password: [
-        {required: true, message: '请输入密码', trigger: 'blur'},
-        {validator: validatePassword, trigger: 'blur'},
-        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { validator: validatePassword, trigger: 'blur' },
+        { min: 6, message: '长度至少6个字符', trigger: 'blur' }
       ],
       checkPassword: [
-        {required: true, message: '请输入确认密码', trigger: 'blur'},
-        {validator: validateCheckPassword, trigger: 'blur'},
-        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
+        { required: true, message: '请输入确认密码', trigger: 'blur' },
+        { validator: validateCheckPassword, trigger: 'blur' },
+        { min: 6, message: '长度至少6个字符', trigger: 'blur' }
       ]
     }
-    var model = {
+    const model = {
       loginName: '',
       nickname: '',
       password: '',
       checkPassword: ''
-    };
+    }
     return {
-      model: model,
-      rules: rules,
+      model,
+      rules,
       error: null,
       loading: false,
       logining: false,
@@ -64,14 +64,14 @@ export default {
 
   methods: {
     login() {
-      var self = this;
-      var redirect = this.$route.query.redirect
-      var isNewPage = /^(https?:)?\/\//.test(redirect)
-      var data = {
+      const self = this
+      let redirect = this.$route.query.redirect
+      const isNewPage = /^(https?:)?\/\//.test(redirect)
+      const data = {
         loginName: this.model.loginName,
         password: this.model.password,
         jwtType: isNewPage ? 'cookie' : 'header'
-      };
+      }
 
       if (!redirect || !isSafeUrl(redirect)) {
         redirect = '/node/list'
@@ -87,7 +87,7 @@ export default {
             self.$router.replace(redirect || '/node/list')
           }
         })
-        .catch(_ => {
+        .catch((_) => {
           self.logining = false
         })
     },
@@ -96,7 +96,7 @@ export default {
         return
       }
 
-      this.$refs[ref].validate(valid => {
+      this.$refs[ref].validate((valid) => {
         if (!valid) {
           return false
         }
@@ -104,14 +104,14 @@ export default {
         this.error = null
         this.loading = true
 
-        var data = {}
+        const data = {}
 
         Object.keys(this.model).forEach((key) => {
           (key !== 'checkPassword') && (data[key] = this.model[key])
         })
 
         this.$services.other.register(data)
-          .then(res => {
+          .then((res) => {
             if (res.data.errcode === 0) {
               this.$message.success('注册成功')
               this.login()
@@ -120,8 +120,8 @@ export default {
             }
             this.loading = false
           })
-          .catch(err => {
-            this.error = {title: '发生错误', message: '出现异常，请稍后再试！'}
+          .catch((err) => {
+            this.error = { title: '发生错误', message: '出现异常，请稍后再试！' }
             switch (err.response && err.response.status) {
               case 401:
                 this.error.message = '用户名或密码错误！'

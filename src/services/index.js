@@ -16,12 +16,12 @@ import OtherService from './other'
 import PbContract from './pbcontract'
 import ContractRecords from './contractRecords'
 import Accounts from './accounts'
-import Pay from './pay' //支付接口
-import orderInfo from './orderInfo' //支付接口
+import Pay from './pay' // 支付接口
+import orderInfo from './orderInfo' // 支付接口
 import SigningLicenses from './signingLicenses'
 import groupsService from './groups'
 import policyTemplateService from './policyTemplates'
-import pbStatics from './pbStatics' //pb签约情况统计
+import pbStatics from './pbStatics' // pb签约情况统计
 import authSchemes from './authSchemes'
 import collectionsService from './collections'
 

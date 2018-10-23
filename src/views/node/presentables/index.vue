@@ -37,9 +37,9 @@
 </template>
 
 <script>
-  import Presentables from './index'
+import Presentables from './index'
 
-  export default Presentables
+export default Presentables
 </script>
 
 <style lang="less" scoped>

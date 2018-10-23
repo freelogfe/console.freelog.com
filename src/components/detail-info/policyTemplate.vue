@@ -22,27 +22,27 @@
 </template>
 
 <script>
-  export default {
-    name: 'policy-template-detail-info',
-    props: {
-      data: {
-        type: Object,
-        default() {
-          return {}
-        }
-      }
-    },
-
-    mounted() {
-    },
-
-    methods: {
-      resolveType(type) {
-        return type === 1 ? '资源策略模板' : '用户策略模板'
-      },
-      resolveStatus(status) {
-        return status === 0 ? '正常' : '已删除'
+export default {
+  name: 'policy-template-detail-info',
+  props: {
+    data: {
+      type: Object,
+      default() {
+        return {}
       }
     }
+  },
+
+  mounted() {
+  },
+
+  methods: {
+    resolveType(type) {
+      return type === 1 ? '资源策略模板' : '用户策略模板'
+    },
+    resolveStatus(status) {
+      return status === 0 ? '正常' : '已删除'
+    }
   }
+}
 </script>

@@ -1,7 +1,7 @@
 import TagsEditor from '@/components/Tags/index.vue'
-import {RESOURCE_TYPES} from "@/config/resource";
+import { RESOURCE_TYPES } from '@/config/resource'
 import PresentablePolicy from '@/components/policyEditor/index.vue'
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 import CONFIG from '@/config/index'
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
@@ -12,7 +12,7 @@ export default {
     return {
       rules: {
         name: [
-          {required: true, message: '请输入presentable name', trigger: 'blur'}
+          { required: true, message: '请输入presentable name', trigger: 'blur' }
         ]
       },
       inputData: {
@@ -39,9 +39,7 @@ export default {
   },
   computed: {
     isValidPolicy() {
-      return this.inputData.policy.some(p => {
-        return p.status === 1
-      })
+      return this.inputData.policy.some(p => p.status === 1)
     }
   },
   mounted() {
@@ -67,11 +65,11 @@ export default {
       presentable.isReady = (presentable.status & 3) === 3
     },
     savePresentableHandler() {
-      var policies = this.$refs.editor.getChangeData()
-      var param = {
+      const policies = this.$refs.editor.getChangeData()
+      const param = {
         // isOnline
         presentableName: this.inputData.presentableName
-      };
+      }
       param.userDefinedTags = this.userDefinedTags
       if (Object.keys(policies).length) {
         param.policies = policies
@@ -80,7 +78,7 @@ export default {
       this.$services.presentables.put(this.data.presentableId, param)
         .then((res) => {
           if (res.data.errcode === 0) {
-            var data = res.getData()
+            const data = res.getData()
             delete data.resourceInfo
             Object.assign(this.inputData, data)
             this.formatPresentable(this.inputData)

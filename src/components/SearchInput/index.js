@@ -19,7 +19,7 @@ export default {
   methods: {
     showInputHandler() {
       this.showInput = true
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.$refs.input.focus()
       })
     },
@@ -28,7 +28,7 @@ export default {
     },
     searchHandler() {
       this.showInput = true
-      this.$emit('search', this.input);
+      this.$emit('search', this.input)
     }
   }
 }

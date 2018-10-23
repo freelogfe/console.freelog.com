@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  import AboutView from './index'
+import AboutView from './index'
 
-  export default AboutView
+export default AboutView
 </script>
 
 <style lang="less" scoped>

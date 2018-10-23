@@ -24,7 +24,7 @@ export default {
 
   computed: {
     tplList() {
-      return (this.filter) ? this.filter(this.list) : this.list;
+      return (this.filter) ? this.filter(this.list) : this.list
     }
   },
 
@@ -38,7 +38,7 @@ export default {
       return utils.resolveStatus(status)
     },
     handleSelect(row) {
-      this.$emit('select', {...row})
+      this.$emit('select', { ...row })
     }
   }
 }

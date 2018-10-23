@@ -1,8 +1,8 @@
-import {OtherService} from '@/services'
+import { OtherService } from '@/services'
 
 const types = {
   CHECK_TOKEN: 'checkToken'
-};
+}
 
 const token = {
   state: {},
@@ -10,9 +10,9 @@ const token = {
   mutations: {},
 
   actions: {
-    [types.CHECK_TOKEN]({commit, getters}) {
+    [types.CHECK_TOKEN]({ commit, getters }) {
       return new Promise((resolve, reject) => {
-        var ignore = (location.hostname === 'localhost') && (process.env.NODE_ENV === 'development')
+        const ignore = (location.hostname === 'localhost') && (process.env.NODE_ENV === 'development')
         if (ignore) {
           resolve(false)
         } else if (getters.session.user && getters.session.user.userId) {

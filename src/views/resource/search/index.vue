@@ -37,9 +37,9 @@
 </template>
 
 <script>
-  import SearchResource from './index'
+import SearchResource from './index'
 
-  export default SearchResource
+export default SearchResource
 </script>
 
 <style lang="less" scoped>

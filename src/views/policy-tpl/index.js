@@ -3,4 +3,4 @@ const policyTplDetail = resolve => require.ensure([], () => resolve(require('./d
 const policyTplList = resolve => require.ensure([], () => resolve(require('./list/index.vue')), 'policy-tpl')
 
 
-export default {policyTplCreator, policyTplDetail, policyTplList}
+export default { policyTplCreator, policyTplDetail, policyTplList }

@@ -100,9 +100,9 @@
 </template>
 
 <script>
-  import AuthSchemeDetail from './index'
+import AuthSchemeDetail from './index'
 
-  export default AuthSchemeDetail
+export default AuthSchemeDetail
 </script>
 
 <style lang="less" scoped>

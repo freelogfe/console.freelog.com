@@ -14,28 +14,27 @@ import resourceRoute from './resource'
 import userRoute from './user'
 import resourceMarket from './resource-market'
 
-Vue.use(Router)
-
 import Views from '@/views/index'
+
+Vue.use(Router)
 
 const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
     return savedPosition
-  } else {
-    const position = {}
-    if (to.hash) {
-      position.selector = to.hash
-    }
-
-    if (to.meta.scrollToTop !== false) {
-      position.x = 0
-      position.y = 0
-    }
-    return position
   }
+  const position = {}
+  if (to.hash) {
+    position.selector = to.hash
+  }
+
+  if (to.meta.scrollToTop !== false) {
+    position.x = 0
+    position.y = 0
+  }
+  return position
 }
 
-var router = new Router({
+const router = new Router({
   mode: 'history',
   scrollBehavior,
   routes: [
@@ -59,7 +58,7 @@ var router = new Router({
     // },
     {
       path: '/',
-      meta: {title: '首页'},
+      meta: { title: '首页' },
       component: Views.layout,
       children: [resourceRoute, nodeRoute, groupRote, {
         path: 'about',
@@ -105,9 +104,9 @@ var router = new Router({
       }]
     }
   ]
-});
+})
 
-router.beforeEach((to,from, next)=>{
+router.beforeEach((to, from, next) => {
   next()
 })
 export default router

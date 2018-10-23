@@ -1,12 +1,12 @@
-import {cloneDeep, intersectionBy, unionBy, differenceBy} from 'lodash'
+import { cloneDeep, intersectionBy, unionBy, differenceBy } from 'lodash'
 import SchemeDataLoader from '@/data/scheme/loader'
 import ResourceLoader from '@/data/resource/loader'
 import PolicyEditor from '@/components/policyEditor/index.vue'
-import {beautify} from '@freelog/resource-policy-lang'
+import { beautify } from '@freelog/resource-policy-lang'
 import ResourceIntroInfo from '../intro/index.vue'
 import SchemeDetail from '../detail/auth-scheme/index.vue'
-import {SCHEME_STATUS, SCHEME_PUBLISH_STATUS} from '@/config/scheme'
-import {POLICY_STATUS} from '@/config/policy'
+import { SCHEME_STATUS, SCHEME_PUBLISH_STATUS } from '@/config/scheme'
+import { POLICY_STATUS } from '@/config/policy'
 
 export default {
   name: 'resource-scheme-tree',
@@ -59,13 +59,13 @@ export default {
     },
   },
   data() {
-    var isNodeDetail = !!this.$route.params.nodeId
+    const isNodeDetail = !!this.$route.params.nodeId
     return {
-      isNodeDetail: isNodeDetail,
+      isNodeDetail,
       schemes: [],
       dutyStatements: [],
       // bubbleResources: [],
-      viewMode: isNodeDetail ? 'tree' : 'list', //tree or list
+      viewMode: isNodeDetail ? 'tree' : 'list', // tree or list
       currentAuthNodeIndex: -1,
       dutyResourceMap: {},
       resourcesMap: {},
@@ -82,9 +82,7 @@ export default {
   },
   computed: {
     unsignPolicyList() {
-      return this.dutyStatements.filter(duty => {
-        return !duty.contractId
-      })
+      return this.dutyStatements.filter(duty => !duty.contractId)
     }
   },
   watch: {
@@ -104,7 +102,7 @@ export default {
     },
     resource(newRes, oldRes) {
       if (newRes && oldRes && (newRes.resourceId === oldRes.resourceId)) {
-        return;
+        return
       }
       if (oldRes && oldRes.resourceId) {
         if (!this.resourceSchemesCache[oldRes.resourceId]) {
@@ -126,86 +124,83 @@ export default {
         .then(() => {
           this.changeViewMode('tree')
         }).catch((err) => {
-        this.schemes = []
-        this.$error.showErrorMessage(err)
-      })
+          this.schemes = []
+          this.$error.showErrorMessage(err)
+        })
     }
   },
   methods: {
     fillDutyStatements() {
-      this.schemes.forEach(dep => {
+      this.schemes.forEach((dep) => {
         this.onSetResourceDetail(dep)
         this.haveSelectedScheme(dep)
         this.checkResourceActiveStatus(dep)
         return dep.resourceId
-      });
+      })
 
       this.$forceUpdate()
     },
     initView() {
-      var resourceId = this.resourceId || this.resource.resourceId
+      const resourceId = this.resourceId || this.resource.resourceId
 
       if (!resourceId) {
         this.schemes = []
         return Promise.resolve()
       }
 
-      var resourceSchemesCache = this.resourceSchemesCache
-      var resourceCache = resourceSchemesCache[resourceId]
+      const resourceSchemesCache = this.resourceSchemesCache
+      const resourceCache = resourceSchemesCache[resourceId]
 
       this.dutyStatements = this.contracts
-      this.contracts.forEach(contract => {
-        var rid = contract.resourceId
+      this.contracts.forEach((contract) => {
+        const rid = contract.resourceId
         this.dutyResourceMap[rid] = contract
-      });
+      })
 
       if (resourceCache && resourceCache.schemes) {
         this.schemes = []
         this.pushSchemeDep(resourceCache.resource)
         return Promise.resolve()
-      } else {
-        var promise;
-        if (this.resource && this.resource.resourceId)
-          promise = Promise.all([
-            this.loadSchemesForResource(resourceId)
-          ]).then(res => {
-            var resource = this.resource
-            resource.schemes = this.formatSchemes(res[0])
-            return resource
-          })
-        else {
-          promise = Promise.all([
-            ResourceLoader.onloadResourceDetail(resourceId),
-            this.loadSchemesForResource(resourceId)
-          ]).then(res => {
-            var resource = res[0]
-            resource.schemes = this.formatSchemes(res[1])
-            return resource
-          });
-        }
-        return promise.then((resource) => {
-          resource.activeIndex = 0
-          this.resourceSchemesCache[resourceId] = {
-            resource: resource
-          }
-          this.schemes = []
-          this.pushSchemeDep(resource)
-        });
       }
+      let promise
+      if (this.resource && this.resource.resourceId) {
+        promise = Promise.all([
+          this.loadSchemesForResource(resourceId)
+        ]).then((res) => {
+          const resource = this.resource
+          resource.schemes = this.formatSchemes(res[0])
+          return resource
+        })
+      } else {
+        promise = Promise.all([
+          ResourceLoader.onloadResourceDetail(resourceId),
+          this.loadSchemesForResource(resourceId)
+        ]).then((res) => {
+          const resource = res[0]
+          resource.schemes = this.formatSchemes(res[1])
+          return resource
+        })
+      }
+      return promise.then((resource) => {
+        resource.activeIndex = 0
+        this.resourceSchemesCache[resourceId] = {
+          resource
+        }
+        this.schemes = []
+        this.pushSchemeDep(resource)
+      })
     },
     loadSchemesForResource(resourceId) {
       return SchemeDataLoader.onloadSchemesForResource(resourceId, {
         // authSchemeStatus: 1,
         policyStatus: 2
       }).then((schemes) => {
-        var authSchemeIds = schemes.map(scheme => {
-          return scheme.authSchemeId
-        });
+        const authSchemeIds = schemes.map(scheme => scheme.authSchemeId)
 
         if (!authSchemeIds.length) {
           return schemes
         }
-        var params = {
+        const params = {
           authSchemeIds: authSchemeIds.join(',')
         }
 
@@ -214,44 +209,44 @@ export default {
         }
 
         return this.$axios.get('/v1/auths/authSchemeIdentityAuth', {
-          params: params
-        }).then(res => {
-          var list = res.getData();
-          var authsMap = {};
-          var duty = this.dutyResourceMap[resourceId];
-          list.forEach(schemeAuths => {
-            schemeAuths.policy.forEach(auth => {
+          params
+        }).then((res) => {
+          const list = res.getData()
+          const authsMap = {}
+          const duty = this.dutyResourceMap[resourceId]
+          list.forEach((schemeAuths) => {
+            schemeAuths.policy.forEach((auth) => {
               authsMap[`${schemeAuths.authSchemeId}_${auth.segmentId}`] = (auth.authResult && auth.authResult.isAuth)
             })
-          });
+          })
 
-          schemes = schemes.filter(scheme => {
-            //只展示已发布的和已选择的
-            var isPublished = scheme.status === SCHEME_PUBLISH_STATUS.PUBLISHED;
-            var isSelected = (duty && duty.authSchemeId === scheme.authSchemeId)
+          schemes = schemes.filter((scheme) => {
+            // 只展示已发布的和已选择的
+            const isPublished = scheme.status === SCHEME_PUBLISH_STATUS.PUBLISHED
+            const isSelected = (duty && duty.authSchemeId === scheme.authSchemeId)
             if (!isPublished && !isSelected) {
               return
             }
 
-            scheme.policy = scheme.policy.filter(p => {
+            scheme.policy = scheme.policy.filter((p) => {
               if ((isPublished && p.status === POLICY_STATUS.show) || duty.policySegmentId === p.segmentId) {
-                p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`];
-                return p;
+                p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`]
+                return p
               }
-            });
+            })
             return scheme
-          });
+          })
           return schemes
         })
       })
     },
     checkResourceActiveStatus(dep) {
       const key = 'resourceId'
-      var intersectDeps = intersectionBy(this.dutyStatements, [dep], key);
-      var activeStatus;
+      let intersectDeps = intersectionBy(this.dutyStatements, [dep], key)
+      let activeStatus
       if (intersectDeps.length) {
-        var allResources = unionBy(this.bubbleResources, this.dutyStatements, key)
-        intersectDeps = intersectionBy(allResources, dep.dependenciesTree, key);
+        const allResources = unionBy(this.bubbleResources, this.dutyStatements, key)
+        intersectDeps = intersectionBy(allResources, dep.dependenciesTree, key)
         intersectDeps = differenceBy(intersectDeps, this.dutyStatements, key)
         if (intersectDeps.length) {
           activeStatus = SCHEME_STATUS.SOME
@@ -261,12 +256,12 @@ export default {
 
         dep.activeStatus = activeStatus
         if (dep.selectedScheme && dep.selectedScheme.authSchemeId) {
-          dep.selectedScheme.dependencies.forEach(res => {
+          dep.selectedScheme.dependencies.forEach((res) => {
             this.checkResourceActiveStatus(res)
           })
         }
       } else {
-        intersectDeps = intersectionBy(this.bubbleResources, [dep], key);
+        intersectDeps = intersectionBy(this.bubbleResources, [dep], key)
         if (intersectDeps.length) {
           dep.isResolved = false
         } else {
@@ -276,9 +271,9 @@ export default {
       }
     },
     formatPolicyText(policyText) {
-      var fmtText
+      let fmtText
       try {
-        fmtText = beautify(policyText);
+        fmtText = beautify(policyText)
       } catch (err) {
         fmtText = policyText
       }
@@ -289,22 +284,22 @@ export default {
 
       this.$emit('changeMode', mode)
       if (mode === 'list') {
-        this.hideLineArrow(this.$el);
-        this.showUnSignedPolicyList();
+        this.hideLineArrow(this.$el)
+        this.showUnSignedPolicyList()
       } else {
         this.showLineArrows()
       }
     },
     showUnSignedPolicyList() {
-      var rids = []
-      var schemeRids = []
+      const rids = []
+      const schemeRids = []
       this.dutyStatements.forEach((duty) => {
-        rids.push(duty.resourceId);
+        rids.push(duty.resourceId)
         this.onSetResourceDetail(duty)
         if (!duty.selectedScheme) {
           schemeRids.push(duty.resourceId)
         }
-      });
+      })
 
       if (schemeRids.length) {
         SchemeDataLoader.loadAuthSchemes({
@@ -312,19 +307,19 @@ export default {
           authSchemeStatus: 1,
           policyStatus: 1
         }).then((schemes) => {
-          var resources = []
-          schemes.forEach(scheme => {
-            var resource = this.resourcesMap[scheme.resourceId]
+          const resources = []
+          schemes.forEach((scheme) => {
+            const resource = this.resourcesMap[scheme.resourceId]
             if (resource.schemes) {
-              resource.schemes.push(scheme);
+              resource.schemes.push(scheme)
             } else {
-              resource.schemes = [scheme];
+              resource.schemes = [scheme]
               resources.push(resource)
             }
-          });
+          })
 
-          resources.forEach(res => {
-            this.resolveResourceSchemes(res);
+          resources.forEach((res) => {
+            this.resolveResourceSchemes(res)
             this.haveSelectedScheme(res)
           })
         }).then(() => {
@@ -339,14 +334,12 @@ export default {
     },
     loadResourcesDetail(rids) {
       if (rids.length) {
-        return ResourceLoader.loadResources(rids).then(list => {
-          return list
-        })
+        return ResourceLoader.loadResources(rids).then(list => list)
       }
     },
     changePolicy(resource, scheme, policy) {
       if (scheme.selectedPolicySegmentId) {
-        scheme.selectedPolicy = {...policy}
+        scheme.selectedPolicy = { ...policy }
       }
 
       this.$forceUpdate()
@@ -361,17 +354,17 @@ export default {
     },
     computeLineArrow(target, _from) {
       this.$nextTick(() => {
-        var fromRect = _from.getBoundingClientRect()
+        const fromRect = _from.getBoundingClientRect()
 
-        target.style.top = (_from.offsetTop + 10) + 'px'
-        target.style.left = (_from.offsetLeft + fromRect.width + 5) + 'px'
+        target.style.top = `${_from.offsetTop + 10}px`
+        target.style.left = `${_from.offsetLeft + fromRect.width + 5}px`
         target.style.right = '-10px'
         target.style.display = 'block'
       })
     },
-    //默认取消后续的授权方案
+    // 默认取消后续的授权方案
     cancelBackSchemes(resource) {
-      var dependencies = resource.selectedScheme && resource.selectedScheme.dependencies
+      const dependencies = resource.selectedScheme && resource.selectedScheme.dependencies
       if (dependencies && dependencies.length) {
         dependencies.forEach((dep) => {
           if (dep.selectedScheme) {
@@ -381,36 +374,36 @@ export default {
       }
     },
     prevResourcesHandler(res, fn) {
-      var resources = this.schemes
-      var start = false
-      for (var i = resources.length - 1; i >= 0; i--) {
-        let tmpRes = resources[i]
+      const resources = this.schemes
+      let start = false
+      for (let i = resources.length - 1; i >= 0; i--) {
+        const tmpRes = resources[i]
         if (res.resourceId === tmpRes.resourceId) {
           start = true
         }
 
         if (start && fn(tmpRes)) {
-          break;
+          break
         }
       }
     },
-    //默认选中前置的授权方案
+    // 默认选中前置的授权方案
     selectPrevSchemes(curRes) {
       this.prevResourcesHandler(curRes, (res) => {
         this.setSelectedScheme(res)
       })
     },
     deleteFromDutyStateMents(resource) {
-      var dutyStatements = this.dutyStatements
+      const dutyStatements = this.dutyStatements
 
       if (this.dutyResourceMap[resource.resourceId]) {
         delete this.dutyResourceMap[resource.resourceId]
       }
-      for (var i = 0; i < dutyStatements.length; i++) {
-        let duty = dutyStatements[i]
+      for (let i = 0; i < dutyStatements.length; i++) {
+        const duty = dutyStatements[i]
         if (duty.resourceId === resource.resourceId) {
           dutyStatements.splice(i, 1)
-          break;
+          break
         }
       }
     },
@@ -424,9 +417,9 @@ export default {
     },
     setSelectedScheme(resource, scheme) {
       // var scheme = resource.activeScheme
-      var selectedScheme = resource.selectedScheme
+      const selectedScheme = resource.selectedScheme
 
-      //如果已经选择过且与本次选择不同，则需要覆盖
+      // 如果已经选择过且与本次选择不同，则需要覆盖
       if (selectedScheme && selectedScheme.authSchemeId &&
         (selectedScheme.authSchemeId !== scheme.authSchemeId)) {
         this.resetSelectedScheme(resource)
@@ -443,22 +436,22 @@ export default {
       this.updateResourceActiveStatus(resource)
     },
     updateResourceActiveStatus(resource) {
-      var activeStatus;
+      let activeStatus
 
       if (!resource.selectedScheme || !resource.selectedScheme.authSchemeId) {
         activeStatus = resource.isResolved === false ? SCHEME_STATUS.NONE : SCHEME_STATUS.UNHANDLE
       } else {
-        var bubbleResources = resource.selectedScheme.bubbleResources
+        const bubbleResources = resource.selectedScheme.bubbleResources
         if (bubbleResources.length) {
-          var cnt = 0
+          let cnt = 0
           activeStatus = SCHEME_STATUS.SOME
           bubbleResources.forEach((res) => {
-            var duty = this.dutyResourceMap[res.resourceId]
-            var resource = duty && this.resourcesMap[duty.resourceId]
+            const duty = this.dutyResourceMap[res.resourceId]
+            const resource = duty && this.resourcesMap[duty.resourceId]
             if (duty && (resource.activeStatus === SCHEME_STATUS.ALL)) {
               cnt++
             }
-          });
+          })
           if (cnt === bubbleResources.length) {
             activeStatus = SCHEME_STATUS.ALL
           }
@@ -479,32 +472,28 @@ export default {
       })
     },
     checkResourceSelectable(index) {
-      var prev = index - 1;
+      const prev = index - 1
       if (prev >= 0) {
-        let prevResource = this.schemes[prev];
+        const prevResource = this.schemes[prev]
         return prevResource.selected
-      } else {
-        return true
       }
+      return true
     },
     checkResourceCancelable(resource) {
-      var deps = resource.selectedScheme.dependencies;
-      var selectedDeps = []
+      const deps = resource.selectedScheme.dependencies
+      const selectedDeps = []
 
-      deps.forEach(dep => {
+      deps.forEach((dep) => {
         if (dep.selected || dep.activeStatus === SCHEME_STATUS.ALL || dep.activeStatus === SCHEME_STATUS.SOME) {
           selectedDeps.push(dep)
         }
-      });
+      })
 
       if (!selectedDeps.length) {
         return Promise.resolve()
-      } else {
-        let msg = selectedDeps.map(dep => {
-          return dep.resourceName
-        }).join('、')
-        return this.$confirm(`取消当前资源的选择会导致后续资源选择的策略都取消，确定吗？`, {})
       }
+      const msg = selectedDeps.map(dep => dep.resourceName).join('、')
+      return this.$confirm('取消当前资源的选择会导致后续资源选择的策略都取消，确定吗？', {})
     },
     selectAuthSchemeHandler(resource, scheme, panelIndex) {
       if (this.config.isPublished) {
@@ -519,7 +508,7 @@ export default {
               this.schemes[0].checked = false
             }
             this.resetSelectedScheme(resource)
-            this.updatePrevSchemesActiveStatus(resource);
+            this.updatePrevSchemesActiveStatus(resource)
             this._fireUpdateHandler()
           })
           .catch(() => {
@@ -532,29 +521,28 @@ export default {
         }
 
         this.setSelectedScheme(resource, scheme)
-        this.updatePrevSchemesActiveStatus(resource);
+        this.updatePrevSchemesActiveStatus(resource)
         // this.selectPrevSchemes(resource)
         this._fireUpdateHandler()
       }
     },
     _fireUpdateHandler() {
-      var data = this.dutyStatements
+      const data = this.dutyStatements
       this.updateCallback && this.updateCallback(data)
       this.$emit('update', data)
     },
     getParent(el, selector) {
       if (!selector) {
         return el.parentNode
-      } else {
-        var target = el.parentNode
-        var isId = selector[0] === '#';
-        selector = selector.substr(1)
-        while (!((isId && target.id === selector) || (!isId && target.className.indexOf(selector) > -1)) && target !== document.body) {
-          target = target.parentNode
-        }
-
-        return target
       }
+      let target = el.parentNode
+      const isId = selector[0] === '#'
+      selector = selector.substr(1)
+      while (!((isId && target.id === selector) || (!isId && target.className.indexOf(selector) > -1)) && target !== document.body) {
+        target = target.parentNode
+      }
+
+      return target
     },
     selectResourceHandler(dep, scheme, index, ev) {
       scheme.activeResource = dep
@@ -564,53 +552,52 @@ export default {
     },
     updateSchemeList(index) {
       index++
-      var len = this.schemes.length;
-      var diff = len - index
+      const len = this.schemes.length
+      const diff = len - index
       this.currentAuthNodeIndex = index
       if (diff > 0) {
-        for (var i = 0; i < diff; i++) {
+        for (let i = 0; i < diff; i++) {
           this.schemes.pop()
         }
       }
     },
     haveSelectedScheme(dep) {
-      var duty = this.dutyResourceMap[dep.resourceId]
+      const duty = this.dutyResourceMap[dep.resourceId]
       if (duty) {
-        for (var i = 0, len = dep.schemes.length; i < len; i++) {
-          let scheme = dep.schemes[i];
+        for (let i = 0, len = dep.schemes.length; i < len; i++) {
+          const scheme = dep.schemes[i]
           if (scheme.authSchemeId === duty.authSchemeId ||
             (duty.selectedScheme && scheme.authSchemeId === duty.selectedScheme.authSchemeId)) {
-            dep.activeScheme = scheme;
-            dep.activeIndex = i;
+            dep.activeScheme = scheme
+            dep.activeIndex = i
             dep.selectedScheme = scheme
             dep.selected = true
             Object.assign(duty, dep)
             scheme.selectedPolicySegmentId = duty.selectedScheme.selectedPolicySegmentId || duty.policySegmentId
-            for (var j = 0; j < scheme.policy.length; j++) {
+            for (let j = 0; j < scheme.policy.length; j++) {
               if (scheme.policy[j].segmentId === duty.policySegmentId) {
                 scheme.selectedPolicy = scheme.policy[j]
                 scheme.policy[j].selected = true
               }
             }
-            break;
+            break
           }
         }
         return true
-      } else {
-        dep.selectedScheme = {}
-        dep.selected = false
-        return false
       }
+      dep.selectedScheme = {}
+      dep.selected = false
+      return false
     },
     loadResourceSchemes(dep) {
       if (dep.schemes) {
         return Promise.resolve(dep)
       }
       dep.schemes = []
-      //获取已发布的授权点列表 {authSchemeStatus: 1}
+      // 获取已发布的授权点列表 {authSchemeStatus: 1}
       return this.loadSchemesForResource(dep.resourceId).then((schemes) => {
         dep.schemes = schemes
-        return this.resolveResourceSchemes(dep);
+        return this.resolveResourceSchemes(dep)
       })
     },
     resolveResourceSchemes(dep) {
@@ -629,9 +616,9 @@ export default {
       if (!dep.schemes) {
         this.loadResourceSchemes(dep).then(() => {
           this.$forceUpdate()
-        });
+        })
       } else if (dep.activeStatus === undefined) {
-        this.checkResourceActiveStatus(dep);
+        this.checkResourceActiveStatus(dep)
         if (!dep.activeScheme && dep.schemes.length) {
           dep.activeScheme = dep.schemes[0]
         }
@@ -642,35 +629,35 @@ export default {
         dep.activeScheme = dep.schemes[0]
       }
 
-      this.schemes.push(dep);
+      this.schemes.push(dep)
       if (dep.activeScheme && dep.activeScheme.activeResource) {
         this.revertDependencyPanels(dep)
       }
     },
     onSetResourceDetail(dep) {
-      var rid = dep.resourceId;
-      var resource = this.resourcesMap[rid]
+      const rid = dep.resourceId
+      const resource = this.resourcesMap[rid]
       if (!resource) {
         this.resourcesMap[rid] = dep
       }
 
       if (!dep.resourceInfo) {
-        ResourceLoader.onloadResourceDetail(rid).then(detail => {
-          this.$set(dep, 'resourceInfo', detail);
+        ResourceLoader.onloadResourceDetail(rid).then((detail) => {
+          this.$set(dep, 'resourceInfo', detail)
         })
       }
     },
     revertDependencyPanels(dep) {
-      var activeScheme = dep.activeScheme
+      let activeScheme = dep.activeScheme
       if (!activeScheme) {
         return
       }
-      var next = activeScheme.activeResource
-      var schemeList = [];
+      let next = activeScheme.activeResource
+      const schemeList = []
       schemeList.push(activeScheme)
       while (next) {
         this.currentAuthNodeIndex++
-        this.schemes.push(next);
+        this.schemes.push(next)
         activeScheme = next.activeScheme
         next = activeScheme && activeScheme.activeResource
         if (next) {
@@ -679,49 +666,48 @@ export default {
       }
 
       this.$nextTick(() => {
-        schemeList.forEach(scheme => {
+        schemeList.forEach((scheme) => {
           this.drawLineArrow(scheme)
         })
       })
     },
     drawLineArrow(scheme) {
-      var target = this.$el.querySelector('.js-line-' + scheme.authSchemeId)
-      var $parent = this.getParent(target, '.scheme-detail-panel')
-      this.computeLineArrow(target, $parent.querySelector('.js-res-' + scheme.activeResource.resourceId))
+      const target = this.$el.querySelector(`.js-line-${scheme.authSchemeId}`)
+      const $parent = this.getParent(target, '.scheme-detail-panel')
+      this.computeLineArrow(target, $parent.querySelector(`.js-res-${scheme.activeResource.resourceId}`))
     },
     formatSchemes(schemes) {
-      var resourcesMap = this.resourcesMap;
+      const resourcesMap = this.resourcesMap
       schemes.forEach((scheme) => {
-        var rids = []
-        scheme.dependencies = scheme.bubbleResources.map(res => {
-          let resourceId = res.resourceId
+        const rids = []
+        scheme.dependencies = scheme.bubbleResources.map((res) => {
+          const resourceId = res.resourceId
           if (resourcesMap[resourceId]) {
             return resourcesMap[resourceId]
-          } else {
-            this.onSetResourceDetail(res);
-            rids.push(res.resourceId)
-            return res
           }
-        });
+          this.onSetResourceDetail(res)
+          rids.push(res.resourceId)
+          return res
+        })
 
         if (scheme.selectedPolicySegmentId === undefined) {
           scheme.selectedPolicy = {}
           scheme.selectedPolicySegmentId = ''
         }
-      });
+      })
       return schemes
     },
     hideLineArrow($el) {
-      var $lines = $el.querySelectorAll('.line-arrow')
+      const $lines = $el.querySelectorAll('.line-arrow')
       $lines.forEach(($line) => {
         $line.style.display = 'none'
       })
     },
     showLineArrows() {
-      var resources = this.schemes.slice(0, -1);
+      const resources = this.schemes.slice(0, -1)
       resources.forEach((resource) => {
         if (resource.activeScheme) {
-          var $lines = this.$el.querySelectorAll(`.js-line-${resource.activeScheme.authSchemeId}`);
+          const $lines = this.$el.querySelectorAll(`.js-line-${resource.activeScheme.authSchemeId}`)
           $lines.forEach(($line) => {
             $line.style.display = 'block'
           })
@@ -734,25 +720,25 @@ export default {
 
       this.updateSchemeList(panelIndex)
       if (scheme.activeResource) {
-        this.pushSchemeDep(scheme.activeResource);
+        this.pushSchemeDep(scheme.activeResource)
         this.drawLineArrow(scheme)
       }
 
       this.$forceUpdate()
     },
     getDutyStatements() {
-      this.dutyStatements.forEach(res => {
-        var detail = this.resourcesMap[res.resourceId]
-        //更新数据
+      this.dutyStatements.forEach((res) => {
+        const detail = this.resourcesMap[res.resourceId]
+        // 更新数据
         if (detail) {
           Object.assign(res, detail)
         }
-      });
+      })
       console.log(this.dutyStatements)
       return this.dutyStatements
     },
     hideSchemeArrow(scheme) {
-      var $line = this.$el.querySelector(`.js-line-${scheme.authSchemeId}`);
+      const $line = this.$el.querySelector(`.js-line-${scheme.authSchemeId}`)
       $line.style.display = 'none'
     },
     toggleResolveResource(resource, index) {

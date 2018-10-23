@@ -37,65 +37,66 @@
 </template>
 
 <script>
-  import {CONTRACT_STATUS_COLORS} from '@/config/contract'
-  import ContractUtils from '@/data/contract/utils'
-  export default {
-    name: 'contract-detail-info',
-    data() {
-      return {
-        detail: null,
-        refreshing: false
+import { CONTRACT_STATUS_COLORS } from '@/config/contract'
+import ContractUtils from '@/data/contract/utils'
+
+export default {
+  name: 'contract-detail-info',
+  data() {
+    return {
+      detail: null,
+      refreshing: false
+    }
+  },
+  props: {
+    data: {
+      type: Object,
+      default() {
+        return { statusInfo: {} }
       }
     },
-    props: {
-      data: {
-        type: Object,
-        default() {
-          return {statusInfo: {}}
-        }
-      },
-      shouldShowSegment: {
-        type: Boolean,
-        default() {
-          return true
-        }
-      },
-      labelWidth: {
-        type: Number,
-        default() {
-          return 100
-        }
-      },
-      showRefreshing: {
-        type: Boolean,
-        default() {
-          return false
-        }
+    shouldShowSegment: {
+      type: Boolean,
+      default() {
+        return true
       }
     },
-
-    mounted() {
-      this.render()
+    labelWidth: {
+      type: Number,
+      default() {
+        return 100
+      }
     },
-
-    watch: {
-      data: 'render'
-    },
-
-    methods: {
-      refreshHandler() {
-        this.refreshing = true
-        this.$emit('refresh', {
-          done: () => {
-            this.refreshing = false
-          }
-        })
-      },
-      render() {
-        this.detail = ContractUtils.format(this.data)
+    showRefreshing: {
+      type: Boolean,
+      default() {
+        return false
       }
     }
+  },
+
+  mounted() {
+    this.render()
+  },
+
+  watch: {
+    data: 'render'
+  },
+
+  methods: {
+    refreshHandler() {
+      this.refreshing = true
+      this.$emit('refresh', {
+        done: () => {
+          this.refreshing = false
+        }
+      })
+    },
+    render() {
+      this.detail = ContractUtils.format(this.data)
+    }
   }
+}
 </script>
 
 <style lang="less" scoped>

@@ -3,10 +3,8 @@ import router from '../router'
 export default (Vue, options) => {
   let items
 
-  router.afterEach(route => {
-    items = route.matched.map((item)=>{
-      return (item.meta && item.meta.title) || item.name || '';
-    }).filter(v=>!!v)
+  router.afterEach((route) => {
+    items = route.matched.map(item => (item.meta && item.meta.title) || item.name || '').filter(v => !!v)
 
     document.title = items.join(options.separator)
   })

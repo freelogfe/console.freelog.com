@@ -14,7 +14,7 @@ export default {
 
   computed: {
     getCreateLink() {
-      return `/${this.type}/policy_tpl/create`;
+      return `/${this.type}/policy_tpl/create`
     }
   },
   mounted() {
@@ -23,7 +23,7 @@ export default {
     loader() {
       return (param) => {
         if (typeof param === 'object') {
-          param.templateType = (this.type === 'node') ? 2 : 1;
+          param.templateType = (this.type === 'node') ? 2 : 1
           param = {
             params: param
           }
@@ -38,7 +38,7 @@ export default {
       return utils.resolveStatus(status)
     },
     handleEdit(row) {
-      this.$router.push({path: `/${this.type}/policy_tpl/detail`, query: {id: row.id}})
+      this.$router.push({ path: `/${this.type}/policy_tpl/detail`, query: { id: row.id } })
     }
   }
 }

@@ -18,9 +18,9 @@
 </template>
 
 <script>
-  import ResourceMetaInfo from './index'
+import ResourceMetaInfo from './index'
 
-  export default ResourceMetaInfo
+export default ResourceMetaInfo
 </script>
 
 <style lang="less">

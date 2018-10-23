@@ -20,21 +20,21 @@
 </template>
 
 <script>
-  export default {
-    name: 'resource-intro',
-    data() {
-      return {}
-    },
+export default {
+  name: 'resource-intro',
+  data() {
+    return {}
+  },
 
-    props: {
-      resource: {
-        type: Object,
-        default() {
-          return {}
-        }
+  props: {
+    resource: {
+      type: Object,
+      default() {
+        return {}
       }
     }
   }
+}
 </script>
 
 

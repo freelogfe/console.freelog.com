@@ -86,9 +86,9 @@
 </template>
 
 <script>
-  import ResourceDetail from './index'
+import ResourceDetail from './index'
 
-  export default ResourceDetail
+export default ResourceDetail
 </script>
 
 <style lang="less" scoped>

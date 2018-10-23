@@ -7,12 +7,12 @@
 </template>
 
 <script>
-  import './styles/reset.css'
-  import './styles/global.less';
+import './styles/reset.css'
+import './styles/global.less'
 
-  export default {
-    name: 'app'
-  }
+export default {
+  name: 'app'
+}
 </script>
 
 <style media="screen">

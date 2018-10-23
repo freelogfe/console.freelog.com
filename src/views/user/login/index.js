@@ -1,6 +1,6 @@
-import {storage} from '@/lib'
-import {validateLoginName} from '../validator'
-import {isSafeUrl} from '@/lib/security'
+import { storage } from '@/lib'
+import { validateLoginName } from '../validator'
+import { isSafeUrl } from '@/lib/security'
 
 export default {
   name: 'login',
@@ -8,12 +8,12 @@ export default {
   data() {
     const rules = {
       loginName: [
-        {required: true, message: '请输入账号', trigger: 'blur'},
-        {validator: validateLoginName, trigger: 'blur'}
+        { required: true, message: '请输入账号', trigger: 'blur' },
+        { validator: validateLoginName, trigger: 'blur' }
       ],
       password: [
-        {required: true, message: '请输入密码', trigger: 'blur'},
-        {min: 6, message: '长度至少6个字符', trigger: 'blur'}
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, message: '长度至少6个字符', trigger: 'blur' }
       ]
     }
 
@@ -23,14 +23,14 @@ export default {
         password: '',
       },
       signUpLink: '/user/signup',
-      rules: rules,
+      rules,
       error: null,
       loading: false,
       rememberUser: false
     }
   },
   mounted() {
-    var redirect = this.$route.query.redirect;
+    const redirect = this.$route.query.redirect
 
 
     this.$store.dispatch('checkUserSession').then((isLogined) => {
@@ -40,12 +40,11 @@ export default {
         this.signUpLink += `?redirect=${redirect}`
       }
     })
-
   },
 
   methods: {
     redirect() {
-      var redirect = this.$route.query.redirect;
+      const redirect = this.$route.query.redirect
       if (isSafeUrl(redirect)) {
         location.replace(redirect)
       } else {
@@ -53,8 +52,8 @@ export default {
       }
     },
     submit(ref) {
-      var self = this;
-      this.$refs[ref].validate(valid => {
+      const self = this
+      this.$refs[ref].validate((valid) => {
         if (!valid) {
           return false
         }
@@ -62,7 +61,7 @@ export default {
         this.error = null
         this.loading = true
 
-        var data = Object.assign(this.model, {
+        const data = Object.assign(this.model, {
           // jwtType: 'header',
           isRememer: this.rememberUser ? 1 : 0
         })
@@ -70,7 +69,7 @@ export default {
         this.$store.dispatch('userLogin', data)
           .then((userInfo) => {
             storage.set('loginName', data.loginName)
-            var redirect = this.$route.query.redirect;
+            const redirect = this.$route.query.redirect
             if (isSafeUrl(redirect)) {
               location.replace(redirect)
               // self.$router.replace(redirect)
@@ -79,12 +78,12 @@ export default {
             }
             self.loading = false
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err)
             if (typeof err === 'string') {
-              self.error = {title: '', message: err}
+              self.error = { title: '', message: err }
             } else {
-              self.error = {title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！'}
+              self.error = { title: '发生错误', message: err.response.errorMsg || '出现异常，请稍后再试！' }
               switch (err.response && err.response.status) {
                 case 401:
                   self.error.message = '用户名或密码错误！'

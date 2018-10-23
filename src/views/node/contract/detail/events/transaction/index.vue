@@ -51,9 +51,9 @@
 </template>
 
 <script type="text/javascript">
-  import TransactionEvent from './index.js'
+import TransactionEvent from './index.js'
 
-  export default TransactionEvent
+export default TransactionEvent
 </script>
 
 <style lang="less">

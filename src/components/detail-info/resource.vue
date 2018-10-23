@@ -28,42 +28,40 @@
 </template>
 
 <script>
-  import {RESOURCE_TYPES, RESOURCE_STATUS} from '@/config/resource'
+import { RESOURCE_TYPES, RESOURCE_STATUS } from '@/config/resource'
 
-  export default {
-    name: 'resource-detail-info',
-    props: {
-      data: {
-        type: Object,
-        default() {
-          return {}
-        }
+export default {
+  name: 'resource-detail-info',
+  props: {
+    data: {
+      type: Object,
+      default() {
+        return {}
       }
-    },
+    }
+  },
 
-    mounted() {
-      this.format()
-    },
+  mounted() {
+    this.format()
+  },
 
-    watch: {
-      data: 'format'
-    },
+  watch: {
+    data: 'format'
+  },
 
-    methods: {
-      loadAuthorInfo(userId) {
-        return this.$services.user.get(userId).then((res) => {
-          return res.getData()
+  methods: {
+    loadAuthorInfo(userId) {
+      return this.$services.user.get(userId).then(res => res.getData())
+    },
+    format() {
+      const detail = this.data
+      detail.statusInfo = RESOURCE_STATUS[detail.status]
+      if (detail.userId) {
+        this.loadAuthorInfo(detail.userId).then((authorInfo) => {
+          this.$set(detail, 'authorInfo', authorInfo)
         })
-      },
-      format() {
-        var detail = this.data
-        detail.statusInfo = RESOURCE_STATUS[detail.status]
-        if (detail.userId) {
-          this.loadAuthorInfo(detail.userId).then((authorInfo) => {
-            this.$set(detail, 'authorInfo', authorInfo)
-          })
-        }
       }
     }
   }
+}
 </script>

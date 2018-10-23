@@ -14,9 +14,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'not-found'
-  }
+export default {
+  name: 'not-found'
+}
 </script>
 
 <style lang="less" scoped>

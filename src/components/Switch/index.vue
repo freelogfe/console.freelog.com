@@ -10,9 +10,9 @@
 </template>
 
 <script>
-  import SwitchWidget from './index'
+import SwitchWidget from './index'
 
-  export default SwitchWidget
+export default SwitchWidget
 </script>
 
 <style lang="less" scoped>

@@ -45,9 +45,9 @@
 </template>
 
 <script>
-  import LoginView from './index'
+import LoginView from './index'
 
-  export default LoginView
+export default LoginView
 </script>
 
 <style lang="less" scoped>

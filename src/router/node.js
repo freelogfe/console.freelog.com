@@ -1,13 +1,13 @@
 import Views from '@/views'
 
-//节点操作相关的页面
+// 节点操作相关的页面
 export const nodeItemRoute = {
   path: ':nodeId',
   component: Views.container,
   hidden: true,
   meta: {
     requiresAuth: true,
-    title: ':nodeId节点' //:key 可动态通过route.params上的k-v进行替换
+    title: ':nodeId节点' // :key 可动态通过route.params上的k-v进行替换
   },
   children: [
     {
@@ -42,7 +42,7 @@ export const nodeItemRoute = {
       ]
     }
   ]
-};
+}
 
 export default {
   path: 'node',

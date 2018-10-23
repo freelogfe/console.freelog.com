@@ -3,4 +3,6 @@ const userResetPassword = resolve => require.ensure([], () => resolve(require('.
 const userSetting = resolve => require.ensure([], () => resolve(require('./setting/index.vue')), 'user')
 const userSignup = resolve => require.ensure([], () => resolve(require('./signup/index.vue')), 'user')
 
-export default {userLogin, userResetPassword, userSetting, userSignup}
+export default {
+  userLogin, userResetPassword, userSetting, userSignup
+}

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-  import PolicyTplList from './index'
+import PolicyTplList from './index'
 
-  export default PolicyTplList
+export default PolicyTplList
 </script>
 
 <style lang="less" scoped>
