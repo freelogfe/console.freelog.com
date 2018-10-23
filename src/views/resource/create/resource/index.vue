@@ -9,7 +9,8 @@
               class="resource-thumbnail-uploader"
               drag
               ref="thumbnailUploader"
-              action="/api/v1/resources/upoladPreviewImage"
+              action="//qi.testfreelog.com/v1/resources/upoladPreviewImage"
+              :with-credentials="true"
               :data="uploader.data"
               :headers="uploader.headers"
               :on-error="errorHandler"
@@ -48,7 +49,8 @@
                 class="resource-file-uploader"
                 drag
                 ref="resourceUploader"
-                action="/api/v1/resources/uploadResourceFile"
+                action="//qi.testfreelog.com/v1/resources/uploadResourceFile"
+                :with-credentials="true"
                 :multiple="false"
                 :data="{resourceType: formData.resourceType}"
                 :headers="uploader.headers"
