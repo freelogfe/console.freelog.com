@@ -1,9 +1,9 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import AuthSchemeDetail from './auth-scheme/index.vue'
-import {loadDetail} from '@/data/resource/loader'
+import { loadDetail } from '@/data/resource/loader'
 import NodeDataLoader from '@/data/node/loader'
 
 export default {
@@ -24,7 +24,7 @@ export default {
     }
   },
   computed: Object.assign({
-    isOwnerResource: function () {
+    isOwnerResource() {
       return this.resourceDetail.resourceInfo.isOwner
     }
   }, mapGetters({
@@ -50,44 +50,43 @@ export default {
         if (res.isOwner) {
           this.showAuthSchemes = true
         }
-      }).catch(err => {
+      }).catch((err) => {
         this.$router.push('/')
         // this.$error.showErrorMessage(err)
-      });
+      })
 
       this.isFavorResource().then((isFavor) => {
         this.resourceDetail.isFavor = isFavor
-      }).catch(err => {
+      }).catch((err) => {
         console.warn(err)
         // this.$error.showErrorMessage(err)
-      });
+      })
     },
     isFavorResource() {
       return this.$services.collections.get(this.resourceId).then((res) => {
         if (res.data.errcode === 0) {
           return !!res.data.data
-        } else {
-          throw new Error(res)
         }
+        throw new Error(res)
       })
     },
     humanizeSize(number) {
-      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
 
       if (number < 1) {
-        return number + 'B';
+        return `${number}B`
       }
 
       const algorithm = 1024
-      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
-      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
-      const unit = UNITS[exponent];
+      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1)
+      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2))
+      const unit = UNITS[exponent]
 
-      return number + unit;
+      return number + unit
     },
     showAuthSchemeHandler() {
       this.showAuthSchemes = true
-      this.transformLeft = Math.min(250, Math.max(this.$refs.detailContent.offsetLeft - 20, 0));
+      this.transformLeft = Math.min(250, Math.max(this.$refs.detailContent.offsetLeft - 20, 0))
       this.contentTransform = `translate(-${this.transformLeft}px, 0)`
     },
     hideAuthSchemeHandler() {
@@ -124,8 +123,8 @@ export default {
         return
       }
 
-      this.favoring = true;
-      var callback
+      this.favoring = true
+      let callback
       if (!this.resourceDetail.isFavor) {
         callback = this.favorResource()
       } else {
@@ -144,15 +143,15 @@ export default {
         return Promise.resolve(this.nodes)
       }
 
-      return Promise.all([this.loadResourceOwners(), NodeDataLoader.onloadNodeList()]).then(res => {
-        var resourceOwners = res[0];
-        var nodeList = res[1].dataList || []
-        var ownersMap = {}
-        resourceOwners.forEach(item => {
+      return Promise.all([this.loadResourceOwners(), NodeDataLoader.onloadNodeList()]).then((res) => {
+        const resourceOwners = res[0]
+        const nodeList = res[1].dataList || []
+        const ownersMap = {}
+        resourceOwners.forEach((item) => {
           ownersMap[item.nodeId] = item
         })
 
-        nodeList.map(node => {
+        nodeList.map((node) => {
           node.checked = !!ownersMap[node.nodeId]
           if (node.checked) {
             node._presentable = ownersMap[node.nodeId]
@@ -165,13 +164,11 @@ export default {
       })
     },
     loadResourceOwners() {
-      return this.$axios.get(`/v1/presentables/resourceSubordinateNodes`, {
+      return this.$axios.get('/v1/presentables/resourceSubordinateNodes', {
         params: {
           resourceId: this.resourceId
         }
-      }).then(res => {
-        return res.getData()
-      })
+      }).then(res => res.getData())
     },
     showNodeOptions() {
       return new Promise((resolve, reject) => {
@@ -196,17 +193,15 @@ export default {
     },
     confirmAuthHandler() {
       this.hideOptionsDialogHandler()
-      var selectedNodes = []
-      this.nodes.forEach(node => {
+      const selectedNodes = []
+      this.nodes.forEach((node) => {
         if (node.checked) {
           selectedNodes.push(node.nodeId)
         }
       })
 
       if (selectedNodes.length) {
-        var promises = selectedNodes.map(nodeId => {
-          return this.createPresentable(nodeId)
-        });
+        const promises = selectedNodes.map(nodeId => this.createPresentable(nodeId))
 
         Promise.all(promises).then((list) => {
           this.$message.success('获取成功')
@@ -214,21 +209,20 @@ export default {
       }
     },
     createPresentable(nodeId) {
-      var resourceInfo = this.resourceDetail.resourceInfo
+      const resourceInfo = this.resourceDetail.resourceInfo
       return this.$services.presentables.post({
-        nodeId: nodeId,
+        nodeId,
         presentableName: resourceInfo.resourceName,
         resourceId: resourceInfo.resourceId
-      }).then(res => {
+      }).then((res) => {
         if (res.data.errcode !== 0) {
           return Promise.reject(res.data.msg)
-        } else {
-          return res.getData()
         }
+        return res.getData()
       })
     },
     selectPolicyHandler(scheme, policy) {
-      this.selectedPolicy.scheme = scheme;
+      this.selectedPolicy.scheme = scheme
       this.selectedPolicy.policy = policy
     },
     editDetailHandler() {

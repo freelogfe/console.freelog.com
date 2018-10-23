@@ -14,8 +14,8 @@ export default {
     }
   },
   mounted() {
-    var self = this
-    this.$services.accounts.get().then(function (res) {
+    const self = this
+    this.$services.accounts.get().then((res) => {
       self.options = res.data.data
     })
     // this.queryOrder().then(this.checkOrderStatus.bind(this))
@@ -38,14 +38,13 @@ export default {
   props: ['contractDetail', 'params'],
   methods: {
     selectVisibleChange(visible) {
-      if(visible && this.options.length === 0) {
+      if (visible && this.options.length === 0) {
         this.isLoadingAccount = true
         this.$services.accounts.get()
-          .then( res => {
+          .then((res) => {
             this.options = res.data.data
             this.isLoadingAccount = false
           })
-
       }
     },
     // 支付结果处理
@@ -53,13 +52,13 @@ export default {
       switch (result.status) {
         case 1:
           this.$message.success('支付进行中，稍后查询支付结果')
-          break;
+          break
         case 2:
           this.$message.success('支付成功')
-          break;
+          break
         case 3:
           this.$message.success('支付失败')
-          break;
+          break
         default:
           this.$message.info('未知的支付状态')
       }
@@ -77,17 +76,17 @@ export default {
       if (!order) return
 
       this.order = order
-      var msg
+      let msg
       switch (order.status) {
         case 1:
           msg = '支付进行中'
-          break;
+          break
         case 2:
-          msg = '已支付成功';
-          break;
+          msg = '已支付成功'
+          break
         case 3:
-          msg = '支付失败';
-          break;
+          msg = '支付失败'
+          break
       }
 
       this.tipMsg = msg
@@ -104,8 +103,8 @@ export default {
     },
     // 支付
     pay() {
-      var self = this;
-      var promise = null
+      const self = this
+      let promise = null
       switch (this.params.payType) {
         // 保证金支付
         case 'escrowExceedAmount': {
@@ -121,26 +120,25 @@ export default {
         default: {}
       }
 
-      if(promise !== null) {
+      if (promise !== null) {
         promise
-          .then(res => {
+          .then((res) => {
             console.log('res ---', res)
             if (res.data.errcode === 0) {
               this.showError = false
               this.payResultHandler(res.data.data)
-              this.doneHandler({shouldUpdate: true, data: res.data.data})
+              this.doneHandler({ shouldUpdate: true, data: res.data.data })
             } else {
               this.showError = true
               this.$message.error(res.data.msg)
             }
           })
-          .catch(e => {
+          .catch((e) => {
             this.$error.showErrorMessage(e)
           })
-      }else {
+      } else {
         console.error(`payType(${payType}) is wrong!`)
       }
-
     }
   }
 }

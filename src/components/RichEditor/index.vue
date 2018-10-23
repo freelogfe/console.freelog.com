@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import RichEditor from './index.js'
+import RichEditor from './index.js'
 
-  export default RichEditor
+export default RichEditor
 </script>
 
 <style lang="less">

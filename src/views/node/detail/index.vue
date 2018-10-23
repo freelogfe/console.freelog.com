@@ -36,9 +36,9 @@
 </template>
 
 <script>
-  import NodeDetail from './index'
+import NodeDetail from './index'
 
-  export default NodeDetail
+export default NodeDetail
 </script>
 
 <style lang="less" scoped>

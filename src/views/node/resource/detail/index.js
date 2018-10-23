@@ -1,6 +1,6 @@
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import ResourceDetailInfo from '@/components/detail-info/resource.vue'
-import {RESOURCE_TYPES} from '@/config/resource'
+import { RESOURCE_TYPES } from '@/config/resource'
 
 export default {
   name: 'resource-detail',
@@ -10,9 +10,9 @@ export default {
     }
   },
 
-  components: {ResourceDetailInfo},
+  components: { ResourceDetailInfo },
   mounted() {
-    var resourceId = this.$route.params.resourceId
+    const resourceId = this.$route.params.resourceId
     if (resourceId) {
       this.load(resourceId)
         .then(this.format.bind(this))
@@ -20,7 +20,7 @@ export default {
           this.detail = detail
         })
     } else {
-      this.$message.error('缺少参数resourceId');
+      this.$message.error('缺少参数resourceId')
     }
   },
   methods: {
@@ -36,13 +36,13 @@ export default {
     load(param) {
       return this.$services.resource.get(param || {})
         .then((res) => {
-          var detail = res.getData()
+          const detail = res.getData()
           return detail
         }).catch(this.$error.showErrorMessage)
     },
     bakcToList() {
       this.$router.push({
-        path: `/resources/market`,
+        path: '/resources/market',
       })
     },
     gotoCreateContract(resource) {

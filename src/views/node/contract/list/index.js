@@ -3,6 +3,7 @@ import ContractUtils from '@/data/contract/utils'
 import DataLoader from '@/data'
 import ContractDetail from '../detail/index.vue'
 import {loadDetail, loadResources} from '@/data/resource/loader'
+import contract from '../../../../services/contract'
 
 export default {
   name: 'node-contracts',
@@ -69,20 +70,19 @@ export default {
         })
     },
     loadContractInfos(presentableIds) {
-      return this.$axios.get(`v1/presentables/contractInfos`, {
+      return this.$axios.get('v1/presentables/contractInfos', {
         params: {
           nodeId: this.$route.params.nodeId,
           presentableIds: presentableIds.join(',')
         }
-      }).then(res => {
-        return res.getData()
-      })
+      }).then(res => res.getData())
     },
+
     loadPresentables(param) {
-      return DataLoader.presentable.loadDetail({params: param}).catch(this.$error.showErrorMessage)
+      return DataLoader.presentable.loadDetail({ params: param }).catch(this.$error.showErrorMessage)
     },
     previewHandler(row) {
-      var query = {}
+      const query = {}
       if (row.presentableDetail) {
         query.presentableId = row.presentableDetail.presentableId
       } else {
@@ -90,7 +90,7 @@ export default {
       }
       this.$router.push({
         path: `/node/${this.$route.params.nodeId}/presentable/detail#contract`,
-        query: query
+        query
       })
     },
     showContractDetailHandler(contract) {

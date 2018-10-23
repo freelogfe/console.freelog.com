@@ -13,24 +13,24 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
-  import Sidebar from './Sidebar/index.vue'
-  import Header from './Header/index.vue'
-  import Footer from './Footer/index.vue'
-  import Breadcrumb from './breadcrumb/index.vue'
+import { mapGetters } from 'vuex'
+import Sidebar from './Sidebar/index.vue'
+import Header from './Header/index.vue'
+import Footer from './Footer/index.vue'
+import Breadcrumb from './breadcrumb/index.vue'
 
-  export default {
-    name: 'fl-layout',
-    computed: mapGetters({
-      sidebar: 'sidebar'
-    }),
-    components: {
-      'fl-header': Header,
-      'fl-sidebar': Sidebar,
-      'fl-footer': Footer,
-      'fl-breadcrumb': Breadcrumb
-    }
+export default {
+  name: 'fl-layout',
+  computed: mapGetters({
+    sidebar: 'sidebar'
+  }),
+  components: {
+    'fl-header': Header,
+    'fl-sidebar': Sidebar,
+    'fl-footer': Footer,
+    'fl-breadcrumb': Breadcrumb
   }
+}
 </script>
 
 <style scoped lang="less">

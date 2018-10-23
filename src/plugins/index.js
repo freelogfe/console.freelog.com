@@ -11,7 +11,7 @@ import filters from './filters'
 import error from './error'
 
 export default {
-  install (Vue) {
+  install(Vue) {
     axios(Vue)
     title(Vue, { property: 'title', separator: ' » ' })
     services(Vue)

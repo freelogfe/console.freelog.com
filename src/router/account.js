@@ -1,6 +1,6 @@
-import Views  from '@/views/index'
+import Views from '@/views/index'
 
-export default  {
+export default {
   name: 'account',
   path: '/account',
   meta: {

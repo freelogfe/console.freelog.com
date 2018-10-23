@@ -124,9 +124,9 @@
 </template>
 
 <script>
-  import BaseResourceCreator from './index'
+import BaseResourceCreator from './index'
 
-  export default BaseResourceCreator
+export default BaseResourceCreator
 </script>
 
 <style lang="less" scoped>

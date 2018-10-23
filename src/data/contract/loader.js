@@ -1,10 +1,8 @@
-import {ContractService} from '@/services'
-import {createLoader, createCacheLoaders} from '@/lib/utils'
+import { ContractService } from '@/services'
+import { createLoader, createCacheLoaders } from '@/lib/utils'
 
 function loadDetail(id) {
-  return ContractService.get(id).then((res) => {
-    return res.getData()
-  })
+  return ContractService.get(id).then(res => res.getData())
 }
 
 

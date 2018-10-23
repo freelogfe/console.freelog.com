@@ -1,6 +1,6 @@
 import ResourceMetaInfo from '../../meta/index.vue'
-import {storage} from '@/lib'
-import {RESOURCE_TYPES} from '@/config/resource'
+import { storage } from '@/lib'
+import { RESOURCE_TYPES } from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 
 const EDIT_MODES = {
@@ -19,19 +19,19 @@ export default {
       const NAME_REG = /^[a-z]{1}[0-9a-z_]{2,19}[0-9a-z]{1}$/
 
       if (!NAME_REG.test(value)) {
-        callback(new Error('命名格式有误，需满足' + NAME_REG.toString()));
+        callback(new Error(`命名格式有误，需满足${NAME_REG.toString()}`))
       } else {
         callback()
       }
     }
 
-//      保持与web component中自定义标签名一致
+    //      保持与web component中自定义标签名一致
     const validateWidgetName = (rule, value, callback) => {
-      //格式为freelog-xxx-yyyy，最少4个字符
+      // 格式为freelog-xxx-yyyy，最少4个字符
       const NAME_REG = /^freelog-[a-z0-9._-]{3,15}-[a-z0-9._-]{2,14}[a-z0-9]$/
 
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('例如freelog-namespace-widgetname，namespace和widgetname至少3个字符'));
+        callback(new Error('例如freelog-namespace-widgetname，namespace和widgetname至少3个字符'))
       } else {
         callback()
       }
@@ -40,18 +40,16 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'},],
+        resourceName: [{ required: true, message: '请输入资源名称', trigger: 'blur' },],
         widgetName: [
-          {validator: validateWidgetName, trigger: 'blur'}
+          { validator: validateWidgetName, trigger: 'blur' }
         ],
         resourceType: [
-          {required: true, message: '请选择资源类型', trigger: 'blur'},
-          {validator: validateResourceType, trigger: 'blur'}
+          { required: true, message: '请选择资源类型', trigger: 'blur' },
+          { validator: validateResourceType, trigger: 'blur' }
         ]
       },
-      options: Object.keys(RESOURCE_TYPES).map((k) => {
-        return {label: k, value: RESOURCE_TYPES[k]}
-      }),
+      options: Object.keys(RESOURCE_TYPES).map(k => ({ label: k, value: RESOURCE_TYPES[k] })),
 
       loading: false,
       formData: {
@@ -61,7 +59,7 @@ export default {
         description: '',
         previewImage: ''
       },
-      //上传到服务器的数据
+      // 上传到服务器的数据
       uploader: {
         headers: {
           method: 'POST'
@@ -141,37 +139,37 @@ export default {
     },
     errorHandler(err) {
       this.loading = false
-      var errMsg
-      var error
+      let errMsg
+      let error
 
       if (err.errcode !== undefined) {
-        error = {error: err.msg}
+        error = { error: err.msg }
       } else {
         switch (err.status) {
           case 400:
             errMsg = '不支持的文件类型'
-            break;
+            break
           case 401:
             errMsg = '权限未经验证'
-            break;
+            break
           default:
             errMsg = err.message
         }
-        error = {error: errMsg}
+        error = { error: errMsg }
       }
 
       this.$emit('uploadEnd', error)
-      this.$refs.resourceUploader.fileList = [] //reset clearFiles
+      this.$refs.resourceUploader.fileList = [] // reset clearFiles
     },
     successHandler(res, file) {
       this.loading = false
       if (res.ret !== 0 || res.errcode !== 0) {
-        //reset
+        // reset
         this.$refs.resourceUploader.clearFiles()
-        this.uploaderStates.resource.isUploading = false;
-        this.uploaderStates.resource.percentage = 0;
+        this.uploaderStates.resource.isUploading = false
+        this.uploaderStates.resource.percentage = 0
         this.$message.error(res.msg)
-        this.$emit('uploadEnd', {error: res.msg})
+        this.$emit('uploadEnd', { error: res.msg })
       } else {
         this.uploaderStates.resource.sha1 = res.data.sha1
         this.uploaderStates.resource.isUploaded = true
@@ -181,7 +179,7 @@ export default {
       }
     },
     autoSetFormData(file) {
-      var fileName = file.name.split('.');
+      let fileName = file.name.split('.')
 
       if (fileName.length > 1) {
         fileName.pop()
@@ -224,8 +222,8 @@ export default {
       return true
     },
     clearUploaderHandler(uploader) {
-      var $uploader
-      var uploaderState = this.uploaderStates[uploader]
+      let $uploader
+      const uploaderState = this.uploaderStates[uploader]
       if (uploader === 'resource') {
         $uploader = this.$refs.resourceUploader
       } else {
@@ -240,23 +238,23 @@ export default {
         isUploading: false,
         isUploaded: false,
         percentage: 0
-      });
+      })
     },
     beforeUploadHandler(file) {
-      this.resetUploaderState(this.uploaderStates.resource, file);
+      this.resetUploaderState(this.uploaderStates.resource, file)
     },
     resetUploaderState(uploader, file) {
       Object.assign(uploader, {
-        file: file,
+        file,
         name: (file && file.name) || '',
         isUploading: true,
         isUploaded: false,
         percentage: 0
-      });
+      })
     },
     imgUploadSuccessHandler(detail) {
-      var data = detail.data;
-      var editor = this.$refs.editor;
+      const data = detail.data
+      const editor = this.$refs.editor
       if (data.errcode === 0) {
         editor.insertImg(data.data)
       } else {
@@ -265,19 +263,19 @@ export default {
     },
     validate() {
       return new Promise((resolve, reject) => {
-        var reourceUploader = this.uploaderStates.resource
+        const reourceUploader = this.uploaderStates.resource
         this.$refs.createForm.validate((valid, err) => {
           if (valid) {
             if (this.editMode === EDIT_MODES.creator) {
-              var errMsg;
+              let errMsg
               if (!reourceUploader.sha1) {
                 errMsg = '未上传资源文件'
               } else if (!reourceUploader.isUploaded) {
-                errMsg = '资源文件正在上传中，等上传完再点击创建';
+                errMsg = '资源文件正在上传中，等上传完再点击创建'
               }
 
               if (errMsg) {
-                return reject(errMsg);
+                return reject(errMsg)
               }
             }
 
@@ -290,8 +288,8 @@ export default {
 
             resolve()
           } else {
-            var msg = Object.keys(err).map(key => {
-              var item = err[key]
+            const msg = Object.keys(err).map((key) => {
+              const item = err[key]
               return item.message
             })
             reject(msg.join('，'))
@@ -299,7 +297,7 @@ export default {
         })
       })
     },
-    //是否超过上传限制
+    // 是否超过上传限制
     fileLimitValidator(file, fileList) {
       if (fileList.length > 1) {
         fileList.shift()
@@ -309,22 +307,22 @@ export default {
       return true
     },
     packUploadData() {
-      var reourceUploader = this.uploaderStates.resource
-      var uploadData = {};
-      var formData = this.formData;
-      var metaData;
+      const reourceUploader = this.uploaderStates.resource
+      const uploadData = {}
+      const formData = this.formData
+      let metaData
       const INPUT_KEYS = ['resourceType']
       const UPDATE_KEYS = ['resourceName']
-      var keys = UPDATE_KEYS
+      let keys = UPDATE_KEYS
 
-      //包装meta数据
+      // 包装meta数据
       try {
         metaData = JSON.parse(this.meta)
       } catch (err) {
         metaData = {}
       }
       if (this.formData.widgetName) {
-        metaData.widgetName = this.formData.widgetName;
+        metaData.widgetName = this.formData.widgetName
       }
 
       if (this.editMode === EDIT_MODES.creator) {
@@ -332,16 +330,16 @@ export default {
         uploadData.sha1 = reourceUploader.sha1
         formData.previewImage && (uploadData.previewImage = formData.previewImage)
       } else {
-        formData.previewImage && (uploadData.previewImages = [formData.previewImage]);
+        formData.previewImage && (uploadData.previewImages = [formData.previewImage])
       }
 
       uploadData.meta = metaData
-      var desc = this.$refs.editor.getHtml()
+      const desc = this.$refs.editor.getHtml()
       if (desc) {
         uploadData.description = desc
       }
 
-      keys.forEach(key => {
+      keys.forEach((key) => {
         if (formData[key]) {
           uploadData[key] = formData[key]
         }
@@ -349,14 +347,14 @@ export default {
       return uploadData
     },
     isChanged() {
-      //todo 待优化
+      // todo 待优化
       return true
     },
     nextHandler() {
       return new Promise((resolve, reject) => {
         this.validate()
           .then(() => {
-            var data = this.packUploadData();
+            const data = this.packUploadData()
             if (!this.data.resourceId) {
               this.createResource(data).then(resolve).catch(reject)
             } else if (this.isChanged()) {
@@ -369,9 +367,9 @@ export default {
     },
     createResource(data) {
       return new Promise((resolve, reject) => {
-        var $uploader = this.$refs.resourceUploader;
+        const $uploader = this.$refs.resourceUploader
         if ($uploader.uploadFiles.length > 0) {
-          this.$services.resource.post(data).then(res => {
+          this.$services.resource.post(data).then((res) => {
             if (res.data.ret !== 0 || res.data.errcode !== 0) {
               reject(res.data.msg)
             } else {
@@ -392,8 +390,8 @@ export default {
       })
     },
     uploadProgressHandler(event, file, fileList) {
-      var uploaderStates = this.uploaderStates;
-      var uploader
+      const uploaderStates = this.uploaderStates
+      let uploader
       if (uploaderStates.resource.name === file.name) {
         uploader = uploaderStates.resource
       } else if (uploaderStates.thumbnail.name === file.name) {

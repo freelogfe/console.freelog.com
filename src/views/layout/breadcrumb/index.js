@@ -12,12 +12,12 @@ export default {
     $route: 'breadcrumbHandler'
   },
   created() {
-    this.breadcrumbHandler();
+    this.breadcrumbHandler()
   },
   methods: {
     paddingTitle(title) {
-      var params = this.$route.params;
-      var keys = Object.keys(params)
+      const params = this.$route.params
+      const keys = Object.keys(params)
       keys.forEach((k) => {
         title = title.replace(`:${k}`, params[k])
       })
@@ -25,21 +25,19 @@ export default {
       return title
     },
     breadcrumbHandler() {
-      const matched = this.$route.matched;
+      const matched = this.$route.matched
       this.breadcrumbs = []
       if (this.$route.name === '404') {
         this.breadcrumbs = []
       } else {
         this.breadcrumbs = matched.map((m) => {
-          var title = m.meta.title || ''
+          const title = m.meta.title || ''
 
           return {
             path: m.path,
             title: this.paddingTitle(title)
           }
-        }).filter((item) => {
-          return !!item.title
-        })
+        }).filter(item => !!item.title)
       }
     }
   }

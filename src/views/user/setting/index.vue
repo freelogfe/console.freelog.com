@@ -26,9 +26,9 @@
 </template>
 
 <script>
-  import UserSettingView from './index'
+import UserSettingView from './index'
 
-  export default UserSettingView
+export default UserSettingView
 </script>
 
 <style lang="less" scoped>

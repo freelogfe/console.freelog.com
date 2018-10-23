@@ -1,4 +1,4 @@
-import {compile, beautify} from '@freelog/resource-policy-lang'
+import { compile, beautify } from '@freelog/resource-policy-lang'
 
 import PolicyTemplateDetailInfo from '@/components/detail-info/policyTemplate.vue'
 import rules from '../rules'
@@ -7,7 +7,7 @@ import * as utils from '../utils'
 const MODE = {
   VIEW: 'view',
   EDIT: 'edit'
-};
+}
 
 export default {
   name: 'policy-tpl-detail',
@@ -15,7 +15,7 @@ export default {
     return {
       mode: MODE.VIEW,
       detail: {},
-      rules: rules
+      rules
     }
   },
   components: {
@@ -27,7 +27,7 @@ export default {
     }
   },
   mounted() {
-    var query = this.$route.query
+    const query = this.$route.query
     if (query.id) {
       this.loadDetail(query.id)
         .then((data) => {
@@ -40,12 +40,10 @@ export default {
   methods: {
     loadDetail(id) {
       return this.$services.policyTemplate.get(id)
-        .then((res) => {
-          return res.getData()
-        })
+        .then(res => res.getData())
     },
     changeModeHandler() {
-      var mode = this.mode;
+      const mode = this.mode
       if (mode === MODE.EDIT) {
         this.$refs.detailForm.validate((valid) => {
           if (!valid) {
@@ -65,17 +63,15 @@ export default {
       }
     },
     validatePolicy() {
-      var promise = Promise.resolve()
-      var tpl = this.detail.template
-      var ret = compile(tpl);
+      const promise = Promise.resolve()
+      const tpl = this.detail.template
+      const ret = compile(tpl)
 
       if (!ret.errorMsg) {
         this.detail.template = beautify(tpl)
       }
 
-      return promise.then(() => {
-        return ret.errorMsg
-      })
+      return promise.then(() => ret.errorMsg)
     },
     cancelEditMode() {
       this.mode = MODE.VIEW

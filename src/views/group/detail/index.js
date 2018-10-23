@@ -1,12 +1,10 @@
-import {manageMembers} from '@/services/groups'
-import {USER_GROUP_TYPE, NODE_GROUP_TYPE} from "../../../config/group";
+import { manageMembers } from '@/services/groups'
+import { USER_GROUP_TYPE, NODE_GROUP_TYPE } from '../../../config/group'
 import GroupMemberSelector from '../member-selector/index.vue'
 
 
 function diff(a, b) {
-  return a.filter(function (v) {
-    return b.indexOf(v) < 0;
-  });
+  return a.filter(v => b.indexOf(v) < 0)
 }
 
 export default {
@@ -19,13 +17,13 @@ export default {
       loading: false
     }
   },
-  components: {GroupMemberSelector},
+  components: { GroupMemberSelector },
   mounted() {
-    var groupId = this.$route.params.groupId
+    const groupId = this.$route.params.groupId
     if (groupId) {
       this.load(groupId)
         .then((detail) => {
-          var originalMemberIds = []
+          const originalMemberIds = []
           this.groupMembers = detail.members.map((member) => {
             originalMemberIds.push(member.memberId)
             return member.memberName || member.memberId
@@ -35,18 +33,16 @@ export default {
           this.detail = detail
         })
     } else {
-      this.$message.error('缺少参数groupId');
+      this.$message.error('缺少参数groupId')
     }
   },
   methods: {
     load(param) {
       return this.$services.groups.get(param || {})
-        .then((res) => {
-          return res.getData();
-        }).catch(this.$error.showErrorMessage)
+        .then(res => res.getData()).catch(this.$error.showErrorMessage)
     },
     getRemoveMembers() {
-      var removed = []
+      const removed = []
       this.detail.members.forEach((member) => {
         if (this.groupMembers.indexOf(member.memberName || member.memberId) === -1) {
           removed.push(member.memberId)
@@ -56,9 +52,9 @@ export default {
       return removed
     },
     getAddMembers() {
-      var addList = []
-      var names = this.detail.members.map((m) => m.memberName)
-      var ids = this.detail.members.map((m) => m.memberId)
+      const addList = []
+      const names = this.detail.members.map(m => m.memberName)
+      const ids = this.detail.members.map(m => m.memberId)
       this.groupMembers.forEach((member) => {
         if (names.indexOf(member) === -1 && ids.indexOf(member) === -1) {
           addList.push(member)
@@ -68,9 +64,9 @@ export default {
       return addList
     },
     updateDetail() {
-      const self = this;
-      var addMembers = this.getAddMembers()
-      var removeMembers = this.getRemoveMembers()
+      const self = this
+      const addMembers = this.getAddMembers()
+      const removeMembers = this.getRemoveMembers()
 
 
       manageMembers(this.$route.params.groupId, {

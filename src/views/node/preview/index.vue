@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  import NodePreviewer from './index'
+import NodePreviewer from './index'
 
-  export default NodePreviewer
+export default NodePreviewer
 </script>
 
 <style lang="less" scoped>

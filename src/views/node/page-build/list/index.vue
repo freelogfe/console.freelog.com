@@ -35,9 +35,9 @@
 </template>
 
 <script>
-  import PageBuildList from './index'
+import PageBuildList from './index'
 
-  export default PageBuildList
+export default PageBuildList
 </script>
 
 <style lang="less" scoped>

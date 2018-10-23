@@ -40,9 +40,9 @@
 </template>
 
 <script>
-  import PolicyTplDetail from './index'
+import PolicyTplDetail from './index'
 
-  export default PolicyTplDetail
+export default PolicyTplDetail
 </script>
 
 <style lang="less" scoped>

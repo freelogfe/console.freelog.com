@@ -2,7 +2,7 @@ import SearchInput from '@/components/SearchInput/index.vue'
 import CONFIG from '@/config/index'
 import ResourceItems from './list.vue'
 
-const {RESOURCE_STATUS} = CONFIG
+const { RESOURCE_STATUS } = CONFIG
 
 export default {
   name: 'resource-list',
@@ -10,7 +10,7 @@ export default {
     return {
       resourceList: [],
       curTabName: 'self',
-      RESOURCE_STATUS: RESOURCE_STATUS
+      RESOURCE_STATUS
     }
   },
   components: {
@@ -22,10 +22,10 @@ export default {
   },
   methods: {
     handleEdit(resource) {
-      this.$router.push({path: `/resource/detail/${resource.resourceId}`})
+      this.$router.push({ path: `/resource/detail/${resource.resourceId}` })
     },
     editAuthNode(resource) {
-      this.$router.push({path: `/resource/detail/${resource.resourceId}/auth_schemes`})
+      this.$router.push({ path: `/resource/detail/${resource.resourceId}/auth_schemes` })
     },
     searchHandler(query) {
       this.$message.warning('未开发')

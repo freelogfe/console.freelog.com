@@ -31,9 +31,9 @@
 </template>
 
 <script>
-  import PresentableEditor from './index'
+import PresentableEditor from './index'
 
-  export default PresentableEditor
+export default PresentableEditor
 </script>
 
 <style lang="less" scoped>

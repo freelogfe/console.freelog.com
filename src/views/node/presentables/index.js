@@ -40,13 +40,13 @@ export default {
           index: -1,
           detail: {}
         })
-        this.loadPresentables({nodeId: nodeId, isOnline: 2})
+        this.loadPresentables({ nodeId, isOnline: 2 })
           .then(this.formatHandler.bind(this))
           .then((list) => {
             this.presentableList = list
           })
       } else {
-        this.$message.error('缺失节点ID参数');
+        this.$message.error('缺失节点ID参数')
       }
     },
     formatHandler(list) {
@@ -64,9 +64,7 @@ export default {
       item.isReady = (item.status & 3) === 3
     },
     loadPresentables(param) {
-      return this.$services.presentables.get({params: param}).then((res) => {
-        return res.getData()
-      }).catch(this.$error.showErrorMessage)
+      return this.$services.presentables.get({ params: param }).then(res => res.getData()).catch(this.$error.showErrorMessage)
     },
     changePresentableHandler(presentable, index) {
       this.currentPresentable.index = index
@@ -88,7 +86,7 @@ export default {
           presentable.isOnlineChecked = false
           this.$message.error(res.data.msg || '更新失败')
         }
-      }).catch(err => {
+      }).catch((err) => {
         presentable.isOnline = 0
         presentable.isOnlineChecked = false
         this.$error.showErrorMessage(err)
@@ -105,23 +103,22 @@ export default {
         nodeId: this.$route.params.nodeId,
         presentableName: resource.resourceName,
         resourceId: resource.resourceId
-      }).then(presentable => {
+      }).then((presentable) => {
         this.presentableList.push(presentable)
         this.showSearchResource = false
-      }).catch(this.$error.showErrorMessage);
+      }).catch(this.$error.showErrorMessage)
     },
     createPresentable(data) {
-      return this.$services.presentables.post(data).then(res => {
+      return this.$services.presentables.post(data).then((res) => {
         if (res.data.errcode !== 0) {
           return Promise.reject(res.data.msg)
-        } else {
-          return res.getData()
         }
+        return res.getData()
       })
     },
     updatePresentableHandler(presentable) {
-      var curPresentable = this.currentPresentable.detail
-      Object.assign(curPresentable, presentable);
+      const curPresentable = this.currentPresentable.detail
+      Object.assign(curPresentable, presentable)
       this.resolvePresentable(curPresentable)
     }
   }

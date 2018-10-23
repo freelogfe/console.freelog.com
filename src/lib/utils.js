@@ -1,9 +1,9 @@
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 
 function createLoader(loader) {
-  var loading = false;
-  var handles = [];
-  var value;
+  let loading = false
+  const handles = []
+  let value
 
   return function (callback) {
     if (value) {
@@ -11,11 +11,11 @@ function createLoader(loader) {
     } else if (loading) {
       handles.push(callback)
     } else {
-      loading = true;
+      loading = true
       handles.push(callback)
-      loader(function (v) {
-        value = v;
-        let h;
+      loader((v) => {
+        value = v
+        let h
         while ((h = handles.shift())) {
           h(v)
         }
@@ -24,16 +24,16 @@ function createLoader(loader) {
   }
 }
 
-//多个缓存loader的创建
+// 多个缓存loader的创建
 function createCacheLoaders(loaderFn, shouldCloned) {
-  var loaders = {}
+  const loaders = {}
   return function (params) {
-    let id;
+    let id
     if (typeof params !== 'string') {
       try {
         id = JSON.stringify(params)
       } catch (e) {
-        //todo 确保缓存的唯一性
+        // todo 确保缓存的唯一性
       }
     } else {
       id = params
@@ -43,16 +43,16 @@ function createCacheLoaders(loaderFn, shouldCloned) {
       return loaderFn(id)
     }
 
-    let loader = loaders[id];
+    let loader = loaders[id]
     if (!loader) {
-      loader = loaders[id] = createLoader(function (callback) {
+      loader = loaders[id] = createLoader((callback) => {
         loaderFn(params).then(callback)
       })
     }
 
     return new Promise((resolve) => {
-      loader(function (data) {
-        resolve(shouldCloned ? cloneDeep(data) :data)
+      loader((data) => {
+        resolve(shouldCloned ? cloneDeep(data) : data)
       })
     })
   }
@@ -60,7 +60,7 @@ function createCacheLoaders(loaderFn, shouldCloned) {
 
 
 function promisifyLoader(loader) {
-  var handler = createLoader(loader)
+  const handler = createLoader(loader)
   return function () {
     return new Promise((resolve) => {
       handler(resolve)
@@ -69,12 +69,12 @@ function promisifyLoader(loader) {
 }
 
 function loopForBreak(array, fn) {
-  var flag = false
-  for (var i = 0; i < array.length; i++) {
-    let item = array[i]
+  let flag = false
+  for (let i = 0; i < array.length; i++) {
+    const item = array[i]
     if (fn(item, i)) {
       flag = true
-      break;
+      break
     }
   }
 

@@ -2,14 +2,14 @@
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
-import {quillEditor, Quill} from 'vue-quill-editor'
+import { quillEditor, Quill } from 'vue-quill-editor'
 
-//https://quilljs.com/docs/modules/toolbar/
+// https://quilljs.com/docs/modules/toolbar/
 export default {
   name: 'fl-rich-editor',
 
   data() {
-    var self = this;
+    const self = this
     return {
       editor: null,
       showImgUploader: false,
@@ -22,20 +22,20 @@ export default {
             container: [
               ['bold', 'italic', 'underline', 'strike'],
               ['blockquote', 'code-block'],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              [{'size': ['small', false, 'large', 'huge']}],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              [{ size: ['small', false, 'large', 'huge'] }],
               // [{'script': 'sub'}, {'script': 'super'}],
               // [{'indent': '-1'}, {'indent': '+1'}],
               // [{'direction': 'rtl'}],
               // [{'header': [1, 2, 3, 4, 5, 6, false]}],
-              [{'color': []}, {'background': []}],
+              [{ color: [] }, { background: [] }],
               // [{'font': []}],
               // [{'align': []}],
               // ['clean'],
               ['link', 'image', 'video']
             ],
             handlers: {
-              'image': function () {
+              image() {
                 self.showImgUploader = true
                 self.uploadImgState = {
                   cursorIndex: this.quill.selection.savedRange.index
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     uploadImageSuccessHandler(res, file) {
-      this.$emit('load', {file, data: res})
+      this.$emit('load', { file, data: res })
       this.resetImgUploaderState()
     },
     uploadImageErrorHandler() {
@@ -94,7 +94,7 @@ export default {
       this.showImgUploader = false
     },
     createEditor() {
-      this.editor = this.$refs.richEditor.quill;
+      this.editor = this.$refs.richEditor.quill
       this.setHtml(this.value || '')
     },
     getHtml() {
@@ -119,7 +119,7 @@ export default {
     },
     onEditorReady(quill) {
     },
-    onEditorChange({quill, html, text}) {
+    onEditorChange({ quill, html, text }) {
       this.$emit('input', html)
     }
   }

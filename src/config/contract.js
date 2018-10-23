@@ -6,7 +6,7 @@ export const CONTRACT_STATUS = {
   userTerminated: 4,
   sysTerminated: 5,
   terminated: 6
-};
+}
 
 
 export const CONTRACT_STATUS_TIPS = {

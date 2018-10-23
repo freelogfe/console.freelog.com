@@ -40,9 +40,9 @@
 </template>
 
 <script>
-  import GroupList from './index'
+import GroupList from './index'
 
-  export default GroupList
+export default GroupList
 </script>
 
 <style lang="less" scoped>

@@ -5,8 +5,9 @@
 </template>
 
 <script>
-  import SideBar from './index'
-  export default SideBar
+import SideBar from './index'
+
+export default SideBar
 </script>
 
 <style scoped lang="less">

@@ -1,21 +1,19 @@
-import {UserService} from '@/services'
-import {createLoader, createCacheLoaders} from '@/lib/utils'
-import {cookieStore} from '@/lib/storage'
+import { UserService } from '@/services'
+import { createLoader, createCacheLoaders } from '@/lib/utils'
+import { cookieStore } from '@/lib/storage'
 
 function loadDetail(userId) {
-  return UserService.get(parseInt(userId)).then((res) => {
-    return res.getData()
-  })
+  return UserService.get(parseInt(userId)).then(res => res.getData())
 }
 
 
 function loadLoginUserInfo() {
-  var authInfo = cookieStore.get('authInfo')
+  const authInfo = cookieStore.get('authInfo')
   if (!authInfo) {
     return {}
   }
-  var jwt = authInfo.split('.')
-  var userInfo = atob(jwt[1])
+  const jwt = authInfo.split('.')
+  let userInfo = atob(jwt[1])
   try {
     userInfo = JSON.parse(userInfo)
   } catch (err) {
@@ -25,7 +23,7 @@ function loadLoginUserInfo() {
   return userInfo
 }
 
-const onloadUserInfo  = createCacheLoaders(loadDetail)
+const onloadUserInfo = createCacheLoaders(loadDetail)
 export {
   loadDetail,
   onloadUserInfo,

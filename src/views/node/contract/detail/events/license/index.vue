@@ -36,7 +36,7 @@
   }
 </style>
 <script type="text/javascript">
-  import LicenseEvent from './index.js'
+import LicenseEvent from './index.js'
 
-  export default LicenseEvent
+export default LicenseEvent
 </script>

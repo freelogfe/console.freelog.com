@@ -1,7 +1,7 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import ResourceInputs from '../create/resource/index.vue'
 
 import ResourceLoader from '@/data/resource/loader'
@@ -21,7 +21,7 @@ export default {
     ResourceInputs
   },
   mounted() {
-    var params = this.$route.params
+    const params = this.$route.params
     if (params.resourceId) {
       ResourceLoader.loadDetail(params.resourceId)
         .then((data) => {
@@ -46,7 +46,8 @@ export default {
       }
     },
     updateResourceHandler() {
-      this.executeNext(detail => {
+      this.executeNext((detail) => {
+        // console.log(detail)
         this.$message.success('更新成功')
       })
     }

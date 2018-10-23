@@ -22,9 +22,9 @@
 </template>
 
 <script>
-  import GroupMemberSelector from './index'
+import GroupMemberSelector from './index'
 
-  export default GroupMemberSelector
+export default GroupMemberSelector
 </script>
 
 <style lang="less" scoped>

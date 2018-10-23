@@ -1,4 +1,4 @@
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
 
 export default {
@@ -30,12 +30,12 @@ export default {
 
   created() {
     this.listenWindowVisibility()
-    this.resolveRouter();
+    this.resolveRouter()
     this.$store.dispatch('loadNodes')
   },
   mounted() {
     if (!this.session.user.userId) {
-      this.$store.dispatch('getCurrentUser').then(userInfo=>{
+      this.$store.dispatch('getCurrentUser').then((userInfo) => {
         this.setAvatarUrl(userInfo.userId)
       })
     } else {
@@ -44,39 +44,32 @@ export default {
   },
 
   methods: {
-    setAvatarUrl(userId){
+    setAvatarUrl(userId) {
       this.avatarUrl = `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image`
     },
     listenWindowVisibility() {
-      var self = this
-      var hidden = 'hidden';
-      var doc = document
+      const self = this
+      let hidden = 'hidden'
+      const doc = document
 
-      if (hidden in doc)
-        doc.addEventListener('visibilitychange', onchange);
-      else if ((hidden = 'mozHidden') in doc)
-        doc.addEventListener('mozvisibilitychange', onchange);
-      else if ((hidden = 'webkitHidden') in doc)
-        doc.addEventListener('webkitvisibilitychange', onchange);
-      else if ((hidden = 'msHidden') in doc)
-        doc.addEventListener('msvisibilitychange', onchange);
-      else
+      if (hidden in doc) { doc.addEventListener('visibilitychange', onchange) } else if ((hidden = 'mozHidden') in doc) { doc.addEventListener('mozvisibilitychange', onchange) } else if ((hidden = 'webkitHidden') in doc) { doc.addEventListener('webkitvisibilitychange', onchange) } else if ((hidden = 'msHidden') in doc) { doc.addEventListener('msvisibilitychange', onchange) } else {
         window.onpageshow = window.onpagehide
-          = window.onfocus = window.onblur = onchange;
+          = window.onfocus = window.onblur = onchange
+      }
 
       function onchange(evt) {
-        var v = 'visible';
-        var h = 'hidden';
-        var evtMap = {
+        const v = 'visible'
+        const h = 'hidden'
+        const evtMap = {
           focus: v, focusin: v, pageshow: v, blur: h, focusout: h, pagehide: h
-        };
-        var type
+        }
+        let type
 
-        evt = evt || window.event;
+        evt = evt || window.event
         if (evt.type in evtMap) {
-          type = evtMap[evt.type];
+          type = evtMap[evt.type]
         } else {
-          type = this[hidden] ? 'hidden' : 'visible';
+          type = this[hidden] ? 'hidden' : 'visible'
         }
 
         if (type === 'visible') {
@@ -103,16 +96,16 @@ export default {
     },
     switchNodeHandler() {
       this.$store.dispatch('deleteNode')
-      this.$router.push({path: '/node/login'})
+      this.$router.push({ path: '/node/login' })
     },
     resolveRouter() {
-      var routes = this.$router.options.routes;
+      const routes = this.$router.options.routes
 
-      for (var i = 0; i < routes.length; i++) {
-        let route = routes[i];
+      for (let i = 0; i < routes.length; i++) {
+        const route = routes[i]
         if (route.path === '/') {
-          this.navRoutes = route.children.filter(r => !r.hidden);
-          break;
+          this.navRoutes = route.children.filter(r => !r.hidden)
+          break
         }
       }
     },
@@ -121,20 +114,20 @@ export default {
     logout() {
       this.$store.dispatch('userLogout')
         .then(() => {
-          var redirect = this.$route.fullPath || '/'
+          const redirect = this.$route.fullPath || '/'
           setTimeout(() => {
-            this.$router.replace({path: '/user/login', query: {redirect: redirect}})
+            this.$router.replace({ path: '/user/login', query: { redirect } })
           }, 20)
         })
         .catch(this.$error.showErrorMessage)
     },
     searchHandler(qs) {
-      this.$router.push({path: '/',query: {q: qs}})
+      this.$router.push({ path: '/', query: { q: qs } })
     },
-    gotoSetting(){
+    gotoSetting() {
 
     },
-    loadAvatarError(){
+    loadAvatarError() {
       this.isLoadAvatarError = true
     }
   }

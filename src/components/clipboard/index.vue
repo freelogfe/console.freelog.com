@@ -6,30 +6,30 @@
 </template>
 
 <script>
-    export default {
-        name: 'clip-board',
-        data() {
-            return {}
-        },
+export default {
+  name: 'clip-board',
+  data() {
+    return {}
+  },
 
-        props: {
-            value: String
-        },
-        mounted() {
-        },
-        methods: {
-            copyHandler() {
-                var copyTextarea = this.$refs.copyText;
-                copyTextarea.select();
-                try {
-                    var successful = document.execCommand('copy');
-                    this.$emit('copyDone', successful)
-                } catch (err) {
-                    this.$emit('copyDone', false)
-                }
-            }
-        }
+  props: {
+    value: String
+  },
+  mounted() {
+  },
+  methods: {
+    copyHandler() {
+      const copyTextarea = this.$refs.copyText
+      copyTextarea.select()
+      try {
+        const successful = document.execCommand('copy')
+        this.$emit('copyDone', successful)
+      } catch (err) {
+        this.$emit('copyDone', false)
+      }
     }
+  }
+}
 </script>
 
 <style lang="less" scoped>

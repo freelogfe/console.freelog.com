@@ -14,9 +14,7 @@ export default {
 
   methods: {
     loadLicenses() {
-      var promises = this.params.licenseIds.map((rid) => {
-        return this.loadLicenseContent(rid)
-      })
+      const promises = this.params.licenseIds.map(rid => this.loadLicenseContent(rid))
 
       Promise.all(promises).then((list) => {
         this.licenses = list
@@ -25,10 +23,10 @@ export default {
     loadLicenseContent(resourceId) {
       return this.$axios.get(`/v1/auths/resource/${resourceId}.data`)
         .then((res) => {
-          var error = res.getData().errcode;
-          if ( error== 15 ) {
+          const error = res.getData().errcode
+          if (error == 15) {
             this.$message.warning('协议格式不正确，请联系合约作者。')
-            return;
+            return
           }
           return res.getData()
         })
@@ -49,7 +47,7 @@ export default {
       })
     },
     doneHandler(shouldUpdate) {
-      this.$emit('close', {shouldUpdate})
+      this.$emit('close', { shouldUpdate })
     }
   }
 }

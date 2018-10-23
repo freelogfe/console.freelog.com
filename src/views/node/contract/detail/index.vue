@@ -40,9 +40,9 @@
 </template>
 
 <script>
-  import PresentableContractDetail from './index'
+import PresentableContractDetail from './index'
 
-  export default PresentableContractDetail
+export default PresentableContractDetail
 </script>
 
 <style lang="less" scoped>

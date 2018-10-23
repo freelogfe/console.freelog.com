@@ -2,4 +2,4 @@ const groupCreator = resolve => require.ensure([], () => resolve(require('./crea
 const groupDetail = resolve => require.ensure([], () => resolve(require('./detail/index.vue')), 'group')
 const groupList = resolve => require.ensure([], () => resolve(require('./list/index.vue')), 'group')
 
-export default {groupCreator, groupDetail, groupList}
+export default { groupCreator, groupDetail, groupList }

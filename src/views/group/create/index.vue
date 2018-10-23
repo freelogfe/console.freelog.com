@@ -27,9 +27,9 @@
 </template>
 
 <script>
-  import GroupCreator from './index'
+import GroupCreator from './index'
 
-  export default GroupCreator
+export default GroupCreator
 </script>
 
 <style lang="less" scoped>

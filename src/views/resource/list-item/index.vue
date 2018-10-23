@@ -18,66 +18,66 @@
 
 
 <script>
-  import {onloadUserInfo} from '@/data/user/loader'
-  import {RESOURCE_STATUS} from '@/config/resource'
+import { onloadUserInfo } from '@/data/user/loader'
+import { RESOURCE_STATUS } from '@/config/resource'
 
-  export default {
-    name: 'resource-info-item',
+export default {
+  name: 'resource-info-item',
 
-    data() {
-      return {}
-    },
+  data() {
+    return {}
+  },
 
-    props: {
-      resource: {
-        type: Object,
-        default() {
-          return {}
-        }
-      },
-      type: {
-        type: String,
-        default: 'list'
+  props: {
+    resource: {
+      type: Object,
+      default() {
+        return {}
       }
     },
+    type: {
+      type: String,
+      default: 'list'
+    }
+  },
 
-    watch: {},
+  watch: {},
 
-    mounted() {
-      this.format(this.resource)
-    },
+  mounted() {
+    this.format(this.resource)
+  },
 
-    methods: {
-      format(resource) {
-        if (!this.resource.resourceId) {
-          return
-        }
-
-        resource._statusInfo = RESOURCE_STATUS[resource.status];
-        resource._fileSize = this.humanizeSize(resource.systemMeta.fileSize)
-        onloadUserInfo(resource.userId).then((userInfo) => {
-          this.$set(resource, '_userInfo', userInfo)
-        })
-      },
-      humanizeSize(number) {
-        const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-        if (number < 1) {
-          return number + 'B';
-        }
-
-        const algorithm = 1024
-        const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
-        number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
-        const unit = UNITS[exponent];
-
-        return number + unit;
-      },
-      gotoDetail(resource) {
-        this.$router.push(`/resource/detail/${resource.resourceId}`)
+  methods: {
+    format(resource) {
+      if (!this.resource.resourceId) {
+        return
       }
+
+      resource._statusInfo = RESOURCE_STATUS[resource.status]
+      resource._fileSize = this.humanizeSize(resource.systemMeta.fileSize)
+      onloadUserInfo(resource.userId).then((userInfo) => {
+        this.$set(resource, '_userInfo', userInfo)
+      })
+    },
+    humanizeSize(number) {
+      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
+
+      if (number < 1) {
+        return `${number}B`
+      }
+
+      const algorithm = 1024
+      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1)
+      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2))
+      const unit = UNITS[exponent]
+
+      return number + unit
+    },
+    gotoDetail(resource) {
+      this.$router.push(`/resource/detail/${resource.resourceId}`)
     }
   }
+}
 </script>
 
 <style lang="less" scoped>

@@ -82,9 +82,9 @@
 </template>
 
 <script>
-  import PolicyEditor from './index'
+import PolicyEditor from './index'
 
-  export default PolicyEditor
+export default PolicyEditor
 </script>
 
 <style lang="less" scoped>

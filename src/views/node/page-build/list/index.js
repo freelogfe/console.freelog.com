@@ -11,41 +11,39 @@ export default {
   data() {
     return {
       pagebuildList: [],
-      PAGE_BUILD_STATUS: PAGE_BUILD_STATUS,
+      PAGE_BUILD_STATUS,
       currentIndex: 1,
       showSearchResource: false
     }
   },
-  components: {SearchResource},
+  components: { SearchResource },
   mounted() {
     this.loader()
       .then(this.format.bind(this))
       .then((data) => {
-        this.pagebuildList = data;
+        this.pagebuildList = data
       })
   },
   methods: {
     loader() {
-      const self = this;
-      var param = {
+      const self = this
+      const param = {
         nodeId: this.$route.params.nodeId
-      };
+      }
       return this.$services.pagebuild.get({
         params: param
       }).then((res) => {
-        var presentables = res.getData()
-        var promises = [];
+        const presentables = res.getData()
+        const promises = []
         presentables.forEach((p) => {
-          var promise = ResourceDataLoader.onloadResourceDetail(p.resourceId).then((resourceDetail) => {
+          const promise = ResourceDataLoader.onloadResourceDetail(p.resourceId).then((resourceDetail) => {
             p.resourceDetail = resourceDetail
             return resourceDetail
           })
           promises.push(promise)
         })
 
-        return Promise.all(promises).then((resources) => {
-          return presentables
-        })
+        return Promise.all(promises).then(resources => presentables)
       })
     },
     format(pagebuildList) {
@@ -72,7 +70,7 @@ export default {
         }
       }
 
-      var resourceDetail = pb.resourceDetail;
+      const resourceDetail = pb.resourceDetail
       if (resourceDetail.previewImages && resourceDetail.previewImages.length) {
         pb.resourceDetail._previewImage = resourceDetail.previewImages[0]
       } else {
@@ -88,13 +86,13 @@ export default {
     },
     setDefaultPageBuildHandler(presentable, status) {
       if (!status) {
-        //toggle
+        // toggle
         status = (presentable.status === PAGE_BUILD_STATUS.show) ? PAGE_BUILD_STATUS.hide : PAGE_BUILD_STATUS.show
       }
 
-      var param = {
+      const param = {
         nodeId: parseInt(this.$route.params.nodeId),
-        status: status
+        status
       }
       return this.changePageBuildShowStatus(presentable, param)
     },
@@ -115,11 +113,11 @@ export default {
     handlePreview(presentable) {
       this.$router.push({
         path: `/node/${this.$route.params.nodeId}/presentable/detail`,
-        query: {presentableId: presentable.presentableId, ispb: true}
+        query: { presentableId: presentable.presentableId, ispb: true }
       })
     },
     changePageBuildHandler(pagebuild) {
-      var msg;
+      let msg
       if (pagebuild.status === PAGE_BUILD_STATUS.show) {
         msg = '确定取消使用该页面?'
       } else {
@@ -130,9 +128,9 @@ export default {
         .then(() => {
           this.setDefaultPageBuildHandler(pagebuild).then(() => {
             this.currentIndex = pagebuild.status === PAGE_BUILD_STATUS.show ? pagebuild.index : ''
-          });
+          })
         }).catch(() => {
-      })
+        })
     },
     addNewPageBuildHandler() {
       this.showSearchResource = true
@@ -146,19 +144,18 @@ export default {
         nodeId: this.$route.params.nodeId,
         presentableName: resource.resourceName,
         resourceId: resource.resourceId
-      }).then(presentable => {
-        presentable.resourceDetail = Object.assign({}, resource);
+      }).then((presentable) => {
+        presentable.resourceDetail = Object.assign({}, resource)
         this.pagebuildList.push(this.formatPageBuild(presentable))
         this.showSearchResource = false
-      }).catch(this.$error.showErrorMessage);
+      }).catch(this.$error.showErrorMessage)
     },
     createPresentable(data) {
-      return this.$services.presentables.post(data).then(res => {
+      return this.$services.presentables.post(data).then((res) => {
         if (res.data.errcode !== 0) {
           return Promise.reject(res.data.msg)
-        } else {
-          return res.getData()
         }
+        return res.getData()
       })
     }
   }

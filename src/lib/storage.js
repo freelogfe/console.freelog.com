@@ -16,16 +16,16 @@
 
 import store from 'store'
 
-var engine = require('store/src/store-engine')
-var cookieStorage = [
+const engine = require('store/src/store-engine')
+const cookieStorage = [
   require('store/storages/cookieStorage')
 ]
-var plugins = [
+const plugins = [
   require('store/plugins/defaults'),
   require('store/plugins/expire')
-];
+]
 
-var sessionStorages = [
+const sessionStorages = [
   require('store/storages/sessionStorage')
 ]
 

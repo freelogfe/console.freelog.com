@@ -5,4 +5,6 @@ const resourceAuthSchemeEditor = resolve => require.ensure([], () => resolve(req
 const resourceEditor = resolve => require.ensure([], () => resolve(require('./edit/index.vue')), 'resource-editor')
 
 
-export default {resourceCreator, resourceEditor, resourceDetail, resourceList, resourceAuthSchemeEditor}
+export default {
+  resourceCreator, resourceEditor, resourceDetail, resourceList, resourceAuthSchemeEditor
+}

@@ -13,8 +13,9 @@
 </template>
 
 <script>
-  import PresentableSteps from './index'
-  export default PresentableSteps
+import PresentableSteps from './index'
+
+export default PresentableSteps
 </script>
 
 <style lang="less" scoped>

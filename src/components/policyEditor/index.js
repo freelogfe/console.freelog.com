@@ -1,4 +1,4 @@
-import {highlight, compile} from '@freelog/resource-policy-lang'
+import { highlight, compile } from '@freelog/resource-policy-lang'
 
 import PolicyTemplateSelector from './tool/policyTpl.vue'
 import QueryPolicyLicense from './tool/queryLicense.vue'
@@ -33,22 +33,22 @@ export default {
       type: Object,
       default() {
         return {
-          type: ''  //resource or presentable
+          type: '' // resource or presentable
         }
       }
     }
   },
 
-  components: {PolicyTemplateSelector, QueryPolicyLicense},
+  components: { PolicyTemplateSelector, QueryPolicyLicense },
   watch: {
     policyList: {
-      handler: function (val, oldVal) {
+      handler(val, oldVal) {
         this.$emit('change', this.policyList)
       },
       deep: true
     },
     'value.policy': {
-      handler: function (val, oldVal) {
+      handler(val, oldVal) {
         this.fillPolicyList(this.value)
       },
       deep: true
@@ -63,19 +63,19 @@ export default {
   methods: {
     fillPolicyList(list) {
       if (list.policy) {
-        this.policyList = list.policy.map(p => {
-          var policyText = p.policyText
-          var ret = compile(policyText)
+        this.policyList = list.policy.map((p) => {
+          let policyText = p.policyText
+          const ret = compile(policyText)
           if (!ret.errorMsg) {
-            policyText = highlight(policyText);
+            policyText = highlight(policyText)
           }
           return {
             policyName: p.policyName || '',
-            policyText: policyText,
+            policyText,
             policySegmentId: p.segmentId,
             disabled: p.status === 0
           }
-        });
+        })
       }
 
       if (!this.policyList.length) {
@@ -83,11 +83,11 @@ export default {
       }
     },
     validate() {
-      var ret = compile(this.policyText)
+      const ret = compile(this.policyText)
       if (!ret.errorMsg) {
-        this.policyText = highlight(this.policyText);
+        this.policyText = highlight(this.policyText)
         this.$emit('input', this.policyText)
-        this.$emit('validate', {done: true})
+        this.$emit('validate', { done: true })
       } else {
         this.$emit('validate', {
           done: false,
@@ -95,7 +95,7 @@ export default {
             message: ret.errorMsg
           }
         })
-        this.$message.error(ret.errorMsg) //外层控制??
+        this.$message.error(ret.errorMsg) // 外层控制??
       }
     },
     addNewPolicy() {
@@ -109,31 +109,31 @@ export default {
       return this.$services.policy.post(data)
     },
     showToolHandler(toolName) {
-      this.currentTool = toolName;
+      this.currentTool = toolName
       this.showCustomPolicyTplDialog = true
     },
     operationCallback(data) {
-      this.showCustomPolicyTplDialog = false;
+      this.showCustomPolicyTplDialog = false
 
       if (data && data.name) {
-        var name = `${data.name}Callback`;
-        this[name] && this[name](data.data);
+        const name = `${data.name}Callback`
+        this[name] && this[name](data.data)
         this.$emit('input', this.policyText)
       }
     },
     getCurrentEditingPolicy() {
-      return this.policyList[this.editingIndex];
+      return this.policyList[this.editingIndex]
     },
     selectPolicyTemplateCallback(data) {
-      var policy = this.getCurrentEditingPolicy()
-      policy.policyText = data.template;
+      const policy = this.getCurrentEditingPolicy()
+      policy.policyText = data.template
     },
     selectLicenseIdCallback(data) {
-      var policy = this.getCurrentEditingPolicy()
+      const policy = this.getCurrentEditingPolicy()
       policy.policyText += ` ${data.licenseId}`
     },
     changePolicyText(policy) {
-      //to validate
+      // to validate
     },
     focusInputHandler(ev, index) {
       this.editingIndex = index
@@ -146,12 +146,12 @@ export default {
           .then(() => {
             this.policyList.splice(index, 1)
           }).catch(() => {
-        })
+          })
       }
     },
     getChangeData() {
-      var policies = {}
-      this.policyList.forEach(p => {
+      const policies = {}
+      this.policyList.forEach((p) => {
         if (p.policySegmentId) {
           policies.updatePolicySegments = policies.updatePolicySegments || []
           policies.updatePolicySegments.push({
@@ -166,7 +166,7 @@ export default {
             policyText: btoa(p.policyText)
           })
         }
-      });
+      })
       return policies
     }
   }

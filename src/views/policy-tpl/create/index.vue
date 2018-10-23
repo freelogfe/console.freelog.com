@@ -20,9 +20,9 @@
 </template>
 
 <script>
-  import PolicyTplCreator from './index'
+import PolicyTplCreator from './index'
 
-  export default PolicyTplCreator
+export default PolicyTplCreator
 </script>
 
 <style lang="less" scoped>

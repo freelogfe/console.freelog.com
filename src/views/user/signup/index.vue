@@ -45,9 +45,9 @@
 </template>
 
 <script>
-  import SignupView from './index'
+import SignupView from './index'
 
-  export default SignupView
+export default SignupView
 </script>
 
 <style lang="less" scoped>

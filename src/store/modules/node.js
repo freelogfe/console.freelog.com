@@ -1,4 +1,4 @@
-import {storage} from '@/lib'
+import { storage } from '@/lib'
 import NodeDataLoader from '@/data/node/loader'
 
 const types = {
@@ -6,7 +6,7 @@ const types = {
   CHANGE_NODE: 'changeNode',
   ADD_NODE: 'addNode',
   LOAD_NODES: 'loadNodes'
-};
+}
 
 const node = {
   state: {
@@ -25,20 +25,20 @@ const node = {
   },
 
   actions: {
-    [types.CHECK_NODE]({commit, getters}) {
+    [types.CHECK_NODE]({ commit, getters }) {
       return new Promise((resolve, reject) => {
         resolve(null)
       })
     },
-    [types.LOAD_NODES]({commit, getters}) {
+    [types.LOAD_NODES]({ commit, getters }) {
       return new Promise((resolve) => {
-        var userId = getters.session.user && getters.session.user.userId;
+        const userId = getters.session.user && getters.session.user.userId
         if (userId) {
           NodeDataLoader.onloadNodeList({
             ownerUserId: userId,
             pageSize: 1e2
-          }).then(data => {
-            var nodes = data.dataList
+          }).then((data) => {
+            const nodes = data.dataList
             commit(types.LOAD_NODES, nodes)
             resolve(nodes)
           })
@@ -47,10 +47,10 @@ const node = {
         }
       })
     },
-    [types.ADD_NODE]({commit, getters}, node) {
+    [types.ADD_NODE]({ commit, getters }, node) {
       commit(types.ADD_NODE, node)
     },
-    [types.CHANGE_NODE]({commit}, data) {
+    [types.CHANGE_NODE]({ commit }, data) {
       commit(types.CHANGE_NODE, data)
       return new Promise((resolve) => {
         setTimeout(resolve, 50)

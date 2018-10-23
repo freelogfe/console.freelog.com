@@ -10,9 +10,9 @@
 </template>
 
 <script>
-  import Footer from './index';
+import Footer from './index'
 
-  export default Footer;
+export default Footer
 </script>
 
 <style scoped lang="less">

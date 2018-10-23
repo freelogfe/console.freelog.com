@@ -16,9 +16,9 @@
 </template>
 
 <script>
-  import PresentableSchemeDetail from './index'
+import PresentableSchemeDetail from './index'
 
-  export default PresentableSchemeDetail
+export default PresentableSchemeDetail
 </script>
 
 <style lang="less" scoped>

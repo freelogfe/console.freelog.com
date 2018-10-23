@@ -42,123 +42,122 @@
 
 <script type="text/javascript">
 
-  export default {
-    name: 'escrow-confiscate',
-    data() {
-      return {
-        options: [],
-        toAccountId: '',
-        tipMsg: '',
-        order: {},
-        showError: false,
-        isLoadingAccount: false,
+export default {
+  name: 'escrow-confiscate',
+  data() {
+    return {
+      options: [],
+      toAccountId: '',
+      tipMsg: '',
+      order: {},
+      showError: false,
+      isLoadingAccount: false,
+    }
+  },
+  mounted() {
+    const self = this
+    this.$services.accounts.get().then((res) => {
+      self.options = res.data.data
+    })
+  },
+  computed: {
+
+  },
+  props: ['contractDetail', 'params'],
+  methods: {
+    selectVisibleChange(visible) {
+      if (visible && this.options.length === 0) {
+        this.isLoadingAccount = true
+        this.$services.accounts.get()
+          .then((res) => {
+            this.options = res.data.data
+            this.isLoadingAccount = false
+          })
       }
     },
-    mounted() {
-      var self = this
-      this.$services.accounts.get().then(function (res) {
-        self.options = res.data.data
+    // 支付结果处理
+    confiscatedResultHandler(result) {
+      switch (result.status) {
+        case 1:
+          this.$message.success('支付进行中，稍后查询支付结果')
+          break
+        case 2:
+          this.$message.success('支付成功')
+          break
+        case 3:
+          this.$message.success('支付失败')
+          break
+        default:
+          this.$message.info('未知的支付状态')
+      }
+    },
+    // 支付完成（即支付成功） 处理
+    doneHandler(data) {
+      if (this.order) {
+        data = {
+          shouldUpdate: true
+        }
+      }
+      this.$emit('close', data)
+    },
+    checkOrderStatus(order) {
+      if (!order) return
+
+      this.order = order
+      let msg
+      switch (order.status) {
+        case 1:
+          msg = '没收进行中'
+          break
+        case 2:
+          msg = '已没收成功'
+          break
+        case 3:
+          msg = '没收失败'
+          break
+      }
+
+      this.tipMsg = msg
+    },
+    // 查询支付订单状态
+    queryOrder() {
+      // return this.$services.orderInfo.get({
+      //   params: {
+      //     targetId: this.contractDetail.contractId
+      //   }
+      // }).then((res) => {
+      //   return res.getData()
+      // })
+    },
+    // 没收保证金
+    confiscate() {
+      return
+      this.$axios.post('/v1/contracts/events/escrowConfiscated', {
+        contractId: this.contractId,
+        eventId,
+        toAccountId: this.toAccountId,
       })
-    },
-    computed: {
-
-    },
-    props: ['contractDetail', 'params'],
-    methods: {
-      selectVisibleChange(visible) {
-        if (visible && this.options.length === 0) {
-          this.isLoadingAccount = true
-          this.$services.accounts.get()
-            .then(res => {
-              this.options = res.data.data
-              this.isLoadingAccount = false
-            })
-
-        }
-      },
-      // 支付结果处理
-      confiscatedResultHandler(result) {
-        switch (result.status) {
-          case 1:
-            this.$message.success('支付进行中，稍后查询支付结果')
-            break;
-          case 2:
-            this.$message.success('支付成功')
-            break;
-          case 3:
-            this.$message.success('支付失败')
-            break;
-          default:
-            this.$message.info('未知的支付状态')
-        }
-      },
-      // 支付完成（即支付成功） 处理
-      doneHandler(data) {
-        if (this.order) {
-          data = {
-            shouldUpdate: true
-          }
-        }
-        this.$emit('close', data)
-      },
-      checkOrderStatus(order) {
-        if (!order) return
-
-        this.order = order
-        var msg
-        switch (order.status) {
-          case 1:
-            msg = '没收进行中'
-            break;
-          case 2:
-            msg = '已没收成功';
-            break;
-          case 3:
-            msg = '没收失败';
-            break;
-        }
-
-        this.tipMsg = msg
-      },
-      // 查询支付订单状态
-      queryOrder() {
-        // return this.$services.orderInfo.get({
-        //   params: {
-        //     targetId: this.contractDetail.contractId
-        //   }
-        // }).then((res) => {
-        //   return res.getData()
-        // })
-      },
-      // 没收保证金
-      confiscate() {
-        return
-        this.$axios.post('/v1/contracts/events/escrowConfiscated', {
-          contractId: this.contractId,
-          eventId,
-          toAccountId: this.toAccountId,
-        })
-        .then(resp => {
-          if(resp.status === 200) {
+        .then((resp) => {
+          if (resp.status === 200) {
             if (res.data.errcode === 0) {
               this.showError = false
               this.confiscatedResultHandler(res.data.data)
-              this.doneHandler({shouldUpdate: true, data: res.data.data})
+              this.doneHandler({ shouldUpdate: true, data: res.data.data })
             } else {
               this.showError = true
               this.$message.error(res.data.msg)
             }
-          }else {
+          } else {
             console.log('/v1/contracts/events/escrowConfiscated 请求失败！')
           }
         })
-        .catch(e => {
+        .catch((e) => {
           this.$error.showErrorMessage(e)
         })
-      }
     }
-
   }
+
+}
 </script>
 
 <style lang="less">

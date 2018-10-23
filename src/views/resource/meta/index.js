@@ -1,14 +1,15 @@
-import {codemirror, codeMirrorOptions} from '@/lib/codemirror'
-var throttle = require('lodash/throttle');
-import 'codemirror/mode/javascript/javascript';
+import { codemirror, codeMirrorOptions } from '@/lib/codemirror'
+import 'codemirror/mode/javascript/javascript'
+
+const throttle = require('lodash/throttle')
 require('codemirror/theme/idea.css')
 
 export default {
   name: 'resource-meta-info',
   data() {
-    var cmOpts = Object.assign({}, codeMirrorOptions)
+    const cmOpts = Object.assign({}, codeMirrorOptions)
     Object.assign(cmOpts, {
-      mode:  {
+      mode: {
         name: 'javascript',
         json: true
       },
@@ -37,7 +38,7 @@ export default {
   },
 
   watch: {
-    value: function () {
+    value() {
       this.data = this.value
     }
   },
@@ -58,14 +59,13 @@ export default {
       this.$emit('input', this.data)
     },
     validateJSON() {
-
       try {
         if (this.data) {
           JSON.parse(this.data)
         }
         this.clearErrorMsg()
       } catch (err) {
-        this.errorMsg = 'JSON格式有误！' + err
+        this.errorMsg = `JSON格式有误！${err}`
       }
 
       this.$emit('validate', this.errorMsg)

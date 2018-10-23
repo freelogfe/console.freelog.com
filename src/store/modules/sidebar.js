@@ -3,7 +3,7 @@ const types = {
   CLOSE_SIDEBAR: 'closeSidebar',
   HIDE_SIDEBAR: 'hideSidebar',
   OPEN_SIDEBAR: 'openSidebar'
-};
+}
 
 const sidebar = {
   state: {
@@ -19,22 +19,22 @@ const sidebar = {
       if (shouldOpen === undefined) {
         state.openSidebar = !state.openSidebar
       } else {
-        state.openSidebar = shouldOpen;
+        state.openSidebar = shouldOpen
       }
     }
   },
 
   actions: {
-    [types.HIDE_SIDEBAR]({commit}, shouldOpen) {
+    [types.HIDE_SIDEBAR]({ commit }, shouldOpen) {
       commit(types.HIDE_SIDEBAR, shouldOpen)
     },
-    [types.TOGGLE_SIDEBAR]({commit}, shouldOpen) {
+    [types.TOGGLE_SIDEBAR]({ commit }, shouldOpen) {
       commit(types.TOGGLE_SIDEBAR, shouldOpen)
     },
-    [types.CLOSE_SIDEBAR]({commit}) {
+    [types.CLOSE_SIDEBAR]({ commit }) {
       commit(types.TOGGLE_SIDEBAR, false)
     },
-    [types.OPEN_SIDEBAR]({commit}) {
+    [types.OPEN_SIDEBAR]({ commit }) {
       commit(types.TOGGLE_SIDEBAR, true)
     }
   }

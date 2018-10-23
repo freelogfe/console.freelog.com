@@ -1,24 +1,23 @@
-import {ResourceService} from '@/services'
-import {createLoader, createCacheLoaders} from '@/lib/utils'
-import {cloneDeep} from 'lodash'
+import { ResourceService } from '@/services'
+import { createLoader, createCacheLoaders } from '@/lib/utils'
+import { cloneDeep } from 'lodash'
 import axios from '@/lib/axios'
 
-var cachedResources = {};
+const cachedResources = {}
 
 
 function loadDetail(resourceId) {
   return ResourceService.get(resourceId).then((res) => {
     if (res.data.errcode === 0) {
       return res.getData()
-    } else {
-      return Promise.reject(res.data)
     }
+    return Promise.reject(res.data)
   })
 }
 
 function loadResources(resourceIds) {
-  var result = [];
-  var rids = []
+  const result = []
+  const rids = []
   // resourceIds.forEach(rid => {
   //   if (cachedResources[rid]) {
   //     result.push(cloneDeep(cachedResources[rid]))
@@ -31,12 +30,12 @@ function loadResources(resourceIds) {
   //   return Promise.resolve(result)
   // }
 
-  return axios.get(`/v1/resources/list`, {
+  return axios.get('/v1/resources/list', {
     params: {
       resourceIds: resourceIds.join(',')
     }
-  }).then(res => {
-    var data = res.getData()
+  }).then((res) => {
+    const data = res.getData()
     // if (data) {
     //   data.forEach(res => {
     //     cachedResources[res.resourceId] = res
@@ -60,9 +59,7 @@ function loadResources(resourceIds) {
 
 
 const onloadResourceDetail = function (resourceId) {
-  return loadDetail(resourceId).then(res => {
-    return res
-  });
+  return loadDetail(resourceId).then(res => res)
 }
 export {
   loadDetail,

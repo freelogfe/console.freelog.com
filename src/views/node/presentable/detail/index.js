@@ -1,6 +1,6 @@
 import PresentablePolicy from '@/components/policyEditor/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
-import {RESOURCE_TYPES} from '@/config/resource'
+import { RESOURCE_TYPES } from '@/config/resource'
 import PresentableEditor from '../editor/index.vue'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
 import ResourceDataLoader from '@/data/resource/loader'
@@ -55,22 +55,22 @@ export default {
         return
       }
       this.presentableData = this.detail
-      ResourceDataLoader.onloadResourceDetail(this.detail.resourceId).then(detail => {
-        this.presentableData.resourceInfo = {...detail}
-      });
+      ResourceDataLoader.onloadResourceDetail(this.detail.resourceId).then((detail) => {
+        this.presentableData.resourceInfo = { ...detail }
+      })
 
-      this.loadPresentableScheme();
+      this.loadPresentableScheme()
     },
     loadPresentableScheme() {
-      var contract = this.getPresentableContract()
+      const contract = this.getPresentableContract()
       if (contract) {
-        SchemeDataLoader.onloadSchemeDetail(contract.authSchemeId).then(scheme => {
+        SchemeDataLoader.onloadSchemeDetail(contract.authSchemeId).then((scheme) => {
           if (scheme) {
             for (let i = 0; i < scheme.policy.length; i++) {
-              let policy = scheme.policy[i]
+              const policy = scheme.policy[i]
               if (policy.segmentId === contract.policySegmentId) {
                 scheme.selectedPolicy = policy
-                break;
+                break
               }
             }
 
@@ -80,11 +80,11 @@ export default {
       }
     },
     getPresentableContract() {
-      var contracts = this.presentableData.contracts || []
+      const contracts = this.presentableData.contracts || []
       if (contracts.length) {
-        let contract;
+        let contract
         for (let i = 0; i < contracts.length; i++) {
-          contract = contracts[i];
+          contract = contracts[i]
           if (contract.resourceId === this.presentableData.resourceId) {
             return contract
           }
@@ -96,7 +96,7 @@ export default {
     gotoSchemeDetailHandler() {
       this.$router.push({
         path: `/node/${this.$route.params.nodeId}/presentable/${this.detail.presentableId}/scheme_detail`,
-        query: {resourceId: this.detail.resourceId}
+        query: { resourceId: this.detail.resourceId }
       })
     },
     savePresentableEnd(data) {

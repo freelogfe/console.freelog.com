@@ -1,6 +1,6 @@
 import { axios } from '../lib'
 
-export default Vue => {
+export default (Vue) => {
   Object.defineProperties(Vue, {
     axios: { get: () => axios }
   })

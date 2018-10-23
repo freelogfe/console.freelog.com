@@ -25,6 +25,7 @@
 </template>
 
 <script>
-  import PolicyTplSelector from './index'
-  export default PolicyTplSelector
+import PolicyTplSelector from './index'
+
+export default PolicyTplSelector
 </script>

@@ -16,7 +16,7 @@ export const resource = [
   `,
     name: '收费'
   }
-];
+]
 
 export const presentable = [
   {
@@ -30,9 +30,9 @@ export const presentable = [
   `,
     name: '收费'
   }
-];
+]
 
 export default {
   resource,
   presentable
-};
+}

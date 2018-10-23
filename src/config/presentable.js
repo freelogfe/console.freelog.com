@@ -23,4 +23,4 @@ export const PRESENTABLE_STATUS_TIPS = [
     text: '系统终止',
     type: 'info'
   }
-];
+]

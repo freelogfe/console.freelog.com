@@ -11,10 +11,10 @@ export default {
     ResourceIntroInfo
   },
   data() {
-    var params = this.$route.params
+    const params = this.$route.params
     return {
       isInitStatus: false,
-      params: params,
+      params,
       presentableDetail: {
         contracts: [],
         schemes: [],
@@ -34,14 +34,14 @@ export default {
         return
       }
 
-      PresentableDataLoader.onloadPresentableDetail(params.presentableId).then(data => {
+      PresentableDataLoader.onloadPresentableDetail(params.presentableId).then((data) => {
         if (data && data.contracts) {
           this.isInitStatus = !data.contracts.length
 
           data.contracts.slice(0).reduce((cachedContractsMap, item) => {
             cachedContractsMap[this.getSchemeContractKey(item)] = item
             return cachedContractsMap
-          }, this.cachedContractsMap);
+          }, this.cachedContractsMap)
 
           ResourceDataLoader.onloadResourceDetail(data.resourceId).then(detail => {
             Object.assign(data.resourceInfo, detail)
@@ -49,42 +49,42 @@ export default {
             this.presentableDetail = data
           })
         }
-      });
+      })
     },
     loadPresentableSchemes(resourceId) {
-      SchemeDataLoader.onloadSchemesForResource(resourceId).then(schemes => {
-        this.presentableDetail.schemes = schemes;
+      SchemeDataLoader.onloadSchemesForResource(resourceId).then((schemes) => {
+        this.presentableDetail.schemes = schemes
       })
     },
     getSchemeContractKey(item) {
       return `${item.authSchemeId}_${item.policySegmentId}`
     },
     saveSchemeHandler() {
-      var dutyStatements = this.$refs.schemeTree.getDutyStatements()
-      var targetResourceId = this.presentableDetail.resourceId
-      var cachedContractsMap = this.cachedContractsMap
-      var contracts = [];
+      const dutyStatements = this.$refs.schemeTree.getDutyStatements()
+      const targetResourceId = this.presentableDetail.resourceId
+      const cachedContractsMap = this.cachedContractsMap
+      const contracts = []
 
-      dutyStatements.map(dep => {
-        let selectedScheme = dep.selectedScheme
-        let contract = {
+      dutyStatements.map((dep) => {
+        const selectedScheme = dep.selectedScheme
+        const contract = {
           resourceId: dep.resourceId
-        };
-        var schemePolicy;
+        }
+        let schemePolicy
         if (selectedScheme) {
           schemePolicy = {
             authSchemeId: selectedScheme.authSchemeId,
             policySegmentId: selectedScheme.selectedPolicy.segmentId
-          };
+          }
         } else if (dep.policySegmentId) {
           schemePolicy = {
             authSchemeId: dep.authSchemeId,
             policySegmentId: dep.policySegmentId
-          };
+          }
         }
 
         if (schemePolicy) {
-          let key = this.getSchemeContractKey(schemePolicy)
+          const key = this.getSchemeContractKey(schemePolicy)
           if (cachedContractsMap[key]) {
             contract.contractId = cachedContractsMap[key].contractId
           } else {
@@ -92,13 +92,13 @@ export default {
           }
           contracts.push(contract)
         }
-      });
+      })
 
-      var targetResource;
+      let targetResource
       for (let i = 0; i < dutyStatements.length; i++) {
         if (dutyStatements[i].resourceId === targetResourceId) {
           targetResource = dutyStatements[i]
-          break;
+          break
         }
       }
 
@@ -108,15 +108,14 @@ export default {
             contracts: filterSameContracts(contracts)
           })
 
-          function filterSameContracts (contracts){
-            var tempMap = new Map()
-            return contracts.filter(it =>{
-              if(tempMap.get(it.authSchemeId)){
+          function filterSameContracts(contracts) {
+            const tempMap = new Map()
+            return contracts.filter((it) => {
+              if (tempMap.get(it.authSchemeId)) {
                 return false
-              }else{
-                tempMap.set(it.authSchemeId, 1)
-                return true
               }
+              tempMap.set(it.authSchemeId, 1)
+              return true
             })
           }
         } else {
@@ -128,10 +127,10 @@ export default {
       }
     },
     updatePresentableSchemes(data) {
-      return this.$services.presentables.put(this.params.presentableId, data).then(res => {
+      return this.$services.presentables.put(this.params.presentableId, data).then((res) => {
         if (res.data.errcode === 0) {
           this.isInitStatus = !res.data.data.contracts.length
-          this.$message.success('更新成功');
+          this.$message.success('更新成功')
           this.gotoContractView(res.data.data)
         } else {
           this.$error.showErrorMessage(res)
@@ -139,16 +138,16 @@ export default {
       })
     },
     gotoContractView(data) {
-      var query = {tab: 'node-contracts'}
-      for (var i = 0; i < data.contracts.length; i++) {
-        let contract = data.contracts[i]
+      const query = { tab: 'node-contracts' }
+      for (let i = 0; i < data.contracts.length; i++) {
+        const contract = data.contracts[i]
         if (contract.resourceId === this.presentableDetail.resourceId) {
           query.contractId = contract.contractId
-          break;
+          break
         }
       }
 
-      this.$router.push({path: `/node/${this.params.nodeId}`, query: query})
+      this.$router.push({ path: `/node/${this.params.nodeId}`, query })
     },
     switchSchemeHandler(resource, scheme, index, panelIndex) {
 

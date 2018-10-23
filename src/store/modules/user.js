@@ -1,6 +1,6 @@
-import {UserService, OtherService} from '../../services'
-import {storage, axios} from '@/lib/index'
-import {cookieStore, sessionStore} from '@/lib/storage'
+import { UserService, OtherService } from '../../services'
+import { storage, axios } from '@/lib/index'
+import { cookieStore, sessionStore } from '@/lib/storage'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
@@ -13,7 +13,7 @@ const types = {
 
 const user = {
   state: {
-    session: sessionStore.get('user_session') || {user: {}, token: null}, // sessionStore.get('user_session')
+    session: sessionStore.get('user_session') || { user: {}, token: null }, // sessionStore.get('user_session')
   },
 
   mutations: {
@@ -22,39 +22,39 @@ const user = {
       sessionStore.set('user_session', state.session);
     },
     [types.DELETE_SESSION](state) {
-      state.session = {user: {}, token: null}
-      sessionStore.remove('user_session');
+      state.session = { user: {}, token: null }
+      sessionStore.remove('user_session')
     }
   },
 
   actions: {
-    [types.GET_CURRENT_USER]({commit}, userId) {
-      var promise
+    [types.GET_CURRENT_USER]({ commit }, userId) {
+      let promise
       if (userId) {
         promise = UserService.get(userId)
       } else {
         promise = axios.get('/v1/userinfos/current')
       }
 
-      return promise.then(res => {
+      return promise.then((res) => {
         if (res.data.errcode === 0) {
-          commit(types.CHANGE_SESSION, {user: res.data.data});
+          commit(types.CHANGE_SESSION, { user: res.data.data })
         }
         return res.data.data
       })
     },
-    [types.CHANGE_SESSION]({commit}, data) {
-      commit(types.CHANGE_SESSION, data);
+    [types.CHANGE_SESSION]({ commit }, data) {
+      commit(types.CHANGE_SESSION, data)
     },
-    [types.CHECK_USER_SESSION]({commit, getters}) {
-      var session = getters.session || sessionStore.get('user_session')
-      var authInfo = (session && session.user)
-      var userInfo = {}
+    [types.CHECK_USER_SESSION]({ commit, getters }) {
+      const session = getters.session || sessionStore.get('user_session')
+      let authInfo = (session && session.user)
+      let userInfo = {}
       if (!authInfo || !authInfo.userId) {
         authInfo = cookieStore.get('authInfo') || ''
         if (authInfo) {
           try {
-            var jwt = authInfo.split('.')
+            const jwt = authInfo.split('.')
             userInfo = atob(jwt[1])
             userInfo = JSON.parse(userInfo)
           } catch (err) {
@@ -66,33 +66,32 @@ const user = {
         userInfo = authInfo
       }
       return new Promise((resolve) => {
-        var logged = (getters.session && userInfo.userId && getters.session.user.userId === userInfo.userId)
+        const logged = (getters.session && userInfo.userId && getters.session.user.userId === userInfo.userId)
         resolve(logged)
       })
     },
-    [types.USER_LOGIN]({commit}, data) {
-      return OtherService.login(data).then(res => {
+    [types.USER_LOGIN]({ commit }, data) {
+      return OtherService.login(data).then((res) => {
         if (res.data.ret === 0 && res.data.errcode == 0) {
-          const token = res.headers.authorization;
-          commit(types.CHANGE_SESSION, {user: res.data.data, token: token});
+          const token = res.headers.authorization
+          commit(types.CHANGE_SESSION, { user: res.data.data, token })
           return res.data.data
-        } else {
-          return Promise.reject(res.data.msg);
         }
-      });
+        return Promise.reject(res.data.msg)
+      })
     },
-    [types.USER_LOGOUT]({commit}) {
-      return OtherService.logout().then(res => {
+    [types.USER_LOGOUT]({ commit }) {
+      return OtherService.logout().then((res) => {
         if (res.data.ret === 0 && res.data.errcode == 0) {
           commit(types.DELETE_SESSION)
           commit('deleteNode')
         } else {
-          return Promise.reject(res.data.msg);
+          return Promise.reject(res.data.msg)
         }
-      });
+      })
     }
   }
 }
 
-export default user;
-export const mutationTypes = types;
+export default user
+export const mutationTypes = types

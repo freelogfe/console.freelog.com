@@ -74,9 +74,9 @@
 </template>
 
 <script>
-  import Header from './index'
+import Header from './index'
 
-  export default Header
+export default Header
 </script>
 
 <style scoped lang="less">
