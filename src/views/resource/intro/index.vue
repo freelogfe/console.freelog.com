@@ -1,6 +1,6 @@
 <template>
   <div class="res-intro-wrapper">
-    <div class="user-avatar">
+    <div class="user-avatar" v-if="avatarUrl">
       <img class="resource-author-img"
            :src="avatarUrl"
            alt="">
@@ -32,15 +32,14 @@ export default {
       default() {
         return {}
       }
-    },
-
-    computed: {
-      avatarUrl(){
-        if (this.resource.userId) {
-          return `https://image.freelog.com/headImage/${this.resource.userId}?x-oss-process=style/head-image`
-        } else {
-          return ''
-        }
+    }
+  },
+  computed: {
+    avatarUrl(){
+      if (this.resource.userId) {
+        return `https://image.freelog.com/headImage/${this.resource.userId}?x-oss-process=style/head-image`
+      } else {
+        return ''
       }
     }
   }
