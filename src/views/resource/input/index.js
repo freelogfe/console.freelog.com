@@ -96,6 +96,20 @@ export default {
   },
 
   computed: {
+
+    apiHostName() {
+      var arr = location.hostname.split('.')
+      arr.shift()
+      arr.unshift('qi')
+      console.log(arr.join('.'))
+      return arr.join('.')
+    },
+    upoladPreviewImageAction() {
+      return `//${this.apiHostName}/v1/resources/upoladPreviewImage`
+    },
+    uploadResourceFileAction() {
+      return `//${this.apiHostName}/v1/resources/uploadResourceFile`
+    },
     showCreatorInputItem() {
       return this.editMode === EDIT_MODES.creator
     },

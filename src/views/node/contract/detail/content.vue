@@ -28,7 +28,6 @@ export default {
       return this.contract.contractClause.fsmStates
     },
     currentFsmState() {
-      return 'auth'
       return this.contract.contractClause.currentFsmState
     },
     policyText() {

@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@freelog/resource-policy-lang": "^0.0.31",
+    "@freelog/resource-policy-lang": "0.0.33",
     "axios": "^0.18.0",
     "codemirror": "^5.39.2",
     "date-fns": "^1.29.0",
