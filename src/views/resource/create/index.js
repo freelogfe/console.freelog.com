@@ -1,11 +1,11 @@
-import BaseResourceCreator from './resource/index.vue'
+import ResourceInput from '../input/index.vue'
 import ResourceLoader from '@/data/resource/loader'
 import { storage } from '@/lib'
 
 export default {
   name: 'resource-creator',
   components: {
-    BaseResourceCreator
+    ResourceInput
   },
   data() {
     return {
@@ -52,6 +52,12 @@ export default {
       this.executeNext(() => {
         detail.resourceId && this.$router.push(`/resource/detail/${detail.resourceId}/auth_schemes`)
       })
+    },
+    cancelHandler(){
+      this.$confirm('确定取消创建资源？')
+        .then(()=>{
+          this.$router.push(`/resource/list`)
+        }).catch(()=>{})
     }
   }
 }

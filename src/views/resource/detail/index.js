@@ -1,9 +1,9 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import AuthSchemeDetail from './auth-scheme/index.vue'
-import { loadDetail } from '@/data/resource/loader'
+import {loadDetail} from '@/data/resource/loader'
 import NodeDataLoader from '@/data/node/loader'
 
 export default {
@@ -26,6 +26,11 @@ export default {
   computed: Object.assign({
     isOwnerResource() {
       return this.resourceDetail.resourceInfo.isOwner
+    },
+    avatarUrl() {
+      const userId = this.resourceDetail.resourceInfo.userId
+      console.log(userId)
+      return userId ? `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image` : ''
     }
   }, mapGetters({
     session: 'session'
@@ -231,9 +236,6 @@ export default {
     nodeOptCheckHandler(node) {
       node.checked = !node.checked
       this.$forceUpdate()
-    },
-    resolveAvatarUrl(resourceDetail){
-      return `https://image.freelog.com/headImage/${resourceDetail.resourceInfo.userId}?x-oss-process=style/head-image`
     }
   }
 }

@@ -2,6 +2,7 @@
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
+import screenfull from 'screenfull'
 import { quillEditor, Quill } from 'vue-quill-editor'
 
 // https://quilljs.com/docs/modules/toolbar/
@@ -32,7 +33,8 @@ export default {
               // [{'font': []}],
               // [{'align': []}],
               // ['clean'],
-              ['link', 'image', 'video']
+              ['link', 'image', 'video'],
+              ['omega']
             ],
             handlers: {
               image() {
@@ -95,6 +97,16 @@ export default {
     },
     createEditor() {
       this.editor = this.$refs.richEditor.quill
+
+      var customButton = this.$el.querySelector('.ql-omega');
+      if (screenfull.enabled){
+        customButton.addEventListener('click', ()=> {
+          screenfull.toggle(this.$el);
+        })
+      } else {
+        customButton.remove()
+      }
+
       this.setHtml(this.value || '')
     },
     getHtml() {

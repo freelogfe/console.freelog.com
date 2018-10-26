@@ -1,4 +1,4 @@
-import ResourceMetaInfo from '../../meta/index.vue'
+import ResourceMetaInfo from '../meta/index.vue'
 import { storage } from '@/lib'
 import { RESOURCE_TYPES } from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
@@ -9,7 +9,7 @@ const EDIT_MODES = {
 }
 
 export default {
-  name: 'base-resource-creator',
+  name: 'resource-input',
   components: {
     ResourceMetaInfo,
     RichEditor
@@ -24,7 +24,6 @@ export default {
         callback()
       }
     }
-
     //      保持与web component中自定义标签名一致
     const validateWidgetName = (rule, value, callback) => {
       // 格式为freelog-xxx-yyyy，最少4个字符

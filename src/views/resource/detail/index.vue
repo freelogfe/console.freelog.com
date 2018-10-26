@@ -18,18 +18,33 @@
 
     <div class="res-detail-content" ref="detailContent" :style="{transform: contentTransform}">
       <div class="res-detail-hd clearfix">
-        <div class="res-author-avatar">
-          <img :src="resolveAvatarUrl(resourceDetail)"
-               alt="">
-        </div>
-        <div class="res-digest">
-          <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
-          <div class="res-origin-info">
-            <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
-            <span class="res-author-name">by: {{resourceDetail.resourceInfo.userName}}</span>
-            <span class="res-update-time">最近更新时间： {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
+        <div class="res-hd-wrap">
+          <div class="res-digest">
+            <div class="rt-side">
+              <p>
+                <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
+              </p>
+              <p>
+                <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+              </p>
+              <p>
+                <el-button type="text" class="edit-btn detail-ft-btn" @click="editDetailHandler">
+                  <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
+                </el-button>
+              </p>
+            </div>
+            <div class="lf-side">
+              <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
+              <div class="res-origin-info">
+                <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
+                <span class="res-update-time">{{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
+              </div>
+            </div>
           </div>
-          <div class="res-type-info"></div>
+          <div class="res-author-info">
+            <img :src="avatarUrl" alt="">
+            <span class="res-author-name">{{resourceDetail.resourceInfo.userName}}</span>
+          </div>
         </div>
       </div>
       <div class="res-detail-bd">
@@ -38,23 +53,6 @@
           <h3>meta</h3>
           <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
         </div>
-      </div>
-    </div>
-
-    <div class="res-detail-ft">
-      <div class="res-detail-ft-content">
-        <el-button type="text" class="preview-btn detail-ft-btn" @click="previewHandler">
-          <img class="img-icon" src="../../../assets/img/icons/preview.png"
-               alt="预览">预览
-        </el-button>
-        <el-button type="text" class="favor-btn detail-ft-btn" @click="favorHandler">
-          <img class="img-icon" src="../../../assets/img/icons/favor.png"
-               alt="收藏">{{resourceDetail.isFavor?'已收藏':'收藏至我的资源库'}}
-        </el-button>
-        <el-button type="text" class="edit-btn detail-ft-btn" @click="editDetailHandler">
-          <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
-        </el-button>
-        <el-button class="auth-btn" circle @click="getResourceAuthHandler">获取授权</el-button>
       </div>
     </div>
 
@@ -86,11 +84,17 @@
 </template>
 
 <script>
-import ResourceDetail from './index'
+  import ResourceDetail from './index'
 
-export default ResourceDetail
+  export default ResourceDetail
 </script>
 
 <style lang="less" scoped>
   @import "index.less";
+</style>
+
+<style>
+  .main {
+    background-color: #fbfbfb;
+  }
 </style>

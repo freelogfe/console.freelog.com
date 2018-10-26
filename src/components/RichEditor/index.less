@@ -1,6 +1,9 @@
 .rich-editor-wrapper {
   width: 100%;
   height: 100%;
+  background-color: white;
+  padding: 20px;
+  margin: -20px;
 
   .rich-editor-upload-img {
     text-align: center;
@@ -8,6 +11,8 @@
 
   .rich-text-editor {
     min-height: 200px;
+    border: 1px solid #E6E6E6;
+    height: 100%;
   }
 
   .ql-editor {
@@ -20,6 +25,16 @@
     }
   }
   .ql-toolbar {
+
+    .ql-omega {
+      background: url('../../assets/img/icons/fullscreen.png') no-repeat;
+      outline: none;
+    }
+
+    .ql-formats:last-child {
+      float: right;
+    }
+
     &.ql-snow {
       border: none;
       padding: 10px 0;

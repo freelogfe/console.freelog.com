@@ -11,7 +11,7 @@ function getBaseUrl() {
   if (argv.env === 'beta') {
     baseUrl = '//static.testfreelog.com/console'
   } else if (isProd) {
-    baseUrl = '//static.freelog.com'
+    baseUrl = '//static.freelog.com/console'
   } else {
     baseUrl = '/'
   }
