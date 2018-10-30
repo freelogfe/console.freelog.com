@@ -1,5 +1,5 @@
-import { createLoader, createCacheLoaders } from '@/lib/utils'
-import { cloneDeep, uniqBy } from 'lodash'
+import {createLoader, createCacheLoaders} from '@/lib/utils'
+import {cloneDeep, uniqBy} from 'lodash'
 
 import axios from '@/lib/axios'
 
@@ -70,6 +70,7 @@ function loadSchemeDetail(authSchemeId, params) {
     return Promise.reject(res.data.msg)
   })
 }
+
 //
 // const onloadSchemeDetail = createCacheLoaders(function (id) {
 //   return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
@@ -82,7 +83,7 @@ function loadSchemeDetail(authSchemeId, params) {
 
 
 const onloadSchemeDetail = function (id) {
-  return loadAuthSchemes({ authSchemeIds: [id] }).then((scheme) => {
+  return loadAuthSchemes({authSchemeIds: [id]}).then((scheme) => {
     if (Array.isArray(scheme)) {
       scheme = scheme[0]
     }
@@ -106,6 +107,12 @@ function onloadSchemesForResource(id, params) {
   params.resourceIds = [id]
 
   return loadSchemesForResource(params)
+}
+
+export {
+  onloadSchemesForResource,
+  onloadSchemeDetail,
+  loadAuthSchemes
 }
 
 export default {

@@ -41,21 +41,6 @@ const router = new Router({
     accountRoute,
     userRoute,
     resourceMarket,
-    // {
-    //   path: '/resource/create/preview',
-    //   meta: {requiresAuth: true, title: 'page build预览'},
-    //   component: Views.container,
-    //   hidden: true,
-    //   children: [{
-    //     path: '/',
-    //     hidden: true,
-    //     meta: {
-    //       requiresAuth: false,
-    //       title: 'page build预览'
-    //     },
-    //     component: Views.pageBuildPreview
-    //   }]
-    // },
     {
       path: '/',
       meta: { title: '首页' },
@@ -81,7 +66,8 @@ const router = new Router({
         hidden: true,
         meta: {
           requiresAuth: false,
-          title: '首页'
+          title: '首页',
+          theme: 'gray'
         },
         component: Views.mainView
       }]

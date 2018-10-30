@@ -19,7 +19,8 @@ export default {
       meta: {
         requiresAuth: true,
         title: '创建资源',
-        type: 'resource'
+        type: 'resource',
+        theme: 'gray'
       },
       component: Views.resourceCreator,
     },
@@ -29,7 +30,8 @@ export default {
       meta: {
         requiresAuth: true,
         title: '更新资源',
-        type: 'resource'
+        type: 'resource',
+        theme: 'gray'
       },
       component: Views.resourceEditor,
     },
@@ -63,7 +65,8 @@ export default {
       meta: {
         requiresAuth: true,
         title: '资源详情',
-        type: 'resource'
+        type: 'resource',
+        theme: 'gray'
       },
       component: Views.resourceDetail
     },

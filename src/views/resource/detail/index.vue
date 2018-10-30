@@ -92,9 +92,3 @@
 <style lang="less" scoped>
   @import "index.less";
 </style>
-
-<style>
-  .main {
-    background-color: #fbfbfb;
-  }
-</style>
