@@ -55,16 +55,20 @@ export default {
           if (entry.intersectionRatio <= 0) {
 
           } else if (self.canLoadMore !== false) {
-            self.load().catch(() => {
+            self.load().then(()=>{
+              if (entry.isIntersecting) {
+                return self.load()
+              }
+            }).catch(() => {
               self.observer.unobserve(self.$refs.loading)
               self.$refs.loading.classList.add('hide')
             })
           }
         })
       }), {
-        rootMargin: '50px 0px'
+        threshold: 1,
+        // rootMargin: '-500px 0px'
       })
-
       self.observer.observe(this.$refs.loading)
     },
     load() {

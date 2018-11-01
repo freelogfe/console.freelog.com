@@ -38,7 +38,8 @@ export default {
     type: {
       type: String,
       default: 'list'
-    }
+    },
+    navTo: Function
   },
 
   mounted() {
@@ -72,7 +73,11 @@ export default {
       return number + unit
     },
     gotoDetail(resource) {
-      this.$router.push(`/resource/detail/${resource.resourceId}`)
+      if (typeof this.navTo === 'function') {
+        this.navTo(resource)
+      } else {
+        this.$router.push(`/resource/detail/${resource.resourceId}`)
+      }
     }
   }
 }

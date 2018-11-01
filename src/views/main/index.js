@@ -53,9 +53,7 @@ export default {
         query.keyWords = this.query
       }
       return this.loader(query).then((data) => {
-        if (data.dataList.length < 10) {
-          data.canLoadMore = false
-        }
+        data.canLoadMore = !(data.dataList.length < data.pageSize)
         return data
       })
     },

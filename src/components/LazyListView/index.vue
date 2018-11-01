@@ -11,7 +11,10 @@
     </ul>
     <slot name="empty" v-if="previewList.length === 0"></slot>
     <slot name="loading">
-      <div class="load-more-gif" ref="loading">loading...</div>
+      <div class="load-more-gif" ref="loading"
+           element-loading-text="拼命加载中"
+           element-loading-background="rgba(0,0,0,0)"
+           v-loading="true"></div>
     </slot>
   </div>
 </template>

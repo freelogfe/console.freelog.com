@@ -2,7 +2,7 @@
   <div class="resource-items">
     <lazy-list-view :list="resources" :height="90" :fetch="fetchData">
       <template slot-scope="scope">
-        <resource-item :resource="scope.data"></resource-item>
+        <resource-item :resource="scope.data" :navTo="gotoEditHandler"></resource-item>
       </template>
       <div slot="empty" class="empty-resource-tip">
         {{type==='self'?'没有自制资源' :'未收藏资源'}}
@@ -47,6 +47,9 @@ export default {
   },
 
   methods: {
+    gotoEditHandler(resource){
+      this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
+    },
     initView() {
       switch (this.type) {
         case 'favor':

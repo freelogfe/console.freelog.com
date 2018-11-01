@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     handleEdit(resource) {
-      this.$router.push({ path: `/resource/detail/${resource.resourceId}` })
+      this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
     },
     editAuthNode(resource) {
       this.$router.push({ path: `/resource/detail/${resource.resourceId}/auth_schemes` })

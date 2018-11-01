@@ -1,8 +1,8 @@
 <template>
   <div class="main-resource-item-wrap" @click="gotoDetail">
     <div class="res-poster-wrap">
-      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1540792719445&di=124be59785895fe7872df620be3bde7d&imgtype=0&src=http%3A%2F%2Fwww.tupperware.com.cn%2Ffileserver%2Fproduct%2F201407%2F2014-7-24_15-14-16_979_401_b.jpg"
-           alt="">
+      <img :src="postImgUrl"
+           :alt="resource.resourceType + ' preview image'">
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
@@ -55,6 +55,20 @@
       }
     },
 
+    computed: {
+      postImgUrl(){
+        var src
+
+        if (this.resource.previewImages.length) {
+          src = this.resource.previewImages[0]
+        } else {
+          src = ''
+        }
+
+        return src
+      }
+    },
+
     mounted() {
       this.format(this.resource)
     },
@@ -75,7 +89,6 @@
 
         onloadSchemesForResource(resource.resourceId).then(list => {
           this.schemes = list.map(this.resolveScheme)
-          console.log(list)
         })
       },
       resolveScheme(scheme){
@@ -205,6 +218,7 @@
     img {
       width: 100%;
       height: 165px;
+      display: inline-block;
     }
     .res-digest-info {
       padding: 10px 10px 8px;
