@@ -1,6 +1,5 @@
 import SchemeLoader from '@/data/scheme/loader'
 import { beautify } from '@freelog/resource-policy-lang'
-import ContractDetail from '../../../node/contract/detail/index.vue'
 import { SCHEME_PUBLISH_STATUS } from '@/config/scheme'
 
 function generateAlpha(num) {
