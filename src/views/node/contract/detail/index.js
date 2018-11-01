@@ -1,25 +1,10 @@
-import TransactionEvent from './events/transaction/index.vue'
-import LicenseEvent from './events/license/index.vue'
-import EscrowConfiscated from './events/escrow/confiscate.vue'
+
+import { ContractDetail } from '@freelog/freelog-ui-contract'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
-import ContractContent from './content.vue'
+
 import ContractUtils from '@/data/contract/utils'
 import { onloadResourceDetail } from '@/data/resource/loader'
 
-const eventComponentMap = {
-  transaction: {
-    type: 'transaction-event',
-    title: '支付'
-  },
-  signing: {
-    type: 'license-event',
-    title: '签署'
-  },
-  escrowConfiscated: {
-    type: 'escrow-confiscated',
-    title: '保证金没收'
-  }
-}
 
 export default {
   name: 'presentable-contract-detail',
@@ -38,11 +23,8 @@ export default {
     }
   },
   components: {
-    TransactionEvent,
-    LicenseEvent,
     ContractDetailInfo,
-    ContractContent,
-    EscrowConfiscated
+    "contract-content": ContractDetail,
   },
   props: {
     contractId: String
@@ -69,19 +51,12 @@ export default {
           this.loading = false
         })
     },
-    handleCloseDialog(done) {
-      this.closeDialogHandler()
-      done()
-    },
-    closeDialogHandler(detail) {
+    updateContractAfterEvent(detail) {
       if (detail && detail.shouldUpdate) {
         setTimeout(() => {
           this.updateContractDetail() // 由于后端支付存在延迟，临时延迟update，后续根据订单支付状态进行优化展示
         }, 5e2)
       }
-      this.eventComponent = ''
-      this.dialogTitle = ''
-      this.$refs.eventDialog.hide()
     },
     formatData() {
       let detail = Object.assign({}, this.contractDetail)
@@ -101,25 +76,6 @@ export default {
           detail.done()
         }
       })
-    },
-    // 执行合同
-    executeContractHandler(params) {
-      console.log('params --', params)
-      switch (params.type) {
-        case 'escrowConfiscated':
-        case 'signing':
-        case 'transaction': {
-          const eventComConfig = eventComponentMap[params.type]
-          this.selectedContractEvent = params
-          this.eventComponent = eventComConfig.type
-          this.dialogTitle = eventComConfig.title
-          this.showEventExecDialog = true
-          break
-        }
-        default: {
-          this.updateContractDetail()
-        }
-      }
     },
     // 激活合同
     activateContractHandler(contract) {

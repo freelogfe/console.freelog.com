@@ -1,18 +1,5 @@
 <template>
   <section v-if="contractDetail.contractId">
-    <el-dialog
-      :title="dialogTitle"
-      ref="eventDialog"
-      :visible.sync="showEventExecDialog"
-      :before-close="handleCloseDialog"
-      :center=true
-      width="40%">
-      <component :is="eventComponent"
-                 :contractDetail="contractDetail"
-                 @close="closeDialogHandler"
-                 :params="selectedContractEvent"></component>
-    </el-dialog>
-
     <div v-loading="loading">
       <el-form label-width="120px">
         <el-form-item label="资源名称" style="margin-bottom: 0">
@@ -26,7 +13,7 @@
       <contract-detail-info :data="contractDetail" :showRefreshing="true" :labelWidth="120" :shouldShowSegment="false"
                             @refresh="updateContractDetail">
         <el-form-item label="合同详情">
-          <contract-content :contract="contractDetail" @execute="executeContractHandler"></contract-content>
+          <contract-content :contract.sync="contractDetail" @update-contract="updateContractAfterEvent"></contract-content>
         </el-form-item>
         <el-form-item label="激活合同"
                       v-if="contractDetail.status === 1" class="flex-grid">
