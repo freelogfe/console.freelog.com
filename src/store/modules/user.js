@@ -82,9 +82,8 @@ const user = {
     },
     [types.USER_LOGOUT]({ commit }) {
       return OtherService.logout().then((res) => {
-        if (res.data.ret === 0 && res.data.errcode == 0) {
+        if (res.data.ret === 0 && res.data.errcode === 0) {
           commit(types.DELETE_SESSION)
-          commit('deleteNode')
         } else {
           return Promise.reject(res.data.msg)
         }

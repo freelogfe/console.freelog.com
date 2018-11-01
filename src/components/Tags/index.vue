@@ -33,8 +33,8 @@ export default FreelogTags
   .input-new-tag{
     margin-bottom: 10px;
   }
-  .el-tag + .el-tag {
-    margin-left: 10px;
+  .el-tag {
+    margin-right: 10px;
   }
   .button-new-tag {
     height: 32px;
@@ -46,7 +46,6 @@ export default FreelogTags
   }
   .input-new-tag {
     width: 90px;
-    margin-left: 10px;
     vertical-align: bottom;
   }
 
