@@ -1,4 +1,4 @@
-import ListItem from '@/views/resource/list-item/index.vue'
+import ListItem from './resource.vue'
 import LazyListView from '@/components/LazyListView/index.vue'
 
 export default {

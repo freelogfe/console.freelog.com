@@ -25,6 +25,7 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",
     "nprogress": "^0.2.0",
+    "screenfull": "^3.3.3",
     "store": "^2.0.12",
     "vue": "^2.5.17",
     "vue-codemirror": "^4.0.5",

@@ -1,8 +1,8 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import { mapGetters } from 'vuex'
-import ResourceInputs from '../create/resource/index.vue'
+import {mapGetters} from 'vuex'
+import ResourceInputs from '../input/index.vue'
 
 import ResourceLoader from '@/data/resource/loader'
 
@@ -14,9 +14,15 @@ export default {
       resourceDetail: {}
     }
   },
-  computed: mapGetters({
-    session: 'session'
-  }),
+  computed: {
+    ...mapGetters({
+      session: 'session'
+    }),
+    actionUrl() {
+      const origin = location.origin.replace('console', 'qi')
+      return origin + '/v1/resources/updateResourceContext/' + this.resourceDetail.resourceId
+    }
+  },
   components: {
     ResourceInputs
   },

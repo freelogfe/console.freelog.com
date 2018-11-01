@@ -1,7 +1,7 @@
 <template>
   <div :class="[sidebar.openSidebar?'': 'collapse-sidebar']">
     <fl-header/>
-    <section class="main">
+    <section class="main" :class="themeCls">
       <main class="content">
         <transition name="content">
           <router-view class="main-view"></router-view>
@@ -13,24 +13,38 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Sidebar from './Sidebar/index.vue'
-import Header from './Header/index.vue'
-import Footer from './Footer/index.vue'
-import Breadcrumb from './breadcrumb/index.vue'
+  import {mapGetters} from 'vuex'
+  import Sidebar from './Sidebar/index.vue'
+  import Header from './Header/index.vue'
+  import Footer from './Footer/index.vue'
+  import Breadcrumb from './breadcrumb/index.vue'
 
-export default {
-  name: 'fl-layout',
-  computed: mapGetters({
-    sidebar: 'sidebar'
-  }),
-  components: {
-    'fl-header': Header,
-    'fl-sidebar': Sidebar,
-    'fl-footer': Footer,
-    'fl-breadcrumb': Breadcrumb
+  export default {
+    name: 'fl-layout',
+    computed: {
+      ...mapGetters({
+        sidebar: 'sidebar'
+      }),
+      themeCls() {
+        if (this.$route.meta.theme) {
+          return this.$route.meta.theme + '-theme'
+        }
+        return ''
+      }
+    },
+    components: {
+      'fl-header': Header,
+      'fl-sidebar': Sidebar,
+      'fl-footer': Footer,
+      'fl-breadcrumb': Breadcrumb
+    },
+
+    watch: {
+      $route() {
+        console.log(this.$route.meta)
+      }
+    }
   }
-}
 </script>
 
 <style scoped lang="less">
@@ -38,6 +52,14 @@ export default {
 
   .main {
     min-height: 100%;
+  }
+
+  .white-theme {
+    background-color: white;
+  }
+  /*fbfbfb*/
+  .gray-theme {
+    background-color: #FAFBFB;
   }
 
   .main-view {
@@ -66,9 +88,9 @@ export default {
 
   .collapse-sidebar {
 
-  .content, .footer-wrap {
-    margin-left: 30px;
-  }
+    .content, .footer-wrap {
+      margin-left: 30px;
+    }
 
   }
 </style>

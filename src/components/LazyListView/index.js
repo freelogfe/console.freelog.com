@@ -14,6 +14,10 @@ export default {
       type: Number,
       default: 44
     },
+    itemClass:{
+      type: String,
+      default: ''
+    },
     /**
      * parameters {int} pageIndex
      * return Promise

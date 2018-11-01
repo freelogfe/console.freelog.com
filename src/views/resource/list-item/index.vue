@@ -41,8 +41,6 @@ export default {
     }
   },
 
-  watch: {},
-
   mounted() {
     this.format(this.resource)
   },
