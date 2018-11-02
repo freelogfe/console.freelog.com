@@ -2,11 +2,13 @@
   <div class="main-resource-item-wrap" @click="gotoDetail">
     <div class="res-poster-wrap">
       <img :src="postImgUrl"
-           :alt="resource.resourceType + ' preview image'">
+           class="res-post-img"
+           alt="">
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
-      <p class="res-author-name" v-if="resource._userInfo"><span>{{resource.resourceType}}</span>{{resource._userInfo.nickname}}</p>
+      <p class="res-author-name" v-if="resource._userInfo"><span>{{resource.resourceType}}</span>{{resource._userInfo.nickname}}
+      </p>
     </div>
     <ul class="res-policies-list" v-if="schemes.length">
       <li class="res-p-item" :class="resSchemeStatusCls(scheme)" v-for="scheme in schemes">
@@ -56,7 +58,7 @@
     },
 
     computed: {
-      postImgUrl(){
+      postImgUrl() {
         var src
 
         if (this.resource.previewImages.length) {
@@ -74,8 +76,8 @@
     },
 
     methods: {
-      resSchemeStatusCls(scheme){
-        return scheme.bubbleResources.length? 'status-1' : 'status-0'
+      resSchemeStatusCls(scheme) {
+        return scheme.bubbleResources.length ? 'status-1' : 'status-0'
       },
       format(resource) {
         if (!this.resource.resourceId) {
@@ -87,15 +89,19 @@
           this.$set(resource, '_userInfo', userInfo)
         })
 
-        onloadSchemesForResource(resource.resourceId).then(list => {
-          this.schemes = list.map(this.resolveScheme)
-        })
+        if (!resource.schemes) {
+          onloadSchemesForResource(resource.resourceId).then(list => {
+            this.schemes = list.map(this.resolveScheme)
+          })
+        } else {
+          this.schemes = resource.schemes.map(this.resolveScheme)
+        }
       },
-      resolveScheme(scheme){
+      resolveScheme(scheme) {
         var users = new Set()
-        scheme.policy.forEach(p=>{
-          p.authorizedObjects.forEach(objs=>{
-            objs.users.forEach(u=>{
+        scheme.policy.forEach(p => {
+          p.authorizedObjects.forEach(objs => {
+            objs.users.forEach(u => {
               users.add(u)
             })
           })
@@ -115,6 +121,7 @@
 
 <style lang="less" type="text/less" scoped>
   @import "../../styles/mixin";
+
   @status0Color: #009AFF;
   @status1Color: #EDA02C;
   .main-resource-item-wrap {
@@ -215,6 +222,10 @@
       }
     }
 
+    .res-post-img {
+      background: url('../../assets/img/resource.jpg') no-repeat;
+      background-size: 100%;
+    }
     img {
       width: 100%;
       height: 165px;
