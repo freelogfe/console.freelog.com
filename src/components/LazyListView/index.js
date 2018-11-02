@@ -67,7 +67,7 @@ export default {
         })
       }), {
         threshold: 1,
-        // rootMargin: '-500px 0px'
+        // rootMargin: '500px 0px'
       })
       self.observer.observe(this.$refs.loading)
     },

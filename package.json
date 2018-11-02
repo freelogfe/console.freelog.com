@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@freelog/freelog-ui-contract": "0.0.2",
+    "@freelog/freelog-ui-contract": "0.0.3",
     "@freelog/resource-policy-lang": "0.0.33",
     "axios": "^0.18.0",
     "codemirror": "^5.39.2",
