@@ -52,9 +52,9 @@ export default {
           res.isOwner = false
         }
         this.resourceDetail.resourceInfo = res
-        if (res.isOwner) {
-          this.showAuthSchemes = true
-        }
+        // if (res.isOwner) {
+        //   this.showAuthSchemes = true
+        // }
       }).catch((err) => {
         this.$router.push('/')
         // this.$error.showErrorMessage(err)

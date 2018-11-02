@@ -50,7 +50,7 @@ export default {
       redirect: '/resource/list',
     },
     {
-      path: 'detail/:resourceId/auth_schemes',
+      path: 'edit/:resourceId/auth_schemes',
       hidden: true,
       meta: {
         requiresAuth: true,

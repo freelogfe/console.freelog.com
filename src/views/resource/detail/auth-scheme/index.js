@@ -39,7 +39,7 @@ export default {
       currentScheme: {}
     }
   },
-  components: { ContractDetail },
+  components: {  },
   props: {
     selectedCallback: {
       type: Function
@@ -107,7 +107,7 @@ export default {
       })
     },
     gotoResourceSchemeDetailHandler() {
-      this.$router.push(`/resource/detail/${this.resource.resourceId}/auth_schemes`)
+      this.$router.push(`/resource/edit/${this.resource.resourceId}/auth_schemes`)
     },
     hideAuthSchemeHandler() {
       this.$emit('close')
