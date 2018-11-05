@@ -101,7 +101,6 @@ export default {
       var arr = location.hostname.split('.')
       arr.shift()
       arr.unshift('qi')
-      console.log(arr.join('.'))
       return arr.join('.')
     },
     upoladPreviewImageAction() {

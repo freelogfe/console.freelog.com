@@ -122,7 +122,6 @@ export default {
           this.$message.error('有资源未选择授权策略')
         }
       } else {
-        console.log('error contracts', contracts)
         this.$message.error('未选择授权方案')
       }
     },

@@ -90,14 +90,8 @@ export default {
       return node
     },
     selectResourceHandler(resource) {
-<<<<<<< HEAD
-      var dutyResourceMap = this.dutyResourceMap
-      var rid = resource.resourceId
-=======
-      console.log(resource)
       const dutyResourceMap = this.dutyResourceMap
       const rid = resource.resourceId
->>>>>>> 9c03cf9cfc5ae81925ae22c5a6597242392ced2b
       if (resource.selectedScheme) {
         dutyResourceMap[rid] = resource
       } else if (dutyResourceMap[rid]) {

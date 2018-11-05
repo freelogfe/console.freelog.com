@@ -64,7 +64,6 @@ export default {
       }
     },
     fetchData(page) {
-      console.log('fetchData', page)
       const pageSize = 10
 
       if (!this.loader) {

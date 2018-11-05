@@ -61,9 +61,6 @@ export default {
                 })
               })
 
-              setTimeout(function () {
-                console.log(data)
-              }, 1e3)
               this.presentables = data
             })
           }

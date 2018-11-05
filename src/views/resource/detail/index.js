@@ -37,7 +37,6 @@ export default {
     },
     avatarUrl() {
       const userId = this.resourceDetail.resourceInfo.userId
-      console.log(userId)
       return userId ? `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image` : ''
     }
   }, mapGetters({
