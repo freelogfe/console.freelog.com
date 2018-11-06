@@ -39,7 +39,7 @@ export default {
       currentScheme: {}
     }
   },
-  components: { ContractDetail },
+  components: {  },
   props: {
     selectedCallback: {
       type: Function
