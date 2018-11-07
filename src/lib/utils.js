@@ -81,11 +81,29 @@ function loopForBreak(array, fn) {
   return flag
 }
 
+
+function camelize(str) {
+  return str.replace(/-(\w)/g, (_, c) => c ? c.toUpperCase() : '');
+}
+
+function cssSupports(prop, value) {
+  if (!value) {
+    return camelize(prop) in document.body.style
+  } else if (typeof CSS.supports === 'function') {
+    return CSS.supports(prop, value)
+  } else {
+    var $el = document.createElement('div');
+    $el.style[prop] = value;
+    return $el.style[prop] === value;
+  }
+}
+
 export {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak
+  loopForBreak,
+  cssSupports
 }
 
 

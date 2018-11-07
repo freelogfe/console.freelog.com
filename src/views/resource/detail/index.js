@@ -5,6 +5,7 @@ import {mapGetters} from 'vuex'
 import AuthSchemeDetail from './auth-scheme/index.vue'
 import {loadDetail} from '@/data/resource/loader'
 import NodeDataLoader from '@/data/node/loader'
+import {cssSupports} from '@/lib/utils'
 
 export default {
   name: 'resource-detail',
@@ -78,18 +79,29 @@ export default {
 
       this.initScrollEvent()
     },
+    getBodyScrollTop(){
+      return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    },
     initScrollEvent() {
+      const $toolbar = document.querySelector('.nav-header')
       const $tabs = this.$refs.tabs
       const $upBtn = this.$refs.upBtn
+      const marginTop=$tabs.getBoundingClientRect().height
+      const isSupportSticky = cssSupports('position', 'sticky')
       var prevTop
       var st = +new Date()
-
       this.scrollFn = () => {
         var et = +new Date()
-        if (et - st < 50) return
+        if (et - st < 20) return
         st = et
 
         const rect = $tabs.getBoundingClientRect()
+
+        //sticky nav tabs
+        if (!isSupportSticky) {
+          (rect.top <= this.getBodyScrollTop())? $tabs.classList.add('sticky-tabs'): $tabs.classList.remove('sticky-tabs')
+        }
+
         if (rect.top === prevTop) {
           $upBtn.classList.add('show')
         } else {

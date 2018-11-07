@@ -346,10 +346,7 @@ export default {
       }
 
       uploadData.meta = metaData
-      const desc = this.$refs.editor.getHtml()
-      if (desc) {
-        uploadData.description = desc
-      }
+      uploadData.description = this.$refs.editor.getHtml()
 
       keys.forEach((key) => {
         if (formData[key]) {
