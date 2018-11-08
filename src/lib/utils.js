@@ -98,12 +98,46 @@ function cssSupports(prop, value) {
   }
 }
 
+function isSafeUrl(url) {
+  const reg = /^.+\.(test)?freelog\.com$/
+
+  try {
+    const obj = new URL(url) // 正确的链接检测
+    if (reg.test(obj.hostname)) {
+      return true
+    }
+  } catch (e) {
+    // path型链接检测
+    if ((/^\/[^\/]+/.test(url))) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function gotoLogin(redirect) {
+  let loginPath = '/login'
+  if (location.pathname === loginPath) {
+    return
+  }
+
+  let loginUrl = `${location.origin.replace('console','www')}${loginPath}`
+  if (isSafeUrl(redirect)) {
+    loginUrl += `?redirect=${encodeURIComponent(redirect)}`
+  }
+
+  window.location.href = loginUrl
+}
+
 export {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
   loopForBreak,
-  cssSupports
+  cssSupports,
+  gotoLogin,
+  isSafeUrl
 }
 
 
@@ -111,5 +145,6 @@ export default {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak
+  loopForBreak,
+  gotoLogin
 }

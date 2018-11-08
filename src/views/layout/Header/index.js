@@ -1,5 +1,6 @@
 import { mapGetters } from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
+import {gotoLogin} from "../../../lib/utils";
 
 export default {
   name: 'fl-header',
@@ -32,17 +33,19 @@ export default {
   mounted() {
     if (!this.session.user.userId) {
       this.$store.dispatch('getCurrentUser').then((userInfo) => {
-        this.initData(userInfo.userId)
+        this.initData()
       })
     } else {
-      this.initData(this.session.user.userId)
+      this.initData()
     }
   },
 
   methods: {
-    initData(userId){
+    initData(){
       this.$store.dispatch('loadNodes')
-      this.avatarUrl = `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image`
+      if (this.session.user.headImage) {
+        this.avatarUrl = `${this.session.user.headImage}?x-oss-process=style/head-image`
+      }
     },
     listenWindowVisibility() {
       const self = this
@@ -78,7 +81,6 @@ export default {
       this.$store.dispatch('checkUserSession')
         .then((valid) => {
           if (!valid) {
-            this.$store.dispatch('deleteNode')
             this.$store.dispatch('getCurrentUser').then(() => {
               location.reload()
             })
@@ -88,10 +90,7 @@ export default {
     logout() {
       this.$store.dispatch('userLogout')
         .then(() => {
-          const redirect = this.$route.fullPath || '/'
-          setTimeout(() => {
-            this.$router.replace({ path: '/user/login', query: { redirect } })
-          }, 20)
+          gotoLogin(location.href)
         })
         .catch(this.$error.showErrorMessage)
     },

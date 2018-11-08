@@ -55,7 +55,6 @@ export default {
   methods: {
     init() {
       loadDetail(this.resourceId).then((res) => {
-        res._filesize = this.humanizeSize(res.systemMeta.fileSize)
 
         if (this.session && this.session.user) {
           res.isOwner = (res.userId === this.session.user.userId)
@@ -79,35 +78,34 @@ export default {
 
       this.initScrollEvent()
     },
-    getBodyScrollTop(){
-      return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-    },
     initScrollEvent() {
       const $toolbar = document.querySelector('.nav-header')
       const $tabs = this.$refs.tabs
       const $upBtn = this.$refs.upBtn
-      const marginTop=$tabs.getBoundingClientRect().height
+      const marginTop = $toolbar.getBoundingClientRect().height
+      const originTop = $tabs.getBoundingClientRect().top
       const isSupportSticky = cssSupports('position', 'sticky')
       var prevTop
       var st = +new Date()
+
       this.scrollFn = () => {
+        //throttle
         var et = +new Date()
         if (et - st < 20) return
         st = et
 
         const rect = $tabs.getBoundingClientRect()
 
-        //sticky nav tabs
+        // nav tabs sticky兼容性处理
         if (!isSupportSticky) {
-          (rect.top <= this.getBodyScrollTop())? $tabs.classList.add('sticky-tabs'): $tabs.classList.remove('sticky-tabs')
+          if (rect.top <= originTop) {
+            $tabs.classList.remove('sticky-tabs')
+          } else if (rect.top <= marginTop) {
+            $tabs.classList.add('sticky-tabs')
+          }
         }
 
-        if (rect.top === prevTop) {
-          $upBtn.classList.add('show')
-        } else {
-          $upBtn.classList.remove('show')
-        }
-
+        $upBtn.classList[(rect.top === prevTop) ? 'add' : 'remove']('show')
         prevTop = rect.top
       }
       window.addEventListener('scroll', this.scrollFn)
@@ -119,20 +117,6 @@ export default {
         }
         throw new Error(res)
       })
-    },
-    humanizeSize(number) {
-      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
-
-      if (number < 1) {
-        return `${number}B`
-      }
-
-      const algorithm = 1024
-      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1)
-      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2))
-      const unit = UNITS[exponent]
-
-      return number + unit
     },
     showAuthSchemeHandler() {
       this.showAuthSchemes = true
@@ -231,12 +215,6 @@ export default {
     },
     getResourceAuthHandler() {
       this.showNodeOptions().catch(this.$error.showErrorMessage)
-      //
-      // if (this.selectedPolicy.policy) {
-      //   this.showNodeOptions().catch(this.$error.showErrorMessage)
-      // } else {
-      //   this.showAuthSchemeHandler()
-      // }
     },
     hideOptionsDialogHandler() {
       this.showOptionsDialog = false
@@ -285,7 +263,6 @@ export default {
     scrollInto(target) {
       var $el = this.$refs[target]
       this.activeTab = target
-
       if (typeof $el.scrollIntoView === 'function') {
         $el.scrollIntoView(true)
         window.scrollBy(0, -120) //填补fixed占位的高度

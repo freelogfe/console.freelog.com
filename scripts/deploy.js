@@ -48,7 +48,7 @@ function gitBranchIs(branchName) {
 
 function build(env) {
   const spinner = ora(`building for ${env}...`).start();
-  const res = execSync(`npm run build:${env}`)
+  const res = execSync(`npm i && npm run build:${env}`)
   spinner.succeed('build complete')
   return res.toString().includes('Build complete')
 }
