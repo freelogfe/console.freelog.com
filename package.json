@@ -37,6 +37,7 @@
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
+    "@freelog/freelog-ci": "0.0.1",
     "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
