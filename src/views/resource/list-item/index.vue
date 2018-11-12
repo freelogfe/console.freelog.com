@@ -53,24 +53,9 @@ export default {
       }
 
       resource._statusInfo = RESOURCE_STATUS[resource.status]
-      resource._fileSize = this.humanizeSize(resource.systemMeta.fileSize)
       onloadUserInfo(resource.userId).then((userInfo) => {
         this.$set(resource, '_userInfo', userInfo)
       })
-    },
-    humanizeSize(number) {
-      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
-
-      if (number < 1) {
-        return `${number}B`
-      }
-
-      const algorithm = 1024
-      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1)
-      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2))
-      const unit = UNITS[exponent]
-
-      return number + unit
     },
     gotoDetail(resource) {
       if (typeof this.navTo === 'function') {

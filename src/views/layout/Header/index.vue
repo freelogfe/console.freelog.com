@@ -49,7 +49,7 @@
                 </ul>
               </li>
               <li class="my-profile-item center hover">
-                <a class="nav-link" :href="`//www${domainPostfix}/profile`" target="_blank">
+                <a class="nav-link" :href="`//www${domainPostfix}/user/profile`" target="_blank">
                   <i class="el-icon-setting tool-icon"></i>设置
                 </a>
               </li>

@@ -11,7 +11,6 @@ import nodeRoute from './node'
 import groupRote from './group'
 import accountRoute from './account'
 import resourceRoute from './resource'
-import userRoute from './user'
 import resourceMarket from './resource-market'
 
 import Views from '@/views/index'
@@ -39,11 +38,10 @@ const router = new Router({
   scrollBehavior,
   routes: [
     accountRoute,
-    userRoute,
     resourceMarket,
     {
       path: '/',
-      meta: { title: '首页' },
+      meta: { title: '资源市场' },
       component: Views.layout,
       children: [resourceRoute, nodeRoute, groupRote, {
         path: 'about',

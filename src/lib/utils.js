@@ -81,11 +81,63 @@ function loopForBreak(array, fn) {
   return flag
 }
 
+
+function camelize(str) {
+  return str.replace(/-(\w)/g, (_, c) => c ? c.toUpperCase() : '');
+}
+
+function cssSupports(prop, value) {
+  if (!value) {
+    return camelize(prop) in document.body.style
+  } else if (typeof CSS.supports === 'function') {
+    return CSS.supports(prop, value)
+  } else {
+    var $el = document.createElement('div');
+    $el.style[prop] = value;
+    return $el.style[prop] === value;
+  }
+}
+
+function isSafeUrl(url) {
+  const reg = /^.+\.(test)?freelog\.com$/
+
+  try {
+    const obj = new URL(url) // 正确的链接检测
+    if (reg.test(obj.hostname)) {
+      return true
+    }
+  } catch (e) {
+    // path型链接检测
+    if ((/^\/[^\/]+/.test(url))) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function gotoLogin(redirect) {
+  let loginPath = '/login'
+  if (location.pathname === loginPath) {
+    return
+  }
+
+  let loginUrl = `${location.origin.replace('console','www')}${loginPath}`
+  if (isSafeUrl(redirect)) {
+    loginUrl += `?redirect=${encodeURIComponent(redirect)}`
+  }
+
+  window.location.href = loginUrl
+}
+
 export {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak
+  loopForBreak,
+  cssSupports,
+  gotoLogin,
+  isSafeUrl
 }
 
 
@@ -93,5 +145,6 @@ export default {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak
+  loopForBreak,
+  gotoLogin
 }

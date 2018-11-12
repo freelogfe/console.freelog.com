@@ -3,7 +3,6 @@
 // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/router
 
 import PolicyTplViews from '@/views/policy-tpl'
-import UserViews from '@/views/user'
 import ResourceViews from '@/views/resource'
 import NodeViews from '@/views/node'
 import GroupViews from '@/views/group'
@@ -22,7 +21,6 @@ export default {
   helpView,
   error,
   mainView,
-  ...UserViews,
   ...ResourceViews,
   ...NodeViews,
   ...GroupViews,

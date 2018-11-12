@@ -6,6 +6,7 @@
 
 import axios from 'axios'
 import store from '@/store'
+import {gotoLogin} from "./utils";
 
 const instance = axios.create({
   baseURL: window.location.origin.replace('console','qi'),
@@ -32,14 +33,11 @@ instance.interceptors.response.use(
   (response) => {
     let errorMsg
     const data = response.data
-    let loginPath = '/user/login'
 
-    if ([28, 30].indexOf(data.errcode) > -1 && location.pathname !== loginPath) {
-      loginPath += `?redirect=${encodeURIComponent(location.href)}`
-
+    if ([28, 30].indexOf(data.errcode) > -1) {
       //清除已过期cookie
       store.dispatch('userLogout').then(()=>{
-        location.replace(loginPath)
+        gotoLogin(location.href)
       })
       // replace执行存在延迟
       return new Promise((resolve) => {

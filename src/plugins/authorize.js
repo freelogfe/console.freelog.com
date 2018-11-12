@@ -1,6 +1,6 @@
 import store from '../store'
 import router from '../router'
-
+import {gotoLogin} from '../lib/utils'
 export default (Vue) => {
   router.beforeHooks.unshift((to, from, next) => {
     if (!to.meta.requiresAuth) {
@@ -9,7 +9,7 @@ export default (Vue) => {
     store.dispatch('checkToken')
       .then((valid) => {
         if (valid) return next()
-        next({ path: '/user/login', query: { redirect: to.fullPath } })
+        gotoLogin(location.href)
       })
   })
 }

@@ -14,7 +14,7 @@
       <li class="res-p-item" :class="resSchemeStatusCls(scheme)" v-for="scheme in schemes">
         {{scheme.authSchemeName[0]}}
         <div class="res-scheme-info-wrap">
-          <h4>免费授权方案</h4>
+          <h4>{{scheme.authSchemeName}}</h4>
           <div class="res-scheme-item">
             <p>授权对象：</p>
             <ul class="res-scheme-item res-scheme-auth-targets">
