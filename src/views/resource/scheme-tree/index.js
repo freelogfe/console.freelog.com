@@ -229,7 +229,7 @@ export default {
             }
 
             scheme.policy = scheme.policy.filter((p) => {
-              if ((isPublished && p.status === POLICY_STATUS.show) || duty.policySegmentId === p.segmentId) {
+              if ((isPublished && p.status === POLICY_STATUS.show) || (duty &&duty.policySegmentId === p.segmentId)) {
                 p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`]
                 return p
               }

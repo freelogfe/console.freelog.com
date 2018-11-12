@@ -111,10 +111,10 @@ export default {
           function filterSameContracts(contracts) {
             const tempMap = new Map()
             return contracts.filter((it) => {
-              if (tempMap.get(it.authSchemeId)) {
+              if (tempMap.get(it.contractId)) {
                 return false
               }
-              tempMap.set(it.authSchemeId, 1)
+              tempMap.set(it.contractId, true)
               return true
             })
           }

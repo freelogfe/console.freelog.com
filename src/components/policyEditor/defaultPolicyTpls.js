@@ -1,6 +1,7 @@
 const freePolicy = `for public:
   initial:
     active
+    recontractable
     terminate
   `
 
