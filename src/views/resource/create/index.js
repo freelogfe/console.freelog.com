@@ -50,7 +50,7 @@ export default {
     create2AddHandler() {
       const detail = this.resourceDetail
       this.executeNext(() => {
-        detail.resourceId && this.$router.push(`/resource/detail/${detail.resourceId}/auth_schemes`)
+        detail.resourceId && this.$router.push(`/resource/edit/${detail.resourceId}/auth_schemes`)
       })
     },
     cancelHandler(){

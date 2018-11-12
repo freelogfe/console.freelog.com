@@ -18,6 +18,7 @@
       <div class="btm-wrap clearfix">
         <div class="rt-side">
           <el-button class="ft-btn" type="primary" @click="updateResourceHandler">更新资源</el-button>
+          <el-button class="ft-btn" type="primary" @click="gotoResourceSchemeDetailHandler">进入授权</el-button>
         </div>
       </div>
     </resource-inputs>

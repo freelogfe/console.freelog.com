@@ -11,6 +11,14 @@ export default {
   data() {
     return {
       resourceId: this.$route.params.resourceId,
+      activeTab: 'resDesc',
+      tabs: [{
+        name: 'resDesc',
+        title: '资源介绍'
+      }, {
+        name: 'resMeta',
+        title: 'meta信息'
+      }],
       resourceDetail: {
         resourceInfo: {},
         isFavor: false
@@ -29,7 +37,6 @@ export default {
     },
     avatarUrl() {
       const userId = this.resourceDetail.resourceInfo.userId
-      console.log(userId)
       return userId ? `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image` : ''
     }
   }, mapGetters({
@@ -40,6 +47,9 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.scrollFn)
   },
   methods: {
     init() {
@@ -52,9 +62,9 @@ export default {
           res.isOwner = false
         }
         this.resourceDetail.resourceInfo = res
-        if (res.isOwner) {
-          this.showAuthSchemes = true
-        }
+        // if (res.isOwner) {
+        //   this.showAuthSchemes = true
+        // }
       }).catch((err) => {
         this.$router.push('/')
         // this.$error.showErrorMessage(err)
@@ -64,8 +74,31 @@ export default {
         this.resourceDetail.isFavor = isFavor
       }).catch((err) => {
         console.warn(err)
-        // this.$error.showErrorMessage(err)
       })
+
+      this.initScrollEvent()
+    },
+    initScrollEvent() {
+      const $tabs = this.$refs.tabs
+      const $upBtn = this.$refs.upBtn
+      var prevTop
+      var st = +new Date()
+
+      this.scrollFn = () => {
+        var et = +new Date()
+        if (et - st < 50) return
+        st = et
+
+        const rect = $tabs.getBoundingClientRect()
+        if (rect.top === prevTop) {
+          $upBtn.classList.add('show')
+        } else {
+          $upBtn.classList.remove('show')
+        }
+
+        prevTop = rect.top
+      }
+      window.addEventListener('scroll', this.scrollFn)
     },
     isFavorResource() {
       return this.$services.collections.get(this.resourceId).then((res) => {
@@ -236,6 +269,17 @@ export default {
     nodeOptCheckHandler(node) {
       node.checked = !node.checked
       this.$forceUpdate()
+    },
+    scrollInto(target) {
+      var $el = this.$refs[target]
+      this.activeTab = target
+
+      if (typeof $el.scrollIntoView === 'function') {
+        $el.scrollIntoView(true)
+        window.scrollBy(0, -120) //填补fixed占位的高度
+      } else {
+        window.scrollTo(0, $el.offsetTop - 60)
+      }
     }
   }
 }

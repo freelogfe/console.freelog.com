@@ -41,7 +41,6 @@
 
     watch: {
       $route() {
-        console.log(this.$route.meta)
       }
     }
   }

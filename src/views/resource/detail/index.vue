@@ -27,11 +27,6 @@
               <p>
                 <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
               </p>
-              <p>
-                <el-button type="text" class="edit-btn detail-ft-btn" @click="editDetailHandler">
-                  <i class="el-icon-edit" style="padding-right: 12px"></i>编辑
-                </el-button>
-              </p>
             </div>
             <div class="lf-side">
               <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
@@ -47,15 +42,30 @@
           </div>
         </div>
       </div>
+      <div class="res-detail-nav-tabs-wrap" ref="tabs">
+        <ul class="res-detail-nav-tabs">
+          <li :class="{active:activeTab===tab.name}"
+              v-for="tab in tabs" @click="scrollInto(tab.name)">
+            {{tab.title}}
+          </li>
+        </ul>
+      </div>
       <div class="res-detail-bd">
-        <div class="res-detail-desc" v-html="resourceDetail.resourceInfo.description"></div>
-        <div class="res-detail-meta">
-          <h3>meta</h3>
+        <div class="res-detail-desc res-detail-info" ref="resDesc" v-html="resourceDetail.resourceInfo.description"></div>
+        <div class="res-detail-meta res-detail-info" ref="resMeta">
           <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
         </div>
       </div>
+      <div class="res-detail-ft">
+        <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+        <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
+        <el-button type="primary" class="res-act-btn" @click="editDetailHandler" v-if="isOwnerResource">编辑</el-button>
+      </div>
     </div>
 
+    <a class="up-to-top" href="#" ref="upBtn">
+      <i class="el-icon-arrow-up"></i>
+    </a>
     <el-dialog width="640px" title="" :visible.sync="showOptionsDialog">
       <div class="opts-content-wrap">
         <div class="select-target-header">

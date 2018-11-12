@@ -3,7 +3,7 @@
     <h3 class="nav-title">授权方案<i class="el-icon-edit"
                                  v-if="resource.isOwner"
                                  @click="gotoResourceSchemeDetailHandler"></i>
-      <el-button type="text" class="hide-btn" @click="hideAuthSchemeHandler" v-if="!resource.isOwner">
+      <el-button type="text" class="hide-btn" @click="hideAuthSchemeHandler">
         <i class="el-icon-close"></i>
       </el-button>
     </h3>

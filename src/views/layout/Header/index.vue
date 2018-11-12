@@ -23,12 +23,8 @@
             popper-class="nav-list-pop-wrap"
             trigger="hover">
             <span class="user-profile" slot="reference">
-                            <!--<i class="el-icon-fa-user-circle" :title="session.user.nickname"></i>-->
-
-              <i v-if="isLoadAvatarError" class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
-              <img v-else :src="avatarUrl"
-                   @error="loadAvatarError"
-                   alt="">
+              <img v-if="avatarUrl" :src="avatarUrl" alt="">
+              <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
             </span>
             <ul class="my-profile-items">
               <li class="my-profile-item center hover">

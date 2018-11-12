@@ -6,10 +6,8 @@ export default {
 
   data() {
     return {
-      navRoutes: [],
       isSideBarOpen: true,
       domainPostfix: /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
-      isLoadAvatarError: false,
       avatarUrl: ''
     }
   },
@@ -30,21 +28,20 @@ export default {
 
   created() {
     this.listenWindowVisibility()
-    this.resolveRouter()
-    this.$store.dispatch('loadNodes')
   },
   mounted() {
     if (!this.session.user.userId) {
       this.$store.dispatch('getCurrentUser').then((userInfo) => {
-        this.setAvatarUrl(userInfo.userId)
+        this.initData(userInfo.userId)
       })
     } else {
-      this.setAvatarUrl(this.session.user.userId)
+      this.initData(this.session.user.userId)
     }
   },
 
   methods: {
-    setAvatarUrl(userId) {
+    initData(userId){
+      this.$store.dispatch('loadNodes')
       this.avatarUrl = `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image`
     },
     listenWindowVisibility() {
@@ -88,29 +85,6 @@ export default {
           }
         })
     },
-    logoutNodeHandler() {
-      this.$store.dispatch('deleteNode')
-        .then(() => {
-          this.$router.push('/node/list')
-        })
-    },
-    switchNodeHandler() {
-      this.$store.dispatch('deleteNode')
-      this.$router.push({ path: '/node/login' })
-    },
-    resolveRouter() {
-      const routes = this.$router.options.routes
-
-      for (let i = 0; i < routes.length; i++) {
-        const route = routes[i]
-        if (route.path === '/') {
-          this.navRoutes = route.children.filter(r => !r.hidden)
-          break
-        }
-      }
-    },
-    handleSelect(key, keyPath) {
-    },
     logout() {
       this.$store.dispatch('userLogout')
         .then(() => {
@@ -123,12 +97,6 @@ export default {
     },
     searchHandler(qs) {
       this.$router.push({ path: '/', query: { q: qs } })
-    },
-    gotoSetting() {
-
-    },
-    loadAvatarError() {
-      this.isLoadAvatarError = true
     }
   }
 }

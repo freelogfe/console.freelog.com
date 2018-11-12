@@ -13,7 +13,11 @@
       <contract-detail-info :data="contractDetail" :showRefreshing="true" :labelWidth="120" :shouldShowSegment="false"
                             @refresh="updateContractDetail">
         <el-form-item label="合同详情">
-          <contract-content :contract.sync="contractDetail" @update-contract="updateContractAfterEvent"></contract-content>
+          <contract-content
+                  :contract.sync="contractDetail"
+                  :policyText="contractDetail.contractClause.policyText"
+                  @update-contract="updateContractAfterEvent">
+          </contract-content>
         </el-form-item>
         <el-form-item label="激活合同"
                       v-if="contractDetail.status === 1" class="flex-grid">
