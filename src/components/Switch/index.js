@@ -2,7 +2,6 @@ export default {
   name: 'fl-switch',
   data() {
     return {
-      checked: false
     }
   },
   props: {
@@ -20,18 +19,17 @@ export default {
     inactiveText: String,
   },
 
-  watch: {
-
-  },
   mounted() {
-    this.checked = this.value
   },
-  computed: {},
+  computed: {
+    checked(){
+      return this.value
+    }
+  },
   methods: {
     switchHandler() {
-      this.checked = !this.checked
-      this.$emit('input', this.checked)
-      this.$emit('change', this.checked)
+      this.$emit('input', !this.value)
+      this.$emit('change', !this.value)
     }
   }
 }

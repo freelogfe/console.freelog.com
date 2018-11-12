@@ -61,7 +61,7 @@ export default {
     resolvePresentable(item) {
       item.isOnlineChecked = !!item.isOnline
       item._statusInfo = STATUS_TIPS[item.status]
-      item.isReady = (item.status & 3) === 3
+      item.isReady = (item.status & 7) === 7
     },
     loadPresentables(param) {
       return this.$services.presentables.get({ params: param }).then(res => res.getData()).catch(this.$error.showErrorMessage)
@@ -71,6 +71,7 @@ export default {
       this.currentPresentable.detail = presentable
     },
     changePresentableOnlineHandler(presentable) {
+
       if (presentable.isOnlineChecked) {
         presentable.isOnline = 1
       } else {
@@ -79,13 +80,14 @@ export default {
       this.$services.presentables.put(presentable.presentableId, {
         isOnline: presentable.isOnline
       }).then((res) => {
-        if (res.data.errcode === 0) {
-          // this.$message.success('上线成功')
+        if (res.data.errcode === 0 && res.data.errcode === 0) {
+          presentable.isOnlineChecked = true
         } else {
           presentable.isOnline = 0
           presentable.isOnlineChecked = false
           this.$message.error(res.data.msg || '更新失败')
         }
+        this.$forceUpdate()
       }).catch((err) => {
         presentable.isOnline = 0
         presentable.isOnlineChecked = false

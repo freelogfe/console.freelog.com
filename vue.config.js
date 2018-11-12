@@ -5,7 +5,6 @@ const srcDir = path.resolve('./src')
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2));
 const isProd = argv.env === 'prod' || process.env.NODE_ENV === 'production'
-
 function getBaseUrl() {
   var baseUrl
   if (argv.env === 'beta') {
