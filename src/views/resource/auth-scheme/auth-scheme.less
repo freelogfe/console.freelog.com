@@ -123,6 +123,23 @@
   }
 
   &.scheme-status-4 {
+    &:before {
+      display: block;
+      content: '已删除方案';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, .3);
+      bottom: 0;
+      z-index: 2;
+      border-radius: 4px;
+      font-size: 40px;
+      color: #da4141;
+      text-align: center;
+      padding-top: 40px;
+    }
+
     .del-res-icon,
     .add-dep-resource-btn {
       display: none !important;
@@ -130,18 +147,7 @@
 
     .policy-input-wrap {
       position: relative;
-      &:before {
-        display: block;
-        content: ' ';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(0, 0, 0, .3);
-        bottom: 0;
-        z-index: 2;
-        border-radius: 4px;
-      }
+
     }
 
   }

@@ -33,11 +33,15 @@ export default {
       default() {
         return 'all'
       }
-    }
+    },
+    query: String
   },
 
   watch: {
     type() {
+      this.initView()
+    },
+    query(){
       this.initView()
     }
   },

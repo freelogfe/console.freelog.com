@@ -10,7 +10,9 @@ export default {
     return {
       resourceList: [],
       curTabName: 'self',
-      RESOURCE_STATUS
+      RESOURCE_STATUS,
+      selfQueryInput: '',
+      favorQueryInput: ''
     }
   },
   components: {
@@ -28,6 +30,11 @@ export default {
       this.$router.push({ path: `/resource/edit/${resource.resourceId}/auth_schemes` })
     },
     searchHandler(query) {
+      // if (this.curTabName === 'self') {
+      //   this.selfQueryInput = query
+      // } else {
+      //   this.favorQueryInput = query
+      // }
       this.$message.warning('未开发')
     }
   }

@@ -63,7 +63,7 @@
 
   .main-view {
     min-height: 100%;
-    padding-top: 20px;
+    /*padding-top: 20px;*/
   }
 
   .left-sidebar {

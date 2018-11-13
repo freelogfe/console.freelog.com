@@ -8,7 +8,7 @@
       </div>
       <div class="res-intro-ft">
         <span class="res-type">#{{resource.resourceType}}</span>
-        <span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>
+        <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
         <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
         <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
       </div>

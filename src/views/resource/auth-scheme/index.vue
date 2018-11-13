@@ -25,11 +25,6 @@
                                    :detail="item.data"
                                    :updateCallback="updateData"></resource-auth-scheme>
           </lazy-component>
-
-          <!--<component :is="item.content"-->
-          <!--@change="changeDepsHandler"-->
-          <!--:detail="item.data"-->
-          <!--:updateCallback="updateData"></component>-->
         </el-tab-pane>
         <el-tab-pane name="createTab">
           <span slot="label" class="add-new-scheme-tab-btn"><i class="el-icon-plus"></i>添加新授权方案</span>

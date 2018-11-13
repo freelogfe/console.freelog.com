@@ -54,7 +54,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '创建资源授权方案',
+        title: '资源授权方案管理',
         type: 'resource'
       },
       component: Views.resourceAuthSchemeEditor

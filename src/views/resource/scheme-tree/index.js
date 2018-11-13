@@ -293,6 +293,7 @@ export default {
     showUnSignedPolicyList() {
       const rids = []
       const schemeRids = []
+
       this.dutyStatements.forEach((duty) => {
         rids.push(duty.resourceId)
         this.onSetResourceDetail(duty)

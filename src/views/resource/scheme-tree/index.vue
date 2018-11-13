@@ -15,7 +15,7 @@
         <el-collapse-item :name="duty.resourceId" v-for="duty in unsignPolicyList" :key="duty.authSchemeId"
                           class="duty-resource">
           <template slot="title">
-            <h4>{{duty.resourceName}}</h4>
+            <h4>{{duty.resourceName || (duty.resourceInfo && duty.resourceInfo.resourceName)}}</h4>
             <div class="duty-resource-sub-title" v-if="duty.selectedScheme">
               {{duty.selectedScheme.authSchemeName}}/{{duty.selectedScheme.selectedPolicy.policyName}}
             </div>
@@ -51,7 +51,7 @@
                       :class="['active-status-'+dep.activeStatus]"
                       @click="selectResourceHandler(dep, scheme, panelIndex, $event)">
                     <div class="resource-name" :class="'js-res-'+dep.resourceId">
-                      <p><i class="dot"></i>{{dep.resourceName||dep.resourceId}}</p>
+                      <p><i class="dot"></i>{{dep.resourceName || (dep.resourceInfo&&dep.resourceInfo.resourceName) ||dep.resourceId}}</p>
                     </div>
                   </li>
                 </ul>
@@ -68,7 +68,7 @@
                                 @change="changePolicy(resource, scheme, policy)"
                                 v-for="(policy, index) in scheme.policy">
                         <el-tooltip content="不在授权范围内" placement="top" effect="light" v-if="!policy.isAuth">
-                          <span :class="{'selected-segment': policy.selected}">{{policy.policyName}}</span>
+                          <span :class="{'selected-segment': policy.selected}">{{policy.policyName}}<i class="el-icon-warning"></i></span>
                         </el-tooltip>
                         <span :class="{'selected-segment': policy.selected}"
                               v-if="policy.isAuth">{{policy.policyName}}</span>

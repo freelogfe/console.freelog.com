@@ -46,7 +46,17 @@ export default {
             Object.assign(this.resourceDetail, detail)
           }
           callback(detail)
-        }).catch(this.$error.showErrorMessage)
+        }).catch((err)=>{
+          this.$nextTick(()=>{
+            var $error = this.$el.querySelector('.el-form-item__error')
+            if ($error) {
+              $error.parentElement.scrollIntoView()
+              window.scrollBy(0, -80) //填补fixed占位的高度
+            } else {
+              this.$error.showErrorMessage(err)
+            }
+          })
+        })
       } else {
         callback(detail)
       }

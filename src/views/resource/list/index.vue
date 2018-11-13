@@ -10,12 +10,12 @@
         <!--</el-tab-pane>-->
         <el-tab-pane label="自制资源" name="self">
           <lazy-component>
-            <resource-items type="self"></resource-items>
+            <resource-items type="self" :query="selfQueryInput"></resource-items>
           </lazy-component>
         </el-tab-pane>
         <el-tab-pane label="收藏资源" name="favor">
           <lazy-component>
-            <resource-items type="favor"></resource-items>
+            <resource-items type="favor" :query="favorQueryInput"></resource-items>
           </lazy-component>
         </el-tab-pane>
       </el-tabs>

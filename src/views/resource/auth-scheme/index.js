@@ -1,9 +1,9 @@
-import { cloneDeep, uniqBy, intersectionBy } from 'lodash'
+import {cloneDeep, uniqBy, intersectionBy} from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import ResourceAuthScheme from './auth-scheme.vue'
 import SchemeDataLoader from '@/data/scheme/loader'
-import { loopForBreak } from '@/lib/utils'
-import { SCHEME_STATUS } from '@/config/scheme'
+import {loopForBreak} from '@/lib/utils'
+import {SCHEME_STATUS} from '@/config/scheme'
 import ResourceLoader from '@/data/resource/loader'
 
 // intersectionWith
@@ -57,7 +57,7 @@ export default {
         })
       })
       .then(() => {
-        SchemeDataLoader.onloadSchemesForResource(this.resourceId, { policyStatus: 2 }).then((authSchemes) => {
+        SchemeDataLoader.onloadSchemesForResource(this.resourceId, {policyStatus: 2}).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach((scheme) => {
               if (scheme.status === PUBLISH_STATUS.PUBLISHED) {
@@ -258,7 +258,7 @@ export default {
       loopForBreak(deps, (dep) => {
         switch (dep.activeStatus) {
           case SCHEME_STATUS.NONE:
-            data.bubbleResources.push({ resourceId: dep.resourceId })
+            data.bubbleResources.push({resourceId: dep.resourceId})
             break
           case SCHEME_STATUS.SOME:
           case SCHEME_STATUS.ALL:
@@ -508,6 +508,11 @@ export default {
       return this.$services.authSchemes.delete(authSchemeId).then((res) => {
         if (res.data.errcode === 0) {
           this.$message.success('成功删除授权方案')
+          this.tabs.forEach(tab => {
+            if (tab.data.scheme.authSchemeId === authSchemeId) {
+              tab.data.isPublished = false
+            }
+          })
         } else {
           this.$error.showErrorMessage(res)
         }
