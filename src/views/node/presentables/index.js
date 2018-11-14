@@ -35,7 +35,7 @@ export default {
           index: -1,
           detail: {}
         })
-        this.loadPresentables({ nodeId, isOnline: 2 })
+        this.loadPresentables({nodeId, isOnline: 2})
           .then(this.formatHandler.bind(this))
           .then((list) => {
             this.presentableList = list
@@ -59,7 +59,7 @@ export default {
       item.isReady = (item.status & 7) === 7
     },
     loadPresentables(param) {
-      return this.$services.presentables.get({ params: param }).then(res => res.getData()).catch(this.$error.showErrorMessage)
+      return this.$services.presentables.get({params: param}).then(res => res.getData()).catch(this.$error.showErrorMessage)
     },
     changePresentableHandler(presentable, index) {
       this.currentPresentable.index = index
@@ -75,14 +75,11 @@ export default {
       this.$services.presentables.put(presentable.presentableId, {
         isOnline: presentable.isOnline
       }).then((res) => {
-        if (res.data.errcode === 0 && res.data.errcode === 0) {
-          presentable.isOnlineChecked = true
-        } else {
+        if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
           presentable.isOnline = 0
           presentable.isOnlineChecked = false
           this.$message.error(res.data.msg || '更新失败')
         }
-        this.$forceUpdate()
       }).catch((err) => {
         presentable.isOnline = 0
         presentable.isOnlineChecked = false

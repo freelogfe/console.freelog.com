@@ -2,7 +2,7 @@
   <section class="presentable-detail-wrapper">
     <resource-intro-info class="res-intro-info" :resource="presentableData.resourceInfo">
       <div class="presentable-auth-intro"
-           :class="{'active-status-2':presentableData.scheme}"
+           :class="{'active-status-2':(this.presentableData.status&1 === 1)}"
            @click="gotoSchemeDetailHandler">
         <i class="dot"></i>
         <span v-if="presentableData.scheme && presentableData.scheme.selectedPolicy">
