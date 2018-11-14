@@ -56,8 +56,10 @@ export default {
 
           } else if (self.canLoadMore !== false) {
             self.load().then(()=>{
-              if (entry.isIntersecting) {
+              if (entry.isIntersecting && self.canLoadMore) {
                 return self.load()
+              } else {
+                self.$refs.loading.classList.add('hide')
               }
             }).catch(() => {
               self.observer.unobserve(self.$refs.loading)

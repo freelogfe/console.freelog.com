@@ -1,3 +1,5 @@
+@import "../../../styles/mixin";
+
 .auth-scheme-tree-wrap {
   background-color: #fafafa;
   //padding: 0 20px;
@@ -136,6 +138,11 @@
       border: 1px solid #ccc;
       cursor: pointer;
       position: relative;
+      overflow: hidden;
+      padding: 0 10px;
+      p {
+        .text-ellipsis;
+      }
       &:first-child {
         border-right: none;
       }
@@ -146,6 +153,9 @@
         left: 0;
       }
       &.selected {
+        p {
+          color: #89D1AC;
+        }
         .dot {
           display: inline-block;
           &:after {

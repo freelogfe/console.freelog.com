@@ -17,14 +17,22 @@ export default {
     }
   },
   components: { SearchResource },
+  watch: {
+    $route() {
+      this.initView()
+    }
+  },
   mounted() {
-    this.loader()
-      .then(this.format.bind(this))
-      .then((data) => {
-        this.pagebuildList = data
-      })
+    this.initView()
   },
   methods: {
+    initView(){
+      this.loader()
+        .then(this.format.bind(this))
+        .then((data) => {
+          this.pagebuildList = data
+        })
+    },
     loader() {
       const self = this
       const param = {

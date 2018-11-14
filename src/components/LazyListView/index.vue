@@ -9,7 +9,9 @@
       </li>
       <slot name="append"></slot>
     </ul>
-    <slot name="empty" v-if="previewList.length === 0"></slot>
+    <slot name="empty" v-if="previewList.length === 0">
+      <div style="font-size: 20px; text-align: center;">暂无查询结果</div>
+    </slot>
     <slot name="loading">
       <div class="load-more-gif" ref="loading"
            element-loading-text="拼命加载中"

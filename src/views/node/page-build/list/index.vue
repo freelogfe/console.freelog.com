@@ -5,7 +5,7 @@
       <li class="pb-item" v-for="item in pagebuildList" :class="{selected: item.index === currentIndex}">
         <div class="pb-item-wrap">
           <div class="pb-thumbnail-wrap" @click="changePageBuildHandler(item)">
-            <img :src="item.resourceDetail._previewImage" alt="预览图">
+            <img class="resource-default-preview" :src="item.resourceDetail._previewImage" alt="">
           </div>
           <div class="pb-item-content"  @click="gotoResourceDetailHandler(item)">
             <h4 class="pb-title">{{item.presentableName}}</h4>

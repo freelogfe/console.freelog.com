@@ -1,9 +1,7 @@
 <template>
   <div class="main-resource-item-wrap" @click="gotoDetail">
     <div class="res-poster-wrap">
-      <img :src="postImgUrl"
-           class="res-post-img"
-           alt="">
+      <img :src="postImgUrl" class="resource-default-preview" alt="">
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
@@ -222,10 +220,6 @@
       }
     }
 
-    .res-post-img {
-      background: url('../../assets/img/resource.jpg') no-repeat;
-      background-size: 100%;
-    }
     img {
       width: 100%;
       height: 165px;

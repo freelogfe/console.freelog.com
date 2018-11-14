@@ -20,12 +20,21 @@ export default {
     ContractDetail
   },
 
+  watch: {
+    $route() {
+      this.initView()
+    }
+  },
+
   mounted() {
-    var query = this.$route.query;
-    Object.assign(query, this.$route.params)
-    this.loadData(query)
+   this.initView()
   },
   methods: {
+    initView(){
+      var query = this.$route.query;
+      Object.assign(query, this.$route.params)
+      this.loadData(query)
+    },
     loadData(query) {
       this.loadPresentables({nodeId: query.nodeId, isOnline: 2})
         .then(presentables => {
