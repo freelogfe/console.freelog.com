@@ -1,12 +1,22 @@
 <template>
   <transition name="content">
-    <router-view></router-view>
+    <router-view :key="key"></router-view>
   </transition>
 </template>
 
 <script>
 export default {
   name: 'fl-container',
+  data(){
+    return {
+      key:`view-${this.$route.path}`
+    }
+  },
+  // computed: {
+  //   key(){
+  //     return `${this.$route.path}`
+  //   }
+  // },
   beforeRouteUpdate(to, from, next) {
     let toPath = to.fullPath
     const params = this.$route.params

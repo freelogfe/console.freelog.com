@@ -1,31 +1,30 @@
-import { NodeCreationRule } from '@/views/node/create/index'
+import {NodeCreationRule} from '@/views/node/create/index'
 import NodeContracts from '../contract/list/index.vue'
 import NodePresentables from '../presentables/index.vue'
 import NodePageBuilds from '../page-build/list/index.vue'
 import NodePreview from '../preview/index.vue'
-import { NODE_STATUS } from '@/config/node'
+import {NODE_STATUS} from '@/config/node'
 import nodeLoader from '@/data/node/loader'
 import ClipBoard from '@/components/clipboard/index.vue'
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 
 
 export default {
   name: 'node-detail',
   data() {
+    var paths = this.$route.path.split('/')
     return {
       detail: {},
       rules: {
         nodeName: NodeCreationRule.nodeName
       },
-      nav: {
-        content: 'node-presentables'
-      },
+      currentTab: paths[paths.length - 1],
       domainSuffix: /\.testfreelog\.com$/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
       NAV_TABS: [
-        { name: 'node-page-builds', title: '页面样式' },
-        { name: 'node-presentables', title: '节点资源授权管理' },
-        { name: 'node-contracts', title: '合约执行管理' },
-        { name: 'node-preview', title: '预览' }
+        {name: 'pagebuilds', title: '页面样式'},
+        {name: 'presentables', title: '节点资源授权管理'},
+        {name: 'contracts', title: '合约执行管理'},
+        {name: 'preview', title: '预览'}
       ]
     }
   },
@@ -52,11 +51,9 @@ export default {
   computed: {
     ...mapGetters({
       nodes: 'nodes'
-    })
-  },
-  watch: {
-    $route() {
-      this.init(this.$route.params.nodeId)
+    }),
+    key() {
+      return `node-detail-${this.$route.path}`
     }
   },
   mounted() {
@@ -69,10 +66,6 @@ export default {
   },
   methods: {
     init(nodeId) {
-      const query = this.$route.query
-      if (query.tab && (this.NAV_TABS.some(tab => tab.name === query.tab))) {
-        this.nav.content = query.tab
-      }
       this.load(nodeId)
         .then((detail) => {
           detail.statusInfo = NODE_STATUS[detail.status]
@@ -100,8 +93,8 @@ export default {
                 self.$message.error(res.data.msg)
               }
             }).catch((err) => {
-              self.$message.error(err.response.errorMsg || err)
-            })
+            self.$message.error(err.response.errorMsg || err)
+          })
         } else {
           console.error('error submit!!')
           return false
@@ -114,8 +107,8 @@ export default {
       })
     },
     changePanelHandler(content) {
-      // this.nav.content = content
-      this.$router.push({ query: { tab: content } })
+      this.currentTab = content
+      this.$router.push(`/node/${this.$route.params.nodeId}/${content}`)
     }
   }
 }

@@ -99,8 +99,6 @@ export default {
   mounted() {
     this.initDependencies(this.detail.scheme)
   },
-  computed: {},
-  watch: {},
   methods: {
     initDependencies(scheme) {
       const dependencies = scheme.dependencies

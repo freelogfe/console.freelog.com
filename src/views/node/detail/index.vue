@@ -9,7 +9,6 @@
             @copyDone="copyDoneHandler"
             :value="resolveDomain(detail)">
             <a href="javascript:;">
-              <!--<i class="el-icon-fa-clipboard"></i>-->
               <i class="fl-icon-node-page fl-icon"></i>
             </a>
           </clip-board>
@@ -17,7 +16,7 @@
       </div>
       <nav class="node-detail-nav-wrap">
         <ul class="nav-list">
-          <li class="nav-item" :class="{active: nav.content===navItem.name}" @click="changePanelHandler(navItem.name)"
+          <li class="nav-item" :class="{active: currentTab===navItem.name}" @click="changePanelHandler(navItem.name)"
               v-for="navItem in NAV_TABS">{{navItem.title}}
           </li>
         </ul>
@@ -29,8 +28,7 @@
       </div>
     </div>
     <div class="right-side-wrap">
-      <!--<div class="test" style="height: 3000px;"></div>-->
-      <component :is="nav.content" data=""></component>
+      <router-view :key="key"></router-view>
     </div>
   </section>
 </template>

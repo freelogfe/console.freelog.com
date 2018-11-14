@@ -26,8 +26,6 @@ export default {
   mounted() {
     this.initView(this.params)
   },
-  computed: {},
-  watch: {},
   methods: {
     initView(params) {
       if (!params.presentableId) {
@@ -137,7 +135,7 @@ export default {
       })
     },
     gotoContractView(data) {
-      const query = { tab: 'node-contracts' }
+      const query = {}
       for (let i = 0; i < data.contracts.length; i++) {
         const contract = data.contracts[i]
         if (contract.resourceId === this.presentableDetail.resourceId) {
@@ -146,7 +144,7 @@ export default {
         }
       }
 
-      this.$router.push({ path: `/node/${this.params.nodeId}`, query })
+      this.$router.push({ path: `/node/${this.params.nodeId}/contracts`, query })
     },
     switchSchemeHandler(resource, scheme, index, panelIndex) {
 

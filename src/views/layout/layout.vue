@@ -4,7 +4,7 @@
     <section class="main" :class="themeCls">
       <main class="content">
         <transition name="content">
-          <router-view class="main-view"></router-view>
+          <router-view class="main-view" :key="key"></router-view>
         </transition>
       </main>
     </section>
@@ -21,6 +21,11 @@
 
   export default {
     name: 'fl-layout',
+    data(){
+      return {
+        key:`layout-${this.$route.path}`
+      }
+    },
     computed: {
       ...mapGetters({
         sidebar: 'sidebar'
@@ -30,18 +35,16 @@
           return this.$route.meta.theme + '-theme'
         }
         return ''
-      }
+      },
+      // key(){
+      //   return `layout-${this.$route.path}`
+      // }
     },
     components: {
       'fl-header': Header,
       'fl-sidebar': Sidebar,
       'fl-footer': Footer,
       'fl-breadcrumb': Breadcrumb
-    },
-
-    watch: {
-      $route() {
-      }
     }
   }
 </script>

@@ -72,7 +72,6 @@ export default {
         })
       })
   },
-  watch: {},
   computed: {
     isInitStatus() {
       const curScheme = this.tabsSchemeMap[this.curTabName]

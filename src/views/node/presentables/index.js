@@ -21,11 +21,6 @@ export default {
     FreelogSwitch,
     SearchResource
   },
-  watch: {
-    $route() {
-      this.initView(this.$route.params.nodeId)
-    }
-  },
 
   mounted() {
     this.initView(this.$route.params.nodeId)

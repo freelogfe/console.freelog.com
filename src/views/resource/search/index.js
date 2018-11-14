@@ -26,7 +26,6 @@ export default {
     }
   },
 
-  watch: {},
   mounted() {
     this.$refs.searchInputRef.focus()
     this.loader = this.getFavorResourcesLoader()

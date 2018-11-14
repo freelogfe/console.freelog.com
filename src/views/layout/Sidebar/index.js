@@ -3,7 +3,7 @@ import { mapGetters } from 'vuex'
 import NavMenu from '../NavMenu/index.vue'
 import resourceRoute from '@/router/resource'
 import { nodeItemRoute } from '@/router/node'
-import resourceMarket from '@/router/resource-market'
+// import resourceMarket from '@/router/resource-market'
 
 import node from '../../../router/node'
 

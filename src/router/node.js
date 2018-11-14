@@ -119,7 +119,39 @@ export default {
         requiresAuth: true,
         title: '节点详情'
       },
-      component: Views.nodeDetail
+      component: Views.nodeDetail,
+      redirect: function (to) {
+        return `${to.path}/presentables`
+      },
+      children: [{
+        path: 'presentables',
+        meta: {
+          requiresAuth: true,
+          title: '节点详情'
+        },
+        component: Views.presentableList,
+      }, {
+        path: 'contracts',
+        meta: {
+          requiresAuth: true,
+          title: '节点详情'
+        },
+        component: Views.contractList,
+      }, {
+        path: 'pagebuilds',
+        meta: {
+          requiresAuth: true,
+          title: '节点详情'
+        },
+        component: Views.nodePagebuilds,
+      }, {
+        path: 'preview',
+        meta: {
+          requiresAuth: true,
+          title: '节点详情'
+        },
+        component: Views.nodePreview,
+      }]
     },
     nodeItemRoute,
   ]

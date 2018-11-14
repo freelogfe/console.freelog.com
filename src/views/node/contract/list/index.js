@@ -20,17 +20,11 @@ export default {
     ContractDetail
   },
 
-  watch: {
-    $route() {
-      this.initView()
-    }
-  },
-
   mounted() {
-   this.initView()
+    this.initView()
   },
   methods: {
-    initView(){
+    initView() {
       var query = this.$route.query;
       Object.assign(query, this.$route.params)
       this.loadData(query)
@@ -72,6 +66,8 @@ export default {
 
               this.presentables = data
             })
+          } else {
+            this.presentables = []
           }
         })
     },
@@ -85,7 +81,7 @@ export default {
     },
 
     loadPresentables(param) {
-      return DataLoader.presentable.loadDetail({ params: param }).catch(this.$error.showErrorMessage)
+      return DataLoader.presentable.loadDetail({params: param}).catch(this.$error.showErrorMessage)
     },
     previewHandler(row) {
       const query = {}
@@ -104,6 +100,7 @@ export default {
         // this.$message.warning('未创建合同')
         return
       }
+      this.$router.push({query: {contractId: contract.contractId}})
       this.currentContract = contract
     },
     resolveContractCreatorLink(presentable) {

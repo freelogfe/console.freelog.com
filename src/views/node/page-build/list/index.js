@@ -17,13 +17,10 @@ export default {
     }
   },
   components: { SearchResource },
-  watch: {
-    $route() {
-      this.initView()
-    }
-  },
+
   mounted() {
     this.initView()
+    console.log('initview')
   },
   methods: {
     initView(){
@@ -34,7 +31,6 @@ export default {
         })
     },
     loader() {
-      const self = this
       const param = {
         nodeId: this.$route.params.nodeId
       }
