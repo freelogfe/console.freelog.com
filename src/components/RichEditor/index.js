@@ -3,7 +3,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import screenfull from 'screenfull'
-import { quillEditor, Quill } from 'vue-quill-editor'
+import { quillEditor } from 'vue-quill-editor'
 
 // https://quilljs.com/docs/modules/toolbar/
 export default {
@@ -71,7 +71,7 @@ export default {
   mounted() {
     this.createEditor()
     if (this.$route.params.resourceId) {
-      var unwatch = this.$watch('value', () => {
+      const unwatch = this.$watch('value', () => {
         if (this.value) {
           this.content = this.value
         }
@@ -98,10 +98,10 @@ export default {
     createEditor() {
       this.editor = this.$refs.richEditor.quill
 
-      var customButton = this.$el.querySelector('.ql-omega');
-      if (screenfull.enabled){
-        customButton.addEventListener('click', ()=> {
-          screenfull.toggle(this.$el);
+      const customButton = this.$el.querySelector('.ql-omega')
+      if (screenfull.enabled) {
+        customButton.addEventListener('click', () => {
+          screenfull.toggle(this.$el)
         })
       } else {
         customButton.remove()
@@ -125,13 +125,7 @@ export default {
     getEditor() {
       return this.editor
     },
-    onEditorBlur(quill) {
-    },
-    onEditorFocus(quill) {
-    },
-    onEditorReady(quill) {
-    },
-    onEditorChange({ quill, html, text }) {
+    onEditorChange({ html }) {
       this.$emit('input', html)
     }
   }

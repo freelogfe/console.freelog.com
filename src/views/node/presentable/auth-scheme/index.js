@@ -1,8 +1,19 @@
 import ResourceSchemeTree from '@/views/resource/scheme-tree/index.vue'
-import PresentableDataLoader from '@/data/presentable/loader'
-import SchemeDataLoader from '@/data/scheme/loader'
-import ResourceDataLoader from '@/data/resource/loader'
+import { onloadPresentableDetail } from '@/data/presentable/loader'
+import { onloadSchemesForResource } from '@/data/scheme/loader'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
+
+function filterSameContracts(list) {
+  const tempMap = new Map()
+  return list.filter((it) => {
+    if (it.contractId && tempMap.get(it.contractId)) {
+      return false
+    }
+    tempMap.set(it.contractId, true)
+    return true
+  })
+}
 
 export default {
   name: 'presentable-scheme-detail',
@@ -32,7 +43,7 @@ export default {
         return
       }
 
-      PresentableDataLoader.onloadPresentableDetail(params.presentableId).then((data) => {
+      onloadPresentableDetail(params.presentableId).then((data) => {
         if (data && data.contracts) {
           this.isInitStatus = !data.contracts.length
 
@@ -41,7 +52,7 @@ export default {
             return cachedContractsMap
           }, this.cachedContractsMap)
 
-          ResourceDataLoader.onloadResourceDetail(data.resourceId).then(detail => {
+          onloadResourceDetail(data.resourceId).then((detail) => {
             Object.assign(data.resourceInfo, detail)
             data.resourceInfo.contracts = data.contracts
             this.presentableDetail = data
@@ -50,7 +61,7 @@ export default {
       })
     },
     loadPresentableSchemes(resourceId) {
-      SchemeDataLoader.onloadSchemesForResource(resourceId).then((schemes) => {
+      onloadSchemesForResource(resourceId).then((schemes) => {
         this.presentableDetail.schemes = schemes
       })
     },
@@ -63,7 +74,7 @@ export default {
       const cachedContractsMap = this.cachedContractsMap
       const contracts = []
 
-      dutyStatements.map((dep) => {
+      dutyStatements.forEach((dep) => {
         const selectedScheme = dep.selectedScheme
         const contract = {
           resourceId: dep.resourceId
@@ -93,7 +104,7 @@ export default {
       })
 
       let targetResource
-      for (let i = 0; i < dutyStatements.length; i++) {
+      for (let i = 0; i < dutyStatements.length; i += 1) {
         if (dutyStatements[i].resourceId === targetResourceId) {
           targetResource = dutyStatements[i]
           break
@@ -105,17 +116,6 @@ export default {
           this.updatePresentableSchemes({
             contracts: filterSameContracts(contracts)
           })
-
-          function filterSameContracts(contracts) {
-            const tempMap = new Map()
-            return contracts.filter((it) => {
-              if (it.contractId && tempMap.get(it.contractId)) {
-                return false
-              }
-              tempMap.set(it.contractId, true)
-              return true
-            })
-          }
         } else {
           this.$message.error('有资源未选择授权策略')
         }
@@ -136,7 +136,7 @@ export default {
     },
     gotoContractView(data) {
       const query = {}
-      for (let i = 0; i < data.contracts.length; i++) {
+      for (let i = 0; i < data.contracts.length; i += 1) {
         const contract = data.contracts[i]
         if (contract.resourceId === this.presentableDetail.resourceId) {
           query.contractId = contract.contractId
@@ -145,21 +145,6 @@ export default {
       }
 
       this.$router.push({ path: `/node/${this.params.nodeId}/contracts`, query })
-    },
-    switchSchemeHandler(resource, scheme, index, panelIndex) {
-
-    },
-    selectResourceHandler(dep, scheme, panelIndex, $event) {
-
-    },
-    changePolicy(resource, scheme, policy) {
-
-    },
-    changeSchemePolicyHandler(scheme, policy) {
-
-    },
-    selectAuthSchemeHandler(resource, scheme, panelIndex) {
-
     }
   }
 }

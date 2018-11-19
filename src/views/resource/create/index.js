@@ -1,6 +1,5 @@
+import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceInput from '../input/index.vue'
-import ResourceLoader from '@/data/resource/loader'
-import { storage } from '@/lib'
 
 export default {
   name: 'resource-creator',
@@ -15,7 +14,7 @@ export default {
   mounted() {
     const params = this.$route.params
     if (params.resourceId) {
-      ResourceLoader.loadDetail(params.resourceId)
+      onloadResourceDetail(params.resourceId)
         .then((data) => {
           this.resourceDetail = data
         }).catch(this.$error.showErrorMessage)
@@ -29,12 +28,12 @@ export default {
             Object.assign(this.resourceDetail, detail)
           }
           callback()
-        }).catch((err)=>{
-          this.$nextTick(()=>{
-            var $error = this.$el.querySelector('.el-form-item__error')
+        }).catch((err) => {
+          this.$nextTick(() => {
+            const $error = this.$el.querySelector('.el-form-item__error')
             if ($error) {
               $error.parentElement.scrollIntoView()
-              window.scrollBy(0, -80) //填补fixed占位的高度
+              window.scrollBy(0, -80) // 填补fixed占位的高度
             } else {
               this.$error.showErrorMessage(err)
             }
@@ -60,14 +59,16 @@ export default {
     create2AddHandler() {
       const detail = this.resourceDetail
       this.executeNext(() => {
-        detail.resourceId && this.$router.push(`/resource/edit/${detail.resourceId}/auth_schemes`)
+        if (detail.resourceId) {
+          this.$router.push(`/resource/edit/${detail.resourceId}/auth_schemes`)
+        }
       })
     },
-    cancelHandler(){
+    cancelHandler() {
       this.$confirm('确定取消创建资源？')
-        .then(()=>{
-          this.$router.push(`/resource/list`)
-        }).catch(()=>{})
+        .then(() => {
+          this.$router.push('/resource/list')
+        }).catch(() => {})
     }
   }
 }

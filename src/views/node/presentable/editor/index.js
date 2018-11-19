@@ -1,7 +1,5 @@
 import TagsEditor from '@/components/Tags/index.vue'
-import { RESOURCE_TYPES } from '@/config/resource'
 import PresentablePolicy from '@/components/policyEditor/index.vue'
-import { cloneDeep } from 'lodash'
 import CONFIG from '@/config/index'
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS

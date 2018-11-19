@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { RESOURCE_TYPES, RESOURCE_STATUS } from '@/config/resource'
+import { RESOURCE_STATUS } from '@/config/resource'
 
 export default {
   name: 'resource-detail-info',

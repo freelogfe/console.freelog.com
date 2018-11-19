@@ -12,9 +12,8 @@
 </template>
 
 <script>
-import ResourceItem from '../list-item/index.vue'
-import { onloadUserInfo } from '@/data/user/loader'
 import LazyListView from '@/components/LazyListView/index.vue'
+import ResourceItem from '../list-item/index.vue'
 
 export default {
   name: 'resource-items',
@@ -41,7 +40,7 @@ export default {
     type() {
       this.initView()
     },
-    query(){
+    query() {
       this.initView()
     }
   },
@@ -51,8 +50,12 @@ export default {
   },
 
   methods: {
-    gotoEditHandler(resource){
-      this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
+    gotoEditHandler(resource) {
+      if (this.type === 'all') {
+        this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
+      } else {
+        this.$router.push({ path: `/resource/detail/${resource.resourceId}` })
+      }
     },
     initView() {
       switch (this.type) {

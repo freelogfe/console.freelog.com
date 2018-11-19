@@ -1,11 +1,11 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
+import { loadDetail } from '@/data/resource/loader'
+import { onloadNodeList } from '@/data/node/loader'
+import { cssSupports } from '@/lib/utils'
 import AuthSchemeDetail from './auth-scheme/index.vue'
-import {loadDetail} from '@/data/resource/loader'
-import NodeDataLoader from '@/data/node/loader'
-import {cssSupports} from '@/lib/utils'
 
 export default {
   name: 'resource-detail',
@@ -55,7 +55,6 @@ export default {
   methods: {
     init() {
       loadDetail(this.resourceId).then((res) => {
-
         if (this.session && this.session.user) {
           res.isOwner = (res.userId === this.session.user.userId)
         } else {
@@ -65,7 +64,7 @@ export default {
         // if (res.isOwner) {
         //   this.showAuthSchemes = true
         // }
-      }).catch((err) => {
+      }).catch(() => {
         this.$router.push('/')
         // this.$error.showErrorMessage(err)
       })
@@ -85,12 +84,12 @@ export default {
       const marginTop = $toolbar.getBoundingClientRect().height
       const originTop = $tabs.getBoundingClientRect().top
       const isSupportSticky = cssSupports('position', 'sticky')
-      var prevTop
-      var st = +new Date()
+      let prevTop
+      let st = +new Date()
 
       this.scrollFn = () => {
-        //throttle
-        var et = +new Date()
+        // throttle
+        const et = +new Date()
         if (et - st < 20) return
         st = et
 
@@ -177,7 +176,7 @@ export default {
         return Promise.resolve(this.nodes)
       }
 
-      return Promise.all([this.loadResourceOwners(), NodeDataLoader.onloadNodeList()]).then((res) => {
+      return Promise.all([this.loadResourceOwners(), onloadNodeList()]).then((res) => {
         const resourceOwners = res[0]
         const nodeList = res[1].dataList || []
         const ownersMap = {}
@@ -231,7 +230,7 @@ export default {
       if (selectedNodes.length) {
         const promises = selectedNodes.map(nodeId => this.createPresentable(nodeId))
 
-        Promise.all(promises).then((list) => {
+        Promise.all(promises).then(() => {
           this.$message.success('获取成功')
         }).catch(this.$error.showErrorMessage)
       }
@@ -261,11 +260,11 @@ export default {
       this.$forceUpdate()
     },
     scrollInto(target) {
-      var $el = this.$refs[target]
+      const $el = this.$refs[target]
       this.activeTab = target
       if (typeof $el.scrollIntoView === 'function') {
         $el.scrollIntoView(true)
-        window.scrollBy(0, -120) //填补fixed占位的高度
+        window.scrollBy(0, -120) // 填补fixed占位的高度
       } else {
         window.scrollTo(0, $el.offsetTop - 60)
       }

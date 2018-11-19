@@ -1,4 +1,4 @@
-export const isSafeUrl = function (url) {
+export const isSafeUrl = function isSafeUrl(url) {
   const reg = /^.+\.(test)?freelog\.com$/
 
   try {
@@ -8,7 +8,7 @@ export const isSafeUrl = function (url) {
     }
   } catch (e) {
     // path型链接检测
-    if ((/^\/[^\/]+/.test(url))) {
+    if ((/^\/[/]+/.test(url))) {
       return true
     }
   }

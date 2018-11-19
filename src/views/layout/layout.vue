@@ -13,40 +13,40 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
-  import Sidebar from './Sidebar/index.vue'
-  import Header from './Header/index.vue'
-  import Footer from './Footer/index.vue'
-  import Breadcrumb from './breadcrumb/index.vue'
+import { mapGetters } from 'vuex'
+import Sidebar from './Sidebar/index.vue'
+import Header from './Header/index.vue'
+import Footer from './Footer/index.vue'
+import Breadcrumb from './breadcrumb/index.vue'
 
-  export default {
-    name: 'fl-layout',
-    data(){
-      return {
-        key:`layout-${this.$route.path}`
-      }
-    },
-    computed: {
-      ...mapGetters({
-        sidebar: 'sidebar'
-      }),
-      themeCls() {
-        if (this.$route.meta.theme) {
-          return this.$route.meta.theme + '-theme'
-        }
-        return ''
-      },
-      // key(){
-      //   return `layout-${this.$route.path}`
-      // }
-    },
-    components: {
-      'fl-header': Header,
-      'fl-sidebar': Sidebar,
-      'fl-footer': Footer,
-      'fl-breadcrumb': Breadcrumb
+export default {
+  name: 'fl-layout',
+  data() {
+    return {
+      key: `layout-${this.$route.path}`
     }
+  },
+  computed: {
+    ...mapGetters({
+      sidebar: 'sidebar'
+    }),
+    themeCls() {
+      if (this.$route.meta.theme) {
+        return `${this.$route.meta.theme}-theme`
+      }
+      return ''
+    },
+    // key(){
+    //   return `layout-${this.$route.path}`
+    // }
+  },
+  components: {
+    'fl-header': Header,
+    'fl-sidebar': Sidebar,
+    'fl-footer': Footer,
+    'fl-breadcrumb': Breadcrumb
   }
+}
 </script>
 
 <style scoped lang="less">

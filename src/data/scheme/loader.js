@@ -1,5 +1,5 @@
-import {createLoader, createCacheLoaders} from '@/lib/utils'
-import {cloneDeep, uniqBy} from 'lodash'
+// import { createCacheLoaders } from '@/lib/utils'
+import { cloneDeep, uniqBy } from 'lodash'
 
 import axios from '@/lib/axios'
 
@@ -55,22 +55,6 @@ function loadAuthSchemes(params) {
   })
 }
 
-function loadSchemeDetail(authSchemeId, params) {
-  if (cachedSchemes[authSchemeId]) {
-    return Promise.resolve(cloneDeep(cachedSchemes[scheme.authSchemeId]))
-  }
-
-  params = params || {}
-  return axios.get(`/v1/resources/authSchemes/${authSchemeId}`, {
-    params
-  }).then((res) => {
-    if (res.data.errcode === 0) {
-      return res.getData()
-    }
-    return Promise.reject(res.data.msg)
-  })
-}
-
 //
 // const onloadSchemeDetail = createCacheLoaders(function (id) {
 //   return loadAuthSchemes({authSchemeIds: [id]}).then(scheme => {
@@ -82,8 +66,8 @@ function loadSchemeDetail(authSchemeId, params) {
 // }, true)
 
 
-const onloadSchemeDetail = function (id) {
-  return loadAuthSchemes({authSchemeIds: [id]}).then((scheme) => {
+function onloadSchemeDetail(id) {
+  return loadAuthSchemes({ authSchemeIds: [id] }).then((scheme) => {
     if (Array.isArray(scheme)) {
       scheme = scheme[0]
     }
@@ -93,7 +77,7 @@ const onloadSchemeDetail = function (id) {
 // const loadSchemesForResource = createCacheLoaders(function (params) {
 //   return loadAuthSchemes(params)
 // }, true)
-const loadSchemesForResource = function (params) {
+function loadSchemesForResource(params) {
   return loadAuthSchemes(params)
 }
 

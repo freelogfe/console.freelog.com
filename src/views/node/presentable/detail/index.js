@@ -1,10 +1,9 @@
 import PresentablePolicy from '@/components/policyEditor/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
-import { RESOURCE_TYPES } from '@/config/resource'
+import { onloadResourceDetail } from '@/data/resource/loader'
+import { onloadSchemeDetail } from '@/data/scheme/loader'
 import PresentableEditor from '../editor/index.vue'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
-import ResourceDataLoader from '@/data/resource/loader'
-import SchemeDataLoader from '@/data/scheme/loader'
 
 export default {
   name: 'presentable-detail',
@@ -55,7 +54,7 @@ export default {
         return
       }
       this.presentableData = this.detail
-      ResourceDataLoader.onloadResourceDetail(this.detail.resourceId).then((detail) => {
+      onloadResourceDetail(this.detail.resourceId).then((detail) => {
         this.presentableData.resourceInfo = { ...detail }
       })
 
@@ -64,9 +63,9 @@ export default {
     loadPresentableScheme() {
       const contract = this.getPresentableContract()
       if (contract) {
-        SchemeDataLoader.onloadSchemeDetail(contract.authSchemeId).then((scheme) => {
+        onloadSchemeDetail(contract.authSchemeId).then((scheme) => {
           if (scheme) {
-            for (let i = 0; i < scheme.policy.length; i++) {
+            for (let i = 0; i < scheme.policy.length; i += 1) {
               const policy = scheme.policy[i]
               if (policy.segmentId === contract.policySegmentId) {
                 scheme.selectedPolicy = policy
@@ -83,7 +82,7 @@ export default {
       const contracts = this.presentableData.contracts || []
       if (contracts.length) {
         let contract
-        for (let i = 0; i < contracts.length; i++) {
+        for (let i = 0; i < contracts.length; i += 1) {
           contract = contracts[i]
           if (contract.resourceId === this.presentableData.resourceId) {
             return contract

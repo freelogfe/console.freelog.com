@@ -1,10 +1,9 @@
-import {cloneDeep, uniqBy, intersectionBy} from 'lodash'
+import { cloneDeep, uniqBy, intersectionBy } from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
+import { onloadSchemesForResource } from '@/data/scheme/loader'
+import { SCHEME_STATUS } from '@/config/scheme'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceAuthScheme from './auth-scheme.vue'
-import SchemeDataLoader from '@/data/scheme/loader'
-import {loopForBreak} from '@/lib/utils'
-import {SCHEME_STATUS} from '@/config/scheme'
-import ResourceLoader from '@/data/resource/loader'
 
 // intersectionWith
 function getUUID() {
@@ -52,12 +51,12 @@ export default {
           rids.push(dep.resourceId)
         })
 
-        return ResourceLoader.loadDetail(this.resourceId).then((detail) => {
+        return onloadResourceDetail(this.resourceId).then((detail) => {
           this.resourceDetail = Object.assign(detail, depData)
         })
       })
       .then(() => {
-        SchemeDataLoader.onloadSchemesForResource(this.resourceId, {policyStatus: 2}).then((authSchemes) => {
+        onloadSchemesForResource(this.resourceId, { policyStatus: 2 }).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach((scheme) => {
               if (scheme.status === PUBLISH_STATUS.PUBLISHED) {
@@ -136,6 +135,7 @@ export default {
         case 'modify':
           this.modifyDependencies(detail.data)
           break
+        default: break
       }
 
       this.resourceDepChanged = true
@@ -151,7 +151,7 @@ export default {
       this.resourceDetail.dependencies.push(cloneDeep(data))
       data.selected = false
       data.authSchemes = []
-      SchemeDataLoader.onloadSchemesForResource(data.resourceId).then((list) => {
+      onloadSchemesForResource(data.resourceId).then((list) => {
         if (list.length) {
           data.authSchemes = list
         }
@@ -169,18 +169,20 @@ export default {
     modifyDependencies(data) {
       this.schemeList.forEach((scheme) => {
         const deps = scheme.dependencies
-        for (var i = 0, len = deps.length; i < len; i++) {
+        for (let i = 0, len = deps.length; i < len; i += 1) {
           const dep = deps[i]
           if (dep.resourceId === data.oldResource.resourceId) {
-            SchemeDataLoader.onloadSchemesForResource(data.newResource.resourceId).then(() => {
-              deps.splice(i, 1, data.newResource)
-            })
+            onloadSchemesForResource(data.newResource.resourceId)
+              .then(() => {
+                deps.splice(i, 1, data.newResource)
+              })
             break
           }
         }
       })
     },
     updateData(detail) {
+      console.log(detail)
     },
     addTab(scheme) {
       const newTabName = scheme.authSchemeId || getUUID()
@@ -226,6 +228,8 @@ export default {
         case 'createTab':
           this.createTab()
           break
+        default:
+          break
       }
     },
     loadDeps() {
@@ -254,10 +258,12 @@ export default {
         bubbleResources: [],
         unhandles: []
       }
-      loopForBreak(deps, (dep) => {
+
+      for (let i = 0; i < deps.length; i += 1) {
+        const dep = deps[i]
         switch (dep.activeStatus) {
           case SCHEME_STATUS.NONE:
-            data.bubbleResources.push({resourceId: dep.resourceId})
+            data.bubbleResources.push({ resourceId: dep.resourceId })
             break
           case SCHEME_STATUS.SOME:
           case SCHEME_STATUS.ALL:
@@ -285,9 +291,9 @@ export default {
         }
 
         if (data.unhandles.length) {
-          return true
+          break
         }
-      })
+      }
 
       return data
     },
@@ -322,7 +328,7 @@ export default {
         this.updateDependenciesMeta(schemeData).then(() => {
           this.validate()
             .then(() => {
-              var data = this.resolveSchemeData(schemeData)
+              const data = this.resolveSchemeData(schemeData)
               if (!schemeData.authSchemeId) {
                 this.createAuthScheme(data).then((res) => {
                   schemeData.authSchemeId = res.authSchemeId
@@ -388,7 +394,7 @@ export default {
               })
             }
           })
-          policies.length && (data.policies = policies)
+          if (policies.length) data.policies = policies
         }
       }
 
@@ -412,7 +418,7 @@ export default {
       this.nextHandler(scheme).then((schemeDetail) => {
         scheme.policy = schemeDetail.policy
         if (scheme.status === 0) {
-          return this.createSchemeContracts(scheme).then((res) => {
+          return this.createSchemeContracts(scheme).then(() => {
             scheme.status = SCHEME_STATUS.PUBLISHED
             this.curTabName = ''
             this.$nextTick(() => {
@@ -422,28 +428,30 @@ export default {
             this.$router.push(`/resource/detail/${scheme.resourceId}`)
           })
         }
-        this.$message.success('操作成功')
+        return this.$message.success('操作成功')
       }).catch(this.$error.showErrorMessage)
     },
     validateSchemeOptions(dependencies) {
-      var flag = true;
-      loopForBreak(dependencies, (dep) => {
+      let flag = true
+
+      for (let i = 0; i < dependencies.length; i += 1) {
+        const dep = dependencies[i]
         if (flag === false || dep.activeStatus === undefined || dep.activeStatus === SCHEME_STATUS.UNHANDLE) {
           flag = false
-          return true
+          break
         }
-      })
+      }
 
       if (flag) {
-        loopForBreak(dependencies, (dep) => {
+        for (let i = 0; i < dependencies.length; i += 1) {
+          const dep = dependencies[i]
           if (dep.selectedScheme.dependencies) {
             flag = this.validateSchemeOptions(dep.selectedScheme.dependencies)
-
             if (flag === false) {
-              return true
+              break
             }
           }
-        })
+        }
       }
 
       return flag
@@ -457,7 +465,7 @@ export default {
       })
     },
     tmpSaveAndQuitHandler() {
-      var scheme = this.tabsSchemeMap[this.curTabName]
+      const scheme = this.tabsSchemeMap[this.curTabName]
 
       this.nextHandler(scheme).then(() => {
         this.$message.success('操作成功')
@@ -468,7 +476,7 @@ export default {
       this.$confirm('确定删除授权方案？', {}).then(() => {
         const tabId = tab.data.id
         const scheme = this.deleteAuthSchemeById(tabId)
-        if (!scheme.authSchemeId) {
+        if (!scheme || !scheme.authSchemeId) {
           this.deleteTabById(tabId)
         }
         this.setActiveTab()
@@ -483,7 +491,7 @@ export default {
       }
     },
     deleteTabById(tabId) {
-      for (let i = 0, len = this.tabs.length; i < len; i++) {
+      for (let i = 0, len = this.tabs.length; i < len; i += 1) {
         const tabData = this.tabs[i]
         if (tabData.data.id === tabId) {
           this.tabs.splice(i, 1)
@@ -492,7 +500,7 @@ export default {
       }
     },
     deleteAuthSchemeById(id) {
-      for (let i = 0, len = this.schemeList.length; i < len; i++) {
+      for (let i = 0, len = this.schemeList.length; i < len; i += 1) {
         const scheme = this.schemeList[i]
         if (scheme.tabId === id) {
           this.schemeList.splice(i, 1)
@@ -502,12 +510,14 @@ export default {
           return scheme
         }
       }
+
+      return null
     },
     deleteScheme(authSchemeId) {
       return this.$services.authSchemes.delete(authSchemeId).then((res) => {
         if (res.data.errcode === 0) {
           this.$message.success('成功删除授权方案')
-          this.tabs.forEach(tab => {
+          this.tabs.forEach((tab) => {
             if (tab.data.scheme.authSchemeId === authSchemeId) {
               tab.data.isPublished = false
             }

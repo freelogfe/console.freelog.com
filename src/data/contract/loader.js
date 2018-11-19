@@ -1,5 +1,5 @@
 import { ContractService } from '@/services'
-import { createLoader, createCacheLoaders } from '@/lib/utils'
+// import { createLoader, createCacheLoaders } from '@/lib/utils'
 
 function loadDetail(id) {
   return ContractService.get(id).then(res => res.getData())

@@ -45,6 +45,7 @@
       <div class="res-detail-nav-tabs-wrap" ref="tabs">
         <ul class="res-detail-nav-tabs">
           <li :class="{active:activeTab===tab.name}"
+              :key="tab.name"
               v-for="tab in tabs" @click="scrollInto(tab.name)">
             {{tab.title}}
           </li>
@@ -76,7 +77,10 @@
           <h4 class="opts-bd-title">获取资源授权至节点：</h4>
           <div class="opts-container">
             <ul class="checkbox-group node-opts">
-              <li class="checkbox-item" v-for="node in nodes" :class="{'node-opt-selected': node.selected}"
+              <li class="checkbox-item"
+                  v-for="node in nodes"
+                  :key="node.nodeId"
+                  :class="{'node-opt-selected': node.selected}"
                   @click="nodeOptCheckHandler(node)">
                 <i class="node-opt-check-status checked-opt" v-if="node.checked"></i>
                 <i class="node-opt-check-status unchecked-opt" v-else></i>
@@ -94,9 +98,9 @@
 </template>
 
 <script>
-  import ResourceDetail from './index'
+import ResourceDetail from './index'
 
-  export default ResourceDetail
+export default ResourceDetail
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
-import { UserService, OtherService } from '../../services'
-import { storage, axios } from '@/lib/index'
+import { axios } from '@/lib/index'
 import { cookieStore, sessionStore } from '@/lib/storage'
+import { UserService, OtherService } from '../../services'
 
 const types = {
   GET_CURRENT_USER: 'getCurrentUser',
@@ -18,8 +18,8 @@ const user = {
 
   mutations: {
     [types.CHANGE_SESSION](state, data) {
-      Object.assign(state.session, data);
-      sessionStore.set('user_session', state.session);
+      Object.assign(state.session, data)
+      sessionStore.set('user_session', state.session)
     },
     [types.DELETE_SESSION](state) {
       state.session = { user: {}, token: null }
@@ -46,7 +46,7 @@ const user = {
     [types.CHANGE_SESSION]({ commit }, data) {
       commit(types.CHANGE_SESSION, data)
     },
-    [types.CHECK_USER_SESSION]({ commit, getters }) {
+    [types.CHECK_USER_SESSION]({ getters }) {
       const session = getters.session || sessionStore.get('user_session')
       let authInfo = (session && session.user)
       let userInfo = {}
@@ -72,7 +72,7 @@ const user = {
     },
     [types.USER_LOGIN]({ commit }, data) {
       return OtherService.login(data).then((res) => {
-        if (res.data.ret === 0 && res.data.errcode == 0) {
+        if (res.data.ret === 0 && res.data.errcode === 0) {
           const token = res.headers.authorization
           commit(types.CHANGE_SESSION, { user: res.data.data, token })
           return res.data.data
@@ -85,7 +85,7 @@ const user = {
         if (res.data.ret === 0 && res.data.errcode === 0) {
           commit(types.DELETE_SESSION)
         } else {
-          return Promise.reject(res.data.msg)
+          throw new Error(res.data.msg)
         }
       })
     }

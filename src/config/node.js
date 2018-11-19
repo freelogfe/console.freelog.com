@@ -8,3 +8,5 @@ export const NODE_STATUS = [{
   text: '冻结',
   type: 'danger'
 }]
+
+export default NODE_STATUS

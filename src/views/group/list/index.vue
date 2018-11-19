@@ -36,7 +36,6 @@
       </el-table-column>
     </table-view>
   </section>
-  </section>
 </template>
 
 <script>

@@ -1,30 +1,30 @@
-import {NodeCreationRule} from '@/views/node/create/index'
+import { NodeCreationRule } from '@/views/node/create/index'
+import { NODE_STATUS } from '@/config/node'
+import { onloadNodeDetail } from '@/data/node/loader'
+import ClipBoard from '@/components/clipboard/index.vue'
+import { mapGetters } from 'vuex'
 import NodeContracts from '../contract/list/index.vue'
 import NodePresentables from '../presentables/index.vue'
 import NodePageBuilds from '../page-build/list/index.vue'
 import NodePreview from '../preview/index.vue'
-import {NODE_STATUS} from '@/config/node'
-import nodeLoader from '@/data/node/loader'
-import ClipBoard from '@/components/clipboard/index.vue'
-import {mapGetters} from 'vuex'
 
 
 export default {
   name: 'node-detail',
   data() {
-    var paths = this.$route.path.split('/')
+    const paths = this.$route.path.split('/')
     return {
       detail: {},
       rules: {
         nodeName: NodeCreationRule.nodeName
       },
       currentTab: paths[paths.length - 1],
-      domainSuffix: /\.testfreelog\.com$/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
+      domainSuffix: /\.testfreelog\.com$/.test(window.location.host) ? '.testfreelog.com' : '.freelog.com',
       NAV_TABS: [
-        {name: 'pagebuilds', title: '页面样式'},
-        {name: 'presentables', title: '节点资源授权管理'},
-        {name: 'contracts', title: '合约执行管理'},
-        {name: 'preview', title: '预览'}
+        { name: 'pagebuilds', title: '页面样式' },
+        { name: 'presentables', title: '节点资源授权管理' },
+        { name: 'contracts', title: '合约执行管理' },
+        { name: 'preview', title: '预览' }
       ]
     }
   },
@@ -40,7 +40,7 @@ export default {
     next((vm) => {
       vm.$store.dispatch('loadNodes')
         .then((nodes) => {
-          const isValid = nodes.some(node => node.nodeId == vm.$route.params.nodeId)
+          const isValid = nodes.some(node => node.nodeId.toString() === vm.$route.params.nodeId)
 
           if (!isValid) {
             vm.$router.push('/')
@@ -73,13 +73,13 @@ export default {
         })
     },
     load(param) {
-      return nodeLoader.loadDetail(param || {}).catch(this.$error.showErrorMessage)
+      return onloadNodeDetail(param || {}).catch(this.$error.showErrorMessage)
     },
     copyDoneHandler() {
       this.$message.success('已复制节点地址')
     },
     resolveDomain(node) {
-      return `${location.protocol}//${node.nodeDomain}${this.domainSuffix}`
+      return `${window.location.protocol}//${node.nodeDomain}${this.domainSuffix}`
     },
     updateNodeDetail(formName) {
       const self = this
@@ -93,11 +93,10 @@ export default {
                 self.$message.error(res.data.msg)
               }
             }).catch((err) => {
-            self.$message.error(err.response.errorMsg || err)
-          })
+              self.$message.error(err.response.errorMsg || err)
+            })
         } else {
           console.error('error submit!!')
-          return false
         }
       })
     },

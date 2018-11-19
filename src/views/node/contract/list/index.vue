@@ -4,7 +4,9 @@
       <h4 class="contract-list-title"><i class="el-icon-question"></i>合约列表</h4>
 
       <ul class="presentable-list">
-        <li class="presentable-item" v-for="presentable in presentables">
+        <li class="presentable-item"
+            :key="presentable.presentableId"
+            v-for="presentable in presentables">
           <div class="presentable-name"
                :class="[presentable.masterContract?('contract-status-'+presentable.masterContract.status):'',
                {'current': isActiveTab(presentable)}]"
@@ -16,7 +18,9 @@
             </span>
             <span v-else><router-link :to="resolveContractCreatorLink(presentable)">未创建合同</router-link></span></div>
           <ul class="contract-list" v-if="presentable.contracts.length">
-            <li class="contract-item" v-for="contract in presentable.contracts"
+            <li class="contract-item"
+                v-for="contract in presentable.contracts"
+                :key="contract.contractId"
                 :class="['contract-status-'+contract.status, {'current':currentContract.contractId===contract.contractId}]"
                 @click="showContractDetailHandler(contract)">
               <div>

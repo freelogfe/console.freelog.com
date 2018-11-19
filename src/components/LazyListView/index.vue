@@ -4,7 +4,11 @@
       paddingTop: lineTopHeight +'px',
       paddingBottom: lineBottomHeight +'px'
     }">
-      <li :class="[itemClass]" v-for="(item, index) in previewList" :key="index" :style="{height: height + 'px'}">
+      <li :class="[itemClass]"
+          v-for="(item, index) in previewList"
+          :key="index"
+          class="show-up"
+          :style="{height: height + 'px'}">
         <slot :data="item"></slot>
       </li>
       <slot name="append"></slot>
@@ -22,7 +26,7 @@
 </template>
 
 <script>
-import LazyListView from './index.js'
+import LazyListView from './index'
 
 export default LazyListView
 </script>

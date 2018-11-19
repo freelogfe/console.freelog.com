@@ -1,7 +1,5 @@
-
 import { ContractDetail } from '@freelog/freelog-ui-contract'
 import ContractDetailInfo from '@/components/detail-info/contract.vue'
-
 import ContractUtils from '@/data/contract/utils'
 import { onloadResourceDetail } from '@/data/resource/loader'
 
@@ -24,7 +22,7 @@ export default {
   },
   components: {
     ContractDetailInfo,
-    "contract-content": ContractDetail,
+    'contract-content': ContractDetail,
   },
   props: {
     contractId: String
@@ -61,6 +59,7 @@ export default {
     formatData() {
       let detail = Object.assign({}, this.contractDetail)
       detail = ContractUtils.format(detail)
+      return detail
     },
     // 获取合同详情
     loadContractDetail(param) {

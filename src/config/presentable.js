@@ -24,3 +24,6 @@ export const PRESENTABLE_STATUS_TIPS = [
     type: 'info'
   }
 ]
+
+
+export default PRESENTABLE_STATUS_TIPS

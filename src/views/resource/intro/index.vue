@@ -35,12 +35,11 @@ export default {
     }
   },
   computed: {
-    avatarUrl(){
+    avatarUrl() {
       if (this.resource.userId) {
         return `https://image.freelog.com/headImage/${this.resource.userId}?x-oss-process=style/head-image`
-      } else {
-        return ''
       }
+      return ''
     }
   }
 }

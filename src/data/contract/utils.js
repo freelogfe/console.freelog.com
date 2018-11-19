@@ -1,11 +1,11 @@
 import { beautify } from '@freelog/resource-policy-lang'
-import userLoader from '../user/loader'
-import nodeLoader from '../node/loader'
 import { CONTRACT_STATUS_COLORS } from '@/config/contract'
-import Vue from 'vue'
+// import Vue from 'vue'
+// import userLoader from '../user/loader'
+// import nodeLoader from '../node/loader'
 
 function format(contract) {
-  if (!contract) return
+  if (!contract) return null
 
   if (contract.policySegment) {
     contract._policyText = beautify(contract.policySegment.policyText).trim()

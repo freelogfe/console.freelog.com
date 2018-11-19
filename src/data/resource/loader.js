@@ -1,9 +1,9 @@
 import { ResourceService } from '@/services'
-import { createLoader, createCacheLoaders } from '@/lib/utils'
-import { cloneDeep } from 'lodash'
+// import { createCacheLoaders } from '@/lib/utils'
+// import { cloneDeep } from 'lodash'
 import axios from '@/lib/axios'
 
-const cachedResources = {}
+// const cachedResources = {}
 
 
 function loadDetail(resourceId) {
@@ -16,8 +16,8 @@ function loadDetail(resourceId) {
 }
 
 function loadResources(resourceIds) {
-  const result = []
-  const rids = []
+  // const result = []
+  // const rids = []
   // resourceIds.forEach(rid => {
   //   if (cachedResources[rid]) {
   //     result.push(cloneDeep(cachedResources[rid]))
@@ -58,9 +58,10 @@ function loadResources(resourceIds) {
 // }, true)
 
 
-const onloadResourceDetail = function (resourceId) {
+function onloadResourceDetail(resourceId) {
   return loadDetail(resourceId).then(res => res)
 }
+
 export {
   loadDetail,
   onloadResourceDetail

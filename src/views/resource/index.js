@@ -6,5 +6,9 @@ const resourceEditor = resolve => require.ensure([], () => resolve(require('./ed
 
 
 export default {
-  resourceCreator, resourceEditor, resourceDetail, resourceList, resourceAuthSchemeEditor
+  resourceCreator,
+  resourceEditor,
+  resourceDetail,
+  resourceList,
+  resourceAuthSchemeEditor
 }

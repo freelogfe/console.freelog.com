@@ -1,10 +1,9 @@
-import { cloneDeep, intersectionBy, unionBy, differenceBy } from 'lodash'
-import ResourceLoader from '@/data/resource/loader'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import { beautify } from '@freelog/resource-policy-lang'
+import { SCHEME_STATUS } from '@/config/scheme'
 import ResourceIntroInfo from '../intro/index.vue'
 import SchemeDetail from '../detail/auth-scheme/index.vue'
-import { SCHEME_STATUS } from '@/config/scheme'
 import SchemeOpts from './scheme-opts/index.vue'
 
 export default {
@@ -75,7 +74,7 @@ export default {
           activeIndex: 0
         })
 
-        ResourceLoader.onloadResourceDetail(resourceId)
+        onloadResourceDetail(resourceId)
           .then((detail) => {
             Object.assign(nodeResource, detail)
           })
@@ -105,7 +104,7 @@ export default {
       const nextNode = this.initResourceNode(resource, index)
       this.insertNode(nextNode)
     },
-    showDepResourceHandler({ resource, node }) {
+    showDepResourceHandler({ resource }) {
       const nextNode = this.initResourceNode(resource, 0)
       this.insertNode(nextNode)
     },
@@ -119,7 +118,7 @@ export default {
     },
     popNodes(index) {
       const diff = this.nodes.length - index
-      for (let i = 0; i < diff; i++) {
+      for (let i = 0; i < diff; i += 1) {
         this.nodes.pop()
       }
     },
@@ -137,9 +136,6 @@ export default {
     },
     changeSchemeHandler(node) {
       this.popNodes(node.index + 1)
-    },
-    changeTargetSchemeHandler(node) {
-      this.nodes = []
     },
     resolveResourceHandler({ resource, isResolved, index }) {
       const res = this.resourcesMap[resource.resourceId]

@@ -6,8 +6,6 @@ export default {
       breadcrumbs: []
     }
   },
-  created() {
-  },
   watch: {
     $route: 'breadcrumbHandler'
   },

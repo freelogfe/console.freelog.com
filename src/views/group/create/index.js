@@ -1,4 +1,4 @@
-import { GROUP_TYPES, USER_GROUP_TYPE, NODE_GROUP_TYPE } from '../../../config/group'
+import { GROUP_TYPES } from '../../../config/group'
 import GroupMemberSelector from '../member-selector/index.vue'
 
 const validateMembers = (rule, value, callback) => {
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     goBackHandler() {
-      history.back()
+      window.history.back()
     },
     changeGroupType() {
       this.detail.members = []
@@ -58,8 +58,6 @@ export default {
               }
             })
             .catch(this.$error.showErrorMessage)
-        } else {
-          return false
         }
       })
     }

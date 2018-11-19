@@ -11,6 +11,7 @@
         <ul class="scheme-tabs-header" v-if="schemes.length> 1">
           <li class="scheme-tab" @click="switchSchemeHandler(scheme, index)"
               :class="{'is-active': resource.activeIndex === index, selected: scheme.authSchemeId===selectedAuthSchemeId}"
+              :key="index"
               v-for="(scheme, index) in schemes"><i class="dot"></i>{{String.fromCharCode(65+index)}}
           </li>
         </ul>
@@ -20,7 +21,9 @@
                v-if="resource.activeIndex === index">
             <p class="auth-scheme-name">{{scheme.authSchemeName}}</p>
             <ul class="scheme-list">
-              <li v-for="dep in scheme.bubbleResources" class="dep-item"
+              <li v-for="dep in scheme.bubbleResources"
+                  :key="dep.resourceId"
+                  class="dep-item"
                   :class="['active-status-'+dep.activeStatus]">
                 <div class="resource-name" :class="'js-res-'+dep._id"
                      @click="changeResourceHandler(dep, scheme, $event)">

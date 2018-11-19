@@ -7,9 +7,9 @@
 <script>
 export default {
   name: 'fl-container',
-  data(){
+  data() {
     return {
-      key:`view-${this.$route.path}`
+      key: `view-${this.$route.path}`
     }
   },
   // computed: {
@@ -30,7 +30,11 @@ export default {
         toPath = toPath.replace(match, params[key])
       }
     })
-    matched ? next({ path: toPath }) : next()
+    if (matched) {
+      next({ path: toPath })
+    } else {
+      next()
+    }
   }
 }
 </script>

@@ -6,11 +6,11 @@
 
 import axios from 'axios'
 import store from '@/store'
-import {gotoLogin} from "./utils";
+import { gotoLogin } from './utils'
 
 const instance = axios.create({
-  baseURL: window.location.origin.replace('console','qi'),
-  timeout: 1e4, //10s
+  baseURL: window.location.origin.replace('console', 'qi'),
+  timeout: 1e4, // 10s
   withCredentials: true,
   headers: {
     // 'X-Requested-With': 'XMLHttpRequest'
@@ -35,9 +35,9 @@ instance.interceptors.response.use(
     const data = response.data
 
     if ([28, 30].indexOf(data.errcode) > -1) {
-      //清除已过期cookie
-      store.dispatch('userLogout').then(()=>{
-        gotoLogin(location.href)
+      // 清除已过期cookie
+      store.dispatch('userLogout').then(() => {
+        gotoLogin(window.location.href)
       })
       // replace执行存在延迟
       return new Promise((resolve) => {
@@ -47,7 +47,7 @@ instance.interceptors.response.use(
       })
     } else if (response.status === 200 && (!data.ret || data.ret === 0)) {
       response.getData = () => {
-        if (data.hasOwnProperty('errcode') && data.errcode !== 0) {
+        if (('errcode' in data) && data.errcode !== 0) {
           throw new Error(data)
         }
         return data.data || data
@@ -69,7 +69,7 @@ instance.interceptors.response.use(
     }
 
     response.errorMsg = errorMsg
-    return Promise.reject({ response })
+    return Promise.reject({ response }) //eslint-disable-line
   },
   (err) => {
     err.response = err.response || {}

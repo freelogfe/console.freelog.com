@@ -27,7 +27,9 @@
     </div>
     <div class="auth-scheme-wrap" v-show="viewMode==='tree'">
       <scheme-opts :node="node"
-                   class="auth-scheme-list-wrap" :key="node.resource.resourceId" v-for="(node,panelIndex) in nodes"
+                   class="auth-scheme-list-wrap"
+                   :key="node.resource.resourceId"
+                   v-for="(node) in nodes"
                    @changeScheme="changeSchemeHandler"
                    @resolve="resolveResourceHandler"
                    @next="showNextResourceHandler"

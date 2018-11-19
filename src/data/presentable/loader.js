@@ -1,5 +1,5 @@
 import { PresentablesService } from '@/services'
-import { createLoader, createCacheLoaders } from '@/lib/utils'
+// import { createLoader, createCacheLoaders } from '@/lib/utils'
 
 
 function loadDetail(pid) {

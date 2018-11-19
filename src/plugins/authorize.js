@@ -1,15 +1,17 @@
 import store from '../store'
 import router from '../router'
-import {gotoLogin} from '../lib/utils'
-export default (Vue) => {
+import { gotoLogin } from '../lib/utils'
+
+export default () => {
   router.beforeHooks.unshift((to, from, next) => {
     if (!to.meta.requiresAuth) {
-      return next()
+      next()
+    } else {
+      store.dispatch('checkToken')
+        .then((valid) => {
+          if (valid) next()
+          else gotoLogin(window.location.href)
+        })
     }
-    store.dispatch('checkToken')
-      .then((valid) => {
-        if (valid) return next()
-        gotoLogin(location.href)
-      })
   })
 }

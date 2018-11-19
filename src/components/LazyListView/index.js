@@ -14,7 +14,7 @@ export default {
       type: Number,
       default: 44
     },
-    itemClass:{
+    itemClass: {
       type: String,
       default: ''
     },
@@ -52,15 +52,13 @@ export default {
       self.$refs.loading.classList.remove('hide')
       self.observer = new IntersectionObserver(((entries) => {
         entries.forEach((entry) => {
-          if (entry.intersectionRatio <= 0) {
-
-          } else if (self.canLoadMore !== false) {
-            self.load().then(()=>{
+          console.log(entry, self.canLoadMore)
+          if ((entry.intersectionRatio > 0) && self.canLoadMore !== false) {
+            self.load().then(() => {
               if (entry.isIntersecting && self.canLoadMore) {
                 return self.load()
-              } else {
-                self.$refs.loading.classList.add('hide')
               }
+              
             }).catch(() => {
               self.observer.unobserve(self.$refs.loading)
               self.$refs.loading.classList.add('hide')
@@ -75,7 +73,9 @@ export default {
     },
     load() {
       const self = this
-      return self.fetch(self.index++).then((data) => {
+      const index = self.index
+      self.index += 1
+      return self.fetch(index).then((data) => {
         self.canLoadMore = data.canLoadMore
         self.scrollHandler(data.dataList || [])
         if (self.canLoadMore === false) {

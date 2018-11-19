@@ -120,7 +120,7 @@ export default {
         title: '节点详情'
       },
       component: Views.nodeDetail,
-      redirect: function (to) {
+      redirect(to) {
         return `${to.path}/presentables`
       },
       children: [{

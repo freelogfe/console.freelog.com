@@ -1,10 +1,9 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceInputs from '../input/index.vue'
-
-import ResourceLoader from '@/data/resource/loader'
 
 export default {
   name: 'resource-detail-edit',
@@ -19,8 +18,8 @@ export default {
       session: 'session'
     }),
     actionUrl() {
-      const origin = location.origin.replace('console', 'qi')
-      return origin + '/v1/resources/updateResourceContext/' + this.resourceDetail.resourceId
+      const origin = window.location.origin.replace('console', 'qi')
+      return `${origin}/v1/resources/updateResourceContext/${this.resourceDetail.resourceId}`
     }
   },
   components: {
@@ -29,12 +28,13 @@ export default {
   mounted() {
     const params = this.$route.params
     if (params.resourceId) {
-      ResourceLoader.loadDetail(params.resourceId)
+      onloadResourceDetail(params.resourceId)
         .then((data) => {
           if (data.userId !== this.session.user.userId) {
-            return this.$router.push('/')
+            this.$router.push('/')
+          } else {
+            this.resourceDetail = data
           }
-          this.resourceDetail = data
         }).catch(this.$error.showErrorMessage)
     }
   },
@@ -46,23 +46,24 @@ export default {
             Object.assign(this.resourceDetail, detail)
           }
           callback(detail)
-        }).catch((err)=>{
-          this.$nextTick(()=>{
-            var $error = this.$el.querySelector('.el-form-item__error')
+        }).catch((err) => {
+          this.$nextTick(() => {
+            const $error = this.$el.querySelector('.el-form-item__error')
             if ($error) {
               $error.parentElement.scrollIntoView()
-              window.scrollBy(0, -80) //填补fixed占位的高度
+              window.scrollBy(0, -80) // 填补fixed占位的高度
             } else {
               this.$error.showErrorMessage(err)
             }
           })
         })
       } else {
-        callback(detail)
+        callback()
       }
     },
     updateResourceHandler() {
-      this.executeNext((detail) => {
+      // detail
+      this.executeNext(() => {
         this.$message.success('更新成功')
       })
     },

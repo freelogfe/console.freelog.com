@@ -18,10 +18,13 @@
         </el-radio-group>
       </div>
       <div class="tabs-content">
-        <div class="tab-panel" v-for="(scheme, index) in schemes" v-show="curChoice===index">
+        <div class="tab-panel"
+             v-for="(scheme, index) in schemes"
+             :key="scheme.authSchemeId"
+             v-show="curChoice===index">
           <p class="scheme-name">{{scheme.authSchemeName}}</p>
           <ul class="dep-resources">
-            <li v-for="dep in scheme.dependencies" class="dep-item">
+            <li v-for="dep in scheme.dependencies" :key="dep.resourceId" class="dep-item">
               <div class="resource-name">
                 <p>
                   <i class="dot" :class="{done: dep.done}"></i>
@@ -35,7 +38,9 @@
             <h3 style="margin-bottom: 15px;color: #333333;">授权策略</h3>
             <div class="policy-content">
               <el-collapse>
-                <el-collapse-item :title="policy.policyName" :name="index" :key="index"
+                <el-collapse-item :title="policy.policyName"
+                                  :name="index"
+                                  :key="index"
                                   v-for="(policy, index) in scheme.policy">
                   <pre class="policy-segment-text">{{policy._fmtPolicyText}}</pre>
                 </el-collapse-item>

@@ -9,14 +9,16 @@
       </p>
     </div>
     <ul class="res-policies-list" v-if="schemes.length">
-      <li class="res-p-item" :class="resSchemeStatusCls(scheme)" v-for="scheme in schemes">
+      <li class="res-p-item" :class="resSchemeStatusCls(scheme)"
+          :key="scheme.authSchemeId"
+          v-for="scheme in schemes">
         {{scheme.authSchemeName[0]}}
         <div class="res-scheme-info-wrap">
           <h4>{{scheme.authSchemeName}}</h4>
           <div class="res-scheme-item">
             <p>授权对象：</p>
             <ul class="res-scheme-item res-scheme-auth-targets">
-              <li v-for="user in scheme.targets">{{user}}</li>
+              <li v-for="(user,index) in scheme.targets" :key="index">{{user}}</li>
             </ul>
           </div>
           <div class="res-scheme-item">
@@ -30,90 +32,90 @@
 </template>
 
 <script>
-  import {onloadUserInfo} from '@/data/user/loader'
-  import {onloadSchemesForResource} from '@/data/scheme/loader'
-  import {RESOURCE_STATUS} from '@/config/resource'
+import { onloadUserInfo } from '@/data/user/loader'
+import { onloadSchemesForResource } from '@/data/scheme/loader'
+import { RESOURCE_STATUS } from '@/config/resource'
 
-  export default {
-    name: 'main-list-resource-item',
+export default {
+  name: 'main-list-resource-item',
 
-    data() {
-      return {
-        schemes: []
+  data() {
+    return {
+      schemes: []
+    }
+  },
+  props: {
+    resource: {
+      type: Object,
+      default() {
+        return {}
       }
     },
-    props: {
-      resource: {
-        type: Object,
-        default() {
-          return {}
-        }
-      },
-      type: {
-        type: String,
-        default: 'list'
+    type: {
+      type: String,
+      default: 'list'
+    }
+  },
+
+  computed: {
+    postImgUrl() {
+      let src
+
+      if (this.resource.previewImages.length) {
+        src = this.resource.previewImages[0]
+      } else {
+        src = ''
       }
+
+      return src
+    }
+  },
+
+  mounted() {
+    this.format(this.resource)
+  },
+
+  methods: {
+    resSchemeStatusCls(scheme) {
+      return scheme.bubbleResources.length ? 'status-1' : 'status-0'
     },
-
-    computed: {
-      postImgUrl() {
-        var src
-
-        if (this.resource.previewImages.length) {
-          src = this.resource.previewImages[0]
-        } else {
-          src = ''
-        }
-
-        return src
+    format(resource) {
+      if (!this.resource.resourceId) {
+        return
       }
-    },
 
-    mounted() {
-      this.format(this.resource)
-    },
+      resource._statusInfo = RESOURCE_STATUS[resource.status]
+      onloadUserInfo(resource.userId).then((userInfo) => {
+        this.$set(resource, '_userInfo', userInfo)
+      })
 
-    methods: {
-      resSchemeStatusCls(scheme) {
-        return scheme.bubbleResources.length ? 'status-1' : 'status-0'
-      },
-      format(resource) {
-        if (!this.resource.resourceId) {
-          return
-        }
-
-        resource._statusInfo = RESOURCE_STATUS[resource.status]
-        onloadUserInfo(resource.userId).then((userInfo) => {
-          this.$set(resource, '_userInfo', userInfo)
+      if (!resource.schemes) {
+        onloadSchemesForResource(resource.resourceId).then((list) => {
+          this.schemes = list.map(this.resolveScheme)
         })
-
-        if (!resource.schemes) {
-          onloadSchemesForResource(resource.resourceId).then(list => {
-            this.schemes = list.map(this.resolveScheme)
-          })
-        } else {
-          this.schemes = resource.schemes.map(this.resolveScheme)
-        }
-      },
-      resolveScheme(scheme) {
-        var users = new Set()
-        scheme.policy.forEach(p => {
-          p.authorizedObjects.forEach(objs => {
-            objs.users.forEach(u => {
-              users.add(u)
-            })
+      } else {
+        this.schemes = resource.schemes.map(this.resolveScheme)
+      }
+    },
+    resolveScheme(scheme) {
+      const users = new Set()
+      scheme.policy.forEach((p) => {
+        p.authorizedObjects.forEach((objs) => {
+          objs.users.forEach((u) => {
+            users.add(u)
           })
         })
+      })
 
-        scheme.targets = Array.from(users)
-        scheme.isBubbled = scheme.bubbleResources.length > 0
-        return scheme
-      },
-      gotoDetail() {
-        this.$router.push(`/resource/detail/${this.resource.resourceId}`)
-      }
+      scheme.targets = Array.from(users)
+      scheme.isBubbled = scheme.bubbleResources.length > 0
+      return scheme
+    },
+    gotoDetail() {
+      this.$router.push(`/resource/detail/${this.resource.resourceId}`)
     }
   }
+}
 </script>
 
 
@@ -181,9 +183,9 @@
         margin-right: 6px;
         border: 1px solid;
         border-radius: 11px;
-        padding: 0 6px;
+        /*padding: 0 6px;*/
         text-align: center;
-
+        width: 22px;
         /*无上抛*/
         &.status-0 {
           border-color: @status0Color;

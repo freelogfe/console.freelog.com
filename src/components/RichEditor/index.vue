@@ -4,9 +4,6 @@
                        class="rich-text-editor"
                        ref="richEditor"
                        :options="editorOption"
-                       @blur="onEditorBlur($event)"
-                       @focus="onEditorFocus($event)"
-                       @ready="onEditorReady($event)"
                        @change="onEditorChange($event)">
     </quill-rich-editor>
 
@@ -33,7 +30,7 @@
 </template>
 
 <script>
-import RichEditor from './index.js'
+import RichEditor from './index'
 
 export default RichEditor
 </script>

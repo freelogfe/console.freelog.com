@@ -12,7 +12,9 @@
     <div class="auth-dep-list-wrap" v-show="viewMode==='list'">
       <h4 class="policy-input-title"><i class="el-icon-question"></i>待签约列表</h4>
       <el-collapse accordion>
-        <el-collapse-item :name="duty.resourceId" v-for="duty in unsignPolicyList" :key="duty.authSchemeId"
+        <el-collapse-item :name="duty.resourceId"
+                          v-for="duty in unsignPolicyList"
+                          :key="duty.authSchemeId"
                           class="duty-resource">
           <template slot="title">
             <h4>{{duty.resourceName || (duty.resourceInfo && duty.resourceInfo.resourceName)}}</h4>
@@ -36,19 +38,24 @@
           <h4 class="res-auth-schemes-title">授权方案</h4>
           <div class="res-auth-schemes">
             <ul class="scheme-tabs-header" v-if="resource.schemes.length> 1">
-              <li class="scheme-tab" @click="switchSchemeHandler(resource, scheme, index, panelIndex)"
+              <li class="scheme-tab"
+                  @click="switchSchemeHandler(resource, scheme, index, panelIndex)"
                   :class="{'is-active': resource.activeIndex === index, selected: resource.selectedScheme && resource.selectedScheme.authSchemeId === scheme.authSchemeId}"
+                  :key="scheme.authSchemeId"
                   v-for="(scheme, index) in resource.schemes"><i class="dot"></i>{{String.fromCharCode(65+index)}}
               </li>
             </ul>
 
             <div class="scheme-detail-panels">
-              <div class="scheme-detail-panel" :key="scheme.authSchemeId" v-for="(scheme, index) in resource.schemes"
+              <div class="scheme-detail-panel"
+                   :key="scheme.authSchemeId"
+                   v-for="(scheme, index) in resource.schemes"
                    v-show="resource.activeIndex === index">
                 <p class="auth-scheme-name">{{scheme.authSchemeName}}</p>
                 <ul class="scheme-list">
                   <li v-for="dep in scheme.dependencies" class="dep-item"
                       :class="['active-status-'+dep.activeStatus]"
+                      :key="dep.resourceId"
                       @click="selectResourceHandler(dep, scheme, panelIndex, $event)">
                     <div class="resource-name" :class="'js-res-'+dep.resourceId">
                       <p><i class="dot"></i>{{dep.resourceName || (dep.resourceInfo&&dep.resourceInfo.resourceName) ||dep.resourceId}}</p>

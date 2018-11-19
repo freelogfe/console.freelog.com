@@ -1,11 +1,11 @@
-import SchemeLoader from '@/data/scheme/loader'
+import { onloadSchemesForResource } from '@/data/scheme/loader'
 import { beautify } from '@freelog/resource-policy-lang'
 import { SCHEME_PUBLISH_STATUS } from '@/config/scheme'
 
 function generateAlpha(num) {
   num = num || 26
   const alphas = []
-  for (let i = 0; i < num; i++) {
+  for (let i = 0; i < num; i += 1) {
     alphas.push(String.fromCharCode(65 + i))
   }
 
@@ -24,7 +24,7 @@ const ContractStates = [{
 }, {
   status: 3,
   desc: '发布'
-},]
+}]
 
 export default {
   name: 'auth-scheme-detail',
@@ -39,7 +39,7 @@ export default {
       currentScheme: {}
     }
   },
-  components: {  },
+  components: { },
   props: {
     selectedCallback: {
       type: Function
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     init() {
-      SchemeLoader.onloadSchemesForResource(this.resource.resourceId)
+      onloadSchemesForResource(this.resource.resourceId)
         .then((data) => {
           if (data.length) {
             this.schemes = this.formatSchemes(data)
@@ -69,7 +69,9 @@ export default {
         }).catch(this.$error.showErrorMessage)
     },
     changePolicy(scheme, policy) {
-      this.selectedCallback && this.selectedCallback(scheme, policy)
+      if (typeof this.selectedCallback === 'function') {
+        this.selectedCallback(scheme, policy)
+      }
     },
     formatSchemes(schemes) {
       schemes = schemes.filter((scheme, i) => {
@@ -114,7 +116,7 @@ export default {
     },
     updateContractHandler(contract) {
       const contracts = this.currentScheme.dutyStatements
-      for (let i = 0; i < contracts.length; i++) {
+      for (let i = 0; i < contracts.length; i += 1) {
         if (contracts[i].contractId === contract.contractId) {
           Object.assign(contracts[i], contract)
           break

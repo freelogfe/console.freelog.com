@@ -12,7 +12,7 @@ export default (Vue) => {
     next()
   })
 
-  router.afterEach((route) => {
+  router.afterEach(() => {
     nprogress.done()
   })
 

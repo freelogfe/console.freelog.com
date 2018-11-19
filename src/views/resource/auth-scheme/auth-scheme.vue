@@ -7,6 +7,7 @@
           <li v-for="(dep, index) in detail.scheme.dependencies"
               @click="changeResourceScheme(dep, index, $event)"
               class="dep-item"
+              :key="index"
               :class="['active-status-'+dep.activeStatus]">
             <div class="resource-name" :class="{active:dep.active}">
               <p>
@@ -56,11 +57,11 @@
 
 <script>
 
-import ResourceSchemeTree from '../scheme-tree/index.vue'
 import { intersectionBy, unionBy, differenceBy } from 'lodash'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import { SCHEME_STATUS } from '@/config/scheme'
 import SearchResource from '../search/index.vue'
+import ResourceSchemeTree from '../scheme-tree/index.vue'
 
 export default {
   name: 'resource-auth-scheme',

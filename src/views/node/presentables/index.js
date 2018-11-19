@@ -1,6 +1,6 @@
 import CONFIG from '@/config/index'
-import PresentableDetail from '../presentable/detail/index.vue'
 import FreelogSwitch from '@/components/Switch/index.vue'
+import PresentableDetail from '../presentable/detail/index.vue'
 import SearchResource from '../../resource/search/index.vue'
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
@@ -35,7 +35,7 @@ export default {
           index: -1,
           detail: {}
         })
-        this.loadPresentables({nodeId, isOnline: 2})
+        this.loadPresentables({ nodeId, isOnline: 2 })
           .then(this.formatHandler.bind(this))
           .then((list) => {
             this.presentableList = list
@@ -59,14 +59,13 @@ export default {
       item.isReady = (item.status & 7) === 7
     },
     loadPresentables(param) {
-      return this.$services.presentables.get({params: param}).then(res => res.getData()).catch(this.$error.showErrorMessage)
+      return this.$services.presentables.get({ params: param }).then(res => res.getData()).catch(this.$error.showErrorMessage)
     },
     changePresentableHandler(presentable, index) {
       this.currentPresentable.index = index
       this.currentPresentable.detail = presentable
     },
     changePresentableOnlineHandler(presentable) {
-
       if (presentable.isOnlineChecked) {
         presentable.isOnline = 1
       } else {

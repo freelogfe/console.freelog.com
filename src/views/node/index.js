@@ -8,7 +8,7 @@ const contractList = resolve => require.ensure([], () => resolve(require('./cont
 const nodePreview = resolve => require.ensure([], () => resolve(require('./preview/index.vue')), 'node')
 
 
-const nodePagebuilds =  resolve => require.ensure([], () => resolve(require('./page-build/list/index.vue')), 'page-build')
+const nodePagebuilds = resolve => require.ensure([], () => resolve(require('./page-build/list/index.vue')), 'page-build')
 
 export default {
   nodeCreator,

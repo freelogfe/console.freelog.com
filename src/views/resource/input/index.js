@@ -1,7 +1,7 @@
-import ResourceMetaInfo from '../meta/index.vue'
 import { storage } from '@/lib'
 import { RESOURCE_TYPES } from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
+import ResourceMetaInfo from '../meta/index.vue'
 
 const EDIT_MODES = {
   creator: 'creator',
@@ -39,7 +39,7 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{ required: true, message: '请输入资源名称', trigger: 'blur' },],
+        resourceName: [{ required: true, message: '请输入资源名称', trigger: 'blur' }],
         widgetName: [
           { validator: validateWidgetName, trigger: 'blur' }
         ],
@@ -96,9 +96,8 @@ export default {
   },
 
   computed: {
-
     apiHostName() {
-      var arr = location.hostname.split('.')
+      const arr = window.location.hostname.split('.')
       arr.shift()
       arr.unshift('qi')
       return arr.join('.')
@@ -126,6 +125,7 @@ export default {
         this.editMode = EDIT_MODES.editor
         Object.assign(this.formData, this.data)
         this.formData.widgetName = this.data.systemMeta.widgetName || ''
+
         if (this.data.previewImages.length) {
           this.formData.previewImage = this.data.previewImages[0]
         }
@@ -206,9 +206,7 @@ export default {
       }
     },
     fileChangeHandler(file, fileList) {
-      if (this.fileLimitValidator(file, fileList)) {
-
-      }
+      this.fileLimitValidator(file, fileList)
     },
     imageUploadSuccessHandler(res) {
       this.uploaderStates.thumbnail.isUploading = false
@@ -278,33 +276,32 @@ export default {
         const reourceUploader = this.uploaderStates.resource
         this.$refs.createForm.validate((valid, err) => {
           if (valid) {
+            let errMsg
             if (this.editMode === EDIT_MODES.creator) {
-              let errMsg
               if (!reourceUploader.sha1) {
                 errMsg = '未上传资源文件'
               } else if (!reourceUploader.isUploaded) {
                 errMsg = '资源文件正在上传中，等上传完再点击创建'
               }
+            }
 
-              if (errMsg) {
-                return reject(errMsg)
+            if (errMsg) {
+              reject(errMsg)
+            } else {
+              try {
+                JSON.parse(this.meta)
+                resolve()
+              } catch (error) {
+                console.error(error)
+                reject(new Error(`meta格式有误: ${error}`))
               }
             }
-
-            try {
-              JSON.parse(this.meta)
-            } catch (err) {
-              console.error(err)
-              return reject(`meta格式有误: ${err}`)
-            }
-
-            resolve()
           } else {
             const msg = Object.keys(err).map((key) => {
               const item = err[key]
               return item.message
             })
-            reject(msg.join('，'))
+            reject(new Error(msg.join('，')))
           }
         })
       })
@@ -340,9 +337,11 @@ export default {
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
-        formData.previewImage && (uploadData.previewImage = formData.previewImage)
-      } else {
-        formData.previewImage && (uploadData.previewImages = [formData.previewImage])
+        if (formData.previewImage) {
+          uploadData.previewImage = formData.previewImage
+        }
+      } else if (formData.previewImage) {
+        uploadData.previewImages = [formData.previewImage]
       }
 
       uploadData.meta = metaData
@@ -352,7 +351,7 @@ export default {
         if (formData[key]) {
           uploadData[key] = formData[key]
         }
-      });
+      })
       return uploadData
     },
     isChanged() {
@@ -380,13 +379,13 @@ export default {
         if ($uploader.uploadFiles.length > 0) {
           this.$services.resource.post(data).then((res) => {
             if (res.data.ret !== 0 || res.data.errcode !== 0) {
-              reject(res.data.msg)
+              reject(new Error(res.data.msg))
             } else {
               resolve(res.data.data)
             }
           })
         } else {
-          reject('无上传文件')
+          reject(new Error('无上传文件'))
         }
       })
     },
@@ -398,7 +397,7 @@ export default {
         return res.getData()
       })
     },
-    uploadProgressHandler(event, file, fileList) {
+    uploadProgressHandler(event, file) {
       const uploaderStates = this.uploaderStates
       let uploader
       if (uploaderStates.resource.name === file.name) {
@@ -408,7 +407,7 @@ export default {
       }
 
       if (uploader) {
-        uploader.percentage = parseInt(file.percentage.toFixed())
+        uploader.percentage = parseInt(file.percentage.toFixed(), 10)
       }
     }
   }

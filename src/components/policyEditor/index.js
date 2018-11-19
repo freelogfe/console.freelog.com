@@ -42,13 +42,13 @@ export default {
   components: { PolicyTemplateSelector, QueryPolicyLicense },
   watch: {
     policyList: {
-      handler(val, oldVal) {
+      handler() {
         this.$emit('change', this.policyList)
       },
       deep: true
     },
     'value.policy': {
-      handler(val, oldVal) {
+      handler() {
         this.fillPolicyList(this.value)
       },
       deep: true
@@ -117,7 +117,10 @@ export default {
 
       if (data && data.name) {
         const name = `${data.name}Callback`
-        this[name] && this[name](data.data)
+        if (typeof this[name] === 'function') {
+          this[name](data.data)
+        }
+
         this.$emit('input', this.policyText)
       }
     },
@@ -134,6 +137,7 @@ export default {
     },
     changePolicyText(policy) {
       // to validate
+      console.log(policy)
     },
     focusInputHandler(ev, index) {
       this.editingIndex = index

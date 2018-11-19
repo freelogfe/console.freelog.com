@@ -1,4 +1,4 @@
-import { highlight, compile, beautify } from '@freelog/resource-policy-lang'
+import { compile, beautify } from '@freelog/resource-policy-lang'
 
 
 import rules from '../rules'
@@ -25,10 +25,10 @@ export default {
     createPolicyTpl(data) {
       return this.$services.policyTemplate.post(data)
         .then((res) => {
-          const data = res.data
-          if (data.errcode === 0) {
+          const resData = res.data
+          if (resData.errcode === 0) {
             this.$message.success('创建成功')
-            this.$router.push({ path: `/${this.type}/policy_tpl/detail`, query: { id: data.data.id } })
+            this.$router.push({ path: `/${this.type}/policy_tpl/detail`, query: { id: resData.data.id } })
           } else {
             this.$error.showErrorMessage(res)
           }

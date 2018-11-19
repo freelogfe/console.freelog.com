@@ -22,7 +22,7 @@ export default {
   mounted() {
   },
   computed: {
-    checked(){
+    checked() {
       return this.value
     }
   },

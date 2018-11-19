@@ -13,6 +13,7 @@ module.exports = {
     '@': { path: path.resolve('./src') }
   },
   rules: {
+    'global-require': 'off',
     'no-use-before-define': ['error', { functions: false, classes: true }],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

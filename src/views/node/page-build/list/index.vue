@@ -2,7 +2,9 @@
   <section class="pb-list-container">
     <header class="nav-title">节点样式</header>
     <ul class="pb-list">
-      <li class="pb-item" v-for="item in pagebuildList" :class="{selected: item.index === currentIndex}">
+      <li class="pb-item" v-for="item in pagebuildList"
+          :key="item.index"
+          :class="{selected: item.index === currentIndex}">
         <div class="pb-item-wrap">
           <div class="pb-thumbnail-wrap" @click="changePageBuildHandler(item)">
             <img class="resource-default-preview" :src="item.resourceDetail._previewImage" alt="">

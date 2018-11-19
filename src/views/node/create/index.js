@@ -1,6 +1,6 @@
 const validateNodeDomain = (rule, value, callback) => {
   if (value) {
-    const DOMAIN_REG = /^[a-zA-Z\d\-]+$/
+    const DOMAIN_REG = /^[a-zA-Z\d-]+$/
     if (value.length < 4 || value.length > 20) {
       callback(new Error('节点域名前缀长度应为4-20字符'))
     } else if (!DOMAIN_REG.test(value)) {
@@ -35,14 +35,14 @@ export default {
   },
   computed: {
     domainPostfix() {
-      return /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com'
+      return /\.test/.test(window.location.host) ? '.testfreelog.com' : '.freelog.com'
     }
   },
   mounted() {
   },
   methods: {
     goBackHandler() {
-      history.back()
+      window.history.back()
     },
     createNode() {
       const self = this
@@ -77,10 +77,9 @@ export default {
           this.comfirm()
             .then(() => {
               this.createNode()
-            }).catch(() => {
             })
-        } else {
-          return false
+            .catch(() => {
+            })
         }
       })
     }

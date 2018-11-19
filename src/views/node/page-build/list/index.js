@@ -1,4 +1,4 @@
-import ResourceDataLoader from '@/data/resource/loader'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import SearchResource from '../../../resource/search/index.vue'
 
 
@@ -23,7 +23,7 @@ export default {
     console.log('initview')
   },
   methods: {
-    initView(){
+    initView() {
       this.loader()
         .then(this.format.bind(this))
         .then((data) => {
@@ -40,14 +40,14 @@ export default {
         const presentables = res.getData()
         const promises = []
         presentables.forEach((p) => {
-          const promise = ResourceDataLoader.onloadResourceDetail(p.resourceId).then((resourceDetail) => {
+          const promise = onloadResourceDetail(p.resourceId).then((resourceDetail) => {
             p.resourceDetail = resourceDetail
             return resourceDetail
           })
           promises.push(promise)
         })
 
-        return Promise.all(promises).then(resources => presentables)
+        return Promise.all(promises).then(() => presentables)
       })
     },
     format(pagebuildList) {
@@ -95,7 +95,7 @@ export default {
       }
 
       const param = {
-        nodeId: parseInt(this.$route.params.nodeId),
+        nodeId: parseInt(this.$route.params.nodeId, 10),
         status
       }
       return this.changePageBuildShowStatus(presentable, param)

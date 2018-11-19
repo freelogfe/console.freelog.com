@@ -1,11 +1,5 @@
 import { manageMembers } from '@/services/groups'
-import { USER_GROUP_TYPE, NODE_GROUP_TYPE } from '../../../config/group'
 import GroupMemberSelector from '../member-selector/index.vue'
-
-
-function diff(a, b) {
-  return a.filter(v => b.indexOf(v) < 0)
-}
 
 export default {
   name: 'group-detail',

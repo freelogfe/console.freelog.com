@@ -1,6 +1,6 @@
-import ResourceItem from '../list-item/index'
-import ResourceList from '../list/list.vue'
 import LazyListView from '@/components/LazyListView/index.vue'
+import ResourceItem from '../list-item/index.vue'
+import ResourceList from '../list/list.vue'
 
 export default {
   name: 'search-resource',
@@ -73,14 +73,14 @@ export default {
         return data
       })
     },
-    searchDataHandler(page) {
+    searchDataHandler() {
       const pageSize = 10
 
       if (!this.searchInput) {
         return Promise.resolve({ canLoadMore: false })
       }
 
-      return this.$services.g_Resources.get({
+      return this.$services.allResources.get({
         params: Object.assign({
           keyWords: encodeURIComponent(this.searchInput)
         }, this.searchScope)

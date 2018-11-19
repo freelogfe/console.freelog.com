@@ -1,11 +1,6 @@
 import { mapGetters } from 'vuex'
-
-import NavMenu from '../NavMenu/index.vue'
 import resourceRoute from '@/router/resource'
-import { nodeItemRoute } from '@/router/node'
-// import resourceMarket from '@/router/resource-market'
-
-import node from '../../../router/node'
+import NavMenu from '../NavMenu/index.vue'
 
 function cloneArray(arr) {
   return arr.map((item) => {
@@ -84,7 +79,7 @@ export default {
     checkActiveNav(navList) {
       const curPath = this.$route.path
       navList.forEach((nav) => {
-        nav.isActive = (curPath === nav.path) || (curPath == nav.redirect)
+        nav.isActive = (curPath === nav.path) || (curPath === nav.redirect)
       })
     }
   },

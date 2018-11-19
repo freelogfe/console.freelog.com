@@ -23,8 +23,8 @@
 
 <script>
 import PolicyTplList from '@/components/policyTplSelector/index.vue'
-import defaultPolicyTpls from '../defaultPolicyTpls'
 import { storage } from '@/lib'
+import { presentable, resource } from '../defaultPolicyTpls'
 
 export default {
   name: 'policy-template-selector',
@@ -33,7 +33,7 @@ export default {
       currentTabName: storage.get('POLICY_TPL_ACTIVE_TAB_NAME') || 'official',
       policyTpls: [],
       queryPolicyTpl: '',
-      defaultPolicyTpls: (this.$route.meta.type === 'node') ? defaultPolicyTpls.presentable : defaultPolicyTpls.resource
+      defaultPolicyTpls: (this.$route.meta.type === 'node') ? presentable : resource
     }
   },
 
@@ -68,12 +68,14 @@ export default {
       })
     },
     selectPolicyTplHandler(data) {
-      this.callback && this.callback({
-        name: 'selectPolicyTemplate',
-        data: {
-          template: data.template
-        }
-      })
+      if (typeof this.callback === 'function') {
+        this.callback({
+          name: 'selectPolicyTemplate',
+          data: {
+            template: data.template
+          }
+        })
+      }
     },
     filterHandler(list) {
       return list.filter(tpl => (this.queryPolicyTpl ? tpl.name.indexOf(this.queryPolicyTpl) > -1 : true))

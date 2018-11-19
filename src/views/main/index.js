@@ -1,6 +1,6 @@
-import ListItem from './resource.vue'
 import LazyListView from '@/components/LazyListView/index.vue'
-import {loadAuthSchemes} from '@/data/scheme/loader'
+import { loadAuthSchemes } from '@/data/scheme/loader'
+import ListItem from './resource.vue'
 
 export default {
   name: 'index-main-view',
@@ -54,17 +54,17 @@ export default {
         query.keyWords = this.query
       }
       return this.loader(query).then((data) => {
-        var resources = data.dataList
+        const resources = data.dataList
         if (resources && resources.length) {
           data.canLoadMore = !(resources.length < data.pageSize)
-          var resourcesMap = {}
-          var rids = resources.map(r => {
+          const resourcesMap = {}
+          const rids = resources.map((r) => {
             resourcesMap[r.resourceId] = r
             return r.resourceId
           })
 
-          return loadAuthSchemes({resourceIds: rids}).then(schemes => {
-            schemes.forEach(scheme => {
+          return loadAuthSchemes({ resourceIds: rids }).then((schemes) => {
+            schemes.forEach((scheme) => {
               const rid = scheme.resourceId
               resourcesMap[rid].schemes = resourcesMap[rid].schemes || []
               resourcesMap[rid].schemes.push(scheme)
@@ -86,7 +86,7 @@ export default {
           params: param
         }
       }
-      return this.$services.g_Resources.get(param || {}).then(res => res.getData())
+      return this.$services.allResources.get(param || {}).then(res => res.getData())
     }
   }
 }

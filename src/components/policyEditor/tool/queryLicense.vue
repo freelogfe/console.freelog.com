@@ -55,12 +55,14 @@ export default {
         return
       }
       this.$message.success('已复制')
-      this.callback && this.callback({
-        name: 'selectLicenseId',
-        data: {
-          licenseId: this.selectedLicenseId
-        }
-      })
+      if (typeof this.callback === 'function') {
+        this.callback({
+          name: 'selectLicenseId',
+          data: {
+            licenseId: this.selectedLicenseId
+          }
+        })
+      }
     },
     loadAll() {
       this.$axios.get('/v1/resources/warehouse?resourceType=license').then((res) => {

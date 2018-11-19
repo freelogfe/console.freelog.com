@@ -1,6 +1,6 @@
 import { mapGetters } from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
-import {gotoLogin} from "../../../lib/utils";
+import { gotoLogin } from '../../../lib/utils'
 
 export default {
   name: 'fl-header',
@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       isSideBarOpen: true,
-      domainPostfix: /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com',
+      domainPostfix: /\.test/.test(window.location.host) ? '.testfreelog.com' : '.freelog.com',
       avatarUrl: ''
     }
   },
@@ -32,7 +32,7 @@ export default {
   },
   mounted() {
     if (!this.session.user.userId) {
-      this.$store.dispatch('getCurrentUser').then((userInfo) => {
+      this.$store.dispatch('getCurrentUser').then(() => {
         this.initData()
       })
     } else {
@@ -41,7 +41,7 @@ export default {
   },
 
   methods: {
-    initData(){
+    initData() {
       this.$store.dispatch('loadNodes')
       if (this.session.user.headImage) {
         this.avatarUrl = `${this.session.user.headImage}?x-oss-process=style/head-image`
@@ -52,9 +52,22 @@ export default {
       let hidden = 'hidden'
       const doc = document
 
-      if (hidden in doc) { doc.addEventListener('visibilitychange', onchange) } else if ((hidden = 'mozHidden') in doc) { doc.addEventListener('mozvisibilitychange', onchange) } else if ((hidden = 'webkitHidden') in doc) { doc.addEventListener('webkitvisibilitychange', onchange) } else if ((hidden = 'msHidden') in doc) { doc.addEventListener('msvisibilitychange', onchange) } else {
-        window.onpageshow = window.onpagehide
-          = window.onfocus = window.onblur = onchange
+      if (hidden in doc) {
+        doc.addEventListener('visibilitychange', onchange)
+      } else if ('mozHidden' in doc) {
+        hidden = 'mozHidden'
+        doc.addEventListener('mozvisibilitychange', onchange)
+      } else if ('webkitHidden' in doc) {
+        hidden = 'webkitHidden'
+        doc.addEventListener('webkitvisibilitychange', onchange)
+      } else if ('msHidden' in doc) {
+        hidden = 'msHidden'
+        doc.addEventListener('msvisibilitychange', onchange)
+      } else {
+        const events = ['onpageshow', 'onpagehide', 'onfocus', 'onblur']
+        events.forEach((name) => {
+          window[name] = onchange()
+        })
       }
 
       function onchange(evt) {
@@ -82,7 +95,7 @@ export default {
         .then((valid) => {
           if (!valid) {
             this.$store.dispatch('getCurrentUser').then(() => {
-              location.reload()
+              window.location.reload()
             })
           }
         })
@@ -90,7 +103,7 @@ export default {
     logout() {
       this.$store.dispatch('userLogout')
         .then(() => {
-          gotoLogin(location.href)
+          gotoLogin(window.location.href)
         })
         .catch(this.$error.showErrorMessage)
     },

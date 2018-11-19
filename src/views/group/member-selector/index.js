@@ -59,6 +59,7 @@ export default {
         if (!ret) {
           return this.queryNodeInfo(query)
         }
+        return Promise.resolve()
       })
     },
     asyncSearchMembers(query) {

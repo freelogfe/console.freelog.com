@@ -3,6 +3,7 @@
     <div class="policy-list">
       <div class="policy-input-item"
            :class="{'disabled-policy': policy.disabled}"
+           :key="index"
            v-for="(policy, index) in policyList">
         <div class="policy-name-input-wrap">
           <el-button type="text" class="del-policy-btn" @click="switchPolicyStatusHandler(policy, index)">

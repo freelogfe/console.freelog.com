@@ -1,10 +1,9 @@
-import { cloneDeep, intersectionBy, unionBy, differenceBy } from 'lodash'
-import SchemeDataLoader from '@/data/scheme/loader'
+import { onloadSchemesForResource } from '@/data/scheme/loader'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import { beautify } from '@freelog/resource-policy-lang'
+import { SCHEME_STATUS } from '@/config/scheme'
 import ResourceIntroInfo from '../../intro/index.vue'
 import SchemeDetail from '../../detail/auth-scheme/index.vue'
-import { SCHEME_STATUS } from '@/config/scheme'
 
 
 const schemesCacheMap = {}
@@ -58,7 +57,7 @@ export default {
       if (schemesCacheMap[resourceId]) {
         return Promise.resolve(schemesCacheMap[resourceId])
       }
-      return SchemeDataLoader.onloadSchemesForResource(resourceId).then((schemes) => {
+      return onloadSchemesForResource(resourceId).then((schemes) => {
         schemesCacheMap[resourceId] = this.formatSchemes(schemes)
         return schemes
       })
@@ -163,7 +162,7 @@ export default {
       if (!selectedDeps.length) {
         return Promise.resolve()
       }
-      const msg = selectedDeps.map(dep => dep.resourceName).join('、')
+      // const msg = selectedDeps.map(dep => dep.resourceName).join('、')
       return this.$confirm('取消当前资源的选择会导致后续资源选择的策略都取消，确定吗？', {})
     },
     checkResourceSelectable() {
@@ -176,8 +175,7 @@ export default {
       this.selectedAuthSchemeId = ''
     },
     setSelectedScheme(scheme) {
-      var selectedScheme = selectedScheme
-      var selectedAuthSchemeId = selectedAuthSchemeId
+      const selectedAuthSchemeId = this.selectedAuthSchemeId
 
       // 如果已经选择过且与本次选择不同，则需要覆盖
       if (selectedAuthSchemeId && selectedAuthSchemeId !== scheme.authSchemeId) {
@@ -200,10 +198,11 @@ export default {
       } else {
         this.checkResourceSelectable().then(() => {
           if (!scheme.selectedPolicySegmentId) {
-            return Promise.reject('未选择授权方案策略')
+            Promise.reject(new Error('未选择授权方案策略'))
+          } else {
+            this.setSelectedScheme(scheme)
+            this._fireSelected()
           }
-          this.setSelectedScheme(scheme)
-          this._fireSelected()
         }).catch((msg) => {
           this.$message.warning(msg)
         })

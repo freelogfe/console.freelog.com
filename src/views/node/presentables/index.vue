@@ -7,7 +7,8 @@
             :class="[presentable.isReady?'active-status-2':'active-status-0',
             {active: currentPresentable.index===index, 'is-presentable-online':presentable.isOnlineChecked}]"
             @click="changePresentableHandler(presentable, index)"
-            v-for="(presentable, index) in presentableList">
+            v-for="(presentable, index) in presentableList"
+            :key="index">
           <i class="dot"></i>
           <freelog-switch class="node-res-status-switch"
                           v-model="presentable.isOnlineChecked"
@@ -16,20 +17,24 @@
                           inactive-text="下线"></freelog-switch>
           <span class="p-title">{{presentable.presentableName}}</span>
         </li>
-        <li class="presentable-item add-presentable-btn" @click="showSearchResourceHandler"><i class="el-icon-plus"></i>添加节点资源</li>
+        <li class="presentable-item add-presentable-btn" @click="showSearchResourceHandler"><i class="el-icon-plus"></i>添加节点资源
+        </li>
       </ul>
     </div>
     <div class="presentable-detail-container" v-show="currentPresentable.detail.presentableId">
-      <component class="presentable-detail-content" is="presentable-detail" :detail="currentPresentable.detail" @update="updatePresentableHandler"></component>
+      <component class="presentable-detail-content"
+                 :is="'presentable-detail'"
+                 :detail="currentPresentable.detail"
+                 @update="updatePresentableHandler"></component>
     </div>
 
     <el-dialog
-      :visible.sync="showSearchResource"
-      width="840px"
-      :close-on-click-modal="false"
-      :before-close="beforeCloseDialogHandler"
-      top="10vh"
-      center>
+            :visible.sync="showSearchResource"
+            width="840px"
+            :close-on-click-modal="false"
+            :before-close="beforeCloseDialogHandler"
+            top="10vh"
+            center>
       <p slot="title" class="dialog-title">添加资源</p>
       <search-resource class="add-resource-input" @add="addResourceHandler"></search-resource>
     </el-dialog>

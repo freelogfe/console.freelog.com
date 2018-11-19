@@ -1,5 +1,5 @@
 import { NodesService } from '@/services'
-import { createLoader, createCacheLoaders, promisifyLoader } from '@/lib/utils'
+import { promisifyLoader } from '@/lib/utils'
 import { loadLoginUserInfo } from '../user/loader'
 
 const userInfo = loadLoginUserInfo()
@@ -13,17 +13,18 @@ const onloadNodeDetail = loadDetail
 
 const onloadNodeList = promisifyLoader((callback) => {
   if (!userInfo.userId) {
-    return callback({})
+    callback({})
+  } else {
+    const params = {
+      ownerUserId: userInfo.userId,
+      pageSize: 1e2
+    }
+    NodesService.get({
+      params
+    }).then((res) => {
+      callback(res.getData())
+    })
   }
-  const params = {
-    ownerUserId: userInfo.userId,
-    pageSize: 1e2
-  }
-  NodesService.get({
-    params
-  }).then((res) => {
-    callback(res.getData())
-  })
 })
 
 

@@ -39,7 +39,7 @@ export default {
     },
     showInput() {
       this.inputVisible = true
-      this.$nextTick((_) => {
+      this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },

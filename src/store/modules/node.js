@@ -1,5 +1,4 @@
-import { storage } from '@/lib'
-import NodeDataLoader from '@/data/node/loader'
+import { onloadNodeList } from '@/data/node/loader'
 
 const types = {
   CHECK_NODE: 'checkNode',
@@ -8,13 +7,13 @@ const types = {
   LOAD_NODES: 'loadNodes'
 }
 
-const node = {
+const nodeMod = {
   state: {
     nodes: []
   },
 
   mutations: {
-    [types.CHANGE_NODE](state, data) {
+    [types.CHANGE_NODE]() {
     },
     [types.ADD_NODE](state, data) {
       state.nodes.push(data)
@@ -25,8 +24,8 @@ const node = {
   },
 
   actions: {
-    [types.CHECK_NODE]({ commit, getters }) {
-      return new Promise((resolve, reject) => {
+    [types.CHECK_NODE]() {
+      return new Promise((resolve) => {
         resolve(null)
       })
     },
@@ -34,7 +33,7 @@ const node = {
       return new Promise((resolve) => {
         const userId = getters.session.user && getters.session.user.userId
         if (userId) {
-          NodeDataLoader.onloadNodeList({
+          onloadNodeList({
             ownerUserId: userId,
             pageSize: 1e2
           }).then((data) => {
@@ -47,7 +46,7 @@ const node = {
         }
       })
     },
-    [types.ADD_NODE]({ commit, getters }, node) {
+    [types.ADD_NODE]({ commit }, node) {
       commit(types.ADD_NODE, node)
     },
     [types.CHANGE_NODE]({ commit }, data) {
@@ -59,4 +58,4 @@ const node = {
   }
 }
 
-export default node
+export default nodeMod

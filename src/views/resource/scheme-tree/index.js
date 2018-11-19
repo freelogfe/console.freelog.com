@@ -1,12 +1,13 @@
-import { cloneDeep, intersectionBy, unionBy, differenceBy } from 'lodash'
-import SchemeDataLoader from '@/data/scheme/loader'
-import ResourceLoader from '@/data/resource/loader'
+import { intersectionBy, unionBy, differenceBy } from 'lodash'
+import { loadAuthSchemes, onloadSchemesForResource } from '@/data/scheme/loader'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import PolicyEditor from '@/components/policyEditor/index.vue'
 import { beautify } from '@freelog/resource-policy-lang'
-import ResourceIntroInfo from '../intro/index.vue'
-import SchemeDetail from '../detail/auth-scheme/index.vue'
 import { SCHEME_STATUS, SCHEME_PUBLISH_STATUS } from '@/config/scheme'
 import { POLICY_STATUS } from '@/config/policy'
+import ResourceIntroInfo from '../intro/index.vue'
+import SchemeDetail from '../detail/auth-scheme/index.vue'
+
 
 export default {
   name: 'resource-scheme-tree',
@@ -173,7 +174,7 @@ export default {
         })
       } else {
         promise = Promise.all([
-          ResourceLoader.onloadResourceDetail(resourceId),
+          onloadResourceDetail(resourceId),
           this.loadSchemesForResource(resourceId)
         ]).then((res) => {
           const resource = res[0]
@@ -191,7 +192,7 @@ export default {
       })
     },
     loadSchemesForResource(resourceId) {
-      return SchemeDataLoader.onloadSchemesForResource(resourceId, {
+      return onloadSchemesForResource(resourceId, {
         // authSchemeStatus: 1,
         policyStatus: 2
       }).then((schemes) => {
@@ -225,14 +226,15 @@ export default {
             const isPublished = scheme.status === SCHEME_PUBLISH_STATUS.PUBLISHED
             const isSelected = (duty && duty.authSchemeId === scheme.authSchemeId)
             if (!isPublished && !isSelected) {
-              return
+              return false
             }
 
             scheme.policy = scheme.policy.filter((p) => {
-              if ((isPublished && p.status === POLICY_STATUS.show) || (duty &&duty.policySegmentId === p.segmentId)) {
+              if ((isPublished && p.status === POLICY_STATUS.show) || (duty && duty.policySegmentId === p.segmentId)) {
                 p.isAuth = !!authsMap[`${scheme.authSchemeId}_${p.segmentId}`]
                 return p
               }
+              return false
             })
             return scheme
           })
@@ -267,7 +269,6 @@ export default {
         } else {
           dep.activeStatus = SCHEME_STATUS.UNHANDLE
         }
-        return false
       }
     },
     formatPolicyText(policyText) {
@@ -303,7 +304,7 @@ export default {
       })
 
       if (schemeRids.length) {
-        SchemeDataLoader.loadAuthSchemes({
+        loadAuthSchemes({
           resourceIds: schemeRids,
           authSchemeStatus: 1,
           policyStatus: 1
@@ -333,11 +334,6 @@ export default {
     showPublishEditErrorTip() {
       this.$message.warning('已发布授权点，当前操作不可执行')
     },
-    loadResourcesDetail(rids) {
-      if (rids.length) {
-        return ResourceLoader.loadResources(rids).then(list => list)
-      }
-    },
     changePolicy(resource, scheme, policy) {
       if (scheme.selectedPolicySegmentId) {
         scheme.selectedPolicy = { ...policy }
@@ -345,7 +341,8 @@ export default {
 
       this.$forceUpdate()
     },
-    resetSchemePolicyHandler(resource, scheme, policy) {
+    // resource, scheme, policy
+    resetSchemePolicyHandler(resource, scheme) {
       if (scheme.selectedPolicy.segmentId && scheme.selectedPolicySegmentId) {
         scheme.selectedPolicy = {}
         scheme.selectedPolicySegmentId = ''
@@ -377,7 +374,7 @@ export default {
     prevResourcesHandler(res, fn) {
       const resources = this.schemes
       let start = false
-      for (let i = resources.length - 1; i >= 0; i--) {
+      for (let i = resources.length - 1; i >= 0; i -= 1) {
         const tmpRes = resources[i]
         if (res.resourceId === tmpRes.resourceId) {
           start = true
@@ -400,7 +397,7 @@ export default {
       if (this.dutyResourceMap[resource.resourceId]) {
         delete this.dutyResourceMap[resource.resourceId]
       }
-      for (let i = 0; i < dutyStatements.length; i++) {
+      for (let i = 0; i < dutyStatements.length; i += 1) {
         const duty = dutyStatements[i]
         if (duty.resourceId === resource.resourceId) {
           dutyStatements.splice(i, 1)
@@ -448,9 +445,9 @@ export default {
           activeStatus = SCHEME_STATUS.SOME
           bubbleResources.forEach((res) => {
             const duty = this.dutyResourceMap[res.resourceId]
-            const resource = duty && this.resourcesMap[duty.resourceId]
-            if (duty && (resource.activeStatus === SCHEME_STATUS.ALL)) {
-              cnt++
+            const dutyRes = duty && this.resourcesMap[duty.resourceId]
+            if (duty && (dutyRes.activeStatus === SCHEME_STATUS.ALL)) {
+              cnt += 1
             }
           })
           if (cnt === bubbleResources.length) {
@@ -493,15 +490,13 @@ export default {
       if (!selectedDeps.length) {
         return Promise.resolve()
       }
-      const msg = selectedDeps.map(dep => dep.resourceName).join('、')
+      // const msg = selectedDeps.map(dep => dep.resourceName).join('、')
       return this.$confirm('取消当前资源的选择会导致后续资源选择的策略都取消，确定吗？', {})
     },
     selectAuthSchemeHandler(resource, scheme, panelIndex) {
       if (this.config.isPublished) {
-        return this.showPublishEditErrorTip()
-      }
-
-      if (resource.selectedScheme &&
+        this.showPublishEditErrorTip()
+      } else if (resource.selectedScheme &&
         resource.selectedScheme.authSchemeId === scheme.authSchemeId) {
         this.checkResourceCancelable(resource)
           .then(() => {
@@ -514,13 +509,11 @@ export default {
           })
           .catch(() => {
           })
+      } else if (!this.checkResourceSelectable(panelIndex)) {
+        this.$message.warning('未选择前一级资源策略不可选当前资源的策略')
+      } else if (!scheme.selectedPolicySegmentId) {
+        this.$message.warning('未选择当前授权方案的策略')
       } else {
-        if (!this.checkResourceSelectable(panelIndex)) {
-          return this.$message.warning('未选择前一级资源策略不可选当前资源的策略')
-        } else if (!scheme.selectedPolicySegmentId) {
-          return this.$message.warning('未选择当前授权方案的策略')
-        }
-
         this.setSelectedScheme(resource, scheme)
         this.updatePrevSchemesActiveStatus(resource)
         // this.selectPrevSchemes(resource)
@@ -529,7 +522,10 @@ export default {
     },
     _fireUpdateHandler() {
       const data = this.dutyStatements
-      this.updateCallback && this.updateCallback(data)
+      if (typeof this.updateCallback === 'function') {
+        this.updateCallback(data)
+      }
+
       this.$emit('update', data)
     },
     getParent(el, selector) {
@@ -545,19 +541,19 @@ export default {
 
       return target
     },
-    selectResourceHandler(dep, scheme, index, ev) {
+    selectResourceHandler(dep, scheme, index) {
       scheme.activeResource = dep
       this.updateSchemeList(index)
       this.pushSchemeDep(dep)
       this.drawLineArrow(scheme)
     },
     updateSchemeList(index) {
-      index++
+      index += 1
       const len = this.schemes.length
       const diff = len - index
       this.currentAuthNodeIndex = index
       if (diff > 0) {
-        for (let i = 0; i < diff; i++) {
+        for (let i = 0; i < diff; i += 1) {
           this.schemes.pop()
         }
       }
@@ -565,7 +561,7 @@ export default {
     haveSelectedScheme(dep) {
       const duty = this.dutyResourceMap[dep.resourceId]
       if (duty) {
-        for (let i = 0, len = dep.schemes.length; i < len; i++) {
+        for (let i = 0, len = dep.schemes.length; i < len; i += 1) {
           const scheme = dep.schemes[i]
           if (scheme.authSchemeId === duty.authSchemeId ||
             (duty.selectedScheme && scheme.authSchemeId === duty.selectedScheme.authSchemeId)) {
@@ -575,7 +571,7 @@ export default {
             dep.selected = true
             Object.assign(duty, dep)
             scheme.selectedPolicySegmentId = duty.selectedScheme.selectedPolicySegmentId || duty.policySegmentId
-            for (let j = 0; j < scheme.policy.length; j++) {
+            for (let j = 0; j < scheme.policy.length; j += 1) {
               if (scheme.policy[j].segmentId === duty.policySegmentId) {
                 scheme.selectedPolicy = scheme.policy[j]
                 scheme.policy[j].selected = true
@@ -643,7 +639,7 @@ export default {
       }
 
       if (!dep.resourceInfo) {
-        ResourceLoader.onloadResourceDetail(rid).then((detail) => {
+        onloadResourceDetail(rid).then((detail) => {
           this.$set(dep, 'resourceInfo', detail)
         })
       }
@@ -657,7 +653,7 @@ export default {
       const schemeList = []
       schemeList.push(activeScheme)
       while (next) {
-        this.currentAuthNodeIndex++
+        this.currentAuthNodeIndex += 1
         this.schemes.push(next)
         activeScheme = next.activeScheme
         next = activeScheme && activeScheme.activeResource
@@ -734,7 +730,7 @@ export default {
         if (detail) {
           Object.assign(res, detail)
         }
-      });
+      })
       return this.dutyStatements
     },
     hideSchemeArrow(scheme) {
@@ -743,22 +739,24 @@ export default {
     },
     toggleResolveResource(resource, index) {
       if (this.config.isPublished) {
-        return this.showPublishEditErrorTip()
-      }
-
-      if (resource.isResolved === undefined) {
-        this.$set(resource, 'isResolved', false)
+        this.showPublishEditErrorTip()
       } else {
-        resource.isResolved = !resource.isResolved
-      }
+        if (resource.isResolved === undefined) {
+          this.$set(resource, 'isResolved', false)
+        } else {
+          resource.isResolved = !resource.isResolved
+        }
 
-      if (resource.isResolved === false) {
-        this.updateSchemeList(index)
-        this.hideSchemeArrow(resource.activeScheme)
-        resource.activeScheme.activeResource = null
-        resource.selectedScheme.authSchemeId && this.selectAuthSchemeHandler(resource, resource.selectedScheme, index)
+        if (resource.isResolved === false) {
+          this.updateSchemeList(index)
+          this.hideSchemeArrow(resource.activeScheme)
+          resource.activeScheme.activeResource = null
+          if (resource.selectedScheme.authSchemeId) {
+            this.selectAuthSchemeHandler(resource, resource.selectedScheme, index)
+          }
+        }
+        this.updateResourceActiveStatus(resource)
       }
-      this.updateResourceActiveStatus(resource)
     }
   }
 }

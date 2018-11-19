@@ -30,6 +30,7 @@ export default {
       this.$router.push({ path: `/resource/edit/${resource.resourceId}/auth_schemes` })
     },
     searchHandler(query) {
+      console.log(query)
       // if (this.curTabName === 'self') {
       //   this.selfQueryInput = query
       // } else {

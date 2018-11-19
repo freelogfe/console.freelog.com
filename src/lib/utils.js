@@ -5,7 +5,7 @@ function createLoader(loader) {
   const handles = []
   let value
 
-  return function (callback) {
+  return function lazyLoader(callback) {
     if (value) {
       callback(value)
     } else if (loading) {
@@ -16,6 +16,7 @@ function createLoader(loader) {
       loader((v) => {
         value = v
         let h
+        // eslint-disable-next-line
         while ((h = handles.shift())) {
           h(v)
         }
@@ -27,7 +28,7 @@ function createLoader(loader) {
 // 多个缓存loader的创建
 function createCacheLoaders(loaderFn, shouldCloned) {
   const loaders = {}
-  return function (params) {
+  return function cacheLoaders(params) {
     let id
     if (typeof params !== 'string') {
       try {
@@ -45,9 +46,11 @@ function createCacheLoaders(loaderFn, shouldCloned) {
 
     let loader = loaders[id]
     if (!loader) {
-      loader = loaders[id] = createLoader((callback) => {
+      loader = createLoader((callback) => {
         loaderFn(params).then(callback)
       })
+
+      loaders[id] = loader
     }
 
     return new Promise((resolve) => {
@@ -61,29 +64,15 @@ function createCacheLoaders(loaderFn, shouldCloned) {
 
 function promisifyLoader(loader) {
   const handler = createLoader(loader)
-  return function () {
+  return function promiseLoader() {
     return new Promise((resolve) => {
       handler(resolve)
     })
   }
 }
 
-function loopForBreak(array, fn) {
-  let flag = false
-  for (let i = 0; i < array.length; i++) {
-    const item = array[i]
-    if (fn(item, i)) {
-      flag = true
-      break
-    }
-  }
-
-  return flag
-}
-
-
 function camelize(str) {
-  return str.replace(/-(\w)/g, (_, c) => c ? c.toUpperCase() : '');
+  return str.replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ''))
 }
 
 function cssSupports(prop, value) {
@@ -91,11 +80,10 @@ function cssSupports(prop, value) {
     return camelize(prop) in document.body.style
   } else if (typeof CSS.supports === 'function') {
     return CSS.supports(prop, value)
-  } else {
-    var $el = document.createElement('div');
-    $el.style[prop] = value;
-    return $el.style[prop] === value;
   }
+  const $el = document.createElement('div')
+  $el.style[prop] = value
+  return $el.style[prop] === value
 }
 
 function isSafeUrl(url) {
@@ -108,7 +96,7 @@ function isSafeUrl(url) {
     }
   } catch (e) {
     // path型链接检测
-    if ((/^\/[^\/]+/.test(url))) {
+    if ((/^\/[^/]+/.test(url))) {
       return true
     }
   }
@@ -117,12 +105,12 @@ function isSafeUrl(url) {
 }
 
 function gotoLogin(redirect) {
-  let loginPath = '/login'
-  if (location.pathname === loginPath) {
+  const loginPath = '/login'
+  if (window.location.pathname === loginPath) {
     return
   }
 
-  let loginUrl = `${location.origin.replace('console','www')}${loginPath}`
+  let loginUrl = `${window.location.origin.replace('console', 'www')}${loginPath}`
   if (isSafeUrl(redirect)) {
     loginUrl += `?redirect=${encodeURIComponent(redirect)}`
   }
@@ -134,7 +122,6 @@ export {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak,
   cssSupports,
   gotoLogin,
   isSafeUrl
@@ -145,6 +132,5 @@ export default {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
-  loopForBreak,
   gotoLogin
 }

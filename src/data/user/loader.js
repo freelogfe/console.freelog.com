@@ -1,9 +1,9 @@
 import { UserService } from '@/services'
-import { createLoader, createCacheLoaders } from '@/lib/utils'
+import { createCacheLoaders } from '@/lib/utils'
 import { cookieStore } from '@/lib/storage'
 
 function loadDetail(userId) {
-  return UserService.get(parseInt(userId)).then(res => res.getData())
+  return UserService.get(parseInt(userId, 10)).then(res => res.getData())
 }
 
 

@@ -1,9 +1,8 @@
 import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
-import DataLoader from '@/data'
+import { onloadPresentableDetail } from '@/data/presentable/loader'
+import { onloadResourceDetail } from '@/data/resource/loader'
 import ContractDetail from '../detail/index.vue'
-import {loadDetail, loadResources} from '@/data/resource/loader'
-import contract from '../../../../services/contract'
 
 export default {
   name: 'node-contracts',
@@ -25,31 +24,29 @@ export default {
   },
   methods: {
     initView() {
-      var query = this.$route.query;
+      const query = this.$route.query
       Object.assign(query, this.$route.params)
       this.loadData(query)
     },
     loadData(query) {
-      this.loadPresentables({nodeId: query.nodeId, isOnline: 2})
-        .then(presentables => {
-          var presentableIds = presentables.map(p => {
-            return p.presentableId
-          })
+      this.loadPresentables({ nodeId: query.nodeId, isOnline: 2 })
+        .then((presentables) => {
+          const presentableIds = presentables.map(p => p.presentableId)
 
           if (presentableIds.length) {
-            this.loadContractInfos(presentableIds).then(data => {
-              data.forEach(p => {
-                var contractIds = [];
-                var resourceIds = [];
-                var contractsMap = {}
-                p.contracts = p.contracts.filter(contract => {
+            this.loadContractInfos(presentableIds).then((data) => {
+              data.forEach((p) => {
+                const contractIds = []
+                const resourceIds = []
+                const contractsMap = {}
+                p.contracts = p.contracts.filter((contract) => {
                   contract.resourceDetail = {}
                   resourceIds.push(contract.resourceId)
                   contractIds.push(contract.contractId)
                   contractsMap[contract.contractId] = contract
                   ContractUtils.format(contract)
 
-                  loadDetail(contract.resourceId).then(info => {
+                  onloadResourceDetail(contract.resourceId).then((info) => {
                     contract.resourceDetail = info
                   }).catch(this.$error.showErrorMessage)
 
@@ -58,9 +55,9 @@ export default {
                   }
                   if (contract.isMasterContract) {
                     p.masterContract = contract
-                  } else {
-                    return contract
+                    return false
                   }
+                  return contract
                 })
               })
 
@@ -81,7 +78,7 @@ export default {
     },
 
     loadPresentables(param) {
-      return DataLoader.presentable.loadDetail({params: param}).catch(this.$error.showErrorMessage)
+      return onloadPresentableDetail({ params: param }).catch(this.$error.showErrorMessage)
     },
     previewHandler(row) {
       const query = {}
@@ -100,7 +97,7 @@ export default {
         // this.$message.warning('未创建合同')
         return
       }
-      this.$router.push({query: {contractId: contract.contractId}})
+      this.$router.push({ query: { contractId: contract.contractId } })
       this.currentContract = contract
     },
     resolveContractCreatorLink(presentable) {

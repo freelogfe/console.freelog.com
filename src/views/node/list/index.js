@@ -22,9 +22,9 @@ export default {
   },
   methods: {
     resolveDomain(row) {
-      const post = /\.test/.test(location.host) ? '.testfreelog.com' : '.freelog.com'
+      const post = /\.test/.test(window.location.host) ? '.testfreelog.com' : '.freelog.com'
 
-      return `${location.protocol}//${row.nodeDomain}${post}`
+      return `${window.location.protocol}//${row.nodeDomain}${post}`
     },
     loader() {
       const self = this

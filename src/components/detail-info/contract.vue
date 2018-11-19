@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { CONTRACT_STATUS_COLORS } from '@/config/contract'
 import ContractUtils from '@/data/contract/utils'
 
 export default {

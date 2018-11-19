@@ -146,9 +146,9 @@
 
 
 <script>
-  import ResourceInput from './index'
+import ResourceInput from './index'
 
-  export default ResourceInput
+export default ResourceInput
 </script>
 
 <style lang="less" scoped>

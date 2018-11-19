@@ -7,12 +7,10 @@
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-import nodeRoute from './node'
-import groupRote from './group'
-import accountRoute from './account'
-import resourceRoute from './resource'
-
 import Views from '@/views/index'
+
+import nodeRoute from './node'
+import resourceRoute from './resource'
 
 Vue.use(Router)
 
@@ -36,12 +34,11 @@ const router = new Router({
   mode: 'history',
   scrollBehavior,
   routes: [
-    accountRoute,
     {
       path: '/',
       meta: { title: '资源市场' },
       component: Views.layout,
-      children: [resourceRoute, nodeRoute, groupRote, {
+      children: [resourceRoute, nodeRoute, {
         path: 'about',
         hidden: true,
         meta: {

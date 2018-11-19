@@ -16,7 +16,10 @@
       </div>
       <nav class="node-detail-nav-wrap">
         <ul class="nav-list">
-          <li class="nav-item" :class="{active: currentTab===navItem.name}" @click="changePanelHandler(navItem.name)"
+          <li class="nav-item"
+              :class="{active: currentTab===navItem.name}"
+              @click="changePanelHandler(navItem.name)"
+              :key="navItem.name"
               v-for="navItem in NAV_TABS">{{navItem.title}}
           </li>
         </ul>

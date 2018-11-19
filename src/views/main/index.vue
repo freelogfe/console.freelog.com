@@ -29,9 +29,9 @@
 </template>
 
 <script>
-  import IndexMainView from './index'
+import IndexMainView from './index'
 
-  export default IndexMainView
+export default IndexMainView
 </script>
 
 <style lang="less" scoped>

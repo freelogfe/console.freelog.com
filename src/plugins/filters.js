@@ -1,7 +1,7 @@
-import ACCOUNT_CONFIG from '../config/account'
 import { format } from 'date-fns'
+import ACCOUNT_CONFIG from '../config/account'
 
-export default (Vue, options) => {
+export default (Vue) => {
   Vue.filter('humanizeNumber', value => value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
 
 
