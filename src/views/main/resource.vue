@@ -1,7 +1,7 @@
 <template>
   <div class="main-resource-item-wrap" @click="gotoDetail">
     <div class="res-poster-wrap">
-      <img :src="postImgUrl" class="resource-default-preview" alt="">
+      <img :src="postImgUrl" :class="{'resource-default-preview':!postImgUrl}" alt="">
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
