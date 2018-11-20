@@ -173,8 +173,6 @@ export default {
 
       this.$emit('uploadEnd', error)
       this.$refs.resourceUploader.clearFiles() // reset clearFiles
-      console.log(this.$refs.resourceUploader.fileList)
-      // this.$refs.resourceUploader.fileList = [] // reset clearFiles
     },
     successHandler(res, file) {
       this.loading = false
@@ -340,10 +338,9 @@ export default {
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
-        if (formData.previewImage) {
-          uploadData.previewImage = formData.previewImage
-        }
-      } else if (formData.previewImage) {
+      }
+
+      if (formData.previewImage) {
         uploadData.previewImages = [formData.previewImage]
       }
 
