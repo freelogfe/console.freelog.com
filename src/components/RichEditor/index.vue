@@ -14,7 +14,7 @@
       <el-upload
         class="rich-editor-upload-img"
         drag
-        action="/api/v1/resources/upoladPreviewImage"
+        action="/api/v1/resources/uploadPreviewImage"
         ref="imgUploader"
         :on-success="uploadImageSuccessHandler"
         :on-error="uploadImageErrorHandler"

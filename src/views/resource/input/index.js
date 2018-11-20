@@ -102,8 +102,8 @@ export default {
       arr.unshift('qi')
       return arr.join('.')
     },
-    upoladPreviewImageAction() {
-      return `//${this.apiHostName}/v1/resources/upoladPreviewImage`
+    uploadPreviewImageAction() {
+      return `//${this.apiHostName}/v1/resources/uploadPreviewImage`
     },
     uploadResourceFileAction() {
       return `//${this.apiHostName}/v1/resources/uploadResourceFile`
