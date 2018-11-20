@@ -420,10 +420,6 @@ export default {
         if (scheme.status === 0) {
           return this.createSchemeContracts(scheme).then(() => {
             scheme.status = SCHEME_STATUS.PUBLISHED
-            this.curTabName = ''
-            this.$nextTick(() => {
-              this.curTabName = curTabName
-            })
             this.$message.success('创建成功')
             this.$router.push(`/resource/detail/${scheme.resourceId}`)
           })
