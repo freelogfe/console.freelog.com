@@ -5,7 +5,7 @@
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
-      <p class="res-author-name" v-if="resource._userInfo"><span>{{resource.resourceType}}</span>{{resource._userInfo.nickname}}
+      <p class="res-author-name"><span>{{resource.resourceType}}</span>{{resource.userName}}
       </p>
     </div>
     <ul class="res-policies-list" v-if="schemes.length">
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import { onloadUserInfo } from '@/data/user/loader'
 import { onloadSchemesForResource } from '@/data/scheme/loader'
 import { RESOURCE_STATUS } from '@/config/resource'
 
@@ -85,9 +84,6 @@ export default {
       }
 
       resource._statusInfo = RESOURCE_STATUS[resource.status]
-      onloadUserInfo(resource.userId).then((userInfo) => {
-        this.$set(resource, '_userInfo', userInfo)
-      })
 
       if (!resource.schemes) {
         onloadSchemesForResource(resource.resourceId).then((list) => {

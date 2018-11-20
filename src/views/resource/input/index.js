@@ -331,13 +331,12 @@ export default {
       } catch (err) {
         metaData = {}
       }
-      if (this.formData.widgetName) {
-        metaData.widgetName = this.formData.widgetName
-      }
+
 
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
+        metaData.widgetName = formData.widgetName? formData.widgetName: ''
       }
 
       if (formData.previewImage) {
