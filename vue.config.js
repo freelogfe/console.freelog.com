@@ -1,10 +1,11 @@
 /* eslint-disable */
-
+const fs = require('fs')
 const path = require('path')
 const srcDir = path.resolve('./src')
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2));
 const isProd = argv.env === 'prod' || process.env.NODE_ENV === 'production'
+
 function getBaseUrl() {
   var baseUrl
   if (argv.env === 'beta') {
@@ -26,10 +27,10 @@ module.exports = {
     disableHostCheck: true,
     historyApiFallback: true,
     hot: false,
-    // https: {
-    //   key: fs.readFileSync('./config/cert/server_ca.key'),
-    //   cert: fs.readFileSync('./config/cert/server_ca.crt'),
-    // }
+    https: {
+      key: fs.readFileSync('./config/cert/server_ca.key'),
+      cert: fs.readFileSync('./config/cert/server_ca.crt'),
+    }
   },
   css: {
     extract: true

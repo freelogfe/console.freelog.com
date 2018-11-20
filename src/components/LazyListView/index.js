@@ -52,7 +52,6 @@ export default {
       self.$refs.loading.classList.remove('hide')
       self.observer = new IntersectionObserver(((entries) => {
         entries.forEach((entry) => {
-          console.log(entry, self.canLoadMore)
           if ((entry.intersectionRatio > 0) && self.canLoadMore !== false) {
             self.load().then(() => {
               if (entry.isIntersecting && self.canLoadMore) {

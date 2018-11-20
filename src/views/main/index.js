@@ -55,8 +55,9 @@ export default {
       }
       return this.loader(query).then((data) => {
         const resources = data.dataList
+        data.canLoadMore = !(resources.length < data.pageSize)
+
         if (resources && resources.length) {
-          data.canLoadMore = !(resources.length < data.pageSize)
           const resourcesMap = {}
           const rids = resources.map((r) => {
             resourcesMap[r.resourceId] = r

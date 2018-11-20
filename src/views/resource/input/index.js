@@ -139,6 +139,7 @@ export default {
       }
     }
   },
+
   mounted() {
     this.resourceTypeChange(this.formData.resourceType)
   },
@@ -171,7 +172,9 @@ export default {
       }
 
       this.$emit('uploadEnd', error)
-      this.$refs.resourceUploader.fileList = [] // reset clearFiles
+      this.$refs.resourceUploader.clearFiles() // reset clearFiles
+      console.log(this.$refs.resourceUploader.fileList)
+      // this.$refs.resourceUploader.fileList = [] // reset clearFiles
     },
     successHandler(res, file) {
       this.loading = false
