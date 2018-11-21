@@ -27,10 +27,10 @@ module.exports = {
     disableHostCheck: true,
     historyApiFallback: true,
     hot: false,
-    https: {
-      key: fs.readFileSync('./config/cert/server_ca.key'),
-      cert: fs.readFileSync('./config/cert/server_ca.crt'),
-    }
+    // https: {
+    //   key: fs.readFileSync('./config/cert/server_ca.key'),
+    //   cert: fs.readFileSync('./config/cert/server_ca.crt'),
+    // }
   },
   css: {
     extract: true

@@ -14,6 +14,15 @@ export default {
   redirect: '/resource/list',
   children: [
     {
+      path: 'policy_tpl/list',
+      meta: {
+        requiresAuth: true,
+        title: '资源策略模板列表',
+        type: 'resource'
+      },
+      component: Views.policyTplList
+    },
+    {
       path: 'create',
       hidden: true,
       meta: {
