@@ -40,13 +40,17 @@ export default {
   },
   methods: {
     executeNext(callback) {
+      if (this.isRequesting)return
+      this.isRequesting = true
       if (this.$refs.inputArea.nextHandler) {
         this.$refs.inputArea.nextHandler().then((detail) => {
           if (detail) {
             Object.assign(this.resourceDetail, detail)
           }
-          callback(detail)
+          this.isRequesting = false
+          callback()
         }).catch((err) => {
+          this.isRequesting = false
           this.$nextTick(() => {
             const $error = this.$el.querySelector('.el-form-item__error')
             if ($error) {
@@ -58,6 +62,7 @@ export default {
           })
         })
       } else {
+        this.isRequesting = false
         callback()
       }
     },

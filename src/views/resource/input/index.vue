@@ -89,7 +89,7 @@
                      class="resource-thumbnail-uploader"
                      drag
                      ref="thumbnailUploader"
-                     :action="upoladPreviewImageAction"
+                     :action="uploadPreviewImageAction"
                      :with-credentials="true"
                      :data="uploader.data"
                      :headers="uploader.headers"
