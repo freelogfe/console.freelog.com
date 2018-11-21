@@ -2,7 +2,7 @@
 // import(/* webpackChunkName: "lodash" */ 'lodash');
 // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/router
 
-// import PolicyTplViews from '@/views/policy-tpl'
+import PolicyTplViews from '@/views/policy-tpl'
 import ResourceViews from '@/views/resource'
 import NodeViews from '@/views/node'
 // import GroupViews from '@/views/group'
@@ -35,5 +35,5 @@ export default {
   ...ResourceViews,
   ...NodeViews,
   // ...GroupViews,
-  // ...PolicyTplViews
+  ...PolicyTplViews
 }

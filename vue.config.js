@@ -43,6 +43,7 @@ module.exports = {
   baseUrl: getBaseUrl(),
   crossorigin: 'anonymous',
   devServer: getDevServer(),
+
   css: {
     extract: true
   },
