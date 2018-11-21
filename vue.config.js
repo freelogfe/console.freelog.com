@@ -18,20 +18,31 @@ function getBaseUrl() {
   return baseUrl
 }
 
-module.exports = {
-  baseUrl: getBaseUrl(),
-  crossorigin: 'anonymous',
-  devServer: {
+function getDevServer() {
+  var config = {
     port: 8080,
     inline: false,
     disableHostCheck: true,
     historyApiFallback: true,
-    hot: false,
-    https: {
-      key: fs.readFileSync('./config/cert/server_ca.key'),
-      cert: fs.readFileSync('./config/cert/server_ca.crt'),
-    }
-  },
+    hot: false
+  }
+
+  if (argv.https) {
+    Object.assign(config, {
+      https: {
+        key: fs.readFileSync('./config/cert/server_ca.key'),
+        cert: fs.readFileSync('./config/cert/server_ca.crt'),
+      }
+    })
+  }
+
+  return config
+}
+
+module.exports = {
+  baseUrl: getBaseUrl(),
+  crossorigin: 'anonymous',
+  devServer: getDevServer(),
   css: {
     extract: true
   },
