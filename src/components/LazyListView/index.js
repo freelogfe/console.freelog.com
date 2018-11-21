@@ -1,4 +1,5 @@
 // https://github.com/hejianxian/vue-list/blob/master/src/components/vue-list.vue
+import lozad from 'lozad'
 
 export default {
   name: 'fl-lazy-list-view',
@@ -50,25 +51,26 @@ export default {
     initView() {
       const self = this
       self.$refs.loading.classList.remove('hide')
-      self.observer = new IntersectionObserver(((entries) => {
-        entries.forEach((entry) => {
-          if ((entry.intersectionRatio > 0) && self.canLoadMore !== false) {
-            self.load().then(() => {
-              if (entry.isIntersecting && self.canLoadMore) {
-                return self.load()
+      const observer = lozad(this.$refs.loading, {
+        root: this.$el,
+        load(el) {
+          self.load()
+            .then(() => {
+              if (self.canLoadMore) {
+                el.dataset.loaded = false
+                observer.observe(el)
+              } else {
+                self.$refs.loading.classList.add('hide')
               }
-              
-            }).catch(() => {
-              self.observer.unobserve(self.$refs.loading)
+            })
+            .catch(() => {
               self.$refs.loading.classList.add('hide')
             })
-          }
-        })
-      }), {
-        threshold: 1,
-        // rootMargin: '500px 0px'
-      })
-      self.observer.observe(this.$refs.loading)
+        },
+        rootMargin: '100px 0px', // syntax similar to that of CSS Margin
+        threshold: 0.1 // ratio of element convergence
+      });
+      observer.observe();
     },
     load() {
       const self = this
