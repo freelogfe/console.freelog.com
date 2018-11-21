@@ -52,7 +52,6 @@ export default {
       const self = this
       self.$refs.loading.classList.remove('hide')
       const observer = lozad(this.$refs.loading, {
-        root: this.$el,
         load(el) {
           self.load()
             .then(() => {
@@ -67,7 +66,7 @@ export default {
               self.$refs.loading.classList.add('hide')
             })
         },
-        rootMargin: '100px 0px', // syntax similar to that of CSS Margin
+        rootMargin: '400px 0px', // syntax similar to that of CSS Margin
         threshold: 0.1 // ratio of element convergence
       });
       observer.observe();
