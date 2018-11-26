@@ -1,0 +1,43 @@
+16:07:31.598 INFO [GridLauncherV3.parse] - Selenium server version: 3.141.59, revision: e82be7d358
+16:07:31.717 INFO [GridLauncherV3.lambda$buildLaunchers$3] - Launching a standalone Selenium Server on port 4444
+2018-11-26 16:07:31.795:INFO::main: Logging initialized @600ms to org.seleniumhq.jetty9.util.log.StdErrLog
+16:07:32.104 INFO [WebDriverServlet.<init>] - Initialising WebDriverServlet
+16:07:32.240 INFO [SeleniumServer.boot] - Selenium Server is up and running on port 4444
+16:07:32.658 INFO [ActiveSessionFactory.apply] - Capabilities are: {
+  "acceptSslCerts": true,
+  "browserName": "firefox",
+  "javascriptEnabled": true,
+  "marionette": true,
+  "name": "Main Test"
+}
+16:07:32.658 INFO [ActiveSessionFactory.apply] - Capabilities are: {
+  "acceptSslCerts": true,
+  "browserName": "safari",
+  "javascriptEnabled": true,
+  "marionette": true,
+  "name": "Main Test"
+}
+16:07:32.658 INFO [ActiveSessionFactory.apply] - Capabilities are: {
+  "acceptSslCerts": true,
+  "browserName": "chrome",
+  "javascriptEnabled": true,
+  "marionette": true,
+  "name": "Main Test"
+}
+16:07:32.660 INFO [ActiveSessionFactory.lambda$apply$11] - Matched factory org.openqa.selenium.grid.session.remote.ServicedSession$Factory (provider: org.openqa.selenium.chrome.ChromeDriverService)
+16:07:32.660 INFO [ActiveSessionFactory.lambda$apply$11] - Matched factory org.openqa.selenium.grid.session.remote.ServicedSession$Factory (provider: org.openqa.selenium.firefox.GeckoDriverService)
+16:07:32.660 INFO [ActiveSessionFactory.lambda$apply$11] - Matched factory org.openqa.selenium.grid.session.remote.ServicedSession$Factory (provider: org.openqa.selenium.safari.SafariDriverService)
+Starting ChromeDriver 2.44.609545 (c2f88692e98ce7233d2df7c724465ecacfe74df5) on port 8848
+Only local connections are allowed.
+1543219653219	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox-bin" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/fl/r54jng9d0zj_07hhmpfv06dr0000gn/T/rust_mozprofile.q0XSj6LAoqXo"
+16:07:33.923 INFO [ProtocolHandshake.createSession] - Detected dialect: W3C
+16:07:33.976 INFO [RemoteSession$Factory.lambda$performHandshake$0] - Started new session 4020B3AB-3468-46F0-BD24-D2E41CC89EC1 (org.openqa.selenium.safari.SafariDriverService)
+16:07:34.604 INFO [ProtocolHandshake.createSession] - Detected dialect: OSS
+16:07:34.972 INFO [RemoteSession$Factory.lambda$performHandshake$0] - Started new session 07c7ff157e634d428dee2edd38be3852 (org.openqa.selenium.chrome.ChromeDriverService)
+1543219656667	Marionette	INFO	Listening on port 55037
+16:07:37.009 INFO [ProtocolHandshake.createSession] - Detected dialect: W3C
+16:07:37.025 INFO [RemoteSession$Factory.lambda$performHandshake$0] - Started new session 2dbadd0a-0fc7-b840-84c4-bce3905b3057 (org.openqa.selenium.firefox.GeckoDriverService)
+16:07:40.274 INFO [ActiveSessions$1.onStop] - Removing session 4020B3AB-3468-46F0-BD24-D2E41CC89EC1 (org.openqa.selenium.safari.SafariDriverService)
+16:07:41.164 INFO [ActiveSessions$1.onStop] - Removing session 07c7ff157e634d428dee2edd38be3852 (org.openqa.selenium.chrome.ChromeDriverService)
+1543219661429	Marionette	INFO	Stopped listening on port 55037
+16:07:41.939 INFO [ActiveSessions$1.onStop] - Removing session 2dbadd0a-0fc7-b840-84c4-bce3905b3057 (org.openqa.selenium.firefox.GeckoDriverService)

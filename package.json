@@ -4,12 +4,17 @@
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
-    "test": "mocha -t 10000 'test/**/*.test.js'",
     "lint": "vue-cli-service lint --fix",
     "dev": "vue-cli-service serve",
     "build:prod": "npm run build -- --env=prod",
     "build:beta": "npm run build -- --env=beta",
-    "pack": "tar -zcf console.tar dist"
+    "pack": "tar -zcf console.tar dist",
+
+    "test:e2e": "vue-cli-service test:e2e --config ./nightwatch.conf.js",
+    "test:e2e:chrome": "npm run test:e2e -- --env chrome",
+    "test:e2e:safari": "npm run test:e2e -- --env safari",
+    "test:e2e:firefox": "npm run test:e2e -- --env firefox",
+    "test:e2e:all": "npm run test:e2e -- --env chrome,firefox,safari"
   },
   "dependencies": {
     "@freelog/freelog-ui-contract": "0.0.7",
@@ -38,17 +43,21 @@
   "devDependencies": {
     "@freelog/freelog-ci": "0.0.1",
     "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-plugin-e2e-nightwatch": "^3.1.1",
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
     "@vue/eslint-config-airbnb": "^3.0.5",
     "ali-oss": "^6.0.1",
     "chai": "^4.2.0",
+    "chromedriver": "^2.44.0",
     "co": "^4.6.0",
     "consola": "^1.4.4",
+    "geckodriver": "^1.14.1",
     "husky": "^1.1.2",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "ora": "^3.0.0",
+    "selenium-server": "^3.141.59",
     "user-home": "^2.0.0",
     "vue-template-compiler": "^2.5.17",
     "walk": "^2.3.14"
