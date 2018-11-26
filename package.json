@@ -17,7 +17,7 @@
     "test:e2e:all": "npm run test:e2e -- --env chrome,firefox,safari"
   },
   "dependencies": {
-    "@freelog/freelog-ui-contract": "0.0.7",
+    "@freelog/freelog-ui-contract": "0.0.9",
     "@freelog/resource-policy-lang": "0.0.33",
     "@vue/component-compiler-utils": "^2.3.0",
     "axios": "^0.18.0",
