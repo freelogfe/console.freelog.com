@@ -4,7 +4,7 @@
       <i>F</i>
       <span class="page-title">{{pageTitle}}</span>
     </router-link>
-    <nav class="toolbar">
+    <nav class="toolbar" v-if="session.user">
       <ul class="navbar-menu">
         <li class="nav-right-menu-item">
           <search-input @search="searchHandler"></search-input>

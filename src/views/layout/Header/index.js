@@ -31,12 +31,12 @@ export default {
     this.listenWindowVisibility()
   },
   mounted() {
-    if (!this.session.user.userId) {
+    if (this.session && this.session.user && this.session.user.userId) {
+      this.initData()
+    } else {
       this.$store.dispatch('getCurrentUser').then(() => {
         this.initData()
       })
-    } else {
-      this.initData()
     }
   },
 
