@@ -16,7 +16,8 @@ sync(store, router, { moduleName: 'route' })
 Vue.use(ElementUI)
 Vue.use(plugins)
 Vue.use(VueLazyload, {
-  lazyComponent: true
+  lazyComponent: true,
+  observer: true
 })
 Vue.config.productionTip = false
 /* eslint-disable no-new */
