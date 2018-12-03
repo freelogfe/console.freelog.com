@@ -9,7 +9,6 @@
     "build:prod": "npm run build -- --env=prod",
     "build:beta": "npm run build -- --env=beta",
     "pack": "tar -zcf console.tar dist",
-
     "test:e2e": "vue-cli-service test:e2e --config ./nightwatch.conf.js",
     "test:e2e:chrome": "npm run test:e2e -- --env chrome",
     "test:e2e:safari": "npm run test:e2e -- --env safari",

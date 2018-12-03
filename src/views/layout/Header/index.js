@@ -47,6 +47,9 @@ export default {
         this.avatarUrl = `${this.session.user.headImage}?x-oss-process=style/head-image`
       }
     },
+    errorImageHandler(){
+      this.avatarUrl = '' //失败展示昵称
+    },
     listenWindowVisibility() {
       const self = this
       let hidden = 'hidden'

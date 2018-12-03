@@ -32,86 +32,101 @@
 </template>
 
 <script>
-import { onloadSchemesForResource } from '@/data/scheme/loader'
-import { RESOURCE_STATUS } from '@/config/resource'
+  import {onloadSchemesForResource} from '@/data/scheme/loader'
+  import {RESOURCE_STATUS} from '@/config/resource'
 
-export default {
-  name: 'main-list-resource-item',
 
-  data() {
-    return {
-      schemes: []
-    }
-  },
-  props: {
-    resource: {
-      type: Object,
-      default() {
-        return {}
+  var isSupportWebp;
+  (function isSupportWebp(callback) {
+    var webP = new Image();
+    webP.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+
+    webP.onload = webP.onerror = function () {
+      callback(webP.height === 1);
+    };
+  })((is) => {
+    isSupportWebp = is
+    console.log('isSupportWebp', isSupportWebp)
+  });
+
+
+  export default {
+    name: 'main-list-resource-item',
+
+    data() {
+      return {
+        schemes: []
       }
     },
-    type: {
-      type: String,
-      default: 'list'
-    }
-  },
-
-  computed: {
-    postImgUrl() {
-      let src
-
-      if (this.resource.previewImages.length) {
-        src = this.resource.previewImages[0]
-      } else {
-        src = ''
-      }
-
-      return src
-    }
-  },
-
-  mounted() {
-    this.format(this.resource)
-  },
-
-  methods: {
-    resSchemeStatusCls(scheme) {
-      return scheme.bubbleResources.length ? 'status-1' : 'status-0'
-    },
-    format(resource) {
-      if (!this.resource.resourceId) {
-        return
-      }
-
-      resource._statusInfo = RESOURCE_STATUS[resource.status]
-
-      if (!resource.schemes) {
-        onloadSchemesForResource(resource.resourceId).then((list) => {
-          this.schemes = list.map(this.resolveScheme)
-        })
-      } else {
-        this.schemes = resource.schemes.map(this.resolveScheme)
+    props: {
+      resource: {
+        type: Object,
+        default() {
+          return {}
+        }
+      },
+      type: {
+        type: String,
+        default: 'list'
       }
     },
-    resolveScheme(scheme) {
-      const users = new Set()
-      scheme.policy.forEach((p) => {
-        p.authorizedObjects.forEach((objs) => {
-          objs.users.forEach((u) => {
-            users.add(u)
+
+    computed: {
+      postImgUrl() {
+        let src
+
+        if (this.resource.previewImages.length) {
+          src = this.resource.previewImages[0] + `?x-oss-process=style/${isSupportWebp ? 'webp' : 'jpg'}_image`
+        } else {
+          src = ''
+        }
+
+        return src
+      }
+    },
+
+    mounted() {
+      this.format(this.resource)
+    },
+
+    methods: {
+      resSchemeStatusCls(scheme) {
+        return scheme.bubbleResources.length ? 'status-1' : 'status-0'
+      },
+      format(resource) {
+        if (!this.resource.resourceId) {
+          return
+        }
+
+        resource._statusInfo = RESOURCE_STATUS[resource.status]
+
+        if (!resource.schemes) {
+          onloadSchemesForResource(resource.resourceId).then((list) => {
+            this.schemes = list.map(this.resolveScheme)
+          })
+        } else {
+          this.schemes = resource.schemes.map(this.resolveScheme)
+        }
+      },
+      resolveScheme(scheme) {
+        const users = new Set()
+        scheme.policy.forEach((p) => {
+          p.authorizedObjects.forEach((objs) => {
+            objs.users.forEach((u) => {
+              users.add(u)
+            })
           })
         })
-      })
 
-      scheme.targets = Array.from(users)
-      scheme.isBubbled = scheme.bubbleResources.length > 0
-      return scheme
-    },
-    gotoDetail() {
-      this.$router.push(`/resource/detail/${this.resource.resourceId}`)
+        scheme.targets = Array.from(users)
+        scheme.isBubbled = scheme.bubbleResources.length > 0
+        return scheme
+      },
+      gotoDetail() {
+        this.$router.push(`/resource/detail/${this.resource.resourceId}`)
+      }
     }
   }
-}
 </script>
 
 

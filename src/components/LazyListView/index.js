@@ -2,6 +2,7 @@
 import lozad from 'lozad'
 
 const winHeight = (window.innerHeight || document.documentElement.clientHeight)
+
 function isElementInViewport(el, diff) {
   var rect = el.getBoundingClientRect();
   var containerRect = {
@@ -74,7 +75,7 @@ export default {
     initView() {
       const self = this
       const $hide = this.$refs.loading
-      const diffBtm = parseInt(winHeight/2, 10)
+      const diffBtm = parseInt(winHeight / 2, 10)
 
       $hide.classList.remove('hide')
 
