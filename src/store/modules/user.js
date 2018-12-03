@@ -66,7 +66,7 @@ const user = {
         userInfo = authInfo
       }
       return new Promise((resolve) => {
-        const logged = (getters.session && userInfo.userId && getters.session.user.userId === userInfo.userId)
+        const logged = (getters.session && userInfo.userId && getters.session.user && getters.session.user.userId === userInfo.userId)
         resolve(logged)
       })
     },

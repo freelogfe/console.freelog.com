@@ -31,12 +31,12 @@ export default {
     this.listenWindowVisibility()
   },
   mounted() {
-    if (!this.session.user.userId) {
+    if (this.session && this.session.user && this.session.user.userId) {
+      this.initData()
+    } else {
       this.$store.dispatch('getCurrentUser').then(() => {
         this.initData()
       })
-    } else {
-      this.initData()
     }
   },
 
@@ -46,6 +46,9 @@ export default {
       if (this.session.user.headImage) {
         this.avatarUrl = `${this.session.user.headImage}?x-oss-process=style/head-image`
       }
+    },
+    errorImageHandler(){
+      this.avatarUrl = '' //失败展示昵称
     },
     listenWindowVisibility() {
       const self = this

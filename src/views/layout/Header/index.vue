@@ -4,7 +4,7 @@
       <i>F</i>
       <span class="page-title">{{pageTitle}}</span>
     </router-link>
-    <nav class="toolbar">
+    <nav class="toolbar" v-if="session.user">
       <ul class="navbar-menu">
         <li class="nav-right-menu-item">
           <search-input @search="searchHandler"></search-input>
@@ -23,7 +23,7 @@
             popper-class="nav-list-pop-wrap"
             trigger="hover">
             <span class="user-profile" slot="reference">
-              <img v-if="avatarUrl" :src="avatarUrl" alt="">
+              <img v-if="avatarUrl" :src="avatarUrl" alt="" @error="errorImageHandler">
               <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
             </span>
             <ul class="my-profile-items">

@@ -1,6 +1,31 @@
 // https://github.com/hejianxian/vue-list/blob/master/src/components/vue-list.vue
 import lozad from 'lozad'
 
+const winHeight = (window.innerHeight || document.documentElement.clientHeight)
+
+function isElementInViewport(el, diff) {
+  var rect = el.getBoundingClientRect();
+  var containerRect = {
+    top: 0,
+    left: 0,
+    bottom: winHeight,
+    right: (window.innerWidth || document.documentElement.clientWidth)
+  }
+  if (diff) {
+    containerRect.top -= diff.top || 0
+    containerRect.left -= diff.left || 0
+    containerRect.bottom += diff.bottom || 0
+    containerRect.right += diff.right || 0
+  }
+
+  return (
+    rect.top >= containerRect.top &&
+    rect.left >= containerRect.left &&
+    rect.bottom <= containerRect.bottom &&
+    rect.right <= containerRect.right
+  );
+}
+
 export default {
   name: 'fl-lazy-list-view',
   props: {
@@ -40,7 +65,6 @@ export default {
     }
   },
   mounted() {
-    // this.handleScroll();
     this.initView()
     this.$on('reload', this.refresh.bind(this))
   },
@@ -50,21 +74,44 @@ export default {
   methods: {
     initView() {
       const self = this
-      self.$refs.loading.classList.remove('hide')
-      const observer = lozad(this.$refs.loading, {
-        load(el) {
-          self.load()
-            .then(() => {
-              if (self.canLoadMore) {
-                el.dataset.loaded = false
-                observer.observe(el)
-              } else {
-                self.$refs.loading.classList.add('hide')
-              }
-            })
-            .catch(() => {
-              self.$refs.loading.classList.add('hide')
-            })
+      const $hide = this.$refs.loading
+      const diffBtm = parseInt(winHeight / 2, 10)
+
+      $hide.classList.remove('hide')
+
+      const hideFn = () => $hide.classList.add('hide')
+      const observer = lozad($hide, {
+        loaded(el) {
+          if (!self.canLoadMore) {
+            return hideFn()
+          }
+          const inView = isElementInViewport($hide, {bottom: diffBtm})
+          const reobserve = () => {
+            el.dataset.loaded = false
+            observer.observe(el)
+          }
+
+          if (!inView) {
+            const fn = () => {
+              if (!el.dataset.loaded) return
+              reobserve()
+              window.removeEventListener('scroll', fn)
+            }
+            setTimeout(() => {
+              window.addEventListener('scroll', fn)
+            }, 1e2)
+            return
+          }
+
+          self.load().then(() => {
+            if (!self.canLoadMore) {
+              hideFn()
+            } else {
+              reobserve()
+            }
+          }).catch(() => {
+            hideFn()
+          })
         },
         rootMargin: '400px 0px', // syntax similar to that of CSS Margin
         threshold: 0.1 // ratio of element convergence

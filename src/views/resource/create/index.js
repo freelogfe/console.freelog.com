@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     executeNext(callback) {
-      if (this.isRequesting)return
+      if (this.isRequesting) return
 
       this.isRequesting = true
       if (this.$refs.inputArea.nextHandler) {
