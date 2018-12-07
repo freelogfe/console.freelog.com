@@ -7,8 +7,8 @@ const presentableList = resolve => require.ensure([], () => resolve(require('./p
 const contractList = resolve => require.ensure([], () => resolve(require('./contract/list/index.vue')), 'contract')
 const nodePreview = resolve => require.ensure([], () => resolve(require('./preview/index.vue')), 'node')
 
-
 const nodePagebuilds = resolve => require.ensure([], () => resolve(require('./page-build/list/index.vue')), 'page-build')
+const presentableDetail = resolve => require.ensure([], () => resolve(require('./presentable/detail/index.vue')), 'presentable')
 
 export default {
   nodeCreator,
@@ -18,5 +18,6 @@ export default {
   contractList,
   nodePagebuilds,
   nodePreview,
-  presentableSchemeDetail
+  presentableSchemeDetail,
+  presentableDetail
 }

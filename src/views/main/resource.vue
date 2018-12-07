@@ -49,7 +49,6 @@
     console.log('isSupportWebp', isSupportWebp)
   });
 
-
   export default {
     name: 'main-list-resource-item',
 

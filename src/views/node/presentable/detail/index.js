@@ -1,28 +1,22 @@
 import PresentablePolicy from '@/components/policyEditor/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
-import { onloadResourceDetail } from '@/data/resource/loader'
-import { onloadSchemeDetail } from '@/data/scheme/loader'
+import {onloadResourceDetail} from '@/data/resource/loader'
+import {onloadSchemeDetail} from '@/data/scheme/loader'
+import {onloadPresentableDetail} from '@/data/presentable/loader'
+
 import PresentableEditor from '../editor/index.vue'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
+import PresentableDetailHeader from './header.vue'
 
 export default {
   name: 'presentable-detail',
   data() {
     return {
-      showBindWidgetDialog: false,
+      params: {},
       loading: false,
-      bindWidget: {},
-      presentableDetail: {},
-      activeTabName: 'resource',
-      nodeId: this.$route.params.nodeId,
-      editPresentable: {
-        name: '',
-        policyText: '',
-        userDefinedTags: []
-      },
-      presentableData: {
-        resourceInfo: {}
-      }
+      activeTabName: 'policy-manager', //contract-manager, schema-manager
+      resourceInfo: {},
+      presentableInfo: {},
     }
   },
 
@@ -32,16 +26,16 @@ export default {
     }
   },
   components: {
-    PresentablePolicy,
-    FreelogTags,
-    PresentableEditor,
-    ResourceIntroInfo
+    PresentableDetailHeader,
+    // FreelogTags,
+    // PresentableEditor,
+    // ResourceIntroInfo
   },
 
   computed: {},
 
   watch: {
-    'detail.presentableId': function () {
+    '$route': function () {
       this.initView()
     }
   },
@@ -50,15 +44,22 @@ export default {
   },
   methods: {
     initView() {
-      if (!this.detail.resourceId) {
-        return
+      this.params = this.$route.params
+      if (!this.params.presentableId) {
+        return this.$error.showErrorMessage('缺乏presentable参数')
       }
-      this.presentableData = this.detail
-      onloadResourceDetail(this.detail.resourceId).then((detail) => {
-        this.presentableData.resourceInfo = { ...detail }
-      })
 
-      this.loadPresentableScheme()
+      this.loadPresentableData(this.params)
+    },
+    loadPresentableData(params) {
+      return onloadPresentableDetail(params.presentableId)
+        .then(presentable => {
+          this.presentableInfo = {...presentable}
+          return onloadResourceDetail(presentable.resourceId).then((detail) => {
+            this.resourceInfo = {...detail}
+            console.log(this.presentableInfo, this.resourceInfo)
+          })
+        })
     },
     loadPresentableScheme() {
       const contract = this.getPresentableContract()
@@ -73,18 +74,18 @@ export default {
               }
             }
 
-            this.$set(this.presentableData, 'scheme', scheme)
+            this.$set(this.presentableInfo, 'scheme', scheme)
           }
         })
       }
     },
     getPresentableContract() {
-      const contracts = this.presentableData.contracts || []
+      const contracts = this.presentableInfo.contracts || []
       if (contracts.length) {
         let contract
         for (let i = 0; i < contracts.length; i += 1) {
           contract = contracts[i]
-          if (contract.resourceId === this.presentableData.resourceId) {
+          if (contract.resourceId === this.presentableInfo.resourceId) {
             return contract
           }
         }
@@ -94,12 +95,12 @@ export default {
     },
     gotoSchemeDetailHandler() {
       this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/${this.detail.presentableId}/scheme_detail`,
-        query: { resourceId: this.detail.resourceId }
+        path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}/scheme_detail`,
+        query: {resourceId: this.presentableInfo.resourceId}
       })
     },
-    savePresentableEnd(data) {
-      this.$emit('update', data)
+    handleClick(){
+
     }
   }
 }
