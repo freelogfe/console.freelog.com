@@ -64,7 +64,8 @@ function onloadResourceDetail(resourceId) {
 
 export {
   loadDetail,
-  onloadResourceDetail
+  onloadResourceDetail,
+  loadResources
 }
 
 export default {

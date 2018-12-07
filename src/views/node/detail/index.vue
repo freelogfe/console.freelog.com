@@ -1,38 +1,21 @@
 <template>
   <section class="node-detail-container">
-    <div class="node-nav-area">
-      <div class="node-info-wrap">
-        <h3 class="title">{{detail.nodeName}}</h3>
-        <div class="node-link">{{detail.nodeDomain}}{{domainSuffix}}
-          <clip-board
-            style="display: inline-block"
-            @copyDone="copyDoneHandler"
-            :value="resolveDomain(detail)">
-            <a href="javascript:;">
-              <i class="fl-icon-node-page fl-icon"></i>
-            </a>
-          </clip-board>
-        </div>
+    <div class="node-info-wrap">
+      <h3 class="title">{{detail.nodeName}}</h3>
+      <div class="node-link">{{detail.nodeDomain}}{{domainSuffix}}
+        <clip-board
+                style="display: inline-block"
+                @copyDone="copyDoneHandler"
+                :value="resolveDomain(detail)">
+          <a href="javascript:;">
+            <i class="fl-icon-node-page fl-icon"></i>
+          </a>
+        </clip-board>
       </div>
-      <nav class="node-detail-nav-wrap">
-        <ul class="nav-list">
-          <li class="nav-item"
-              :class="{active: currentTab===navItem.name}"
-              @click="changePanelHandler(navItem.name)"
-              :key="navItem.name"
-              v-for="navItem in NAV_TABS">{{navItem.title}}
-          </li>
-        </ul>
-      </nav>
+    </div>
 
-      <div class="node-status-info">
-        <p>节点状态：</p>
-        <el-button class="node-status-btn">未发布</el-button>
-      </div>
-    </div>
-    <div class="right-side-wrap">
-      <router-view :key="key"></router-view>
-    </div>
+    <!--<node-page-build></node-page-build>-->
+    <node-presentables></node-presentables>
   </section>
 </template>
 

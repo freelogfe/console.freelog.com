@@ -1,0 +1,117 @@
+.pb-list-container {
+  color: #333333;
+  padding: 50px 25px;
+  .nav-title {
+    font-size: 18px;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  .pb-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 40px;
+    .pb-item {
+      flex-basis: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+
+      &.selected {
+        .pb-desc {
+          .el-icon-circle-check-outline {
+            color: #9BCB39;
+          }
+        }
+
+        .pb-item-wrap {
+          border: 5px solid #9BCB39;
+          border-radius: 4px;
+        }
+      }
+    }
+
+    .pb-item-wrap {
+      border: 1px solid #eeeeee;
+      border-radius: 3px;
+      background-color: #FFFFFF;
+      transition: all .3s;
+      .pb-item-content {
+        cursor: pointer;
+      }
+    }
+
+    .add-pb-area {
+      border: 1px solid #eeeeee;
+      border-radius: 3px;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:after {
+        padding-top: 75%;
+        content: ' ';
+        display: block;
+      }
+      i {
+        color: #999999;
+        font-size: 60px;
+      }
+    }
+    .pb-thumbnail-wrap {
+      width: 100%;
+      position: relative;
+      //cursor: pointer;
+      &:after {
+        content: ' ';
+        display: inline-block;
+        padding-top: 66.67%;
+        width: 100%;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .pb-item-content {
+      padding: 14px 23px;
+      border-top: 1px solid #CCCCCC;
+      .pb-title {
+        height: 19px;
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+    }
+
+    .pb-desc {
+      height: 40px;
+      p {
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+      }
+
+      .pb-select-btn {
+        &:hover {
+          color: #9e9e9e;
+        }
+      }
+      .el-icon-circle-check-outline {
+        float: right;
+        font-size: 40px;
+        color: #EEEEEE;
+        padding-left: 30px;
+      }
+    }
+  }
+}

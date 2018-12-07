@@ -5,7 +5,7 @@ import ClipBoard from '@/components/clipboard/index.vue'
 import { mapGetters } from 'vuex'
 import NodeContracts from '../contract/list/index.vue'
 import NodePresentables from '../presentables/index.vue'
-import NodePageBuilds from '../page-build/list/index.vue'
+import NodePageBuild from '../page-build/index.vue'
 import NodePreview from '../preview/index.vue'
 
 
@@ -32,7 +32,7 @@ export default {
     ClipBoard,
     NodeContracts,
     NodePresentables,
-    NodePageBuilds,
+    NodePageBuild,
     NodePreview
   },
 
