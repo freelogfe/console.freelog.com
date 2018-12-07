@@ -8,7 +8,7 @@
         <div class="res-info">{{resource.resourceName}} | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
         </div>
-        <p><i class="dot"></i>{{contractState}}</p>
+        <p :class="contractStateCls"><i class="dot"></i>{{contractState}}</p>
       </div>
 
       <router-link :to="nodeIndexUrl" class="back-to-node-page">
@@ -32,7 +32,18 @@
 
     computed: {
       contractState() {
-        return '已签约（授权方案1/策略2）'
+        var scheme = this.presentable.scheme
+        var text
+
+        if (!scheme) {
+          text = '未签约'
+        } else {
+          text = `已签约 (${scheme.authSchemeName}/${scheme.selectedPolicy.policyName})`
+        }
+        return text
+      },
+      contractStateCls(){
+        return this.presentable.scheme? 'active-status-2' : 'active-status-0'
       },
       nodeIndexUrl(){
         return `/node/${this.$route.params.nodeId}`

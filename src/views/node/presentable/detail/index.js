@@ -50,6 +50,7 @@ export default {
       }
 
       this.loadPresentableData(this.params)
+        .then(this.loadPresentableScheme.bind(this))
     },
     loadPresentableData(params) {
       return onloadPresentableDetail(params.presentableId)
