@@ -51,7 +51,7 @@
                   width="100">
             <template slot-scope="scope">
               <div>
-                <img :src="scope.row.resourceInfo.postImgUrl"
+                <img :src="scope.row.resourceInfo.postImgUrl | padImage"
                      :class="{'resource-default-preview':!scope.row.resourceInfo.postImgUrl}"
                      alt="">
               </div>

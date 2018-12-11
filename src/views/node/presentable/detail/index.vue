@@ -6,7 +6,7 @@
         <el-tab-pane name="policy-manager">
           <span slot="label" class="panel-tab-name">策略管理</span>
           <div class="panel-content policy-manager-wrap">
-            todo
+            <policy-list :list="presentableInfo.policy"></policy-list>
           </div>
         </el-tab-pane>
         <el-tab-pane name="contract-manager" :lazy="true">

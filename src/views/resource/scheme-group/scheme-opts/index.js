@@ -1,5 +1,5 @@
 import { onloadSchemesForResource } from '@/data/scheme/loader'
-import PolicyEditor from '@/components/policyEditor/index.vue'
+import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { beautify } from '@freelog/resource-policy-lang'
 import { SCHEME_STATUS } from '@/config/scheme'
 import ResourceIntroInfo from '../../intro/index.vue'

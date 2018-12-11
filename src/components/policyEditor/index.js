@@ -1,4 +1,4 @@
-import { highlight, compile } from '@freelog/resource-policy-lang'
+import {highlight, compile} from '@freelog/resource-policy-lang'
 
 import PolicyTemplateSelector from './tool/policyTpl.vue'
 import QueryPolicyLicense from './tool/queryLicense.vue'
@@ -7,19 +7,16 @@ export default {
   name: 'policy-editor',
   data() {
     return {
-      submitLoading: false,
-      policyText: this.value,
       showCustomPolicyTplDialog: false,
       currentTool: '',
-      editingIndex: -1,
-      policyList: []
+      mode: 'edit'
     }
   },
   props: {
-    value: {
-      type: [Array, Object],
+    policy: {
+      type: Object,
       default() {
-        return ''
+        return {}
       }
     },
 
@@ -28,58 +25,34 @@ export default {
       default() {
         return true
       }
-    },
-    config: {
-      type: Object,
-      default() {
-        return {
-          type: '' // resource or presentable
-        }
-      }
     }
   },
 
-  components: { PolicyTemplateSelector, QueryPolicyLicense },
+  components: {PolicyTemplateSelector, QueryPolicyLicense},
   watch: {
-    policyList: {
-      handler() {
-        this.$emit('change', this.policyList)
-      },
-      deep: true
-    },
-    'value.policy': {
-      handler() {
-        this.fillPolicyList(this.value)
-      },
-      deep: true
+    policy() {
+      this.resolvePolicy(this.policy)
     }
   },
   mounted() {
-    if (!this.config.type) {
-      this.config.type = (this.$route.meta.type === 'node') ? 'presentable' : 'resource'
-    }
-    this.fillPolicyList(this.value)
+    this.resolvePolicy(this.policy)
   },
   methods: {
-    fillPolicyList(list) {
-      if (list.policy) {
-        this.policyList = list.policy.map((p) => {
-          let policyText = p.policyText
-          const ret = compile(policyText)
-          if (!ret.errorMsg) {
-            policyText = highlight(policyText)
-          }
-          return {
-            policyName: p.policyName || '',
-            policyText,
-            policySegmentId: p.segmentId,
-            disabled: p.status === 0
-          }
-        })
-      }
+    resolvePolicy(policy) {
+      if (policy.segmentId) {
+        this.mode = 'preview'
+        let policyText = policy.policyText
+        const ret = compile(policyText)
 
-      if (!this.policyList.length) {
-        this.addNewPolicy()
+        if (!ret.errorMsg) {
+          policyText = highlight(policyText)
+        }
+        Object.assign(this.policy, {
+          policyName: policy.policyName || '',
+          policyText,
+          policySegmentId: policy.segmentId,
+          disabled: policy.status === 0
+        })
       }
     },
     validate() {
@@ -87,7 +60,7 @@ export default {
       if (!ret.errorMsg) {
         this.policyText = highlight(this.policyText)
         this.$emit('input', this.policyText)
-        this.$emit('validate', { done: true })
+        this.$emit('validate', {done: true})
       } else {
         this.$emit('validate', {
           done: false,
@@ -97,16 +70,6 @@ export default {
         })
         this.$message.error(ret.errorMsg) // 外层控制??
       }
-    },
-    addNewPolicy() {
-      this.policyList.push({
-        policyName: '未命名策略',
-        policyText: '',
-        disabled: false
-      })
-    },
-    createHandler(data) {
-      return this.$services.policy.post(data)
     },
     showToolHandler(toolName) {
       this.currentTool = toolName
@@ -124,54 +87,37 @@ export default {
         this.$emit('input', this.policyText)
       }
     },
-    getCurrentEditingPolicy() {
-      return this.policyList[this.editingIndex]
-    },
     selectPolicyTemplateCallback(data) {
-      const policy = this.getCurrentEditingPolicy()
-      policy.policyText = data.template
+      this.policy.policyText = data.template
     },
     selectLicenseIdCallback(data) {
-      const policy = this.getCurrentEditingPolicy()
-      policy.policyText += ` ${data.licenseId}`
+      this.policy.policyText += ` ${data.licenseId}`
     },
     changePolicyText(policy) {
       // to validate
       console.log(policy)
     },
-    focusInputHandler(ev, index) {
-      this.editingIndex = index
-    },
-    switchPolicyStatusHandler(policy, index) {
+    switchPolicyStatusHandler() {
+      var policy = this.policy
       if (policy.policySegmentId) {
-        policy.disabled = !policy.disabled
-      } else {
-        this.$confirm('确定删除当前未保存策略？')
+        this.$confirm(`确定${policy.disabled ? '上' : '下'}架策略 <${policy.policyName}>？`)
           .then(() => {
-            this.policyList.splice(index, 1)
+            policy.disabled = !policy.disabled
+            this.$emit('save', this.policy)
           }).catch(() => {
-          })
+        })
       }
     },
-    getChangeData() {
-      const policies = {}
-      this.policyList.forEach((p) => {
-        if (p.policySegmentId) {
-          policies.updatePolicySegments = policies.updatePolicySegments || []
-          policies.updatePolicySegments.push({
-            policySegmentId: p.policySegmentId,
-            policyName: p.policyName,
-            status: p.disabled ? 0 : 1
-          })
-        } else if (p.policyText) {
-          policies.addPolicySegments = policies.addPolicySegments || []
-          policies.addPolicySegments.push({
-            policyName: p.policyName,
-            policyText: btoa(p.policyText)
-          })
-        }
-      })
-      return policies
+    changePolicyNameHandler(){
+      if (this.policy.policySegmentId) {
+        this.$emit('save', this.policy)
+      }
+    },
+    deletePolicyHandler() {
+      this.$emit('delete', this.policy)
+    },
+    savePolicyHandler() {
+      this.$emit('save', this.policy)
     }
   }
 }

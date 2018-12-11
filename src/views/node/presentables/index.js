@@ -31,7 +31,7 @@ export default {
         'show-header': false
       },
       paginationConfig: {
-        target: '/v1/presentables?nodeId=10018&isOnline=2',
+        target: `/v1/presentables?nodeId=${this.$route.params.nodeId}&isOnline=2`,
         params: {}
       },
 
@@ -68,6 +68,13 @@ export default {
     FreelogSwitch,
     SearchResource,
     Pagination
+  },
+
+  watch: {
+    $route(){
+      if (!this.$route.params.nodeId) return
+      this.paginationConfig.target = `/v1/presentables?nodeId=${this.$route.params.nodeId}&isOnline=2`
+    }
   },
 
   mounted() {
@@ -121,7 +128,7 @@ export default {
         console.log(resources)
         resources.forEach(resource => {
           resource.postImgUrl = this.resolvePostImgUrl(resource)
-          Object.assign(list[maps[resource.resourceId]].resourceInfo, resource)
+          this.$set(list[maps[resource.resourceId]], 'resourceInfo', resource)
         })
       })
 
@@ -135,10 +142,6 @@ export default {
             })
           })
       }
-
-      setTimeout(()=>{
-        console.log(list)
-      },1e3)
       return list
     },
     loadPresentablesSchemes(authSchemeIds){
@@ -174,7 +177,7 @@ export default {
       let src
 
       if (resource.previewImages.length) {
-        src = resource.previewImages[0] + `?x-oss-process=style/${isSupportWebp ? 'webp' : 'jpg'}_image`
+        src = resource.previewImages[0]
       } else {
         src = ''
       }

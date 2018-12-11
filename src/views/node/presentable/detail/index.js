@@ -1,11 +1,10 @@
-import PresentablePolicy from '@/components/policyEditor/index.vue'
+import PolicyList from '@/components/PolicyList/index.vue'
 import FreelogTags from '@/components/Tags/index.vue'
 import {onloadResourceDetail} from '@/data/resource/loader'
 import {onloadSchemeDetail} from '@/data/scheme/loader'
 import {onloadPresentableDetail} from '@/data/presentable/loader'
 
 import PresentableEditor from '../editor/index.vue'
-import ResourceIntroInfo from '../../../resource/intro/index.vue'
 import PresentableDetailHeader from './header.vue'
 
 export default {
@@ -16,7 +15,10 @@ export default {
       loading: false,
       activeTabName: 'policy-manager', //contract-manager, schema-manager
       resourceInfo: {},
-      presentableInfo: {},
+      presentableInfo: {
+        policy: [],
+        policyList: []
+      }
     }
   },
 
@@ -27,9 +29,9 @@ export default {
   },
   components: {
     PresentableDetailHeader,
-    // FreelogTags,
-    // PresentableEditor,
-    // ResourceIntroInfo
+    FreelogTags,
+    PresentableEditor,
+    PolicyList
   },
 
   computed: {},

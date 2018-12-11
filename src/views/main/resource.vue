@@ -1,7 +1,7 @@
 <template>
   <div class="main-resource-item-wrap" @click="gotoDetail">
     <div class="res-poster-wrap">
-      <img :src="postImgUrl" :class="{'resource-default-preview':!postImgUrl}" alt="">
+      <img :src="postImgUrl|padImage" :class="{'resource-default-preview':!postImgUrl}" alt="">
     </div>
     <div class="res-digest-info">
       <p class="res-name">{{resource.resourceName}}</p>
@@ -35,20 +35,6 @@
   import {onloadSchemesForResource} from '@/data/scheme/loader'
   import {RESOURCE_STATUS} from '@/config/resource'
 
-
-  var isSupportWebp;
-  (function isSupportWebp(callback) {
-    var webP = new Image();
-    webP.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-
-    webP.onload = webP.onerror = function () {
-      callback(webP.height === 1);
-    };
-  })((is) => {
-    isSupportWebp = is
-    console.log('isSupportWebp', isSupportWebp)
-  });
-
   export default {
     name: 'main-list-resource-item',
 
@@ -75,7 +61,7 @@
         let src
 
         if (this.resource.previewImages.length) {
-          src = this.resource.previewImages[0] + `?x-oss-process=style/${isSupportWebp ? 'webp' : 'jpg'}_image`
+          src = this.resource.previewImages[0]
         } else {
           src = ''
         }

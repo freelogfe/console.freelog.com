@@ -1,5 +1,5 @@
 import TagsEditor from '@/components/Tags/index.vue'
-import PresentablePolicy from '@/components/policyEditor/index.vue'
+import PresentablePolicy from '@/components/PolicyEditor/index.vue'
 import CONFIG from '@/config/index'
 
 const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS

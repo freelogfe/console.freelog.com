@@ -58,7 +58,7 @@
 <script>
 
 import { intersectionBy, unionBy, differenceBy } from 'lodash'
-import PolicyEditor from '@/components/policyEditor/index.vue'
+import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { SCHEME_STATUS } from '@/config/scheme'
 import SearchResource from '../search/index.vue'
 import ResourceSchemeTree from '../scheme-tree/index.vue'
