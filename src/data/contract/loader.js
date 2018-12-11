@@ -5,7 +5,6 @@ function loadDetail(id) {
   return ContractService.get(id).then(res => res.getData())
 }
 
-
 // const onloadContractDetail = createCacheLoaders(loadDetail)
 const onloadContractDetail = loadDetail
 

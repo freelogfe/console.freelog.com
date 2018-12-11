@@ -166,3 +166,17 @@ html body {
     display: inline-block; cursor: pointer; color: #3e94f3; pointer-events: auto;
   }
 }
+
+.label-title {
+  font-size: 14px;
+  font-weight: bold;
+  &:before {
+    content: ' ';
+    display: inline-block;
+    width: 3px;
+    background: #666;
+    height: 16px;
+    vertical-align: text-bottom;
+    margin-right: 5px;
+  }
+}

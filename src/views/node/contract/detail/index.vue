@@ -10,7 +10,7 @@
         </el-form-item>
       </el-form>
 
-      <contract-detail-info :data="contractDetail" :showRefreshing="true" :labelWidth="120" :shouldShowSegment="false"
+      <contract-detail-info :data="contractDetail" :showRefreshing="true" :labelWidth="120"
                             @refresh="updateContractDetail">
         <el-form-item label="合同详情">
           <contract-content

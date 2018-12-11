@@ -38,7 +38,6 @@ export default (Vue) => {
 
 
   Vue.filter('padImage', (value) => {
-    console.log('image', value)
     if (!value) return ''
 
     if (value.indexOf('?') === -1) {

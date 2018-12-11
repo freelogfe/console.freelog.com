@@ -44,6 +44,7 @@
       <pagination class="node-presentable-list"
                   :config="tableConfig"
                   :formatHandler="formatHandler"
+                  ref="paginationRef"
                   :pagination="paginationConfig">
         <template slot="list">
           <el-table-column
@@ -71,7 +72,12 @@
                     ]">
                 <i class="dot"></i>
                 <div class="schema-state">
-                  <p>{{scope.row.hasContract? '已签约':'未签约'}}</p>
+                  <div>
+                    <template v-if="scope.row.hasContract">已签约</template>
+                    <template v-else>
+                      未签约 <el-button type="text" @click="deletePresentableHandler(scope.row)"><i class="el-icon-delete"></i></el-button>
+                    </template>
+                  </div>
                   <p class="schema-info" v-if="scope.row.scheme && scope.row.scheme.selectedPolicy">{{scope.row.scheme.authSchemeName}}/{{scope.row.scheme.selectedPolicy.policyName}}</p>
                 </div>
               </div>

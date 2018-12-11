@@ -71,7 +71,7 @@ export default {
   },
 
   watch: {
-    $route(){
+    $route() {
       if (!this.$route.params.nodeId) return
       this.paginationConfig.target = `/v1/presentables?nodeId=${this.$route.params.nodeId}&isOnline=2`
     }
@@ -100,7 +100,6 @@ export default {
       }
     },
     formatHandler(list) {
-      console.log('format list', list)
       if (!list || !list.length) {
         return []
       }
@@ -125,7 +124,6 @@ export default {
       })
 
       loadResources(rids).then(resources => {
-        console.log(resources)
         resources.forEach(resource => {
           resource.postImgUrl = this.resolvePostImgUrl(resource)
           this.$set(list[maps[resource.resourceId]], 'resourceInfo', resource)
@@ -134,8 +132,8 @@ export default {
 
       if (authSchemeIds.length) {
         this.loadPresentablesSchemes(authSchemeIds)
-          .then(schemes=>{
-            schemes.forEach(scheme=>{
+          .then(schemes => {
+            schemes.forEach(scheme => {
               let {index, contract} = schemeIdMaps[scheme.authSchemeId]
               scheme.selectedPolicy = this.getSelectedPolicy(scheme, contract)
               this.$set(list[index], 'scheme', scheme)
@@ -144,14 +142,14 @@ export default {
       }
       return list
     },
-    loadPresentablesSchemes(authSchemeIds){
+    loadPresentablesSchemes(authSchemeIds) {
       return loadAuthSchemes({
         authSchemeIds: authSchemeIds
-      }).then(schemes=>{
+      }).then(schemes => {
         return schemes
       })
     },
-    getSelectedPolicy(scheme, contract){
+    getSelectedPolicy(scheme, contract) {
       for (let i = 0; i < scheme.policy.length; i += 1) {
         const policy = scheme.policy[i]
         if (policy.segmentId === contract.policySegmentId) {
@@ -199,24 +197,45 @@ export default {
       this.currentPresentable.detail = presentable
     },
     changePresentableOnlineHandler(presentable) {
-      if (presentable.isOnlineChecked) {
-        presentable.isOnline = 1
-      } else {
-        presentable.isOnline = 0
+      if (presentable.status & 3 !== 3) {
+        return this.$error.showErrorMessage('合同不完备或不存在可用策略')
       }
-      this.$services.presentables.put(presentable.presentableId, {
-        isOnline: presentable.isOnline
-      }).then((res) => {
-        if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+
+      if (presentable.isLoading) return
+
+      presentable.isLoading = true
+      var nodeId = this.$route.params.nodeId
+      const url = `/v1/auths/presentables/${presentable.presentableId}/presentableTreeAuthTest?nodeId=${nodeId}`
+      this.$axios.get(url)
+        .then(res => {
+          const {errcode, ret, msg, data} = res.data
+          if (errcode !== 0 || ret !== 0 || data.isAuth === false) {
+            presentable.isLoading = false
+            return Promise.reject(data.isAuth === false ? '未获得授权' : msg)
+          }
+
+          if (presentable.isOnlineChecked) {
+            presentable.isOnline = 1
+          } else {
+            presentable.isOnline = 0
+          }
+
+          return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
+            isOnline: presentable.isOnline
+          }).then((res) => {
+            presentable.isLoading = false
+            if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+              return Promise.reject(res.data.msg || '更新失败')
+            }
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+          presentable.isLoading = false
           presentable.isOnline = 0
           presentable.isOnlineChecked = false
-          this.$message.error(res.data.msg || '更新失败')
-        }
-      }).catch((err) => {
-        presentable.isOnline = 0
-        presentable.isOnlineChecked = false
-        this.$error.showErrorMessage(err)
-      })
+          this.$error.showErrorMessage(err)
+        })
     },
     showSearchResourceHandler() {
       this.showSearchResource = true
@@ -246,6 +265,22 @@ export default {
       const curPresentable = this.currentPresentable.detail
       Object.assign(curPresentable, presentable)
       this.resolvePresentable(curPresentable)
+    },
+    deletePresentableHandler(presentable) {
+      this.$confirm(`确定删除${presentable.presentableName}?`)
+        .then(() => {
+          this.$services.presentables.delete(presentable.presentableId)
+            .then(({data}) => {
+              var {ret, errcode, msg} = data
+              if (ret === 0 && errcode === 0) {
+                this.$message.success('成功删除')
+                this.$refs.paginationRef.reload()
+              } else {
+                this.$message.fail(msg)
+              }
+            })
+        }).catch(() => {
+      })
     }
   }
 }

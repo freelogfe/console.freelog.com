@@ -1,0 +1,98 @@
+@listWidth: 430px;
+.fl-contracts-manager-wrap {
+  .contract-list-wrapper {
+    color: #333333;
+    width: 280px;
+    float: left;
+
+    .dot {
+      margin-right: 9px;
+      &:after {
+        margin-top: 6px;
+      }
+    }
+
+    .label-title {
+      margin-bottom: 30px;
+    }
+
+    .contract-list-panel {
+      border: 1px solid #EEEEEE;
+      min-height: 550px;
+      .sub-label-title {
+        color: #666666;
+        background-color: #FAFBFB;
+        font-size: 12px;
+        padding: 6px 9px;
+        border-bottom: 1px solid #EEEEEE;
+        .contracts-num {
+          float: right;
+        }
+      }
+    }
+
+    //明确上抛
+    .contract-status-1,
+    .contract-status-3,
+    .contract-status-5,
+    .contract-status-6 {
+      .dot {
+        &:after {
+          background-color: #F46284;
+        }
+      }
+    }
+
+    //处理中
+    .contract-status-2 {
+      .dot {
+        &:after {
+          border-color: #89D1AC
+        }
+      }
+    }
+
+    //完全解决
+    .contract-status-4 {
+      .dot {
+        &:after {
+          border-color: #89D1AC;
+          background-color: #89D1AC
+        }
+      }
+    }
+
+    .contract-list-title {
+      font-size: 18px;
+      margin-bottom: 35px;
+      margin-left: 35px;
+      i {
+        margin-right: 12px;
+      }
+    }
+
+    .contract-item {
+      padding: 15px 0 15px 7px;
+      border-bottom: 1px solid #EEEEEE;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #F5F5F5;
+      }
+
+      &.current {
+        background-color: #E8F1FB;
+        border: 1px solid #C6DFFC;
+        color: #4497EC;
+      }
+
+    }
+  }
+
+  .contract-exec-container {
+    margin-left: 340px;
+    padding-right: 5px;
+  }
+}

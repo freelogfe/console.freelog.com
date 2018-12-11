@@ -3,9 +3,25 @@
     <div class="pdh-body">
       <div class="lf-side">
         <div class="presentable-info">
-          <span class="p-name">{{presentable.presentableName}}</span>
+          <div style="float: left; margin-right: 60px">
+            <template v-if="editing === false">
+              <span class="p-name">{{presentable.presentableName}}</span>
+              <el-button type="text" @click="setEdtingHandler(true)"><i class="el-icon-edit"></i></el-button>
+            </template>
+            <template v-else>
+              <input type="text" class="presentable-name-input p-name"
+                     @blur="changePresentableNameHandler"
+                     @keyup.enter="changePresentableNameHandler"
+                     v-model="presentable.presentableName">
+            </template>
+          </div>
+
+          <FreelogTags v-model="presentable.userDefinedTags"
+                       class="p-user-tags"
+                       actionText="新标签"
+                       @input="changeTagsHandler"></FreelogTags>
         </div>
-        <div class="res-info">{{resource.resourceName}} | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
+        <div class="res-info" v-if="resource&&resource.resourceName">{{resource.resourceName}} | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
         </div>
         <p :class="contractStateCls"><i class="dot"></i>{{contractState}}</p>
@@ -19,15 +35,24 @@
 </template>
 
 <script>
+  import FreelogTags from '@/components/Tags/index.vue'
+
+
   export default {
     name: 'presentable-detail-header',
     data() {
-      return {}
+      return {
+        editing: false
+      }
     },
 
     props: {
       presentable: Object,
       resource: Object
+    },
+
+    components:{
+      FreelogTags,
     },
 
     computed: {
@@ -42,14 +67,25 @@
         }
         return text
       },
-      contractStateCls(){
-        return this.presentable.scheme? 'active-status-2' : 'active-status-0'
+      contractStateCls() {
+        return this.presentable.scheme ? 'active-status-2' : 'active-status-0'
       },
-      nodeIndexUrl(){
+      nodeIndexUrl() {
         return `/node/${this.$route.params.nodeId}`
       }
+    },
+    methods: {
+      changePresentableNameHandler() {
+        this.setEdtingHandler(false)
+        this.$emit('save', {presentableName: this.presentable.presentableName})
+      },
+      setEdtingHandler(flag) {
+        this.editing = flag
+      },
+      changeTagsHandler(){
+        this.$emit('save', {userDefinedTags: this.presentable.userDefinedTags})
+      }
     }
-
   }
 </script>
 
@@ -68,6 +104,25 @@
       }
       .presentable-info {
         margin-bottom: 10px;
+        i {
+          color: #333333;
+          font-size: 18px;
+          margin-left: 10px;
+        }
+
+        .p-user-tags {
+          padding-top: 7px;
+        }
+
+        .presentable-name-input {
+          outline: none;
+          background-color: white;
+          border: 1px solid #CCCCCC;
+          border-radius: 4px;
+          padding: 7px 10px;
+          min-width: 200px;
+          max-width: 600px;
+        }
       }
       .p-name {
         color: #333333;

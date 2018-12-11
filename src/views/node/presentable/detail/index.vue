@@ -1,21 +1,33 @@
 <template>
   <section class="presentable-detail-wrapper">
-    <presentable-detail-header :resource="resourceInfo" :presentable="presentableInfo"></presentable-detail-header>
+    <presentable-detail-header :resource="resourceInfo"
+                               :presentable="presentableInfo"
+                               @save="savePresentableHandler"></presentable-detail-header>
+
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
-        <el-tab-pane name="policy-manager">
+        <el-tab-pane :name="TAB_NAMES.policy">
           <span slot="label" class="panel-tab-name">策略管理</span>
           <div class="panel-content policy-manager-wrap">
             <policy-list :list="presentableInfo.policy"></policy-list>
           </div>
         </el-tab-pane>
-        <el-tab-pane name="contract-manager" :lazy="true">
+        <el-tab-pane :name="TAB_NAMES.contract" :lazy="true">
           <span slot="label" class="panel-tab-name">合约管理</span>
-          <div class="panel-content">
-            <lazy-component></lazy-component>
+          <div class="panel-content contract-manager-wrap">
+            <lazy-component>
+              <ContractManager :contracts="presentableInfo.contracts"
+                               v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
+              <div class="empty-contract-tip" v-else>
+                未创建合约
+                <router-link :to="$route.path + '?tab=schema'">
+                  <el-button type="text">去创建合约</el-button>
+                </router-link>
+              </div>
+            </lazy-component>
           </div>
         </el-tab-pane>
-        <el-tab-pane name="schema-manager" :lazy="true">
+        <el-tab-pane :name="TAB_NAMES.schema" :lazy="true">
           <span slot="label" class="panel-tab-name">授权方案管理</span>
           <div class="panel-content">
             <lazy-component></lazy-component>

@@ -1,11 +1,18 @@
 import PolicyList from '@/components/PolicyList/index.vue'
-import FreelogTags from '@/components/Tags/index.vue'
+import ContractManager from '@/components/ContractManager/index.vue'
+
 import {onloadResourceDetail} from '@/data/resource/loader'
 import {onloadSchemeDetail} from '@/data/scheme/loader'
 import {onloadPresentableDetail} from '@/data/presentable/loader'
 
-import PresentableEditor from '../editor/index.vue'
 import PresentableDetailHeader from './header.vue'
+
+
+const TAB_NAMES = {
+  policy: 'policy-manager',
+  contract: 'contract-manager',
+  schema: 'schema-manager'
+}
 
 export default {
   name: 'presentable-detail',
@@ -13,11 +20,12 @@ export default {
     return {
       params: {},
       loading: false,
-      activeTabName: 'policy-manager', //contract-manager, schema-manager
+      TAB_NAMES,
+      activeTabName: TAB_NAMES.policy, //contract-manager, schema-manager
       resourceInfo: {},
       presentableInfo: {
         policy: [],
-        policyList: []
+        contracts: []
       }
     }
   },
@@ -29,12 +37,13 @@ export default {
   },
   components: {
     PresentableDetailHeader,
-    FreelogTags,
-    PresentableEditor,
-    PolicyList
+    PolicyList,
+    ContractManager
   },
 
-  computed: {},
+  computed: {
+
+  },
 
   watch: {
     '$route': function () {
@@ -51,16 +60,30 @@ export default {
         return this.$error.showErrorMessage('缺乏presentable参数')
       }
 
+      const tab = this.$route.query.tab
+
+      if (Object.keys(TAB_NAMES).includes(tab)) {
+        this.activeTabName = TAB_NAMES[tab]
+      }
+
       this.loadPresentableData(this.params)
         .then(this.loadPresentableScheme.bind(this))
     },
     loadPresentableData(params) {
       return onloadPresentableDetail(params.presentableId)
         .then(presentable => {
+
+          presentable.contracts.some(contract=>{
+            if (contract.contractId === presentable.masterContractId) {
+              contract.isMasterContract = true
+              return true
+            }
+          })
+
           this.presentableInfo = {...presentable}
+
           return onloadResourceDetail(presentable.resourceId).then((detail) => {
             this.resourceInfo = {...detail}
-            console.log(this.presentableInfo, this.resourceInfo)
           })
         })
     },
@@ -102,8 +125,19 @@ export default {
         query: {resourceId: this.presentableInfo.resourceId}
       })
     },
-    handleClick(){
+    handleClick() {
 
+    },
+    savePresentableHandler(payload) {
+      this.$services.presentables.put(this.$route.params.presentableId, payload)
+        .then(res => {
+          const {errcode, ret, msg} = res.data
+          if (errcode === 0 && ret === 0) {
+
+          } else {
+            this.$error.showErrorMessage(msg)
+          }
+        })
     }
   }
 }
