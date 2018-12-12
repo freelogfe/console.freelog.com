@@ -80,7 +80,8 @@ export default {
       $hide.classList.remove('hide')
 
       const hideFn = () => $hide.classList.add('hide')
-      const observer = lozad($hide, {
+      $hide.dataset.loaded = false
+      this.observer = lozad($hide, {
         loaded(el) {
           if (!self.canLoadMore) {
             return hideFn()
@@ -116,7 +117,7 @@ export default {
         rootMargin: '400px 0px', // syntax similar to that of CSS Margin
         threshold: 0.1 // ratio of element convergence
       });
-      observer.observe();
+      this.observer.observe();
     },
     load() {
       const self = this
@@ -131,16 +132,21 @@ export default {
       })
     },
     disconnect() {
-      if (this.observer) {
-        this.observer.disconnect()
-      }
+      // if (this.observer) {
+      //   this.observer.disconnect()
+      // }
     },
     refresh() {
+      const $hide = this.$refs.loading
+
       this.canLoadMore = true
       this.previewList = []
       this.index = 1
-      this.disconnect()
-      this.initView()
+      // this.disconnect()
+      $hide.dataset.loaded = false
+
+      this.observer.observe($hide)
+      this.observer.triggerLoad($hide)
     },
     scrollHandler(list) {
       this.previewList = this.previewList.concat(list)

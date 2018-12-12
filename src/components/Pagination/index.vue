@@ -4,10 +4,11 @@
             ref="table"
             @row-click="rowClickHandler"
             v-bind="tableProps"
-            style="width: 100%">
+            style="width: 100%" v-show="tableProps.data.length">
       <slot name="list"></slot>
     </el-table>
-    <div class="fl-pg-ft clearfix">
+    <slot name="empty" v-if="tableProps.data.length === 0"></slot>
+    <div class="fl-pg-ft clearfix" v-if="showFooter">
       <slot name="footer"></slot>
       <div class="fl-pg-info">
         <el-button style="margin-right: 10px" type="text" v-if="hasPrev" @click="gotoFirstPageHandler">&lt;&lt; 首页
@@ -24,6 +25,7 @@
 
 
 <script>
+  import {CancelToken} from 'axios'
 
   export default {
     name: 'fl-pagination',
@@ -55,14 +57,17 @@
         }
       },
 
-      formatHandler: Function
+      formatHandler: Function,
+      showFooter: {
+        type: Boolean,
+        'default': true
+      }
     },
 
     watch: {
       pagination: {
         deep: true,
         handler() {
-          Object.assign(this.tableProps, this.config)
           this.reload()
         }
       }
@@ -84,12 +89,15 @@
           pageSize: this.pageSize
         }
 
+        this.source = CancelToken.source()
+
         if (this.pagination.params) {
           Object.assign(params, this.pagination.params)
         }
 
         return this.$axios.get(this.pagination.target, {
-          params
+          params,
+          cancelToken: this.source.token
         }).then((res) => {
           if (res.data.ret === 0 && res.data.errcode === 0) {
             return res.data.data
@@ -104,20 +112,27 @@
       },
       reload() {
         this.currentPage = 1
+        if (this.loading && this.source) {
+          this.loading = false
+          this.source.cancel('')
+        }
         this.load()
       },
       load() {
         if (this.loading) return
 
         this.loading = true
-        this.loadData().then(this.update.bind(this))
+        this.loadData()
+          .then(this.update.bind(this))
           .then(() => {
             this.loading = false
             window.sessionStorage.setItem(`${this.$route.fullPath}_current_page`, this.currentPage)
           })
           .catch((err) => {
-            this.$error.showErrorMessage(err)
-            this.loading = true
+            if (err.toString() !== 'Cancel') {
+              this.$error.showErrorMessage(err)
+            }
+            this.loading = false
           })
       },
       loadNextHandler() {

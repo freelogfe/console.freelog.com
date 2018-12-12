@@ -131,20 +131,6 @@ export default {
         },
         component: Views.presentableList,
       }, {
-        path: 'contracts',
-        meta: {
-          requiresAuth: true,
-          title: '节点详情'
-        },
-        component: Views.contractList,
-      }, {
-        path: 'pagebuilds',
-        meta: {
-          requiresAuth: true,
-          title: '节点详情'
-        },
-        component: Views.nodePagebuilds,
-      }, {
         path: 'preview',
         meta: {
           requiresAuth: true,

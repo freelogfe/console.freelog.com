@@ -2,6 +2,7 @@ const freePolicy = `for public:
   initial:
     active
     recontractable
+    presentable
     terminate
   `
 
