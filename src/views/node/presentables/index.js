@@ -1,40 +1,24 @@
-import CONFIG from '@/config/index'
 import FreelogSwitch from '@/components/Switch/index.vue'
-import PresentableDetail from '../presentable/detail/index.vue'
-import SearchResource from '../../resource/search/index.vue'
 import {RESOURCE_TYPES} from '@/config/resource'
-import Pagination from '@/components/Pagination/index.vue'
-import {loadResources} from '@/data/resource/loader'
-import {loadAuthSchemes} from '@/data/scheme/loader'
-
-const STATUS_TIPS = CONFIG.PRESENTABLE_STATUS_TIPS
+import PageBuild from './page-build.vue'
+import PresentableList from './list.vue'
+import SearchResource from '../../resource/search/index.vue'
 
 export default {
   name: 'presentables',
   data() {
     return {
-      showSearchResource: false,
-      presentableList: [],
-      currentPresentable: {
-        index: -1,
-        detail: {}
+      params: {
+        isOnline: 2
       },
+      showSearchResource: false,
+      isEntering: false,
       searchData: {
+        keyWords: '',
         contractState: '',
-        onlineState: '',
+        isOnline: '2',
         resourceType: ''
       },
-
-      tableConfig: {
-        rowClassName: 'resource-row',
-        'cell-class-name': 'res-row-cell',
-        'show-header': false
-      },
-      paginationConfig: {
-        target: '/v1/presentables?nodeId=10018&isOnline=2',
-        params: {}
-      },
-
       contractStateOptions: [
         {
           value: '0',
@@ -57,163 +41,91 @@ export default {
       ],
       resourceTypeOptions: Object.keys(RESOURCE_TYPES).map(type => {
         return {
-          value: type,
-          label: RESOURCE_TYPES[type]
+          value: RESOURCE_TYPES[type],
+          label: type
         }
       })
     }
   },
   components: {
-    PresentableDetail,
     FreelogSwitch,
     SearchResource,
-    Pagination
+    PageBuild,
+    PresentableList
   },
+
+  watch: {},
 
   mounted() {
-    // this.initView(this.$route.params.nodeId)
   },
   methods: {
-    queryHandler() {
-      this.$message.warning('待开发')
-    },
-    initView(nodeId) {
-      if (nodeId) {
-        Object.assign(this.currentPresentable, {
-          index: -1,
-          detail: {}
-        })
-        this.loadPresentables({nodeId, isOnline: 2})
-          .then(this.formatHandler.bind(this))
-          .then((list) => {
-            this.presentableList = list
-          })
-      } else {
-        this.$message.error('缺失节点ID参数')
-      }
-    },
-    formatHandler(list) {
-      console.log('format list', list)
-      if (!list || !list.length) {
-        return []
-      }
-
-      var rids = []
-      var authSchemeIds = []
-      var maps = {}
-      var schemeIdMaps = {}
-
-      list.forEach((item, index) => {
-        rids.push(item.resourceId)
-
-        var contract = this.getPresentableContract(item)
-        if (contract) {
-          authSchemeIds.push(contract.authSchemeId)
-          schemeIdMaps[contract.authSchemeId] = {
-            index, contract
-          }
+    searchHandler(params) {
+      console.log(params)
+      Object.keys(params).forEach(key => {
+        if (params[key]) {
+          this.params[key] = params[key]
+        } else {
+          delete this.params[key]
         }
-        maps[item.resourceId] = index
-        this.resolvePresentable(item)
       })
 
-      loadResources(rids).then(resources => {
-        console.log(resources)
-        resources.forEach(resource => {
-          resource.postImgUrl = this.resolvePostImgUrl(resource)
-          Object.assign(list[maps[resource.resourceId]].resourceInfo, resource)
-        })
-      })
-
-      if (authSchemeIds.length) {
-        this.loadPresentablesSchemes(authSchemeIds)
-          .then(schemes=>{
-            schemes.forEach(scheme=>{
-              let {index, contract} = schemeIdMaps[scheme.authSchemeId]
-              scheme.selectedPolicy = this.getSelectedPolicy(scheme, contract)
-              this.$set(list[index], 'scheme', scheme)
-            })
-          })
-      }
-
-      setTimeout(()=>{
-        console.log(list)
-      },1e3)
-      return list
-    },
-    loadPresentablesSchemes(authSchemeIds){
-      return loadAuthSchemes({
-        authSchemeIds: authSchemeIds
-      }).then(schemes=>{
-        return schemes
-      })
-    },
-    getSelectedPolicy(scheme, contract){
-      for (let i = 0; i < scheme.policy.length; i += 1) {
-        const policy = scheme.policy[i]
-        if (policy.segmentId === contract.policySegmentId) {
-          return policy
-        }
-      }
-    },
-    getPresentableContract(presentableInfo) {
-      const contracts = presentableInfo.contracts || []
-      if (contracts.length) {
-        let contract
-        for (let i = 0; i < contracts.length; i += 1) {
-          contract = contracts[i]
-          if (contract.resourceId === presentableInfo.resourceId) {
-            return contract
-          }
-        }
-      }
-
-      return null
-    },
-    resolvePostImgUrl(resource) {
-      let src
-
-      if (resource.previewImages.length) {
-        src = resource.previewImages[0] + `?x-oss-process=style/${isSupportWebp ? 'webp' : 'jpg'}_image`
-      } else {
-        src = ''
-      }
-
-      return src
-    },
-    resolvePresentable(item) {
-      item.isOnlineChecked = !!item.isOnline
-      item._statusInfo = STATUS_TIPS[item.status]
-      item.isReady = (item.status & 7) === 7
-      item.hasContract = item.contracts.length > 0
-      item.detailLink = `/node/${this.$route.params.nodeId}/presentable/${item.presentableId}`
-    },
-    loadPresentables(param) {
-      return this.$services.presentables.get({params: param}).then(res => res.getData()).catch(this.$error.showErrorMessage)
-    },
-    changePresentableHandler(presentable, index) {
-      this.currentPresentable.index = index
-      this.currentPresentable.detail = presentable
+      Object.assign(this.searchData, this.params)
+      this.$refs.presentableList.reload()
     },
     changePresentableOnlineHandler(presentable) {
-      if (presentable.isOnlineChecked) {
-        presentable.isOnline = 1
-      } else {
-        presentable.isOnline = 0
+      if (presentable.status & 3 !== 3) {
+        return this.$error.showErrorMessage('合同不完备或不存在可用策略')
       }
-      this.$services.presentables.put(presentable.presentableId, {
-        isOnline: presentable.isOnline
-      }).then((res) => {
-        if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
-          presentable.isOnline = 0
-          presentable.isOnlineChecked = false
-          this.$message.error(res.data.msg || '更新失败')
-        }
-      }).catch((err) => {
-        presentable.isOnline = 0
-        presentable.isOnlineChecked = false
-        this.$error.showErrorMessage(err)
-      })
+
+      if (presentable.isLoading) return
+      console.log(presentable)
+      if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
+        this.$confirm(`确定${presentable.isOnline ? '下' : '上'}线${presentable.presentableName}?上线后将自动替换当前页面样式`)
+          .then(() => {
+            return this.changePresentableStatus(presentable)
+              .then(() => {
+                this.$refs.pagebuildRef.refresh()
+              })
+          })
+          .catch(() => {
+            presentable.isOnlineChecked = !!presentable.isOnline
+          })
+      } else {
+        this.changePresentableStatus(presentable)
+      }
+    },
+    changePresentableStatus(presentable) {
+      presentable.isLoading = true
+      const nodeId = this.$route.params.nodeId
+      const url = `/v1/auths/presentables/${presentable.presentableId}/presentableTreeAuthTest?nodeId=${nodeId}`
+      return this.$axios.get(url)
+        .then(res => {
+          const {errcode, ret, msg, data} = res.data
+          if (errcode !== 0 || ret !== 0 || data.isAuth === false) {
+            presentable.isLoading = false
+            return Promise.reject(data.isAuth === false ? '未获得授权' : msg)
+          }
+
+          if (presentable.isOnlineChecked) {
+            presentable.isOnline = 1
+          } else {
+            presentable.isOnline = 0
+          }
+          return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
+            isOnline: presentable.isOnline
+          }).then((res) => {
+            presentable.isLoading = false
+            if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+              return Promise.reject(res.data.msg || '更新失败')
+            }
+          })
+        })
+        .catch((err) => {
+          presentable.isLoading = false
+          presentable.isOnlineChecked = !presentable.isOnlineChecked
+          presentable.isOnline = presentable.isOnlineChecked ? 1 : 0
+          this.$error.showErrorMessage(err)
+        })
     },
     showSearchResourceHandler() {
       this.showSearchResource = true
@@ -227,7 +139,7 @@ export default {
         presentableName: resource.resourceName,
         resourceId: resource.resourceId
       }).then((presentable) => {
-        this.presentableList.push(presentable)
+        this.refresh()
         this.showSearchResource = false
       }).catch(this.$error.showErrorMessage)
     },
@@ -239,10 +151,27 @@ export default {
         return res.getData()
       })
     },
-    updatePresentableHandler(presentable) {
-      const curPresentable = this.currentPresentable.detail
-      Object.assign(curPresentable, presentable)
-      this.resolvePresentable(curPresentable)
+    deletePresentableHandler(presentable) {
+      this.$confirm(`确定删除${presentable.presentableName}?`)
+        .then(() => {
+          this.$services.presentables.delete(presentable.presentableId)
+            .then(({data}) => {
+              var {ret, errcode, msg} = data
+              if (ret === 0 && errcode === 0 && data.data) {
+                this.$message.success('成功删除')
+                this.refresh()
+              } else {
+                this.$message.fail(msg)
+              }
+            })
+        }).catch(() => {
+      })
+    },
+    refresh(){
+      this.$refs.presentableList.refresh()
+    },
+    showSeachInputHandler(flag) {
+      this.isEntering = (flag === undefined) ? !this.isEntering : flag
     }
   }
 }

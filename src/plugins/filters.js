@@ -1,9 +1,20 @@
-import { format } from 'date-fns'
+import {format} from 'date-fns'
 import ACCOUNT_CONFIG from '../config/account'
 
 export default (Vue) => {
-  Vue.filter('humanizeNumber', value => value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
+  var isSupportWebp;
+  (function isSupportWebp(callback) {
+    var webP = new Image();
+    webP.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
 
+    webP.onload = webP.onerror = function () {
+      callback(webP.height === 1);
+    };
+  })((is) => {
+    isSupportWebp = is
+  });
+
+  Vue.filter('humanizeNumber', value => value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,'))
 
   Vue.filter('fmtDate', (value, frm) => {
     if (!value) return ''
@@ -23,5 +34,18 @@ export default (Vue) => {
     const values = (value / account.unit).toString().split('.', 2)
     // 123456789->12,3456,789
     return values[0].replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + (values[1] === undefined ? '' : `.${values[1]}`)
+  })
+
+
+  Vue.filter('padImage', (value) => {
+    if (!value) return ''
+
+    if (value.indexOf('?') === -1) {
+      value += '?'
+    } else {
+      value += '&'
+    }
+    value += `x-oss-process=style/${isSupportWebp ? 'webp' : 'jpg'}_image`
+    return value
   })
 }

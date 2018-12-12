@@ -1,7 +1,7 @@
 import { intersectionBy, unionBy, differenceBy } from 'lodash'
 import { loadAuthSchemes, onloadSchemesForResource } from '@/data/scheme/loader'
 import { onloadResourceDetail } from '@/data/resource/loader'
-import PolicyEditor from '@/components/policyEditor/index.vue'
+import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { beautify } from '@freelog/resource-policy-lang'
 import { SCHEME_STATUS, SCHEME_PUBLISH_STATUS } from '@/config/scheme'
 import { POLICY_STATUS } from '@/config/policy'

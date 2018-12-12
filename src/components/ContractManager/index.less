@@ -1,22 +1,34 @@
 @listWidth: 430px;
-.node-contracts-container {
-  display: flex;
-  min-height: 100vh;
+.fl-contracts-manager-wrap {
   .contract-list-wrapper {
-    padding-top: 60px;
     color: #333333;
-    background-color: white;
-    min-width: @listWidth;
-    flex-basis: @listWidth;
-    min-height: 100vh;
-    box-shadow: inset 0px -4px 14px -4px #eee;
+    width: 280px;
+    float: left;
+
     .dot {
       margin-right: 9px;
+      &:after {
+        margin-top: 6px;
+      }
     }
 
-    .current {
-      background-color: #fafafa;
-      border-left: 3px solid #4396F0;
+    .label-title {
+      margin-bottom: 30px;
+    }
+
+    .contract-list-panel {
+      border: 1px solid #EEEEEE;
+      min-height: 550px;
+      .sub-label-title {
+        color: #666666;
+        background-color: #FAFBFB;
+        font-size: 12px;
+        padding: 6px 9px;
+        border-bottom: 1px solid #EEEEEE;
+        .contracts-num {
+          float: right;
+        }
+      }
     }
 
     //明确上抛
@@ -59,45 +71,28 @@
       }
     }
 
-    .contract-list {
-    }
-
-    .presentable-item {
-      margin-bottom: 10px;
-      word-break: break-all;
-    }
-
-    .presentable-name {
-      padding-left: 35px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
     .contract-item {
-      padding-left: 65px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
-    .contract-item,
-    .presentable-name {
+      padding: 15px 0 15px 7px;
+      border-bottom: 1px solid #EEEEEE;
       font-size: 14px;
-      padding-right: 35px;
+      font-weight: bold;
       cursor: pointer;
 
       &:hover {
         background-color: #F5F5F5;
       }
-    }
-    .contract-item {
-      .policy-text {
-        white-space: pre-wrap;
+
+      &.current {
+        background-color: #E8F1FB;
+        border: 1px solid #C6DFFC;
+        color: #4497EC;
       }
+
     }
   }
 
   .contract-exec-container {
-    padding-top: 60px;
-    background-color: #FAFAFA;
-    border-left: 1px solid #EEEEEE;
-    flex: 1;
+    margin-left: 340px;
+    padding-right: 5px;
   }
 }

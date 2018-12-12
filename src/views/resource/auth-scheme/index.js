@@ -1,5 +1,5 @@
 import { cloneDeep, uniqBy, intersectionBy } from 'lodash'
-import PolicyEditor from '@/components/policyEditor/index.vue'
+import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { onloadSchemesForResource } from '@/data/scheme/loader'
 import { SCHEME_STATUS } from '@/config/scheme'
 import { onloadResourceDetail } from '@/data/resource/loader'

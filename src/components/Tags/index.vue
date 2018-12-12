@@ -5,6 +5,7 @@
       :key="tag"
       v-for="tag in tags"
       closable
+      size="small"
       :disable-transitions="false"
       @close="handleClose(tag)">
       {{tag}}
@@ -14,11 +15,11 @@
       v-if="inputVisible"
       v-model="inputValue"
       ref="saveTagInput"
-      size="small"
+      size="mini"
       @keyup.enter.native="handleInputConfirm"
       @blur="handleInputConfirm">
     </el-input>
-    <el-button v-else class="button-new-tag" size="small" @click="showInput"><i class="el-icon-plus"></i> {{actionText}}</el-button>
+    <el-button v-else class="button-new-tag" round size="mini" @click="showInput"><i class="el-icon-plus"></i> {{actionText}}</el-button>
   </div>
 </template>
 
@@ -35,14 +36,14 @@ export default FreelogTags
   }
   .el-tag {
     margin-right: 10px;
+    border-radius: 20px;
+    height: 28px;
+    line-height: 24px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .button-new-tag {
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-radius: 4px;
-    background-color: transparent;
+    background-color: white;
   }
   .input-new-tag {
     width: 90px;

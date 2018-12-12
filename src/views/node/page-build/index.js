@@ -20,7 +20,6 @@ export default {
 
   mounted() {
     this.initView()
-    console.log('initview')
   },
   methods: {
     initView() {
