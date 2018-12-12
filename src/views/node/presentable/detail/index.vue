@@ -18,7 +18,9 @@
         <el-tab-pane name="schema-manager" :lazy="true">
           <span slot="label" class="panel-tab-name">授权方案管理</span>
           <div class="panel-content">
-            <lazy-component></lazy-component>
+            <lazy-component>
+              <authorization-scheme-manage></authorization-scheme-manage>
+            </lazy-component>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -38,8 +40,16 @@ export default PresentableDetail
 
 <style lang="less">
   .presentable-detail-wrapper  {
+    .el-tabs__header {
+      margin-bottom: 0;
+    }
+
     .el-tabs__nav-scroll {
       padding: 0 168px;
+    }
+
+    .el-tabs__content {
+      overflow: inherit;
     }
   }
 </style>

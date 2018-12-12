@@ -8,6 +8,8 @@ import PresentableEditor from '../editor/index.vue'
 import ResourceIntroInfo from '../../../resource/intro/index.vue'
 import PresentableDetailHeader from './header.vue'
 
+import AuthorizationSchemeManage from "../authorization-scheme/index.vue"
+
 export default {
   name: 'presentable-detail',
   data() {
@@ -26,6 +28,7 @@ export default {
     }
   },
   components: {
+    AuthorizationSchemeManage,
     PresentableDetailHeader,
     // FreelogTags,
     // PresentableEditor,
