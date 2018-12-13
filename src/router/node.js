@@ -29,15 +29,6 @@ export const nodeItemRoute = {
             type: 'node'
           },
           component: Views.presentableDetail,
-        },
-        {
-          path: ':presentableId/scheme_detail',
-          meta: {
-            requiresAuth: true,
-            title: '资源依赖授权管理',
-            type: 'node'
-          },
-          component: Views.presentableSchemeDetail
         }
       ]
     }
