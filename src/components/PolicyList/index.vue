@@ -45,9 +45,9 @@
       resolveList(list) {
         this.policyList = list.slice(0)
 
-        if (!this.policyList.length) {
-          this.addNewPolicyHandler()
-        }
+        // if (!this.policyList.length) {
+        //   this.addNewPolicyHandler()
+        // }
       },
       addNewPolicyHandler() {
         this.policyList.push({

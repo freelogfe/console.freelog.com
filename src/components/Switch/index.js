@@ -17,6 +17,7 @@ export default {
     },
     activeText: String,
     inactiveText: String,
+    disabled: Boolean
   },
 
   mounted() {
@@ -28,6 +29,8 @@ export default {
   },
   methods: {
     switchHandler() {
+      if (this.disabled)return
+
       this.$emit('input', !this.value)
       this.$emit('change', !this.value)
     }

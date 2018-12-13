@@ -28,7 +28,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.schema" :lazy="true">
-          <span slot="label" class="panel-tab-name">授权方案管理</span>
+          <span slot="label" class="panel-tab-name">授权签约管理</span>
           <div class="panel-content">
             <lazy-component>
               <authorization-scheme-manage></authorization-scheme-manage>
