@@ -84,7 +84,7 @@ export default {
     },
   },
   mounted() {
-    this.getResourceAuthSchemesList('913552dd670ab21438cea1270cfd295c4b489691')
+    this.getResourceAuthSchemesList('710c3eea3fb61260bdc0e1f5b4678e19ecd010d1')
       .then(res => {
         this.authSchemesData = res
       })
