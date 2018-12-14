@@ -7,7 +7,7 @@
         <span class="title">节点资源列表</span>
         <ul class="list-actions">
           <li>
-            <el-select v-model="searchData.contractState"
+            <el-select v-model="searchData.isSignContract"
                        @change="searchHandler(searchData)"
                        popper-class="opt-cls" size="mini" placeholder="签约状态">
               <el-option label="签约状态" value=""></el-option>
@@ -42,7 +42,7 @@
                       :label="item.label"
                       :value="item.value">
               </el-option>
-              <el-option label="全部状态" value="2"></el-option>
+              <el-option label="全部状态" :value=2></el-option>
             </el-select>
           </li>
           <li style="max-width: none;">
@@ -51,7 +51,7 @@
                       style="width: 200px;"
                       @blur="showSeachInputHandler(false)"
                       @keyup.enter.native="searchHandler(searchData)"
-                      v-model="searchData.keyWords">
+                      v-model="searchData.keywords">
               <i class="el-icon-search el-input__icon"
                  slot="suffix"
                  @click="searchHandler(searchData)"></i>
@@ -73,7 +73,7 @@
                          class="node-presentable-list">
           <template slot="append">
             <el-table-column
-                    width="150"
+                    width="160"
                     label="上线状态">
               <template slot-scope="{row}">
                 <div class="status-item-wrap">
@@ -81,10 +81,11 @@
                                   v-model="row.isOnlineChecked"
                                   @change="changePresentableOnlineHandler(row)"
                                   active-text="上线"
+                                  :disabled="row.isAcquireSignAuth!== 1"
                                   inactive-text="下线"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
-                              v-if="row.warningTip"
+                              v-if="row.isAcquireSignAuth!== 1"
                               placement="right">
                     <div slot="content">
                       {{row.warningTip}}

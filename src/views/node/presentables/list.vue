@@ -133,7 +133,7 @@
 
     methods: {
       setParams() {
-        console.log('this.params',this.params)
+        console.log('this.params', this.params)
         var params = Object.assign({
           nodeId: this.$route.params.nodeId
         }, this.params || {})
@@ -143,7 +143,7 @@
       refresh() {
         this.$refs.listRef.reload()
       },
-      reload(){
+      reload() {
         this.setParams()
         this.refresh()
       },
@@ -156,27 +156,36 @@
         var authSchemeIds = []
         var maps = {}
         var schemeIdMaps = {}
+        var presentablesIdMap = {}
 
         list.forEach((item, index) => {
-          rids.push(item.resourceId)
+          let contract = this.getPresentableContract(item)
 
-          var contract = this.getPresentableContract(item)
           if (contract) {
             authSchemeIds.push(contract.authSchemeId)
             schemeIdMaps[contract.authSchemeId] = {
               index, contract
             }
           }
+
+          Object.assign(item, {
+            // isAcquireSignAuth: 1
+          })
           maps[item.resourceId] = index
+          presentablesIdMap[item.presentableId] = item
+          rids.push(item.resourceId)
+
           this.resolvePresentable(item)
         })
 
-        loadResources(rids).then(resources => {
-          resources.forEach(resource => {
-            resource.postImgUrl = this.resolvePostImgUrl(resource)
-            this.$set(list[maps[resource.resourceId]], 'resourceInfo', resource)
+        if (rids.length) {
+          loadResources(rids).then(resources => {
+            resources.forEach(resource => {
+              resource.postImgUrl = this.resolvePostImgUrl(resource)
+              this.$set(list[maps[resource.resourceId]], 'resourceInfo', resource)
+            })
           })
-        })
+        }
 
         if (authSchemeIds.length) {
           this.loadPresentablesSchemes(authSchemeIds)
@@ -186,10 +195,49 @@
                 scheme.selectedPolicy = this.getSelectedPolicy(scheme, contract)
                 this.$set(list[index], 'scheme', scheme)
               })
+              schemeIdMaps = null
+            })
+        }
+
+        var presentableIds = Object.keys(presentablesIdMap)
+        if (presentableIds.length) {
+          this.loadPresentablesAuth(presentableIds)
+            .then((auths) => {
+              auths.forEach(auth => {
+                console.log(auth)
+                let presentable = presentablesIdMap[auth.presentableId]
+                presentable.isAcquireSignAuth = auth.isAcquireSignAuth
+                this.setWarningTip(presentable)
+              })
+              presentablesIdMap = null
             })
         }
 
         return list
+      },
+      setWarningTip(presentable) {
+        const tips = {
+          '0': '未获得授权',
+          '1': '已获得授权'
+        }
+
+        let warningTip = tips[presentable.isAcquireSignAuth.toString()] || ''
+        this.$set(presentable, 'warningTip', warningTip)
+      },
+      loadPresentablesAuth(presentableIds) {
+        return this.$axios.get('/v1/auths/presentable/getPresentableSignAuth', {
+          params: {
+            presentableIds: presentableIds.join(',')
+          }
+        }).then(res => {
+          const {ret, errcode, msg, data} = res.data
+
+          if (ret === 0 && errcode === 0) {
+            return data
+          } else {
+            throw new Error(msg)
+          }
+        })
       },
       resolvePresentable(item) {
         item.isOnlineChecked = !!item.isOnline
@@ -238,7 +286,7 @@
 
         return src
       },
-      deletePresentableHandler(presentable){
+      deletePresentableHandler(presentable) {
         this.$emit('delete', presentable)
       }
     }

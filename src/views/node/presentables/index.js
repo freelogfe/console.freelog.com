@@ -14,9 +14,9 @@ export default {
       showSearchResource: false,
       isEntering: false,
       searchData: {
-        keyWords: '',
-        contractState: '',
-        isOnline: '2',
+        keywords: '',
+        isSignContract: '',
+        isOnline: 2,
         resourceType: ''
       },
       contractStateOptions: [
@@ -96,8 +96,7 @@ export default {
     },
     changePresentableStatus(presentable) {
       presentable.isLoading = true
-      const nodeId = this.$route.params.nodeId
-      const url = `/v1/auths/presentables/${presentable.presentableId}/presentableTreeAuthTest?nodeId=${nodeId}`
+      const url = `/v1/auths/presentables/${presentable.presentableId}/presentableTreeAuthTest`
       return this.$axios.get(url)
         .then(res => {
           const {errcode, ret, msg, data} = res.data

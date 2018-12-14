@@ -5,7 +5,6 @@ import ClipBoard from '@/components/clipboard/index.vue'
 import NodePresentables from '../presentables/index.vue'
 // import NodePreview from '../preview/index.vue'
 
-
 export default {
   name: 'node-detail',
   data() {

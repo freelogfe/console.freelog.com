@@ -1,5 +1,5 @@
 <template>
-  <div class="fl-switch-wrap">
+  <div class="fl-switch-wrap" :class="{'is-disabled': disabled}">
     <div class="switch-container"
          :class="[checked? 'active-switch': 'inactive-switch']"
          @click="switchHandler">

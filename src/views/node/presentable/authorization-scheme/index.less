@@ -51,11 +51,22 @@
 
   .suspension-list-box {
     position: absolute; bottom: 50px; right: 75px; z-index: 15;
-    width: 390px; height: 460px;
+    width: 390px; height: 460px; padding: 20px;
     border: 1px solid #DADADA; border-radius: 4px;
     background-color: #FFFFFF;
 
+    li { margin-bottom: 10px; border-bottom: 1px solid #D8D8D8; }
     p { margin-top: 180px; font-size: 14px; color: #999999; text-align: center; }
+
+    .suspension-lb-row-1{ margin-bottom: 10px; font-size: 14px; color: #333333; }
+    .suspension-lb-row-2 {
+      margin-bottom: 10px; color: #409EFF;
+
+      span {
+        padding-right: 10px;
+        &:not(:first-child) { padding-left: 10px; border-left: 1px solid #979797; }
+      }
+    }
   }
 
 }

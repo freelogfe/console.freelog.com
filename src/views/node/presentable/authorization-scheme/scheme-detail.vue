@@ -5,12 +5,14 @@
       <li
               v-for="(authScheme, index) in authSchemeList"
               :key="'auth-scheme-tab'+ index"
-              :class="{ 'active': index === activeAuthSchemeTabIndex }"
+              :class="{
+                'active': index === activeAuthSchemeTabIndex,
+              }"
               @click="exchangeTab(index)"
       >
         <i
                 class="el-icon-circle-check"
-                :class="{ 'selected': index === resourceAuthScheme.selectedAuthSchemeTabIndex }"
+                :class="{ 'selected': index === selectedAuthSchemeTabIndex }"
         ></i>
         {{authScheme.authSchemeName}}
       </li>
@@ -22,7 +24,10 @@
           <li
                   v-for="(upcastResource, index) in upcastResourcesArr"
                   :key="'upcastResource'+index"
-                  :class="{ 'selected': index === selectedUpcastResourceIndex }"
+                  :class="{
+                    'selected': index === selectedUpcastResourceIndex,
+                    'active': index === selectedUpcastResourceIndex && isFinishAllSelection
+                  }"
                   @click="selectUpcastResource(index)"
           >
               <span>{{upcastResource.resourceName}}</span>
@@ -72,10 +77,13 @@
       }
     },
     props: {
+      isFinishAllSelection: Boolean,
       resourceAuthScheme: Object,
       resourceLevelIndex: Number,
       upcastResourceAuthSchemeMap: Object,
       upcastResourceIDs: Array,
+      selectedAuthSchemeTabIndex: Number,
+      selectedAuthSchemeTabIndexArr: Array,
     },
     methods: {
       // 切换"授权方案"
@@ -83,9 +91,20 @@
         if(this.activeAuthSchemeTabIndex !== index) {
           this.selectedUpcastResourceIndex = -1
           this.activeAuthSchemeTabIndex = index
-          this.$emit('refresh-upcast-resourceIDs', this.resourceLevelIndex)
+
+          if(this.upcastResourceIDs.length > this.resourceLevelIndex) {
+            let upcastResourceIDs = this.upcastResourceIDs.slice(0, this.resourceLevelIndex)
+            this.$emit('update:upcastResourceIDs', upcastResourceIDs)
+          }
+
+
+          let selectedAuthSchemeTabIndexArr = this.selectedAuthSchemeTabIndexArr.slice(0, this.resourceLevelIndex + 1)
+          this.$emit('update:selectedAuthSchemeTabIndexArr', selectedAuthSchemeTabIndexArr)
         }
-        if(this.resourceAuthScheme.selectedAuthSchemeTabIndex === index) {
+        this.refreshSelectedPolicyIndex(index)
+      },
+      refreshSelectedPolicyIndex(index) {
+        if(this.selectedAuthSchemeTabIndex === index) {
           this.selectedPolicyIndex = typeof this.selectedScheme.selectedPolicyIndex === 'undefined' ? -1 : this.selectedScheme.selectedPolicyIndex
         }else {
           this.selectedPolicyIndex = -1
@@ -100,12 +119,14 @@
       selectPolicyItem(index) {
         var self = this
         // 存在parentResourceId即为upcastResource，须确认父级资源是否已选中授权方案
-        if(this.parentResourceScheme && this.parentResourceScheme.selectedAuthSchemeTabIndex === -1) {
-          Message.error(`父级资源"${this.parentResourceScheme.resourceName}"未选中授权方案`)
-          return
+        if((this.resourceLevelIndex - 1) >= 0) {
+          let prevSelectedAuthSchemeTabIndex = this.selectedAuthSchemeTabIndexArr[this.resourceLevelIndex - 1]
+          if(typeof prevSelectedAuthSchemeTabIndex === 'undefined' || prevSelectedAuthSchemeTabIndex === -1) {
+            Message.error(`父级资源"${this.parentResourceScheme.resourceName}"未选中授权方案`)
+            return
+          }
         }
 
-        //
         if(this.checkURIsSelectedScheme()) {
           let str = this.selectedPolicyIndex === index ? '取消当前选择' : '切换策略'
           MessageBox.confirm(`${str}，将会导致后续资源选择的策略都取消，确定吗？`, {
@@ -113,37 +134,31 @@
               if(action === 'confirm') {
                 self.cancelSomeURSchemeSelection()
                 self.exchangePolicy(index)
+                this.checkIsFixedAllAuth()
               }
             }
           })
         }else {
           this.exchangePolicy(index)
+          this.checkIsFixedAllAuth()
         }
+
       },
       checkURIsSelectedScheme() {
-        var nextUpastResourceId = this.upcastResourceIDs[this.resourceLevelIndex]
-        if(nextUpastResourceId) {
-          return this.upcastResourceAuthSchemeMap[nextUpastResourceId].selectedAuthSchemeTabIndex !== -1
+        var nextResourceSelectedSchemeTabIndex = this.selectedAuthSchemeTabIndexArr[this.resourceLevelIndex + 1]
+        if(typeof nextResourceSelectedSchemeTabIndex !== 'undefined') {
+          return nextResourceSelectedSchemeTabIndex !== -1
         }else {
           return false
         }
       },
       // 取消当前资源 所有下级资源的授权方案选择
       cancelSomeURSchemeSelection() {
-        this.upcastResourceIDs.slice(this.resourceLevelIndex)
-          .forEach(resourceId => {
-            this.upcastResourceAuthSchemeMap[resourceId].selectedAuthSchemeTabIndex = -1
-          })
-        this.$emit('rerender')
-      },
-      // 切换选中的"授权方案"
-      exchangeSelectedScheme() {
-        var selectedAuthSchemeTabIndex = -1
-        if(this.selectedPolicyIndex !== -1) {
-          selectedAuthSchemeTabIndex = this.activeAuthSchemeTabIndex
+        for(let i = this.resourceLevelIndex+1; i < this.selectedAuthSchemeTabIndexArr.length; i++) {
+          this.selectedAuthSchemeTabIndexArr[i] = -1
         }
 
-        this.resourceAuthScheme.selectedAuthSchemeTabIndex = selectedAuthSchemeTabIndex
+        this.$emit('update:selectedAuthSchemeTabIndexArr', this.selectedAuthSchemeTabIndexArr)
       },
       exchangePolicy(index) {
         if(this.selectedPolicyIndex === index) {
@@ -154,6 +169,30 @@
         this.selectedScheme.selectedPolicyIndex = this.selectedPolicyIndex
         this.exchangeSelectedScheme()
       },
+      // 切换选中的"授权方案"
+      exchangeSelectedScheme() {
+        var selectedAuthSchemeTabIndex = -1
+        if(this.selectedPolicyIndex !== -1) {
+          selectedAuthSchemeTabIndex = this.activeAuthSchemeTabIndex
+        }
+
+        this.$emit('update:selectedAuthSchemeTabIndex', selectedAuthSchemeTabIndex)
+        // this.resourceAuthScheme.selectedAuthSchemeTabIndex = selectedAuthSchemeTabIndex
+      },
+      checkIsFixedAllAuth() {
+        var isOk = true
+        if(this.upcastResourcesArr.length === 0) {
+          for(let i = 0; i < this.selectedAuthSchemeTabIndexArr.length; i++) {
+            if(this.selectedAuthSchemeTabIndexArr[i] === -1) {
+              isOk = false
+              break
+            }
+          }
+        }else {
+          isOk = false
+        }
+        this.$emit('update:isFinishAllSelection', isOk)
+      }
     },
     computed: {
       authSchemeList() {
@@ -175,6 +214,17 @@
         return this.policyList.map(policy => {
           return beautify(policy.policyText)
         })
+      },
+    },
+    watch: {
+      selectedAuthSchemeTabIndex() {
+        if(this.selectedAuthSchemeTabIndex === -1) {
+          this.selectedPolicyIndex = -1
+          this.checkIsFixedAllAuth()
+        }
+      },
+      authSchemeList() {
+        this.activeAuthSchemeTabIndex = 0
       },
     },
   }

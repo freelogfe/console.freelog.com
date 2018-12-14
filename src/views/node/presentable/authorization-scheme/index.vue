@@ -5,12 +5,14 @@
     <div class="scheme-partition">
       <scheme-detail
               v-if="authSchemesData && authSchemesData.authSchemeList.length"
+              :isFinishAllSelection.sync="isFinishAllSelection"
               :resourceAuthScheme="authSchemesData"
               :resourceLevelIndex="0"
-              :upcastResourceIDs="upcastResourceIDs"
+              :selectedAuthSchemeTabIndex.sync="selectedAuthSchemeTabIndexArr[0]"
+              :selectedAuthSchemeTabIndexArr.sync="selectedAuthSchemeTabIndexArr"
+              :upcastResourceIDs.sync="upcastResourceIDs"
               :upcastResourceAuthSchemeMap="upcastResourceAuthSchemeMap"
               @show-upcast-resource-scheme="showUpcastResourceScheme"
-              @refresh-upcast-resourceIDs="refreshUpdcastResourceIDs"
       ></scheme-detail>
     </div>
     <div
@@ -27,18 +29,20 @@
         </div>
       </div>
       <scheme-detail
+              :isFinishAllSelection.sync="isFinishAllSelection"
               :resourceAuthScheme="upcastResourceAuthSchemeMap[resourceId]"
               :resourceLevelIndex="index + 1"
-              :upcastResourceIDs="upcastResourceIDs"
+              :selectedAuthSchemeTabIndex.sync="selectedAuthSchemeTabIndexArr[index + 1]"
+              :selectedAuthSchemeTabIndexArr.sync="selectedAuthSchemeTabIndexArr"
+              :upcastResourceIDs.sync="upcastResourceIDs"
               :upcastResourceAuthSchemeMap="upcastResourceAuthSchemeMap"
               @show-upcast-resource-scheme="showUpcastResourceScheme"
-              @refresh-upcast-resourceIDs="refreshUpdcastResourceIDs"
               @rerender="rerender"
       ></scheme-detail>
     </div>
     <div>
       <div class="suspension-ball" @click="toggleSuspensionSchemeList">
-        <span class="suspension-count" v-if="false">3</span>
+        <span class="suspension-count" v-if="selectedAuthSchemes.length">{{selectedAuthSchemes.length}}</span>
         <span class="suspension-icon-list" v-else>
           <span></span>
           <span></span>
@@ -46,8 +50,17 @@
         </span>
       </div>
       <div class="suspension-list-box" v-if="isShowSuspensionSchemeList">
-        <ul v-if="false">
-          <li></li>
+        <ul v-if="selectedAuthSchemes.length">
+          <li
+                  v-for="(item, index) in selectedAuthSchemes"
+                  :key="'selectedAuthScheme-'+index"
+          >
+            <div class="suspension-lb-row-1">{{item.resourceName}}</div>
+            <div class="suspension-lb-row-2">
+              <span>{{item.authSchemeName}}</span>
+              <span>{{item.policyName}}</span>
+            </div>
+          </li>
         </ul>
         <p v-else>请选择相应授权方案及策略……</p>
       </div>
