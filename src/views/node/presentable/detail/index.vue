@@ -31,7 +31,9 @@
           <span slot="label" class="panel-tab-name">授权签约管理</span>
           <div class="panel-content">
             <lazy-component>
-              <authorization-scheme-manage></authorization-scheme-manage>
+              <authorization-scheme-manage
+                :resourceInfo="resourceInfo"
+              ></authorization-scheme-manage>
             </lazy-component>
           </div>
         </el-tab-pane>

@@ -50,13 +50,12 @@
 
       li {
         position: relative;
-        padding-left: 20px;
+        padding-left: 20px; margin-bottom: 7px;
         font-size: 14px; color: #333333; cursor: pointer;
 
         &:before {
           position: absolute; left: 0; top: 50%; z-index: 8; transform: translateY(-50%);
-          content: '';
-          display: block;
+          content: ''; display: block;
           width: 12px; height: 12px; border-radius: 50%;
           background-color: #EA7171;
         }
@@ -87,13 +86,13 @@
 
   .row-policy {
     .p-item-name{
+      display: inline-block;
       position: relative; left: -30px; top: 50%; transform: translateY(-50%);
-      margin-bottom: 6px; padding-left: 30px; color: #333;
-      cursor: pointer;
+      margin-bottom: 6px; padding-left: 30px; color: #333; cursor: pointer;
 
       span.p-item-check{
-        position: absolute; left: 0; top: 1px;
         display: inline-block;
+        position: absolute; left: 0; top: 1px;
         width: 18px; height: 18px; border: 1px solid #C7C7CD; border-radius: 50%;
       }
 
