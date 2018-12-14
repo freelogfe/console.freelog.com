@@ -9,6 +9,12 @@ import PresentableDetailHeader from './header.vue'
 
 import AuthorizationSchemeManage from "../authorization-scheme/index.vue"
 
+const TAB_NAMES = {
+  policy: 'policy-manager',
+  contract: 'contract-manager',
+  schema: 'schema-manager'
+}
+
 export default {
   name: 'presentable-detail',
   data() {
