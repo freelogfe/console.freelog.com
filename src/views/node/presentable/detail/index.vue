@@ -32,7 +32,8 @@
           <div class="panel-content">
             <lazy-component>
               <authorization-scheme-manage
-                :resourceInfo="resourceInfo"
+                      v-if="resourceInfo.resourceId"
+                      :resourceInfo="resourceInfo"
               ></authorization-scheme-manage>
             </lazy-component>
           </div>

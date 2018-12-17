@@ -11,13 +11,12 @@ export default {
   },
   data() {
     return {
+      isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
-      authSchemesData: null,
-      upcastResourceIDs: [],
-      upcastResourceAuthSchemeMap: {},
-      selectedAuthSchemeTabIndexArr: [-1],
-      isFinishAllSelection: false,
-      selectedAuthSchemes:[]
+      currentOpenedResources: [],
+      resourceMap: {},
+      selectedAuthSchemes:[],
+      actIndex: 0
     }
   },
   computed: {
@@ -26,33 +25,68 @@ export default {
     },
   },
   methods: {
-    rerender() {
-      this.$forceUpdate()
+    // 点击"更新合约"按钮
+    updateContract(isUpdateContract) {
+      if(isUpdateContract) {
+
+      }
     },
     resolveUpdateDate(updateDate) {
       const date = new Date(updateDate)
       return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate()
     },
+    refreshSelectedAuthSchemes() {
+      this.selectedAuthSchemes = []
+      this.getSelectedAuthScheme(this.currentOpenedResources[0])
+    },
+    getSelectedAuthScheme(authSchemesData) {
+      if(authSchemesData) {
+        const { authSchemeList, resourceName, selectedAuthSchemeTabIndex, selectedPolicyIndex } = authSchemesData
+        if(selectedAuthSchemeTabIndex !== -1) {
+          const { authSchemeName, policy, bubbleResources } = authSchemeList[selectedAuthSchemeTabIndex]
+          let policyName = policy[selectedPolicyIndex].policyName
+          this.selectedAuthSchemes.push({ resourceName, authSchemeName, policyName })
+          bubbleResources.forEach(bResource => {
+            const { resourceId } = bResource
+            this.getSelectedAuthScheme(this.resourceMap[resourceId])
+          })
+        }
+      }
+    },
+    refreshCurrentOpenedResource(resourceLevelIndex) {
+      var targArr = this.currentOpenedResources.slice(0, resourceLevelIndex + 1)
+      var tempResource = this.currentOpenedResources[resourceLevelIndex]
+
+      while(tempResource !== null){
+        const { activeAuthSchemeTabIndex, authSchemeList } = tempResource
+        const { bubbleResources, selectedUpcastResourceIndex = -1 } = authSchemeList[activeAuthSchemeTabIndex]
+
+        if(selectedUpcastResourceIndex === -1) {
+          tempResource = null
+        }else {
+          const { resourceId } = bubbleResources[selectedUpcastResourceIndex]
+
+          if(this.resourceMap[resourceId]) {
+            targArr.push(this.resourceMap[resourceId])
+            tempResource = this.resourceMap[resourceId]
+          }else {
+            tempResource = null
+          }
+        }
+      }
+      this.currentOpenedResources = targArr
+    },
     // 显示 上抛资源 的授权方案
     showUpcastResourceScheme(upcastResource, resourceLevelIndex) {
       const { resourceId } = upcastResource
 
-      if(this.upcastResourceIDs[resourceLevelIndex]) {
-        if(this.upcastResourceIDs[resourceLevelIndex] !== resourceId) {
-          this.getUpcastResourceSchemeDetail(resourceId, resourceLevelIndex)
-            .then(() => {
-              this.upcastResourceIDs.splice(resourceLevelIndex, this.upcastResourceIDs.length, resourceId)
-            })
-        }
+      if(!this.resourceMap[resourceId]) {
+        this.getUpcastResourceSchemeDetail(resourceId, resourceLevelIndex)
+          .then(() => {
+            this.refreshCurrentOpenedResource(resourceLevelIndex)
+          })
       }else {
-        if(!this.upcastResourceAuthSchemeMap[resourceId]) {
-          this.getUpcastResourceSchemeDetail(resourceId, resourceLevelIndex)
-            .then(() => {
-              this.upcastResourceIDs.push(resourceId)
-            })
-        }else {
-          this.upcastResourceIDs.push(resourceId)
-        }
+        this.refreshCurrentOpenedResource(resourceLevelIndex)
       }
     },
     // 获取上抛资源的授权方案详情
@@ -63,20 +97,22 @@ export default {
       ])
         .then(([ resourceDetailRes, authSchemeListRes ]) => {
 
-          this.upcastResourceAuthSchemeMap[resourceId] = this.upcastResourceAuthSchemeMap[resourceId] || {
-            parentResourceScheme: this.getParentResource(resourceLevelIndex)
+          this.resourceMap[resourceId] = this.resourceMap[resourceId] || {
+            isFinishSelectedAuthScheme: false,
+            selectedAuthSchemeTabIndex: -1,
+            activeAuthSchemeTabIndex: 0,
+            selectedPolicyIndex: -1,
           }
           if(resourceDetailRes.errcode === 0) {
             const { resourceName, resourceType, userName, updateDate } = resourceDetailRes.data
             var resourceDate = this.resolveUpdateDate(updateDate)
-            Object.assign(this.upcastResourceAuthSchemeMap[resourceId], {
+            Object.assign(this.resourceMap[resourceId], {
               resourceName, resourceType, userName, resourceDate, resourceId,
-              selectedAuthSchemeTabIndex: -1
             })
           }
 
           if(authSchemeListRes.errcode === 0) {
-            this.upcastResourceAuthSchemeMap[resourceId].authSchemeList = authSchemeListRes.data
+            this.resourceMap[resourceId].authSchemeList = authSchemeListRes.data
           }
 
           return Promise.resolve()
@@ -98,53 +134,34 @@ export default {
       }).then(res => res.data)
         .then(() => schemeData[resourceId])
     },
-    getParentResource(resourceLevelIndex) {
-      if(resourceLevelIndex === 0) {
-        return this.authSchemesData
-      }else {
-        const parentResourceId = this.upcastResourceIDs[resourceLevelIndex - 1]
-        return this.upcastResourceAuthSchemeMap[parentResourceId]
-      }
-    },
     toggleSuspensionSchemeList() {
       this.isShowSuspensionSchemeList = !this.isShowSuspensionSchemeList
     },
   },
   watch: {
-    resourceInfo() {
-      this.authSchemesData.resourceName = this.resourceInfo.resourceName
-    },
-    selectedAuthSchemeTabIndexArr() {
-      this.selectedAuthSchemes = []
-      this.selectedAuthSchemeTabIndexArr.forEach((item, index) => {
-        if(item !== -1) {
-          let authSchemesData = null
-          if(index === 0) {
-            authSchemesData = this.authSchemesData
-          }else {
-            let resourceId = this.upcastResourceIDs[index - 1]
-            authSchemesData = this.upcastResourceAuthSchemeMap[resourceId]
-          }
-          if(authSchemesData) {
-            const { authSchemeList, resourceName } = authSchemesData
-            const { authSchemeName, selectedPolicyIndex, policy } = authSchemeList[item]
-            let policyName = policy[selectedPolicyIndex].policyName
-            this.selectedAuthSchemes.push({ resourceName, authSchemeName, policyName })
-          }
 
-        }
-      })
-    }
   },
   mounted() {
-    this.getResourceAuthSchemesList('710c3eea3fb61260bdc0e1f5b4678e19ecd010d1')
+    var self = this
+    document.addEventListener('click', function(e) {
+      if(self.isShowSuspensionSchemeList) {
+        self.toggleSuspensionSchemeList()
+      }
+    })
+
+    var resourceId = '710c3eea3fb61260bdc0e1f5b4678e19ecd010d1'
+    this.getResourceAuthSchemesList(resourceId)
       .then(res => {
         if(res.errcode === 0) {
-          this.authSchemesData = {
+          this.resourceMap[resourceId] = {
             authSchemeList: res.data,
             selectedAuthSchemeTabIndex: -1,
-            resourceName: this.resourceInfo.resourceName || ''
+            activeAuthSchemeTabIndex: 0,
+            selectedPolicyIndex: -1,
+            resourceName: this.resourceInfo.resourceName || '',
+            resourceId
           }
+          this.currentOpenedResources.push(this.resourceMap[resourceId])
         }
       })
   }
