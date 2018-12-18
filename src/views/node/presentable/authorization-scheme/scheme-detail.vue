@@ -32,7 +32,7 @@
                   @click="selectUpcastResource(index)"
           >
               <span>{{upcastResource.resourceName}}</span>
-              <span class="history-text" v-if="upcastResource.isHasSignHistory"> (存在历史签约)</span>
+              <!--<span class="history-text" v-if="upcastResource.isHasSignHistory"> (存在历史签约)</span>-->
               <span class="upcast-resource-line" v-if="index === selectedUpcastResourceIndex"></span>
           </li>
         </ul>
@@ -44,14 +44,14 @@
                   v-for="(policy, index) in policyList"
                   :key="'policy'+index"
                   class="policy-item"
-                  :class="{ 'active': index === curSchemeSelectedPolicyIndex, 'hasHistory': policy.isHasHistory, 'offline': policy.isOffline }"
+                  :class="{ 'active': index === curSchemeSelectedPolicyIndex, 'has-sign-history': policy.isHasSignHistory, 'disabled': policy.isDisbale }"
           >
             <div class="p-item-name" @click="selectPolicyItem(index)">
               <i class="el-icon-circle-check" v-if="index === curSchemeSelectedPolicyIndex"></i>
               <span class="p-item-check" v-if="index !== curSchemeSelectedPolicyIndex"></span>
               {{policy.policyName}}
-              <span class="history-text" v-if="policy.isHasHistory">(存在历史签约)</span>
-              <span class="offline-text" v-if="policy.isOffline">(存在历史签约/已下架)</span>
+              <span class="has-sign-history-text" v-if="policy.isHasSignHistory">(存在历史签约)</span>
+              <span class="disabled-text" v-if="policy.isDisbale">(不可用/已下架)</span>
             </div>
             <div class="policy-detail">
               <pre class="policy-segment-text">{{fmtPolicyTextList[index]}}</pre>
@@ -82,6 +82,7 @@
       resourceAuthScheme: Object,
       resourceLevelIndex: Number,
       resourceMap: Object,
+      authSchemeIdentityAuthMap: Object,
       activeAuthSchemeTabIndex: Number,
       selectedAuthSchemeTabIndex: Number,
     },
@@ -125,12 +126,14 @@
                 self.cancelSomeURSchemeSelection(self.upcastResourcesArr)
                 self.exchangePolicyItem(index)
                 self.checkIsFinishAllAuth()
+                self.$emit('refresh-selected-auth-schemes')
               }
             }
           })
         }else {
           self.exchangePolicyItem(index)
           self.checkIsFinishAllAuth()
+          this.$emit('refresh-selected-auth-schemes')
         }
 
       },
@@ -142,12 +145,10 @@
         if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
           str = '切换策略'
           isEffect = true
-        }else {
-          if(this.curSchemeSelectedPolicyIndex === index) {
-            if(this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
-              str = '取消当前选择'
-              isEffect = true
-            }
+        }else if(this.curSchemeSelectedPolicyIndex === index) {
+          if(this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
+            str = '取消当前选择'
+            isEffect = true
           }
         }
 
@@ -189,6 +190,8 @@
         const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex } = tempAuthSchemeData
         const { bubbleResources } = authSchemeList[activeAuthSchemeTabIndex]
         var isFinishSelectedAuthScheme = bubbleResources.length === 0 && selectedAuthSchemeTabIndex !== -1
+
+
         for(let i = leng - 2; i >= 0; i--) {
           if(this.currentOpenedResources[i].selectedAuthSchemeTabIndex === -1) {
             isFinishSelectedAuthScheme = false
@@ -248,7 +251,17 @@
         })
       },
       policyList() {
-        return this.activeScheme.policy
+        var { authSchemeId } = this.activeScheme
+        var tempMap = this.authSchemeIdentityAuthMap[authSchemeId]
+        return this.activeScheme.policy.map(p => {
+          if(tempMap) {
+            const { status, authResult: { isAuth }  } = tempMap[p.segmentId]
+            p.isDisbale = status === 0 || !isAuth
+          }else {
+            p.isDisbale = false
+          }
+          return p
+        })
       },
       fmtPolicyTextList() {
         return this.policyList.map(policy => {
@@ -257,8 +270,12 @@
       },
     },
     watch: {
+      resourceAuthScheme() {
+        console.log('resourceAuthScheme -- change ---', this.resourceAuthScheme)
+      },
       currentOpenedResources() {
         this.activeScheme.bubbleResources = this.activeScheme.bubbleResources.slice(0)
+        this.$emit('refresh-selected-auth-schemes')
       },
       selectedAuthSchemeTabIndex() {
         if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {
@@ -266,7 +283,6 @@
         }else {
           this.curSchemeSelectedPolicyIndex = this.resourceAuthScheme.selectedPolicyIndex
         }
-        this.$emit('refresh-selected-auth-schemes')
       },
       activeScheme() {
         if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {

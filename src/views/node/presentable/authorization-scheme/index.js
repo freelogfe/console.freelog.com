@@ -1,5 +1,5 @@
 import SchemeDetail from './scheme-detail.vue'
-import schemeData, { resourceDetail } from './111.js'
+import { Message } from 'element-ui'
 
 export default {
   name: 'authorization-scheme-manage',
@@ -7,7 +7,9 @@ export default {
     SchemeDetail
   },
   props: {
+    presentableInfo: Object,
     resourceInfo: Object,
+    contracts: Array,
   },
   data() {
     return {
@@ -16,19 +18,92 @@ export default {
       currentOpenedResources: [],
       resourceMap: {},
       selectedAuthSchemes:[],
-      actIndex: 0
+      actIndex: 0,
+      isRegisterGlobalClickEvent: false,
+      authSchemeIdentityAuthMap: {},
     }
   },
   computed: {
     qiHostname() {
       return window.location.hostname.replace(/^console/g, 'qi')
     },
+    nodeId() {
+      return this.presentableInfo.nodeId
+    },
+    presentableId() {
+      return this.presentableInfo.presentableId
+    },
+    presentableName() {
+      return this.presentableInfo.presentableName
+    },
+    presentableContractsMap() {
+      var map = {}
+      this.contracts.forEach(contract => {
+        const { resourceId } = contract
+        map[resourceId] = contract
+      })
+      return map
+    },
+    boxStyle() {
+      if(this.currentOpenedResources.length > 1) {
+        return {
+          position: 'relative',
+          left: (document.querySelector('#pane-schema-manager').offsetWidth - window.innerWidth) / 2 + 'px',
+          width: window.innerWidth + 'px',
+          margin: 0
+        }
+      }else {
+        return {}
+      }
+    }
   },
   methods: {
+    initPresentableAuthSchemes() {
+      var resourceId = this.resourceInfo.resourceId
+
+      var resourceiDset = new Set(this.presentableInfo.contracts.map(c => c.resourceId))
+      resourceiDset.add(resourceId)
+
+      return this.getResourceSchemeDetail([...resourceiDset].join(','))
+        .then(() => {
+          if(this.resourceMap[resourceId]) {
+            this.currentOpenedResources = []
+            this.currentOpenedResources.push(this.resourceMap[resourceId])
+            this.refreshSelectedAuthSchemes()
+          }
+          return Promise.resolve()
+        })
+    },
+    reInitPresentableAuthSchemes(newContracts){
+      this.$emit('update:contracts', newContracts)
+      newContracts.forEach(c => {
+        this.resolveAuthSchemeParams(this.resourceMap[c.resourceId], c)
+      })
+    },
     // 点击"更新合约"按钮
     updateContract(isUpdateContract) {
       if(isUpdateContract) {
+        var contracts = this.selectedAuthSchemes.map(item => {
+          const { resourceId, authSchemeId, segmentId, contractId = '' } = item
+          if(contractId && contractId !== '') {
+            return { resourceId, authSchemeId, policySegmentId: segmentId, contractId }
+          }else {
+            return { resourceId, authSchemeId, policySegmentId: segmentId }
+          }
+        })
 
+        this.$axios.put(`//${this.qiHostname}/v1/presentables/${this.presentableId}`, {
+          contracts
+        })
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              var str = this.presentableInfo.contracts.length ? '更新' : '生成'
+              Message.success(`节点资源${this.presentableName}授权合约${str}成功！`)
+
+              this.reInitPresentableAuthSchemes(res.data.contracts)
+            }
+          })
       }
     },
     resolveUpdateDate(updateDate) {
@@ -41,11 +116,13 @@ export default {
     },
     getSelectedAuthScheme(authSchemesData) {
       if(authSchemesData) {
-        const { authSchemeList, resourceName, selectedAuthSchemeTabIndex, selectedPolicyIndex } = authSchemesData
+        const { authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex, contractId } = authSchemesData
         if(selectedAuthSchemeTabIndex !== -1) {
-          const { authSchemeName, policy, bubbleResources } = authSchemeList[selectedAuthSchemeTabIndex]
-          let policyName = policy[selectedPolicyIndex].policyName
-          this.selectedAuthSchemes.push({ resourceName, authSchemeName, policyName })
+          const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
+          let { policyName, segmentId } = policy[selectedPolicyIndex]
+          this.selectedAuthSchemes.push({
+            resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId
+          })
           bubbleResources.forEach(bResource => {
             const { resourceId } = bResource
             this.getSelectedAuthScheme(this.resourceMap[resourceId])
@@ -59,6 +136,7 @@ export default {
 
       while(tempResource !== null){
         const { activeAuthSchemeTabIndex, authSchemeList } = tempResource
+
         const { bubbleResources, selectedUpcastResourceIndex = -1 } = authSchemeList[activeAuthSchemeTabIndex]
 
         if(selectedUpcastResourceIndex === -1) {
@@ -80,8 +158,8 @@ export default {
     showUpcastResourceScheme(upcastResource, resourceLevelIndex) {
       const { resourceId } = upcastResource
 
-      if(!this.resourceMap[resourceId]) {
-        this.getUpcastResourceSchemeDetail(resourceId, resourceLevelIndex)
+      if(!this.resourceMap[resourceId] || this.resourceMap[resourceId].authSchemeList.length  === 0) {
+        this.getResourceSchemeDetail(resourceId, resourceLevelIndex)
           .then(() => {
             this.refreshCurrentOpenedResource(resourceLevelIndex)
           })
@@ -89,80 +167,147 @@ export default {
         this.refreshCurrentOpenedResource(resourceLevelIndex)
       }
     },
-    // 获取上抛资源的授权方案详情
-    getUpcastResourceSchemeDetail(resourceId, resourceLevelIndex) {
-      return Promise.all([
-        this.getResourceDetail(resourceId),
-        this.getResourceAuthSchemesList(resourceId)
-      ])
-        .then(([ resourceDetailRes, authSchemeListRes ]) => {
+    // 获取资源的授权方案详情
+    getResourceSchemeDetail(resourceIds) {
+      if(resourceIds !== '') {
+        return Promise.all([
+          this.getResourceDetailList(resourceIds),
+          this.getResourceAuthSchemesList(resourceIds)
+        ])
+          .then(([ detailListRes, authSchemeListRes ]) => {
 
-          this.resourceMap[resourceId] = this.resourceMap[resourceId] || {
-            isFinishSelectedAuthScheme: false,
-            selectedAuthSchemeTabIndex: -1,
-            activeAuthSchemeTabIndex: 0,
-            selectedPolicyIndex: -1,
-          }
-          if(resourceDetailRes.errcode === 0) {
-            const { resourceName, resourceType, userName, updateDate } = resourceDetailRes.data
-            var resourceDate = this.resolveUpdateDate(updateDate)
-            Object.assign(this.resourceMap[resourceId], {
-              resourceName, resourceType, userName, resourceDate, resourceId,
-            })
-          }
+            if(detailListRes.errcode === 0) {
+              detailListRes.data.forEach(item => {
+                const { resourceId, resourceName, resourceType, userName, updateDate } = item
+                if(authSchemeListRes[resourceId]) {
+                  this.resolveAuthSchemeListRes(authSchemeListRes[resourceId], resourceId)
 
-          if(authSchemeListRes.errcode === 0) {
-            this.resourceMap[resourceId].authSchemeList = authSchemeListRes.data
-          }
+                  var resourceDate = this.resolveUpdateDate(updateDate)
+                  Object.assign(this.resourceMap[resourceId], {
+                    resourceName, resourceType, userName, resourceDate,
+                  })
+                }
+              })
+            }
+            return Promise.resolve()
+          })
+      }else {
+        return Promise.reject()
+      }
 
-          return Promise.resolve()
-        })
     },
     // 获取资源详情
     getResourceDetail(resourceId) {
       return this.$axios.get(`//${this.qiHostname}/v1/resources/${resourceId}`)
         .then(res => res.data)
-        .then(() => resourceDetail[resourceId])
+    },
+    // 获取资源详情列表
+    getResourceDetailList(resourceIds) {
+      return this.$axios.get(`//${this.qiHostname}/v1/resources/list?resourceIds=${resourceIds}`)
+        .then(res => res.data)
     },
     // 获取资源授权方法
-    getResourceAuthSchemesList(resourceId) {
+    getResourceAuthSchemesList(resourceIds) {
       return this.$axios.get(`//${this.qiHostname}/v1/resources/authSchemes`, {
         params: {
-          policyStatus: 2,
-          resourceIds: resourceId
+          policyStatus: 1,
+          resourceIds
         }
       }).then(res => res.data)
-        .then(() => schemeData[resourceId])
+        .then(res => {
+          var map = {}
+          if(res.errcode === 0) {
+            res.data.forEach(item => {
+              const { resourceId, status } = item
+              if(status === 1) {
+                map[resourceId] = map[resourceId] || []
+                map[resourceId].push(item)
+              }
+            })
+          }
+          return Promise.resolve(map)
+        })
+    },
+    resolveAuthSchemeListRes(authSchemeList, resourceId) {
+      const contractObj = this.presentableContractsMap[resourceId]
+      this.resourceMap[resourceId] = this.resourceMap[resourceId] || {
+        resourceId,
+        authSchemeList,
+        selectedAuthSchemeTabIndex: -1,
+        activeAuthSchemeTabIndex: 0,
+        selectedPolicyIndex: -1,
+        isFinishSelectedAuthScheme: !!contractObj
+      }
+
+      this.resolveAuthSchemeParams(this.resourceMap[resourceId], contractObj)
+
+      var authSchemeIds = authSchemeList.map(item => item.authSchemeId).join(',')
+      this.getAuthSchemeIdentityAuth(authSchemeIds)
+    },
+    resolveAuthSchemeParams(tempResource, contractObj) {
+      const { authSchemeList } = tempResource
+      if(contractObj) {
+        const { authSchemeId, policySegmentId } = contractObj
+        for(let i = 0; i < authSchemeList.length; i++) {
+          if(authSchemeList[i].authSchemeId === authSchemeId) {
+            tempResource.activeAuthSchemeTabIndex = tempResource.selectedAuthSchemeTabIndex = i
+
+            const { policy } = authSchemeList[i]
+            for(let j = 0; j < policy.length; j++) {
+              if(policy[j].segmentId === policySegmentId) {
+                tempResource.selectedPolicyIndex = j
+                policy[j].isHasSignHistory = true
+              }else {
+                policy[j].isHasSignHistory = false
+              }
+            }
+            break
+          }
+        }
+      }
+    },
+    // 获取授权点的策略段身份认证结果
+    getAuthSchemeIdentityAuth(authSchemeIds) {
+      if(authSchemeIds.length === 0) return
+      var nodeId = this.nodeId
+      return this.$axios.get(`//${this.qiHostname}/v1/auths/authSchemeIdentityAuth?authSchemeIds=${authSchemeIds}&nodeId=${nodeId}`)
+        .then(res => res.data)
+        .then(res => {
+          if(res.errcode === 0) {
+            res.data.forEach(item => {
+              const { authSchemeId, policy } = item
+              this.authSchemeIdentityAuthMap[authSchemeId] = this.authSchemeIdentityAuthMap[authSchemeId] || {}
+              const tempMap = this.authSchemeIdentityAuthMap[authSchemeId]
+              policy.forEach(p => {
+                tempMap[p.segmentId] = p
+              })
+            })
+            this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
+          }
+        })
     },
     toggleSuspensionSchemeList() {
       this.isShowSuspensionSchemeList = !this.isShowSuspensionSchemeList
+      if(!this.isRegisterGlobalClickEvent) {
+        this.isRegisterGlobalClickEvent = true
+        document.addEventListener('click', this.hideSuspensionSchemeList)
+      }
     },
+    hideSuspensionSchemeList() {
+      if(this.isShowSuspensionSchemeList) {
+        this.toggleSuspensionSchemeList()
+      }
+    }
   },
   watch: {
 
   },
+  beforeDestroy() {
+    document.removeEventListener('click', this.hideSuspensionSchemeList)
+  },
   mounted() {
-    var self = this
-    document.addEventListener('click', function(e) {
-      if(self.isShowSuspensionSchemeList) {
-        self.toggleSuspensionSchemeList()
-      }
-    })
 
-    var resourceId = '710c3eea3fb61260bdc0e1f5b4678e19ecd010d1'
-    this.getResourceAuthSchemesList(resourceId)
-      .then(res => {
-        if(res.errcode === 0) {
-          this.resourceMap[resourceId] = {
-            authSchemeList: res.data,
-            selectedAuthSchemeTabIndex: -1,
-            activeAuthSchemeTabIndex: 0,
-            selectedPolicyIndex: -1,
-            resourceName: this.resourceInfo.resourceName || '',
-            resourceId
-          }
-          this.currentOpenedResources.push(this.resourceMap[resourceId])
-        }
-      })
+    this.initPresentableAuthSchemes()
+
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <div
           class="authorization-scheme-box"
+          :style="boxStyle"
   >
     <div
             class="scheme-partition"
@@ -21,6 +22,7 @@
               :currentOpenedResources="currentOpenedResources"
               :resourceLevelIndex="index"
               :resourceMap="resourceMap"
+              :authSchemeIdentityAuthMap="authSchemeIdentityAuthMap"
               :selectedAuthSchemeTabIndex.sync="resourceAuthScheme.selectedAuthSchemeTabIndex"
               :activeAuthSchemeTabIndex.sync="resourceAuthScheme.activeAuthSchemeTabIndex"
               @show-upcast-resource-scheme="showUpcastResourceScheme"
@@ -33,7 +35,7 @@
               class="update-btn"
               :class="{'active': isCanUpdateContract}"
               @click="updateContract(isCanUpdateContract)">
-        生成合约
+        {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
       </div>
     </div>
     <div @click.stop="function() {}">
