@@ -68,6 +68,7 @@ export default {
           } else {
             this.createTab()
           }
+          console.log(this.tabs)
         })
       })
   },
@@ -198,6 +199,7 @@ export default {
           isPublished: scheme.status === PUBLISH_STATUS.PUBLISHED
         }
       })
+
       scheme.tabId = newTabName
       this.tabsSchemeMap[newTabName] = scheme
       this.curTabName = newTabName
@@ -358,6 +360,7 @@ export default {
           const existed = {}
           data.policies = {}
           schemeData.policies.forEach((p) => {
+            console.log(p)
             if (p.policySegmentId) {
               data.policies.updatePolicySegments = data.policies.updatePolicySegments || []
               data.policies.updatePolicySegments.push({

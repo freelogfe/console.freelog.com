@@ -26,7 +26,9 @@
         </ul>
         <div class="policy-input-wrap">
           <h4 class="policy-input-title"><i class="el-icon-question"></i>授权方案策略</h4>
-          <policy-editor v-model="detail.scheme" :showValidate="false" @change="changePolicyHandler"></policy-editor>
+          <policy-editor :policy="detail.scheme.policy[0]"
+                         @save="savePolicyHandler"
+                         :showValidate="false" @change="changePolicyHandler"></policy-editor>
         </div>
         <div class="line-arrow" ref="arrowLine">
           <i class="circle"></i>
@@ -98,6 +100,7 @@ export default {
     }
   },
   mounted() {
+    console.log('this.detail',this.detail)
     this.initDependencies(this.detail.scheme)
   },
   methods: {
@@ -257,7 +260,7 @@ export default {
       })
     },
     changePolicyHandler(data) {
-      this.detail.scheme.policies = data
+      // this.detail.scheme.policies = data
     },
     updateDepResourceSchemesHandler(data) {
       this.detail.scheme.willDutyStatements = data
@@ -277,6 +280,10 @@ export default {
       } else if (this.curDepResource.resourceId) {
         target.style.display = 'block'
       }
+    },
+    savePolicyHandler(policy){
+      this.detail.scheme.policies = [policy]
+      // console.log('save policy', policy)
     }
   }
 }
