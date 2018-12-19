@@ -1,5 +1,6 @@
 <template>
   <div
+          v-loading="isShowLoading"
           class="authorization-scheme-box"
           :style="boxStyle"
   >

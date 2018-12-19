@@ -13,6 +13,7 @@ export default {
   },
   data() {
     return {
+      isShowLoading: false,
       isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
       currentOpenedResources: [],
@@ -59,6 +60,7 @@ export default {
   },
   methods: {
     initPresentableAuthSchemes() {
+      this.isShowLoading = true
       var resourceId = this.resourceInfo.resourceId
 
       var resourceiDset = new Set(this.presentableInfo.contracts.map(c => c.resourceId))
@@ -71,7 +73,12 @@ export default {
             this.currentOpenedResources.push(this.resourceMap[resourceId])
             this.refreshSelectedAuthSchemes()
           }
+          this.isShowLoading = false
           return Promise.resolve()
+        })
+        .catch((e) => {
+          this.isShowLoading = false
+          Message.error(e)
         })
     },
     reInitPresentableAuthSchemes(newContracts){

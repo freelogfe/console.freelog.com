@@ -187,23 +187,35 @@
       checkIsFinishAllAuth() {
         var leng = this.currentOpenedResources.length
         const tempAuthSchemeData = this.currentOpenedResources[leng - 1]
-        const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex } = tempAuthSchemeData
+        const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex, isFinishSelectedAuthScheme } = tempAuthSchemeData
+        var isFinishSelectedAS = false
+
         const { bubbleResources } = authSchemeList[activeAuthSchemeTabIndex]
-        var isFinishSelectedAuthScheme = bubbleResources.length === 0 && selectedAuthSchemeTabIndex !== -1
 
-
-        for(let i = leng - 2; i >= 0; i--) {
-          if(this.currentOpenedResources[i].selectedAuthSchemeTabIndex === -1) {
-            isFinishSelectedAuthScheme = false
-            break
+        // 是否已选中"授权方案"，否则isFinishSelectedAS = false
+        if(selectedAuthSchemeTabIndex !== -1) {
+          // 是否存在"上抛资源"，不存在则isFinishSelectedAS = true
+          if(bubbleResources.length === 0) {
+            isFinishSelectedAS = true
+          }else {
+            // 判断所有"上抛资源"是否都已选中"授权方案"
+            let isFinishSelection = true
+            for(let i = 0; i < bubbleResources.length; i++) {
+              const { resourceId } = bubbleResources[i]
+              if(!this.resourceMap[resourceId] || !this.resourceMap[resourceId].isFinishSelectedAuthScheme) {
+                isFinishSelection = false
+                break
+              }
+            }
+            isFinishSelectedAS = isFinishSelection
           }
         }
+
         for(let i = leng - 1; i >= 0; i--) {
-          this.currentOpenedResources[i].isFinishSelectedAuthScheme = isFinishSelectedAuthScheme
+          this.currentOpenedResources[i].isFinishSelectedAuthScheme = isFinishSelectedAS
         }
 
         this.checkCanUpdateContract()
-
       },
       // 检测是否能点击"更新合同"
       checkCanUpdateContract() {
@@ -270,9 +282,6 @@
       },
     },
     watch: {
-      resourceAuthScheme() {
-        console.log('resourceAuthScheme -- change ---', this.resourceAuthScheme)
-      },
       currentOpenedResources() {
         this.activeScheme.bubbleResources = this.activeScheme.bubbleResources.slice(0)
         this.$emit('refresh-selected-auth-schemes')
