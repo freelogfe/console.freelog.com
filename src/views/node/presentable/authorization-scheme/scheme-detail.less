@@ -54,13 +54,18 @@
         font-size: 14px; color: #333333; cursor: pointer;
 
         &:before {
+          box-sizing: border-box;
           position: absolute; left: 0; top: 50%; z-index: 8; transform: translateY(-50%);
           content: ''; display: block;
           width: 12px; height: 12px; border-radius: 50%;
           background-color: #EA7171;
         }
 
-        &.active:before {
+        &.active-1:before{
+          border: 3px solid #89D1AD; background-color: #fff;
+        }
+
+        &.active-2:before {
           background-color: #89D1AD;
         }
 
@@ -101,8 +106,8 @@
         color: #4497EC; font-size: 20px;
       }
 
-      span.history-text{ color: #409EFF; }
-      span.offline-text{ color: #999; }
+      span.has-sign-history-text{ color: #409EFF; }
+      span.disabled-text{ color: #999; }
     }
 
     .policyList {
@@ -122,13 +127,13 @@
         background-color: #FAFBFB; white-space: pre-wrap;
       }
 
-      &.hasHistory {
+      &.has-sign-history {
         .policy-segment-text {
           background-color: #FFF9E2;
         }
       }
 
-      &.offline {
+      &.disabled {
         .policy-segment-text {
           background-color: #E8E8E8; color: #BABABA;
         }

@@ -527,3 +527,101 @@ export const resourceDetail = {
   },
 }
 
+
+var obj = {
+  "ret": 0,
+  "errcode": 0,
+  "msg": "success",
+  "data": {
+    "presentableId": "5c11c087ed15a5002bcca1a8",
+    "resourceInfo": {
+      "userId": 50001,
+      "userName": "资源作者",
+      "resourceName": "pb-md",
+      "resourceType": "page_build",
+      "meta": {"widgetName": "", "dependencies": ["1778b05e6aa9e95ca87f59bd26af94521fff6732"]},
+      "purpose": 3,
+      "previewImages": [],
+      "createDate": "2018-12-10T09:29:57.000Z",
+      "updateDate": "2018-12-11T21:49:22.000Z"
+    },
+    "presentableName": "pb-md",
+    "policy": [],
+    "masterContractId": "5c1867d43c6de3002904f1f5",
+    "userDefinedTags": [],
+    "presentableIntro": "",
+    "isOnline": 0,
+    "status": 5,
+    "nodeId": 672618675,
+    "resourceId": "5a7c1e3082317acccedc0a5fd957475fd78fa6f5",
+    "userId": 50003,
+    "nodeName": "海贼王漫画测试节点",
+    "contracts": [{
+      "resourceId": "5a7c1e3082317acccedc0a5fd957475fd78fa6f5",
+      "authSchemeId": "5c0f272c7a9288002ca103b4",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f5"
+    }, {
+      "resourceId": "1778b05e6aa9e95ca87f59bd26af94521fff6732",
+      "authSchemeId": "5c0f27da7a9288002ca103b8",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f6"
+    }, {
+      "resourceId": "d2327dc8d7916907ec27a7accf1be4d84d7c32c1",
+      "authSchemeId": "5c0f27b57a9288002ca103b6",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f7"
+    }, {
+      "resourceId": "b4e57d5c0920fe4f8dd7a5ef4f0545f75d4c15a3",
+      "authSchemeId": "5c0e2fce7a9288002ca1036e",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f8"
+    }],
+    "createDate": "2018-12-13T02:14:31.823Z",
+    "updateDate": "2018-12-18T06:07:05.641Z"
+  }
+}
+
+var obj1= {
+  "ret": 0,
+  "errcode": 0,
+  "msg": "success",
+  "data": {
+    "presentableId": "5c11c087ed15a5002bcca1a8",
+    "resourceInfo": {"resourceName": "pb-md", "resourceType": "page_build"},
+    "presentableName": "pb-md",
+    "policy": [],
+    "masterContractId": "5c1867d43c6de3002904f1f5",
+    "userDefinedTags": [],
+    "presentableIntro": "",
+    "isOnline": 0,
+    "status": 5,
+    "nodeId": 672618675,
+    "resourceId": "5a7c1e3082317acccedc0a5fd957475fd78fa6f5",
+    "userId": 50003,
+    "nodeName": "海贼王漫画测试节点",
+    "contracts": [{
+      "resourceId": "5a7c1e3082317acccedc0a5fd957475fd78fa6f5",
+      "authSchemeId": "5c0f272c7a9288002ca103b4",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f5"
+    }, {
+      "resourceId": "1778b05e6aa9e95ca87f59bd26af94521fff6732",
+      "authSchemeId": "5c0f27da7a9288002ca103b8",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f6"
+    }, {
+      "resourceId": "d2327dc8d7916907ec27a7accf1be4d84d7c32c1",
+      "authSchemeId": "5c0f27b57a9288002ca103b6",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f7"
+    }, {
+      "resourceId": "b4e57d5c0920fe4f8dd7a5ef4f0545f75d4c15a3",
+      "authSchemeId": "5c0e2fce7a9288002ca1036e",
+      "policySegmentId": "0c31ceccd9db6ad189c45a7e238793ee",
+      "contractId": "5c1867d43c6de3002904f1f8"
+    }],
+    "createDate": "2018-12-13T02:14:31.823Z",
+    "updateDate": "2018-12-18T06:11:14.064Z"
+  }
+}

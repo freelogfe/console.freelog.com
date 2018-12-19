@@ -32,7 +32,10 @@
           <div class="panel-content">
             <lazy-component>
               <authorization-scheme-manage
-                :resourceInfo="resourceInfo"
+                      v-if="resourceInfo.resourceId"
+                      :contracts.sync="presentableInfo.contracts"
+                      :resourceInfo="resourceInfo"
+                      :presentableInfo="presentableInfo"
               ></authorization-scheme-manage>
             </lazy-component>
           </div>
