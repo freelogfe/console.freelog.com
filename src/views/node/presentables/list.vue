@@ -83,7 +83,6 @@
 
 <script>
   import {PRESENTABLE_STATUS_TIPS} from '@/config/presentable'
-  import {loadResources} from '@/data/resource/loader'
   import {loadAuthSchemes} from '@/data/scheme/loader'
   import Pagination from '@/components/Pagination/index.vue'
 
@@ -152,7 +151,6 @@
           return []
         }
 
-        var rids = []
         var authSchemeIds = []
         var maps = {}
         var schemeIdMaps = {}
@@ -173,19 +171,10 @@
           })
           maps[item.resourceId] = index
           presentablesIdMap[item.presentableId] = item
-          rids.push(item.resourceId)
-
+          item.resourceInfo.postImgUrl = this.resolvePostImgUrl(item.resourceInfo)
           this.resolvePresentable(item)
         })
 
-        if (rids.length) {
-          loadResources(rids).then(resources => {
-            resources.forEach(resource => {
-              resource.postImgUrl = this.resolvePostImgUrl(resource)
-              this.$set(list[maps[resource.resourceId]], 'resourceInfo', resource)
-            })
-          })
-        }
 
         if (authSchemeIds.length) {
           this.loadPresentablesSchemes(authSchemeIds)

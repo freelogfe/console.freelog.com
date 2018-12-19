@@ -9,14 +9,14 @@ export default {
   name: 'fl-container',
   data() {
     return {
-      key: `view-${this.$route.path}`
+      // key: `view-${this.$route.path}`
     }
   },
-  // computed: {
-  //   key(){
-  //     return `${this.$route.path}`
-  //   }
-  // },
+  computed: {
+    key(){
+      return `${this.$route.path}`  //切换不同url必定重新渲染
+    }
+  },
   beforeRouteUpdate(to, from, next) {
     let toPath = to.fullPath
     const params = this.$route.params
