@@ -1,7 +1,6 @@
 import PolicyList from '@/components/PolicyList/index.vue'
 import ContractManager from '@/components/ContractManager/index.vue'
 
-import {onloadResourceDetail} from '@/data/resource/loader'
 import {onloadSchemeDetail} from '@/data/scheme/loader'
 import {onloadPresentableDetail} from '@/data/presentable/loader'
 
@@ -83,10 +82,7 @@ export default {
           })
 
           this.presentableInfo = {...presentable}
-
-          return onloadResourceDetail(presentable.resourceId).then((detail) => {
-            this.resourceInfo = {...detail}
-          })
+          this.resourceInfo = presentable.resourceInfo
         })
     },
     loadPresentableScheme() {

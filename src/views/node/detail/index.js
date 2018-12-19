@@ -1,7 +1,6 @@
 import {NODE_STATUS} from '@/config/node'
-import {onloadNodeDetail} from '@/data/node/loader'
 import ClipBoard from '@/components/clipboard/index.vue'
-// import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import NodePresentables from '../presentables/index.vue'
 // import NodePreview from '../preview/index.vue'
 
@@ -32,10 +31,13 @@ export default {
     })
   },
   computed: {
-
+    ...mapGetters({
+      nodes: 'nodes'
+    }),
   },
   mounted() {
     const nodeId = this.$route.params.nodeId
+
     if (nodeId) {
       this.init(nodeId)
     } else {
@@ -44,14 +46,14 @@ export default {
   },
   methods: {
     init(nodeId) {
-      this.load(nodeId)
-        .then((detail) => {
-          detail.statusInfo = NODE_STATUS[detail.status]
-          this.detail = detail
-        })
+      this.loadNodeDetail(nodeId).catch(this.$error.showErrorMessage)
     },
-    load(param) {
-      return onloadNodeDetail(param || {}).catch(this.$error.showErrorMessage)
+    loadNodeDetail(nodeId) {
+      return this.$store.dispatch('loadNodeDetail', nodeId)
+        .then(detail => {
+          this.detail = detail
+          detail.statusInfo = NODE_STATUS[detail.status]
+        })
     },
     copyDoneHandler() {
       this.$message.success('已复制节点地址')
