@@ -13,7 +13,7 @@
       </li>
       <slot name="append"></slot>
     </ul>
-    <slot name="empty" v-if="previewList.length === 0">
+    <slot name="empty" v-if="!isLoading && previewList.length === 0">
       <div style="font-size: 20px; text-align: center;">暂无查询结果</div>
     </slot>
     <slot name="loading">

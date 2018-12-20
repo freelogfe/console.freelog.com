@@ -86,12 +86,14 @@ export default {
         }, this.searchScope)
       }).then((res) => {
         const data = res.getData() || {}
-        if (res.errcode === 0) {
+        if (res.data.errcode === 0) {
           this.searchResources = this.searchResources.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
+            debugger
           }
         } else {
+          debugger
           data.canLoadMore = false
         }
         return data

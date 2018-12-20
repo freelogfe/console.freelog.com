@@ -61,7 +61,8 @@ export default {
       previewList: [],
       displayCount: 0,
       canLoadMore: true,
-      index: 1
+      index: 1,
+      isLoading: false
     }
   },
   mounted() {
@@ -79,17 +80,19 @@ export default {
 
       $hide.classList.remove('hide')
 
-      const hideFn = () => $hide.classList.add('hide')
+      const hideFn = () => {
+        $hide.classList.add('hide')
+      }
       $hide.dataset.loaded = false
       this.observer = lozad($hide, {
         loaded(el) {
-          if (!self.canLoadMore) {
+          if (self.canLoadMore === false) {
             return hideFn()
           }
           const inView = isElementInViewport($hide, {bottom: diffBtm})
           const reobserve = () => {
             el.dataset.loaded = false
-            observer.observe(el)
+            self.observer.observe(el)
           }
 
           if (!inView) {
@@ -105,12 +108,13 @@ export default {
           }
 
           self.load().then(() => {
-            if (!self.canLoadMore) {
+            if (self.canLoadMore === false) {
               hideFn()
             } else {
               reobserve()
             }
-          }).catch(() => {
+          }).catch((err) => {
+            console.log(err)
             hideFn()
           })
         },
@@ -123,9 +127,11 @@ export default {
       const self = this
       const index = self.index
       self.index += 1
+      self.isLoading = true
       return self.fetch(index).then((data) => {
         self.canLoadMore = data.canLoadMore
         self.scrollHandler(data.dataList || [])
+        self.isLoading = false
         if (self.canLoadMore === false) {
           return Promise.reject()
         }
