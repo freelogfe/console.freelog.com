@@ -96,7 +96,8 @@ export default {
       const resourceDetail = this.resourceDetail
       let newScheme = {
         resourceId: resourceDetail.resourceId,
-        dependencies: cloneDeep(resourceDetail.dependencies)
+        dependencies: cloneDeep(resourceDetail.dependencies),
+        policy: []
       }
       if (oldScheme) {
         newScheme = Object.assign(newScheme, oldScheme)

@@ -82,7 +82,8 @@ export default {
           })
 
           this.presentableInfo = {...presentable}
-          this.resourceInfo = presentable.resourceInfo
+
+          this.resourceInfo = Object.assign(presentable.resourceInfo, { resourceId: presentable.resourceId })
         })
     },
     loadPresentableScheme() {

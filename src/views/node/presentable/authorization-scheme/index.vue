@@ -31,6 +31,9 @@
               @refresh-selected-auth-schemes="refreshSelectedAuthSchemes"
       ></scheme-detail>
     </div>
+    <div class="asb-scroll-guide-box" v-if="this.currentOpenedResources.length > 2">
+      <div class="red-bar" :style="redBarStyle"></div>
+    </div>
     <div class="asb-footer">
       <div
               class="update-btn"
