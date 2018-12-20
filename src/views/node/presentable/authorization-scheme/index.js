@@ -1,5 +1,6 @@
 import SchemeDetail from './scheme-detail.vue'
 import { Message } from 'element-ui'
+import _ from 'lodash'
 
 export default {
   name: 'authorization-scheme-manage',
@@ -13,6 +14,9 @@ export default {
   },
   data() {
     return {
+      allPartitionBoxW: 0,
+      authSchemeBoxScrollLeft: 0,
+      isShowLoading: false,
       isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
       currentOpenedResources: [],
@@ -21,6 +25,7 @@ export default {
       actIndex: 0,
       isRegisterGlobalClickEvent: false,
       authSchemeIdentityAuthMap: {},
+      throttleFn: null
     }
   },
   computed: {
@@ -55,10 +60,18 @@ export default {
       }else {
         return {}
       }
-    }
+    },
+    redBarStyle() {
+      var x = (this.authSchemeBoxScrollLeft / this.allPartitionBoxW).toFixed(4) * 150 + 'px'
+      return {
+        width: (window.innerWidth / this.allPartitionBoxW).toFixed(4) * 100 + '%',
+        transform: `translateX(${x})`,
+      }
+    },
   },
   methods: {
     initPresentableAuthSchemes() {
+      this.isShowLoading = true
       var resourceId = this.resourceInfo.resourceId
 
       var resourceiDset = new Set(this.presentableInfo.contracts.map(c => c.resourceId))
@@ -71,7 +84,12 @@ export default {
             this.currentOpenedResources.push(this.resourceMap[resourceId])
             this.refreshSelectedAuthSchemes()
           }
+          this.isShowLoading = false
           return Promise.resolve()
+        })
+        .catch((e) => {
+          this.isShowLoading = false
+          Message.error(e)
         })
     },
     reInitPresentableAuthSchemes(newContracts){
@@ -297,17 +315,31 @@ export default {
       if(this.isShowSuspensionSchemeList) {
         this.toggleSuspensionSchemeList()
       }
-    }
+    },
+    authSchemeBoxScroll(e) {
+      console.log('scrollLeft ---', e.target.scrollLeft)
+      this.authSchemeBoxScrollLeft = e.target.scrollLeft
+    },
   },
   watch: {
+    currentOpenedResources() {
+      setTimeout(() => {
+        var $partitionBox = document.querySelector('.scheme-partition')
 
+        if($partitionBox) {
+          var allPartitionBoxW = $partitionBox.offsetWidth * this.currentOpenedResources.length
+          this.allPartitionBoxW = allPartitionBoxW
+        }
+      })
+    }
   },
   beforeDestroy() {
     document.removeEventListener('click', this.hideSuspensionSchemeList)
+    document.removeEventListener('scroll', this.authSchemeBoxScroll)
   },
   mounted() {
-
     this.initPresentableAuthSchemes()
-
+    this.throttleFn = _.throttle(this.authSchemeBoxScroll, 17).bind(this)
+    document.querySelector('.authorization-scheme-box').addEventListener('scroll', this.throttleFn, false)
   }
 }
