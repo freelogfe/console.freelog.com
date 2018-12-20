@@ -9,7 +9,7 @@
             v-for="(resourceAuthScheme, index) in currentOpenedResources"
             :key="'resource' + index"
     >
-      <div class="upcast-resource-head" v-if="index !== 0">
+      <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 ">
         <h3>{{resourceAuthScheme.resourceName}}</h3>
         <div>
           <span>{{resourceAuthScheme.userName}}</span>
