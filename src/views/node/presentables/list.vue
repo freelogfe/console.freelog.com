@@ -116,7 +116,6 @@
       params: {
         deep: true,
         handler() {
-          console.log('change params', this.params)
           this.reload()
         }
       },
@@ -132,7 +131,6 @@
 
     methods: {
       setParams() {
-        console.log('this.params', this.params)
         var params = Object.assign({
           nodeId: this.$route.params.nodeId
         }, this.params || {})
@@ -193,7 +191,6 @@
           this.loadPresentablesAuth(presentableIds)
             .then((auths) => {
               auths.forEach(auth => {
-                console.log(auth)
                 let presentable = presentablesIdMap[auth.presentableId]
                 presentable.isAcquireSignAuth = auth.isAcquireSignAuth
                 this.setWarningTip(presentable)

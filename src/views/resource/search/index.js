@@ -73,7 +73,7 @@ export default {
         return data
       })
     },
-    searchDataHandler() {
+    searchDataHandler(page) {
       const pageSize = 10
 
       if (!this.searchInput) {
@@ -82,7 +82,9 @@ export default {
 
       return this.$services.allResources.get({
         params: Object.assign({
-          keyWords: encodeURIComponent(this.searchInput)
+          keyWords: encodeURIComponent(this.searchInput),
+          page,
+          pageSize
         }, this.searchScope)
       }).then((res) => {
         const data = res.getData() || {}
@@ -90,10 +92,8 @@ export default {
           this.searchResources = this.searchResources.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
-            debugger
           }
         } else {
-          debugger
           data.canLoadMore = false
         }
         return data

@@ -60,7 +60,6 @@ export default {
   },
   methods: {
     searchHandler(params) {
-      console.log(params)
       Object.keys(params).forEach(key => {
         if (params[key]) {
           this.params[key] = params[key]
@@ -78,7 +77,7 @@ export default {
       }
 
       if (presentable.isLoading) return
-      console.log(presentable)
+
       if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
         this.$confirm(`确定${presentable.isOnline ? '下' : '上'}线${presentable.presentableName}?上线后将自动替换当前页面样式`)
           .then(() => {

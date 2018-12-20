@@ -26,9 +26,8 @@
         </ul>
         <div class="policy-input-wrap">
           <h4 class="policy-input-title"><i class="el-icon-question"></i>授权方案策略</h4>
-          <policy-editor :policy="detail.scheme.policy[0]"
-                         @save="savePolicyHandler"
-                         :showValidate="false" @change="changePolicyHandler"></policy-editor>
+          <policy-list-editor :list="detail.scheme.policy"
+                         @save="savePolicyHandler"></policy-list-editor>
         </div>
         <div class="line-arrow" ref="arrowLine">
           <i class="circle"></i>
@@ -64,13 +63,15 @@ import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { SCHEME_STATUS } from '@/config/scheme'
 import SearchResource from '../search/index.vue'
 import ResourceSchemeTree from '../scheme-tree/index.vue'
+import PolicyListEditor from './policy-list.vue'
 
 export default {
   name: 'resource-auth-scheme',
   components: {
     PolicyEditor,
     ResourceSchemeTree,
-    SearchResource
+    SearchResource,
+    PolicyListEditor
   },
   props: {
     updateCallback: {
@@ -281,8 +282,8 @@ export default {
         target.style.display = 'block'
       }
     },
-    savePolicyHandler(policy){
-      this.detail.scheme.policies = [policy]
+    savePolicyHandler(policyList){
+      this.detail.scheme.policies = policyList
       // console.log('save policy', policy)
     }
   }
