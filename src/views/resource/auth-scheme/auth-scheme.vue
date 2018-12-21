@@ -283,6 +283,7 @@ export default {
       }
     },
     savePolicyHandler(policyList){
+      console.log('save', policyList)
       this.detail.scheme.policies = policyList
       // console.log('save policy', policy)
     }
