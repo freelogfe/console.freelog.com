@@ -26,7 +26,6 @@
                   :key="'upcastResource'+index"
                   :class="{
                     'selected': index === selectedUpcastResourceIndex,
-                    'active-1': upcastResource.selectedAuthSchemeTabIndex !== -1,
                     'active-2': !!upcastResource.isFinishSelectedAuthScheme
                   }"
                   @click="selectUpcastResource(index)"

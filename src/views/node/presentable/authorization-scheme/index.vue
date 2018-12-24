@@ -10,7 +10,11 @@
             :key="'resource' + index"
     >
       <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 ">
-        <h3>{{resourceAuthScheme.resourceName}}</h3>
+        <h3>
+          <router-link :to="{ path: `/resource/detail/${resourceAuthScheme.resourceId}` }">
+            {{resourceAuthScheme.resourceName}}
+          </router-link>
+        </h3>
         <div>
           <span>{{resourceAuthScheme.userName}}</span>
           <span>{{resourceAuthScheme.resourceDate}}</span>
