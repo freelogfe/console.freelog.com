@@ -59,7 +59,6 @@
 <script>
 
 import { intersectionBy, unionBy, differenceBy } from 'lodash'
-import PolicyEditor from '@/components/PolicyEditor/index.vue'
 import { SCHEME_STATUS } from '@/config/scheme'
 import SearchResource from '../search/index.vue'
 import ResourceSchemeTree from '../scheme-tree/index.vue'
@@ -68,7 +67,6 @@ import PolicyListEditor from './policy-list.vue'
 export default {
   name: 'resource-auth-scheme',
   components: {
-    PolicyEditor,
     ResourceSchemeTree,
     SearchResource,
     PolicyListEditor

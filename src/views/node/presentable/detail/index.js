@@ -125,7 +125,10 @@ export default {
       })
     },
     handleClick() {
-
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
+        query: { tab: this.activeTabName }
+      })
     },
     savePresentableHandler(payload) {
       this.$services.presentables.put(this.$route.params.presentableId, payload)

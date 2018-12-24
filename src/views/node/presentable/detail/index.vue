@@ -3,7 +3,6 @@
     <presentable-detail-header :resource="resourceInfo"
                                :presentable="presentableInfo"
                                @save="savePresentableHandler"></presentable-detail-header>
-
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane :name="TAB_NAMES.policy">

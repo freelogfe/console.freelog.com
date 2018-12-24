@@ -15,7 +15,6 @@
                      v-model="presentable.presentableName">
             </template>
           </div>
-
           <FreelogTags v-model="presentable.userDefinedTags"
                        class="p-user-tags"
                        actionText="新标签"

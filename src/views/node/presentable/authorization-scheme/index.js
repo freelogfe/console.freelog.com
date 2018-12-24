@@ -97,6 +97,10 @@ export default {
       newContracts.forEach(c => {
         this.resolveAuthSchemeParams(this.resourceMap[c.resourceId], c)
       })
+      this.$router.push({
+        path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
+        query: { tab: 'contract' }
+      })
     },
     // 点击"更新合约"按钮
     updateContract(isUpdateContract) {
