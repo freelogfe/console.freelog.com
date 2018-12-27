@@ -124,6 +124,8 @@ export default {
               Message.success(`节点资源${this.presentableName}授权合约${str}成功！`)
 
               this.reInitPresentableAuthSchemes(res.data.contracts)
+            }else {
+              Message.error(res.msg)
             }
           })
       }
@@ -246,6 +248,8 @@ export default {
                 map[resourceId].push(item)
               }
             })
+          }else {
+            Message.error(res.msg)
           }
           return Promise.resolve(map)
         })
@@ -305,6 +309,8 @@ export default {
               })
             })
             this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
+          }else {
+            Message.error(res.msg)
           }
         })
     },
@@ -321,7 +327,6 @@ export default {
       }
     },
     authSchemeBoxScroll(e) {
-      console.log('scrollLeft ---', e.target.scrollLeft)
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
     },
   },
