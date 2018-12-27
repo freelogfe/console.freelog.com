@@ -1,6 +1,6 @@
 import SchemeDetail from './scheme-detail.vue'
 import { Message } from 'element-ui'
-import _ from 'lodash'
+import {throttle} from 'lodash'
 
 export default {
   name: 'authorization-scheme-manage',
@@ -104,6 +104,7 @@ export default {
     },
     // 点击"更新合约"按钮
     updateContract(isUpdateContract) {
+
       if(isUpdateContract) {
         var contracts = this.selectedAuthSchemes.map(item => {
           const { resourceId, authSchemeId, segmentId, contractId = '' } = item
@@ -122,8 +123,9 @@ export default {
             if(res.errcode === 0) {
               var str = this.presentableInfo.contracts.length ? '更新' : '生成'
               Message.success(`节点资源${this.presentableName}授权合约${str}成功！`)
-
               this.reInitPresentableAuthSchemes(res.data.contracts)
+            }else {
+              Message.error(res.msg)
             }
           })
       }
@@ -246,6 +248,8 @@ export default {
                 map[resourceId].push(item)
               }
             })
+          }else {
+            Message.error(res.msg)
           }
           return Promise.resolve(map)
         })
@@ -305,6 +309,8 @@ export default {
               })
             })
             this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
+          }else {
+            Message.error(res.msg)
           }
         })
     },
@@ -321,7 +327,6 @@ export default {
       }
     },
     authSchemeBoxScroll(e) {
-      console.log('scrollLeft ---', e.target.scrollLeft)
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
     },
   },
@@ -343,7 +348,7 @@ export default {
   },
   mounted() {
     this.initPresentableAuthSchemes()
-    this.throttleFn = _.throttle(this.authSchemeBoxScroll, 17).bind(this)
+    this.throttleFn = throttle(this.authSchemeBoxScroll, 17).bind(this)
     document.querySelector('.authorization-scheme-box').addEventListener('scroll', this.throttleFn, false)
   }
 }

@@ -48,18 +48,18 @@
       <el-table-column
               width="250"
               label="">
-        <template slot-scope="scope">
-          <div class="presentable-nav-links">
-            <router-link :to="scope.row.detailLink + '?tab=policy'">
-              <el-button type="text">策略管理</el-button>
+        <template slot-scope="{row}">
+          <div class="presentable-nav-links active-status-0">
+            <router-link :to="row.detailLink + '?tab=policy'">
+              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i></el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="scope.row.detailLink + '?tab=contract'">
-              <el-button type="text" :disabled="!scope.row.hasContract">合约管理</el-button>
+            <router-link :to="row.detailLink + '?tab=contract'">
+              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot" v-if="row.hasContract" hidden></i></el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="scope.row.detailLink + '?tab=schema'">
-              <el-button type="text">授权方案</el-button>
+            <router-link :to="row.detailLink + '?tab=schema'">
+              <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i></el-button>
             </router-link>
           </div>
         </template>
@@ -202,9 +202,10 @@
         return list
       },
       setWarningTip(presentable) {
+        //包含presentable策略
         const tips = {
-          '0': '未获得授权',
-          '1': '已获得授权'
+          '0': '不能再二次授权',
+          '1': '可再二次授权'
         }
 
         let warningTip = tips[presentable.isAcquireSignAuth.toString()] || ''
@@ -334,7 +335,22 @@
     .presentable-nav-links {
       span {
         color: #D8D8D8;
-        padding: 0 3px;
+        padding: 0 6px;
+      }
+
+      .nav-link-btn {
+        position: relative;
+      }
+
+      .dot {
+        position: absolute;
+        top: 0;
+        right: -11px;
+        &:after {
+          border-width: 4px;
+          width: 0;
+          height: 0;
+        }
       }
     }
   }
