@@ -85,7 +85,7 @@
                                   inactive-text="下线"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
-                              v-if="row.isAcquireSignAuth!== 1"
+                              v-if="row.warningTip"
                               placement="right">
                     <div slot="content">
                       {{row.warningTip}}
