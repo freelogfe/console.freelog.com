@@ -55,7 +55,7 @@
             </div>
             <div class="policy-content-input-ft" style="float: right">
               <el-button round size="mini" @click="deletePolicyHandler">取消</el-button>
-              <el-button round size="mini" type="primary" @click="savePolicyHandler">保存</el-button>
+              <el-button round size="mini" type="primary" @click="savePolicyHandler" v-if="autoSave === false">保存</el-button>
             </div>
           </template>
         </div>

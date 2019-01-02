@@ -3,6 +3,7 @@
     <h4 class="res-title">{{resource.resourceName}}</h4>
     <div class="res-intro-detail">
       <div class="rt-actions" v-show="type === 'self'">
+        <slot name="actions" :resource="resource"></slot>
         <el-button size="mini" type="primary" @click="gotoSchemeHandler">授权管理</el-button>
       </div>
 

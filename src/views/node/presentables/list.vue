@@ -57,7 +57,7 @@
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=contract'">
               <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
-                                                                                              v-if="row.hasContract && !row.isContractActived"></i>
+                                                                                              v-if="row.hasContract && row.isContractActived === false"></i>
               </el-button>
             </router-link>
             <span>|</span>
@@ -199,7 +199,7 @@
               auths.forEach(auth => {
                 let presentable = presentablesIdMap[auth.presentableId]
                 presentable.isAcquireSignAuth = auth.isAcquireSignAuth
-                this.setWarningTip(presentable)
+                // this.setWarningTip(presentable)
               })
             })
 
@@ -225,8 +225,8 @@
       fillWarningTips(presentables) {
         //判断授权链上的策略包含presentable授权
         const tips = {
-          '0': '不能再二次授权',
-          '1': '可再二次授权'
+          'no': '不能再二次授权',
+          'yes': '可再二次授权'
         }
         const contractTips = {
           'no': '已签约合同未全部激活',
@@ -237,10 +237,10 @@
           let warningTips = []
 
           if (presentable.isAcquireSignAuth === 0) {
-            warningTips.push(tips['0'])
+            warningTips.push(tips.no)
           }
-
           if (presentable.hasContract && !presentable.isContractActived) {
+
             warningTips.push(contractTips.no)
           }
 
