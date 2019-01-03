@@ -20,7 +20,7 @@
       <div class="load-more-gif" ref="loading"
            element-loading-text="拼命加载中"
            element-loading-background="rgba(0,0,0,0)"
-           v-loading="true"></div>
+           v-loading="isLoading > 0"></div>
     </slot>
   </div>
 </template>
