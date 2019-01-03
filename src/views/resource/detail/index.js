@@ -222,7 +222,7 @@ export default {
       this.hideOptionsDialogHandler()
       const selectedNodes = []
       this.nodes.forEach((node) => {
-        if (node.checked) {
+        if (node.checked && !node._presentable) {
           selectedNodes.push(node.nodeId)
         }
       })
