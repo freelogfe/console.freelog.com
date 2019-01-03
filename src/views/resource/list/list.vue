@@ -2,10 +2,14 @@
   <div class="resource-items">
     <lazy-list-view :list="resources" :height="90" :fetch="fetchData">
       <template slot-scope="scope">
-        <resource-item :resource="scope.data" :type="type" :navTo="gotoEditHandler"></resource-item>
+        <resource-item :resource="scope.data" :type="type" :navTo="gotoEditHandler">
+          <template slot="actions" v-if="isSelf">
+            <el-button size="mini" type="primary" @click="gotoEditHandler(scope.data)">编辑</el-button>
+          </template>
+        </resource-item>
       </template>
       <div slot="empty" class="empty-resource-tip">
-        {{type==='self'?'没有自制资源' :'未收藏资源'}}
+        {{isSelf?'没有自制资源' :'未收藏资源'}}
       </div>
     </lazy-list-view>
   </div>
@@ -36,6 +40,12 @@ export default {
     query: String
   },
 
+  computed: {
+    isSelf(){
+      return this.type === 'self'
+    }
+  },
+
   watch: {
     type() {
       this.initView()
@@ -51,7 +61,7 @@ export default {
 
   methods: {
     gotoEditHandler(resource) {
-      if (this.type === 'all') {
+      if (this.type === 'self') {
         this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
       } else {
         this.$router.push({ path: `/resource/detail/${resource.resourceId}` })

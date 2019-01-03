@@ -20,7 +20,7 @@
                        actionText="新标签"
                        @input="changeTagsHandler"></FreelogTags>
         </div>
-        <div class="res-info" v-if="resource&&resource.resourceName">{{resource.resourceName}} | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
+        <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId" target="_blank">{{resource.resourceName}}</a> | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
         </div>
         <p :class="contractStateCls"><i class="dot"></i>{{contractState}}</p>
@@ -138,6 +138,9 @@
       color: #999999;
       font-size: 14px;
       margin-bottom: 10px;
+      a {
+        color: #999999;
+      }
     }
 
     .back-to-node-page {

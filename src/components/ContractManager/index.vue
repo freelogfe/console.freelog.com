@@ -1,5 +1,5 @@
 <template>
-  <div class="fl-contracts-manager-wrap clearfix">
+  <div class="fl-contracts-manager-wrap clearfix" v-loading="loading">
     <div class="contract-list-wrapper">
       <h4 class="label-title">资源列表</h4>
 

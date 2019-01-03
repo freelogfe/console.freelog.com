@@ -2,6 +2,7 @@
   <div class="fl-policy-list-wrap">
     <policy-editor v-for="policy in policyList"
                    :policy="policy"
+                   :autoSave="true"
                    @save="savePolicyHandler"
                    @delete="deletePolicyHandler"></policy-editor>
     <div>

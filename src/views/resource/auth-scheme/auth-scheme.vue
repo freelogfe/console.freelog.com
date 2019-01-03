@@ -99,7 +99,6 @@ export default {
     }
   },
   mounted() {
-    console.log('this.detail',this.detail)
     this.initDependencies(this.detail.scheme)
   },
   methods: {
@@ -283,7 +282,6 @@ export default {
     savePolicyHandler(policyList){
       console.log('save', policyList)
       this.detail.scheme.policies = policyList
-      // console.log('save policy', policy)
     }
   }
 }
