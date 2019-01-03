@@ -22,6 +22,8 @@
         </div>
       </div>
     </resource-inputs>
+    <ResourceDetailIntro></ResourceDetailIntro>
+    <!--授权管理-->
   </section>
 </template>
 

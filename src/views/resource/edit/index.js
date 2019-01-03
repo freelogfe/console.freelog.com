@@ -4,7 +4,7 @@ policy更新后，后续签订的policy按新的来，已签约过的按更新�
 import { mapGetters } from 'vuex'
 import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceInputs from '../input/index.vue'
-
+import ResourceDetailIntro from './intro.vue'
 export default {
   name: 'resource-detail-edit',
   data() {
@@ -23,7 +23,8 @@ export default {
     }
   },
   components: {
-    ResourceInputs
+    ResourceInputs,
+    ResourceDetailIntro
   },
   mounted() {
     const params = this.$route.params
