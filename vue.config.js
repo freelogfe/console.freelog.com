@@ -21,10 +21,10 @@ function getBaseUrl() {
 function getDevServer() {
   var config = {
     port: 8080,
-    inline: false,
+    inline: true,
     disableHostCheck: true,
     historyApiFallback: true,
-    hot: false
+    hot: true
   }
 
   if (argv.https) {

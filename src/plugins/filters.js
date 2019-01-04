@@ -28,6 +28,7 @@ export default (Vue) => {
     AccountMap[accountType.abbr] = accountType
     return AccountMap
   }, {})
+
   Vue.filter('humanizeCurrency', (value, abbr) => {
     if (!value) return '0'
     const account = ACCOUNT_MAP[abbr || 'feth']

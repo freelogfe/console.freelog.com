@@ -1,6 +1,6 @@
 <template>
   <section class="resource-detail-edit-wrap">
-    <div class="update-res-file" v-if="isDev">
+    <div class="update-res-file" v-if="isDev && viewMode === 'edit'">
       <el-upload
         class="upload-container"
         drag
@@ -14,16 +14,19 @@
         <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
       </el-upload>
     </div>
-    <resource-inputs :data="resourceDetail" ref="inputArea">
+    <resource-inputs class="res-base-info-inputs" :data="resourceDetail" :class="[viewMode+'-mode-info']" ref="inputArea">
       <div class="btm-wrap clearfix">
         <div class="rt-side">
-          <el-button class="ft-btn" type="primary" @click="updateResourceHandler">更新资源</el-button>
-          <el-button class="ft-btn" type="primary" @click="gotoResourceSchemeDetailHandler">编辑授权方案</el-button>
+          <el-button class="ft-btn" type="primary" round
+                     @click="updateResourceHandler">更新资源</el-button>
+          <el-button class="ft-btn" type="primary" round
+                     @click="gotoResourceSchemeDetailHandler">编辑授权方案</el-button>
         </div>
       </div>
     </resource-inputs>
-    <ResourceDetailIntro></ResourceDetailIntro>
+    <ResourceDetailIntro class="res-detail-intro-area" :resource="resourceDetail" :class="[viewMode+'-mode-intro']" @switch="switchModeHandler"></ResourceDetailIntro>
     <!--授权管理-->
+    <div class="placeholder-area">test</div>
   </section>
 </template>
 
@@ -36,4 +39,9 @@ export default ResourceDetail
 <style lang="less" scoped>
   @import "index.less";
   @import "../../../styles/footer.less";
+
+  .placeholder-area {
+    background-color: white;
+    min-height: 100vh;
+  }
 </style>

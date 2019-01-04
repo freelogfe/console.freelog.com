@@ -1,7 +1,16 @@
 .resource-detail-edit-wrap {
   margin: auto;
   position: relative;
-  padding-top: 63px;
+
+  .res-base-info-inputs {
+    padding-top: 40px;
+  }
+
+  .res-detail-intro-area,
+  .res-base-info-inputs {
+    transition: max-height 1s;
+    overflow: hidden;
+  }
 
   .btm-wrap {
     padding-bottom: 40px;
@@ -15,6 +24,23 @@
     }
   }
 
+  .preview-mode-info {
+    max-height: 0;
+    padding-top: 0;
+  }
+
+  .edit-mode-info {
+    max-height: 1500px;
+  }
+
+  .preview-mode-intro {
+    max-height: 120px;
+  }
+
+  .edit-mode-intro {
+    max-height: 40px;
+    line-height: 40px;
+  }
 
   .update-res-file {
     width: 500px;

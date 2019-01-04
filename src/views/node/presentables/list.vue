@@ -171,7 +171,7 @@
           }
 
           Object.assign(item, {
-            // isAcquireSignAuth: 1
+            isAcquireSignAuth: 1
           })
           maps[item.resourceId] = index
           presentablesIdMap[item.presentableId] = item

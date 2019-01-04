@@ -10,7 +10,8 @@ export default {
   data() {
     return {
       isDev: process.env.NODE_ENV === 'development',
-      resourceDetail: {}
+      resourceDetail: {},
+      viewMode: 'preview'
     }
   },
   computed: {
@@ -75,6 +76,9 @@ export default {
     },
     gotoResourceSchemeDetailHandler() {
       this.$router.push(`/resource/edit/${this.$route.params.resourceId}/auth_schemes`)
+    },
+    switchModeHandler(mode){
+      this.viewMode = mode
     }
   }
 }
