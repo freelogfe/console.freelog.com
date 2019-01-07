@@ -64,9 +64,18 @@
         resourceInfo: {}
       }
     },
+
+    props: {
+      detail: Object
+    },
+
     components: {
       ContractManager,
       PolicyManager,
+    },
+
+    mounted(){
+      console.log(this.detail)
     },
 
     methods: {

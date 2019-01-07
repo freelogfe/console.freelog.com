@@ -7,12 +7,12 @@
               :name="item.name">
           <span slot="label" :class="['scheme-title-status-'+item.data.scheme.status]">
             <el-button class="auth-name" type="text">
-              {{item.data.scheme.authSchemeName}}
-              <!--<input type="text"-->
-              <!--class="input-auth-name"-->
-              <!--v-model="item.data.scheme.authSchemeName"-->
-              <!--@keydown="inputDownHandler"-->
-              <!--@keyup.enter="handleInputConfirm">-->
+              <!--{{item.data.scheme.authSchemeName}}-->
+              <input type="text"
+                     class="input-auth-name"
+                     v-model="item.data.scheme.authSchemeName"
+                     @keydown="inputDownHandler"
+                     @keyup.enter="handleInputConfirm(item.data.scheme, $event)">
           </el-button>
             <!--<i class="el-icon-delete" @click="deleteAuthSchemeHandler(item)" v-show="item.data.scheme.authSchemeId"></i>-->
           </span>
@@ -84,16 +84,6 @@
           this.curTabName = this.tabs[index].name
         }
       },
-      clickTab(tab) {
-        console.log(arguments)
-        switch (tab.name) {
-          case 'createTab':
-            this.createTab()
-            break
-          default:
-            break
-        }
-      },
       switchTabHandler(activeName, oldActiveName) {
         switch (activeName) {
           case 'createTab':
@@ -135,6 +125,15 @@
             throw new Error(res.data.msg)
           })
       },
+      updateAuthScheme(data, schemeData) {
+        return this.$services.authSchemes.put(schemeData.authSchemeId, data)
+          .then((res) => {
+            if (res.data.errcode === 0) {
+              return res.getData()
+            }
+            throw new Error(res.data.msg)
+          })
+      },
       addTab(scheme) {
         const newTabName = scheme.authSchemeId
         this.tabs.push({
@@ -144,6 +143,7 @@
           data: {
             id: newTabName,
             scheme,
+            resource: this.resourceDetail,
             isPublished: scheme.status === PUBLISH_STATUS.PUBLISHED
           }
         })
@@ -154,11 +154,16 @@
       deleteAuthSchemeHandler() {
 
       },
-      inputDownHandler() {
-
+      inputDownHandler(ev) {
+        const keyCode = ev.keyCode
+        // 屏蔽elementUI左右快捷键的操作
+        if ([37, 38, 39, 40].indexOf(keyCode) !== -1) {
+          ev.stopPropagation()
+        }
       },
-      handleInputConfirm() {
-
+      handleInputConfirm(scheme, ev) {
+        this.updateAuthScheme({authSchemeName: scheme.authSchemeName}, scheme)
+        ev.target.blur()
       },
       updateData() {
 
