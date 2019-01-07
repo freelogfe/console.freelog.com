@@ -31,9 +31,9 @@
                   }"
                   @click="selectUpcastResource(index)"
           >
-              <span>{{upcastResource.resourceName}}</span>
-              <!--<span class="history-text" v-if="upcastResource.isHasSignHistory"> (存在历史签约)</span>-->
-              <span class="upcast-resource-line" v-if="index === selectedUpcastResourceIndex"></span>
+            <span>{{upcastResource.resourceName}}</span>
+            <!--<span class="history-text" v-if="upcastResource.isHasSignHistory"> (存在历史签约)</span>-->
+            <span class="upcast-resource-line" v-if="index === selectedUpcastResourceIndex"></span>
           </li>
         </ul>
       </div>
@@ -311,6 +311,6 @@
 </script>
 
 <style lang="less" scoped>
- @import './scheme-detail.less';
+  @import './scheme-detail.less';
 </style>
 

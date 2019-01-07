@@ -2,6 +2,7 @@
   <nav
           class="left-sidebar"
           :class="{'sidebar-mini': isMini}"
+          v-if="isShowSidebar"
   >
     <ul class="ls-list">
       <li class="ls-item ">
