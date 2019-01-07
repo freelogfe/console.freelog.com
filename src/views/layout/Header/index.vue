@@ -3,6 +3,7 @@
     <router-link to="/"  class="brand">
       <i>F</i>
       <span class="page-title">{{pageTitle}}</span>
+
     </router-link>
     <nav class="toolbar" v-if="session.user">
       <ul class="navbar-menu">
@@ -27,6 +28,7 @@
               <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
             </span>
             <ul class="my-profile-items">
+            <!--
               <li class="my-profile-item center hover">
                 <router-link to="/resource/create" class="nav-link">
                   <i class="el-icon-plus"></i>创建资源
@@ -53,6 +55,7 @@
                   <i class="el-icon-setting tool-icon"></i>设置
                 </a>
               </li>
+            -->
               <li class="my-profile-item center hover" @click="logout">
                 <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出
               </li>

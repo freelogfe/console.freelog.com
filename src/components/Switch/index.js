@@ -29,8 +29,8 @@ export default {
   },
   methods: {
     switchHandler() {
+      console.log('input --- change')
       if (this.disabled)return
-
       this.$emit('input', !this.value)
       this.$emit('change', !this.value)
     }
