@@ -2,6 +2,7 @@ import {CONTRACT_STATUS_COLORS} from '@/config/contract'
 import Vue from 'vue'
 import {onloadUserInfo} from '../user/loader'
 import {onloadNodeDetail} from '../node/loader'
+import {onloadResourceDetail} from '../resource/loader'
 import {createLoader} from "../../lib/utils";
 
 var cachedLoaders = {}
@@ -34,7 +35,8 @@ function format(contract) {
     })
   }
 
-  if (contract.partyTwo) {
+  //确保partyTwo是节点，partyTwo有可能是授权点ID
+  if (contract.partyTwo && contract.partyTwo.length <= 10){
     let loader = cachedLoaders[contract.partyTwo]
     if (!loader) {
       loader = createLoader((callback) => {
