@@ -5,6 +5,8 @@ import { mapGetters } from 'vuex'
 import { onloadResourceDetail } from '@/data/resource/loader'
 import ResourceInputs from '../input/index.vue'
 import ResourceDetailIntro from './intro.vue'
+import SchemesManager from './scheme-manager.vue'
+
 export default {
   name: 'resource-detail-edit',
   data() {
@@ -25,7 +27,8 @@ export default {
   },
   components: {
     ResourceInputs,
-    ResourceDetailIntro
+    ResourceDetailIntro,
+    SchemesManager
   },
   mounted() {
     const params = this.$route.params

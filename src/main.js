@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
-import { sync } from 'vuex-router-sync'
+import {sync} from 'vuex-router-sync'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueLazyload from 'vue-lazyload'
 
@@ -11,7 +11,24 @@ import store from './store'
 import plugins from './plugins'
 import './styles/element-ui.less'
 
-sync(store, router, { moduleName: 'route' })
+sync(store, router, {moduleName: 'route'})
+
+function initEnv() {
+  const win = window
+  const isTest = /\.testfreelog\.com$/.test(win.location.host)
+  const mainDomain = isTest ? 'testfreelog.com' : 'freelog.com'
+  win.g_freelog = win.g_freelog || {}
+  win.g_freelog.Env = win.g_freelog.Env || {}
+
+  Object.assign(win.g_freelog.Env, {
+    isTest,
+    mainDomain
+  })
+
+  win.g_freelog.Env.qiOrigin = win.location.protocol + '//qi.' + mainDomain
+}
+
+initEnv()
 
 Vue.use(ElementUI)
 Vue.use(plugins)
@@ -27,5 +44,5 @@ new Vue({
   store,
   i18n,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })

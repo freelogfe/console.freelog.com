@@ -13,6 +13,7 @@ const error = resolve => require.ensure([], () => resolve(require('@/views/error
 const aboutView = resolve => require.ensure([], () => resolve(require('@/views/about/index.vue')), 'other')
 const helpView = resolve => require.ensure([], () => resolve(require('@/views/help/index.vue')), 'other')
 const mainView = resolve => require.ensure([], () => resolve(require('@/views/main/index.vue')), 'index')
+const userView = resolve => require.ensure([], () => resolve(require('@/views/user/setting/index.vue')), 'user')
 
 export const views = {
   layout,
@@ -21,6 +22,7 @@ export const views = {
   helpView,
   error,
   mainView,
+  userView,
   ...ResourceViews,
   ...NodeViews
 }
@@ -32,6 +34,7 @@ export default {
   helpView,
   error,
   mainView,
+  userView,
   ...ResourceViews,
   ...NodeViews,
   // ...GroupViews,
