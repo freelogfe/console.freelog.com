@@ -1,10 +1,10 @@
-import { Message } from 'element-ui'
 export default {
   name: 'fl-sidebar',
   data() {
     return {
       isMini: true,
       nodes: [],
+      isShowSidebar: true
     }
   },
   computed: {
@@ -22,12 +22,17 @@ export default {
     }
   },
   watch: {
-
+    '$route.fullPath'() {
+      const { meta: { hideSidebar } } = this.$route
+      this.isShowSidebar = !hideSidebar
+    }
   },
   created() {
 
   },
   mounted() {
+    const { meta: { hideSidebar } } = this.$route
+    this.isShowSidebar = !hideSidebar
     this.loadNodeList()
   }
 }

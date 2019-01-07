@@ -1,4 +1,4 @@
-import SchemeDetail from './scheme-detail.vue'
+import SchemeDetail from '@/components/Scheme-detail/scheme-detail.vue'
 import { Message } from 'element-ui'
 import {throttle} from 'lodash'
 
