@@ -47,17 +47,22 @@ export default {
       this.loadData(query)
         .then(this.formatContracts)
         .then((contractList) => {
+          console.log(contractList)
           this.contractList = contractList
-          this.showContractDetailHandler(this.masterContract)
+          if (this.masterContract) {
+            this.showContractDetailHandler(this.masterContract)
+          } else if (contractList.length) {
+            this.showContractDetailHandler(contractList[0])
+          }
         })
-        .finally(()=>{
-          this.loading =false
+        .finally(() => {
+          this.loading = false
           this.shouldUpdate()  //更新key值
         })
     },
     //避免重复请求合同数据
-    shouldUpdate(){
-      var updateKey = this.contracts.map(contract=>{
+    shouldUpdate() {
+      var updateKey = this.contracts.map(contract => {
         return `${contract.contractId}_${contract.status}`
       }).join('_')
 

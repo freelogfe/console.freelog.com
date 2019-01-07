@@ -26,7 +26,9 @@
     </resource-inputs>
     <ResourceDetailIntro class="res-detail-intro-area" :resource="resourceDetail" :class="[viewMode+'-mode-intro']" @switch="switchModeHandler"></ResourceDetailIntro>
     <!--授权管理-->
-    <div class="placeholder-area">test</div>
+    <div class="schemes-manager-container">
+      <SchemesManager :resourceDetail="resourceDetail"></SchemesManager>
+    </div>
   </section>
 </template>
 
@@ -40,7 +42,7 @@ export default ResourceDetail
   @import "index.less";
   @import "../../../styles/footer.less";
 
-  .placeholder-area {
+  .schemes-manager-container {
     background-color: white;
     min-height: 100vh;
   }

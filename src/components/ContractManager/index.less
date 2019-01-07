@@ -5,6 +5,44 @@
     width: 280px;
     float: left;
 
+    .res-contract-title {
+      display: inline-block;
+      padding-right: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 75%;
+      white-space: nowrap;
+      box-sizing: border-box;
+      vertical-align: bottom;
+    }
+
+    .contract-state-tip {
+      font-weight: normal;
+      font-size: 12px;
+      border: 1px solid #333333;
+      border-radius: 20px;
+      float: right;
+      margin-right: 10px;
+      padding: 3px 6px;
+    }
+
+    .contract-state-danger {
+      color: #f56c6c;
+      border-color: #f56c6c;
+    }
+    .contract-state-success {
+      color: #67c23a;
+      border-color: #67c23a;
+    }
+    .contract-state-warning {
+      color: #f56c6c;
+      border-color: #f56c6c;
+    }
+    .contract-state-info {
+      color: #909399;
+      border-color: #909399;
+    }
+
     .dot {
       margin-right: 9px;
       &:after {

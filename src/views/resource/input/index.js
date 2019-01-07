@@ -360,7 +360,6 @@ export default {
         metaData = {}
       }
 
-
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
@@ -369,6 +368,10 @@ export default {
 
       if (formData.previewImage) {
         uploadData.previewImages = [formData.previewImage]
+      }
+
+      if (this.deps.length) {
+        metaData.dependencies = this.deps.map(res => res.resourceId)
       }
 
       uploadData.meta = metaData
