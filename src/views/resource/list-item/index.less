@@ -1,7 +1,11 @@
 .resource-item-info {
-  margin-top: 15px;
-  cursor: pointer;
+  margin-top: 20px;
   padding: 5px;
+
+  &:hover {
+    background-color: #F5F5F5;
+    border-radius: 4px;
+  }
 
   .rt-actions {
     float: right;
@@ -30,25 +34,53 @@
     }
   }
 
-  .res-title {
-    font-size: 18px;
-    color: #333333;
-    margin-bottom: 8px;
+  .resource-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .res-intro-detail {
+      flex: 1;
+    }
+
+    .res-id {
+      margin-top: 5px;
+      color: #999999;
+      font-size: 12px;
+    }
+
+    .res-act-btn {
+      margin-left: 130px;
+    }
+
+    .res-nav-btn {
+      color: #666666;
+      font-size: 14px;
+      margin-right: 40px;
+      cursor: pointer;
+      &:hover {
+        color: #333333;
+      }
+    }
   }
 
   .res-intro-bd {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-size: 13px;
   }
 
   .res-type {
-    margin-right: 15px;
-    color: #1696C0;
+    margin-left: 15px;
+    color: white;
+    background-color: #CCCCCC;
+    border-radius: 12px;
+    padding: 2px 8px;
+    display: inline-block;
   }
 
-  .res-desc {
-    color: #666666;
-    font-size: 13px;
+  .res-name {
+    color: #222222;
+    font-size: 18px;
+    font-weight: bold;
   }
 
   .res-intro-ft {
@@ -58,10 +90,5 @@
 
   .res-author {
     margin-right: 12px;
-  }
-
-  &:hover {
-    background-color: #F5F5F5;
-    border-radius: 2px;
   }
 }

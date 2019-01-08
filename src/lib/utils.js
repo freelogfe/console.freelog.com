@@ -118,13 +118,19 @@ function gotoLogin(redirect) {
   window.location.href = loginUrl
 }
 
+
+function isFunction(fn) {
+  return typeof fn === 'function'
+}
+
 export {
   createLoader,
   createCacheLoaders,
   promisifyLoader,
   cssSupports,
   gotoLogin,
-  isSafeUrl
+  isSafeUrl,
+  isFunction
 }
 
 

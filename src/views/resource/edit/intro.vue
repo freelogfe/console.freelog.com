@@ -21,18 +21,17 @@
 </template>
 
 <script>
-  const MODES = ['preview', 'edit']
   export default {
     name: 'resource-detail-intro',
 
     data() {
       return {
-        mode: 0
       }
     },
 
     props: {
-      resource: Object
+      resource: Object,
+      viewMode: String
     },
 
     mounted() {
@@ -42,13 +41,15 @@
     computed: {
       previewImage() {
         return (this.resource.previewImages && this.resource.previewImages[0]) || ''
+      },
+      mode(){
+        return this.viewMode === 'preview'? 0: 1
       }
     },
 
     methods: {
       pullHandler() {
-        this.mode = 1 - this.mode
-        this.$emit('switch', MODES[this.mode])
+        this.$emit('switch')
       }
     }
   }

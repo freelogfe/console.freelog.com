@@ -1,24 +1,44 @@
 <template>
   <div class="resource-item-info" :class="['resource-item-theme-type-'+type]">
-    <h4 class="res-title">{{resource.resourceName}}</h4>
-    <div class="res-intro-detail">
-      <div class="rt-actions" v-show="type === 'self'">
-        <slot name="actions" :resource="resource"></slot>
-        <el-button size="mini" type="primary" @click="gotoSchemeHandler">授权管理</el-button>
-      </div>
+    <div class="resource-item">
+      <template v-if="type === 'self'">
+        <div class="res-intro-detail">
+          <div class="res-intro-bd">
+            <p>
+              <span class="res-name">{{resource.resourceName}}</span>
+              <span class="res-type">#{{resource.resourceType}}</span>
+            </p>
+            <p class="res-id">{{resource.resourceId}}</p>
+          </div>
+          <div class="res-intro-ft">
+            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+            <!--<span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>-->
+          </div>
+        </div>
 
-      <div @click="gotoDetail(resource)">
-        <div class="res-intro-bd">
-          <span class="res-type">#{{resource.resourceType}}</span>
-          <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
+        <router-link :to="resource._editInfoLink"
+                     v-if="resource._editInfoLink" class="res-nav-btn">更新基础信息</router-link>
+        <router-link :to="resource._editSchemeLink"
+                     v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案</router-link>
+        <!--<router-link :to="resource._editContractLink" class="res-nav-btn">合约列表</router-link>-->
+        <!--<router-link :to="resource._editPolicyLink" class="res-nav-btn">授权策略</router-link>-->
+
+        <el-button type="primary" class="res-act-btn" round>发布资源</el-button>
+      </template>
+      <template v-else>
+        <div @click="gotoDetail(resource)">
+          <div class="res-intro-bd">
+            <span class="res-type">#{{resource.resourceType}}</span>
+            <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
+          </div>
+          <div class="res-intro-ft">
+            <span class="res-type">#{{resource.resourceType}}</span>
+            <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
+            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+            <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
+          </div>
         </div>
-        <div class="res-intro-ft">
-          <span class="res-type">#{{resource.resourceType}}</span>
-          <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
-          <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
-          <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
-        </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -49,6 +69,12 @@
       navTo: Function
     },
 
+    watch: {
+      'resource.resourceId'(){
+        this.format(this.resource)
+      }
+    },
+
     mounted() {
       this.format(this.resource)
     },
@@ -59,6 +85,11 @@
           return
         }
 
+        var editLink = `/resource/edit/${this.resource.resourceId}`
+        resource._editInfoLink = `${editLink}?view=edit`
+        resource._editSchemeLink = `${editLink}`
+        // resource._editContractLink = `${editLink}`
+        // resource._editPolicyLink = `${editLink}`
         resource._statusInfo = RESOURCE_STATUS[resource.status]
         onloadUserInfo(resource.userId).then((userInfo) => {
           this.$set(resource, '_userInfo', userInfo)
@@ -70,10 +101,6 @@
         } else {
           this.$router.push(`/resource/detail/${resource.resourceId}`)
         }
-      },
-      gotoSchemeHandler() {
-        window.open(`/resource/edit/${this.resource.resourceId}/auth_schemes`)
-        // this.$router.push(`/resource/edit/${this.resource.resourceId}/auth_schemes`)
       }
     }
   }

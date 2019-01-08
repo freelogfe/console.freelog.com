@@ -19,12 +19,13 @@
         <div class="rt-side">
           <el-button class="ft-btn" type="primary" round
                      @click="updateResourceHandler">更新资源</el-button>
-          <el-button class="ft-btn" type="primary" round
-                     @click="gotoResourceSchemeDetailHandler">编辑授权方案</el-button>
         </div>
       </div>
     </resource-inputs>
-    <ResourceDetailIntro class="res-detail-intro-area" :resource="resourceDetail" :class="[viewMode+'-mode-intro']" @switch="switchModeHandler"></ResourceDetailIntro>
+
+    <ResourceDetailIntro class="res-detail-intro-area"
+                         :viewMode="viewMode"
+                         :resource="resourceDetail" :class="[viewMode+'-mode-intro']" @switch="switchModeHandler"></ResourceDetailIntro>
     <!--授权管理-->
     <div class="schemes-manager-container">
       <SchemesManager :resourceDetail="resourceDetail"></SchemesManager>

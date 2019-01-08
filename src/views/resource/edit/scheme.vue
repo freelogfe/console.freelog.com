@@ -32,7 +32,7 @@
       <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
         <span slot="label" class="panel-tab-name">策略管理</span>
         <div class="panel-content policy-manager-wrap">
-          <PolicyManager :list="detail.scheme.policy"></PolicyManager>
+          <PolicyManager :list="detail.scheme.policy" @save="savePoliciesHandler"></PolicyManager>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -75,6 +75,17 @@
     methods: {
       handleClick() {
 
+      },
+      savePoliciesHandler({data}) {
+        this.$services.authSchemes.put(this.detail.scheme.authSchemeId, data)
+          .then(res => {
+            const {errcode, ret, msg, data} = res.data
+            if (errcode === 0 && ret === 0) {
+              this.detail.scheme.policy = data.policy
+            } else {
+              this.$error.showErrorMessage(msg)
+            }
+          })
       }
     }
   }

@@ -14,6 +14,7 @@
 
 
 <script>
+  import {isFunction} from '../../lib/utils'
   import PolicyEditor from '../PolicyEditor/index.vue'
 
   export default {
@@ -28,7 +29,8 @@
     components: {PolicyEditor},
 
     props: {
-      list: Array
+      list: Array,
+      savePolicies: Function
     },
 
     mounted() {
@@ -44,10 +46,6 @@
     methods: {
       resolveList(list) {
         this.policyList = list.slice(0)
-
-        // if (!this.policyList.length) {
-        //   this.addNewPolicyHandler()
-        // }
       },
       addNewPolicyHandler() {
         this.policyList.push({
@@ -89,15 +87,11 @@
       },
       savePolicyHandler(policy) {
         var payload = this.getChangeData(policy)
-        this.$services.presentables.put(this.$route.params.presentableId, payload)
-          .then(res => {
-            const {errcode, ret, msg, data} = res.data
-            if (errcode === 0 && ret === 0) {
-              this.resolveList(data.policy)
-            } else {
-              this.$error.showErrorMessage(msg)
-            }
-          })
+        if (isFunction(this.savePolicies)) {
+          this.savePolicies(payload, policy)
+        } else {
+          this.$emit('save', {data: payload, policy})
+        }
       }
     }
   }
