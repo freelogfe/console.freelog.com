@@ -1,12 +1,12 @@
 import PolicyList from '@/components/PolicyList/index.vue'
 import ContractManager from '@/components/ContractManager/index.vue'
+import AuthorizationSchemeManage from "@/components/Authorization-scheme/index.vue"
 
 import {onloadSchemeDetail} from '@/data/scheme/loader'
 import {onloadPresentableDetail} from '@/data/presentable/loader'
 
 import PresentableDetailHeader from './header.vue'
 
-import AuthorizationSchemeManage from "../authorization-scheme/index.vue"
 
 const TAB_NAMES = {
   policy: 'policy-manager',

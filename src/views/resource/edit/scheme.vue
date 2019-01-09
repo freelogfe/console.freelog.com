@@ -5,12 +5,12 @@
         <span slot="label" class="panel-tab-name">授权签约管理</span>
         <div class="panel-content">
           <lazy-component>
-            <!--<authorization-scheme-manage-->
-            <!--v-if="resourceInfo.resourceId"-->
-            <!--:contracts.sync="presentableInfo.contracts"-->
-            <!--:resourceInfo="resourceInfo"-->
-            <!--:presentableInfo="presentableInfo"-->
-            <!--&gt;</authorization-scheme-manage>-->
+            <scheme-content
+                    :resourceInfo="detail.resource"
+                    :isPublished="detail.isPublished"
+                    :scheme="detail.scheme"
+                    :boxStyle="schemeContentBoxStyle"
+            ></scheme-content>
           </lazy-component>
         </div>
       </el-tab-pane>
@@ -42,6 +42,7 @@
 <script>
   import ContractManager from '@/components/ContractManager/index.vue'
   import PolicyManager from '@/components/PolicyList/index.vue'
+  import SchemeContent from './scheme-content.vue'
 
   const TAB_NAMES = {
     policy: 'policy-manager',
@@ -50,7 +51,6 @@
   }
   export default {
     name: 'resource-scheme-manager',
-
     data() {
       return {
         TAB_NAMES,
@@ -58,20 +58,27 @@
         resourceInfo: {}
       }
     },
-
     props: {
       detail: Object
     },
-
     components: {
       ContractManager,
       PolicyManager,
+      SchemeContent,
     },
-
-    mounted(){
-      console.log(this.detail)
+    computed:{
+      wrapperWidth() {
+        return document.querySelector('.resource-schemes-manager-wrap').offsetWidth
+      },
+      schemeContentBoxStyle() {
+        return {
+          position: 'relative',
+          left: (this.wrapperWidth - window.innerWidth) / 2 + 'px',
+          width: window.innerWidth + 'px',
+          margin: 0
+        }
+      },
     },
-
     methods: {
       handleClick() {
 
@@ -87,7 +94,10 @@
             }
           })
       }
-    }
+    },
+    mounted(){
+
+    },
   }
 </script>
 
@@ -95,7 +105,7 @@
 <style lang="less" scoped>
   .resource-scheme-manager-wrap {
     .panel-content {
-      padding-top: 15px;
+      min-height: 500px;
     }
     .empty-contract-tip {
       text-align: center;

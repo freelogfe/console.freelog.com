@@ -40,7 +40,8 @@ export default {
         requiresAuth: true,
         title: '更新资源',
         type: 'resource',
-        theme: 'gray'
+        theme: 'gray',
+        hideSidebar: true
       },
       component: Views.resourceEditor,
     },
@@ -64,7 +65,8 @@ export default {
       meta: {
         requiresAuth: true,
         title: '资源授权方案管理',
-        type: 'resource'
+        type: 'resource',
+        hideSidebar: true
       },
       component: Views.resourceAuthSchemeEditor
     },

@@ -26,6 +26,7 @@
                   :key="'upcastResource'+index"
                   :class="{
                     'selected': index === selectedUpcastResourceIndex,
+                    'upcasted': upcastResource.isNoResolved,
                     'active-1': upcastResource.selectedAuthSchemeTabIndex !== -1,
                     'active-2': !!upcastResource.isFinishSelectedAuthScheme
                   }"
@@ -33,7 +34,10 @@
           >
             <span>{{upcastResource.resourceName}}</span>
             <!--<span class="history-text" v-if="upcastResource.isHasSignHistory"> (存在历史签约)</span>-->
-            <span class="upcast-resource-line" v-if="index === selectedUpcastResourceIndex"></span>
+            <span
+                    class="upcast-resource-line"
+                    v-show="index === selectedUpcastResourceIndex && (currentOpenedResources.length - 1) > resourceLevelIndex"
+            ></span>
           </li>
         </ul>
       </div>
@@ -85,6 +89,7 @@
       authSchemeIdentityAuthMap: Object,
       activeAuthSchemeTabIndex: Number,
       selectedAuthSchemeTabIndex: Number,
+      checkIsCanExchangeSelection: Function,
     },
     methods: {
       // 切换"授权方案"Tab
@@ -96,14 +101,17 @@
       },
       // 选择"上抛资源"
       selectUpcastResource(index) {
-        if(this.selectedUpcastResourceIndex !== index) {
-          this.selectedUpcastResourceIndex = this.activeScheme.selectedUpcastResourceIndex = index
-          this.$emit('show-upcast-resource-scheme', this.upcastResourcesArr[index], this.resourceLevelIndex)
-        }
+        this.selectedUpcastResourceIndex = this.activeScheme.selectedUpcastResourceIndex = index
+        this.$emit('show-upcast-resource-scheme', this.upcastResourcesArr[index], this.resourceLevelIndex)
       },
       // 选择"授权策略"
       selectPolicyItem(index) {
         var self = this
+        if(this.checkIsCanExchangeSelection) {
+          if(!this.checkIsCanExchangeSelection()) {
+            return
+          }
+        }
 
         // 存在parentResourceId即为upcastResource，须确认父级资源是否已选中授权方案
         if((this.resourceLevelIndex - 1) >= 0) {
@@ -123,7 +131,7 @@
           MessageBox.confirm(msg, {
             callback (action) {
               if(action === 'confirm') {
-                self.cancelSomeURSchemeSelection(self.upcastResourcesArr)
+                self.$emit('cancel-scheme-selection', self.upcastResourcesArr)
                 self.exchangePolicyItem(index)
                 self.checkIsFinishAllAuth()
                 self.$emit('refresh-selected-auth-schemes')
@@ -156,23 +164,6 @@
           isEffect, msg: `${str}，将会导致后续资源选择的策略都取消，确定吗？`
         }
       },
-      // 取消当前资源 所有下级资源的授权方案选择
-      cancelSomeURSchemeSelection(bubbleResources) {
-        for(let i = 0; i < bubbleResources.length; i++) {
-          const { resourceId } = bubbleResources[i]
-          let targResource = this.resourceMap[resourceId]
-          if(targResource) {
-            const { selectedAuthSchemeTabIndex, authSchemeList } = targResource
-            if(selectedAuthSchemeTabIndex !== -1) {
-              const { bubbleResources = [] } = authSchemeList[selectedAuthSchemeTabIndex]
-              targResource.selectedAuthSchemeTabIndex = -1
-              targResource.selectedPolicyIndex = -1
-              targResource.isFinishSelectedAuthScheme = false
-              this.cancelSomeURSchemeSelection(bubbleResources)
-            }
-          }
-        }
-      },
       exchangePolicyItem(index) {
         if(this.curSchemeSelectedPolicyIndex === index) {
           this.curSchemeSelectedPolicyIndex = -1
@@ -187,7 +178,7 @@
       checkIsFinishAllAuth() {
         var leng = this.currentOpenedResources.length
         const tempAuthSchemeData = this.currentOpenedResources[leng - 1]
-        const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex, isFinishSelectedAuthScheme } = tempAuthSchemeData
+        const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex, isFinishSelectedAuthScheme, isResovled } = tempAuthSchemeData
         var isFinishSelectedAS = false
 
         const { bubbleResources } = authSchemeList[activeAuthSchemeTabIndex]
