@@ -1,6 +1,6 @@
 <template>
   <div class="resource-item-info" :class="['resource-item-theme-type-'+type]">
-    <div class="resource-item">
+    <div class="resource-item" :class="['resource-state-'+resource.status]">
       <template v-if="type === 'self'">
         <div class="res-intro-detail">
           <div class="res-intro-bd">
@@ -17,13 +17,14 @@
         </div>
 
         <router-link :to="resource._editInfoLink"
-                     v-if="resource._editInfoLink" class="res-nav-btn">更新基础信息</router-link>
+                     v-if="resource._editInfoLink" class="res-nav-btn">更新基础信息
+        </router-link>
         <router-link :to="resource._editSchemeLink"
-                     v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案</router-link>
-        <!--<router-link :to="resource._editContractLink" class="res-nav-btn">合约列表</router-link>-->
-        <!--<router-link :to="resource._editPolicyLink" class="res-nav-btn">授权策略</router-link>-->
+                     v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案
+        </router-link>
 
-        <el-button type="primary" class="res-act-btn" round>发布资源</el-button>
+
+        <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
       </template>
       <template v-else>
         <div @click="gotoDetail(resource)">
@@ -46,15 +47,19 @@
 
 <script>
   import {onloadUserInfo} from '@/data/user/loader'
-  import {RESOURCE_STATUS} from '@/config/resource'
+  import {RESOURCE_STATUS, RESOURCE_STATUS_MAP} from '@/config/resource'
+  import ResourceButton from '@/components/ResourceButton'
 
   export default {
     name: 'resource-info-item',
 
     data() {
-      return {}
+      return {
+        RESOURCE_STATUS_MAP
+      }
     },
 
+    components: {ResourceButton},
     props: {
       resource: {
         type: Object,
@@ -70,7 +75,7 @@
     },
 
     watch: {
-      'resource.resourceId'(){
+      'resource.resourceId'() {
         this.format(this.resource)
       }
     },
@@ -88,8 +93,6 @@
         var editLink = `/resource/edit/${this.resource.resourceId}`
         resource._editInfoLink = `${editLink}?view=edit`
         resource._editSchemeLink = `${editLink}`
-        // resource._editContractLink = `${editLink}`
-        // resource._editPolicyLink = `${editLink}`
         resource._statusInfo = RESOURCE_STATUS[resource.status]
         onloadUserInfo(resource.userId).then((userInfo) => {
           this.$set(resource, '_userInfo', userInfo)

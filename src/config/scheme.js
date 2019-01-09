@@ -7,7 +7,23 @@ export const SCHEME_STATUS = {
 
 
 export const SCHEME_PUBLISH_STATUS = {
-  INIT: 0,
-  PUBLISHED: 1,
-  DELETE: 4
+  disabled: 0,
+  enabled: 1,
+  deleted: 4
+}
+
+
+export const SCHEME_STATUS_MAP = {
+  [SCHEME_PUBLISH_STATUS.disabled]: {
+    desc: '未启用',
+    className: 'off-state'
+  },
+  [SCHEME_PUBLISH_STATUS.enabled]: {
+    desc: '启用',
+    className: 'on-state'
+  },
+  [SCHEME_PUBLISH_STATUS.deleted]: {
+    desc: '已废弃',
+    className: 'deleted-state'
+  },
 }

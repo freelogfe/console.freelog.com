@@ -12,7 +12,8 @@
       <div class="pull-panel-btn" @click="pullHandler">更新资源 <i class="el-icon-arrow-down"></i></div>
 
       <div class="res-actions-wrap">
-        <el-button size="small" type="primary">发布资源</el-button>
+
+        <ResourceButton :resource="resource"></ResourceButton>
       </div>
     </div>
 
@@ -21,6 +22,9 @@
 </template>
 
 <script>
+  import {RESOURCE_STATUS_MAP} from '@/config/resource'
+  import ResourceButton from '@/components/ResourceButton'
+
   export default {
     name: 'resource-detail-intro',
 
@@ -34,8 +38,9 @@
       viewMode: String
     },
 
-    mounted() {
+    components: {ResourceButton},
 
+    mounted() {
     },
 
     computed: {

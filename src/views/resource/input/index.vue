@@ -133,11 +133,21 @@
 
       <div class="input-item-wrap">
         <h4>依赖资源</h4>
-        <div class="input-area">
+        <div class="input-area" :class="{'edit-disabled': !canEditDependencies}">
           <div>
+            <el-popover
+                    ref="depsPopTip"
+                    placement="top"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    :disabled="canEditDependencies"
+                    content="已发布的资源不能修改依赖">
+            </el-popover>
             <el-button class="add-dep-btn"
                        @click="showSearchDialogHandler"
                        type="text"
+                       v-popover:depsPopTip
                        size="mini"><i class="el-icon-plus"></i>添加依赖资源
             </el-button>
           </div>

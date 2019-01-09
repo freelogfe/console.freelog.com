@@ -223,7 +223,7 @@ export default {
 
           schemes = schemes.filter((scheme) => {
             // 只展示已发布的和已选择的
-            const isPublished = scheme.status === SCHEME_PUBLISH_STATUS.PUBLISHED
+            const isPublished = scheme.status === SCHEME_PUBLISH_STATUS.enabled
             const isSelected = (duty && duty.authSchemeId === scheme.authSchemeId)
             if (!isPublished && !isSelected) {
               return false

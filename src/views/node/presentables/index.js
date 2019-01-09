@@ -72,7 +72,6 @@ export default {
       this.$refs.presentableList.reload()
     },
     changePresentableOnlineHandler(presentable) {
-      console.log('presentable ---', presentable)
       if (presentable.status & 3 !== 3) {
         return this.$error.showErrorMessage('合同不完备或不存在可用策略')
       }

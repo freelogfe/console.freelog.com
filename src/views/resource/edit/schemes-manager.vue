@@ -25,7 +25,8 @@
                 <i class="el-icon-remove"></i>停用授权方案
               </li>
             </ul>
-            <span slot="reference" class="scheme-state-text off-state">未启用</span>
+            <span slot="reference" class="scheme-state-text"
+                  :class="[SCHEME_STATUS_MAP[item.data.scheme.status].className]">{{SCHEME_STATUS_MAP[item.data.scheme.status].desc}}</span>
           </el-popover>
         </div>
         <lazy-component>
@@ -49,29 +50,27 @@
       </div>
       <div slot="footer" class="scheme-dialog-footer">
         <el-button type="text" style="color: #999999;margin-right: 10px;"
-                   @click="hideSettingDialogHandler"> 取消 </el-button>
-        <el-button type="primary" style="padding: 8px 30px;" size="medium" round @click="saveSchemeHandler"> 确定 </el-button>
+                   @click="hideSettingDialogHandler"> 取消
+        </el-button>
+        <el-button type="primary" style="padding: 8px 30px;" size="medium" round @click="saveSchemeHandler"> 确定
+        </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+  import {SCHEME_STATUS_MAP, SCHEME_PUBLISH_STATUS} from '@/config/scheme'
   import {onloadSchemesForResource} from '@/data/scheme/loader'
   import SchemeDetail from './scheme.vue'
 
-  const PUBLISH_STATUS = {
-    INIT: 0,
-    PUBLISHED: 1,
-    OFF_LINE: 2,
-    DELETE: 4
-  }
 
   export default {
     name: 'resource-schemes-manager',
 
     data() {
       return {
+        SCHEME_STATUS_MAP,
         curTabName: '',
         tabs: [],
         showSettingDialog: false,
@@ -110,7 +109,10 @@
         this.editingScheme = {}
       },
       enableSchemeHandler(scheme, index) {
-
+        this.updateAuthScheme({isOnline: 1}, scheme)
+          .then(data => {
+            scheme.status = data.status
+          }).catch(this.$error.showErrorMessage)
       },
       disableSchemeHandler(scheme, index) {
         this.$confirm('当前资源中已无其他授权方案，停用此方案将会使资源下架, 是否确认操作？', '提示', {
@@ -122,16 +124,13 @@
           cancelButtonClass: 'scheme-dialog-cancel-btn',
           customClass: 'scheme-tip-dialog'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
+          this.updateAuthScheme({isOnline: 0}, scheme)
+            .then(data => {
+              scheme.status = data.status
+            }).catch(this.$error.showErrorMessage)
+        }).catch(err => {
+         //cancel
+        })
       },
       querySchemes() {
         if (!this.resourceDetail.resourceId) return
@@ -211,7 +210,7 @@
             id: newTabName,
             scheme,
             resource: this.resourceDetail,
-            isPublished: scheme.status === PUBLISH_STATUS.PUBLISHED
+            isPublished: scheme.status === SCHEME_PUBLISH_STATUS.enabled
           }
         }
         this.tabs.push(tabData)
@@ -345,7 +344,6 @@
       }
     }
   }
-
 
   .el-popover.scheme-popper {
     padding: 0;

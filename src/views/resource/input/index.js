@@ -1,5 +1,5 @@
 import {storage} from '@/lib'
-import {RESOURCE_TYPES} from '@/config/resource'
+import {RESOURCE_TYPES, RESOURCE_STATUS_MAP} from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
@@ -121,22 +121,26 @@ export default {
     },
     shouldShowThumbnailInput() {
       return this.formData.resourceType === RESOURCE_TYPES.pageBuild
+    },
+    canEditDependencies() {
+      return !this.data.resourceId || (this.data.status === RESOURCE_STATUS_MAP.unpublished)
     }
   },
 
   watch: {
     data() {
-      if (this.data.resourceId) {
+      var resource = this.data
+      if (resource.resourceId) {
         this.editMode = EDIT_MODES.editor
-        Object.assign(this.formData, this.data)
-        this.formData.widgetName = this.data.systemMeta.widgetName || ''
-
-        if (this.data.previewImages.length) {
-          this.formData.previewImage = this.data.previewImages[0]
+        Object.assign(this.formData, resource)
+        this.formData.widgetName = resource.systemMeta.widgetName || ''
+        this.deps = resource.systemMeta.dependencies
+        if (resource.previewImages.length) {
+          this.formData.previewImage = resource.previewImages[0]
         }
-        if (this.data.meta) {
+        if (resource.meta) {
           try {
-            this.meta = JSON.stringify(this.data.meta)
+            this.meta = JSON.stringify(resource.meta)
           } catch (e) {
             this.meta = '{}'
           }
@@ -448,7 +452,9 @@ export default {
       this.showSearchResourceDialog = false
     },
     showSearchDialogHandler() {
-      this.showSearchResourceDialog = true
+      if (this.canEditDependencies) {
+        this.showSearchResourceDialog = true
+      }
     },
     removeDepResourceHandler(resource, index) {
       this.deps.splice(index, 1)

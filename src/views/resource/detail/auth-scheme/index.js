@@ -75,7 +75,7 @@ export default {
     },
     formatSchemes(schemes) {
       schemes = schemes.filter((scheme, i) => {
-        if (!this.resource.isOwner && SCHEME_PUBLISH_STATUS.DELETE === scheme.status) {
+        if (!this.resource.isOwner && SCHEME_PUBLISH_STATUS.deleted === scheme.status) {
           return false
         }
         scheme.dependencies = scheme.bubbleResources
