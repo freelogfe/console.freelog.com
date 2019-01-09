@@ -9,18 +9,29 @@ export const RESOURCE_TYPES = {
 }
 
 
+export const RESOURCE_STATUS_MAP = {
+  unknown: 0,
+  unpublished: 1,
+  published: 2,
+  freeze: 3
+}
+
 export const RESOURCE_STATUS = [
   {
     desc: '未知状态',
-    type: 'danger'
+    type: 'danger',
+    status: RESOURCE_STATUS_MAP.unknown
   }, {
     desc: '未发布',
-    type: 'warning'
+    type: 'warning',
+    status: RESOURCE_STATUS_MAP.unpublished
   }, {
     desc: '已发布',
-    type: 'success'
+    type: 'success',
+    status: RESOURCE_STATUS_MAP.published
   }, {
     desc: '冻结',
-    type: 'danger'
+    type: 'danger',
+    status: RESOURCE_STATUS_MAP.freeze
   }
 ]

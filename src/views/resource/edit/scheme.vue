@@ -18,8 +18,8 @@
         <span slot="label" class="panel-tab-name">合约管理</span>
         <div class="panel-content contract-manager-wrap">
           <lazy-component>
-            <ContractManager :contracts="resourceInfo.dutyStatements"
-                             v-if="resourceInfo.dutyStatements&&resourceInfo.dutyStatements.length"></ContractManager>
+            <ContractManager :contracts="detail.scheme.dutyStatements"
+                             v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
             <div class="empty-contract-tip" v-else>
               未创建依赖关系
               <router-link :to="$route.path + '?tab=scheme'">
@@ -32,13 +32,7 @@
       <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
         <span slot="label" class="panel-tab-name">策略管理</span>
         <div class="panel-content policy-manager-wrap">
-          <PolicyManager :list="resourceInfo.policy" v-if="resourceInfo.policy"></PolicyManager>
-          <div class="empty-contract-tip" v-else>
-            未创建依赖关系
-            <router-link :to="$route.path + '?tab=scheme'">
-              <el-button type="text">去创建</el-button>
-            </router-link>
-          </div>
+          <PolicyManager :list="detail.scheme.policy" @save="savePoliciesHandler"></PolicyManager>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -89,6 +83,17 @@
       handleClick() {
 
       },
+      savePoliciesHandler({data}) {
+        this.$services.authSchemes.put(this.detail.scheme.authSchemeId, data)
+          .then(res => {
+            const {errcode, ret, msg, data} = res.data
+            if (errcode === 0 && ret === 0) {
+              this.detail.scheme.policy = data.policy
+            } else {
+              this.$error.showErrorMessage(msg)
+            }
+          })
+      }
     },
     mounted(){
 

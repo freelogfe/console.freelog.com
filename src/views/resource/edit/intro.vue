@@ -12,7 +12,8 @@
       <div class="pull-panel-btn" @click="pullHandler">更新资源 <i class="el-icon-arrow-down"></i></div>
 
       <div class="res-actions-wrap">
-        <el-button size="small" type="primary">发布资源</el-button>
+
+        <ResourceButton :resource="resource"></ResourceButton>
       </div>
     </div>
 
@@ -21,34 +22,39 @@
 </template>
 
 <script>
-  const MODES = ['preview', 'edit']
+  import {RESOURCE_STATUS_MAP} from '@/config/resource'
+  import ResourceButton from '@/components/ResourceButton'
+
   export default {
     name: 'resource-detail-intro',
 
     data() {
       return {
-        mode: 0
       }
     },
 
     props: {
-      resource: Object
+      resource: Object,
+      viewMode: String
     },
 
-    mounted() {
+    components: {ResourceButton},
 
+    mounted() {
     },
 
     computed: {
       previewImage() {
         return (this.resource.previewImages && this.resource.previewImages[0]) || ''
+      },
+      mode(){
+        return this.viewMode === 'preview'? 0: 1
       }
     },
 
     methods: {
       pullHandler() {
-        this.mode = 1 - this.mode
-        this.$emit('switch', MODES[this.mode])
+        this.$emit('switch')
       }
     }
   }

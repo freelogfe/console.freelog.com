@@ -8,7 +8,7 @@
         <el-tab-pane :name="TAB_NAMES.policy">
           <span slot="label" class="panel-tab-name">策略管理</span>
           <div class="panel-content policy-manager-wrap">
-            <policy-list :list="presentableInfo.policy"></policy-list>
+            <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
           </div>
         </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.contract" :lazy="true">

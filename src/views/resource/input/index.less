@@ -24,6 +24,18 @@
         background-color: white;
         padding: 20px 40px;
         border-radius: 4px;
+        &.edit-disabled {
+          .add-dep-btn {
+            cursor: not-allowed;
+            color: #999999;
+          }
+
+          .res-dep-item {
+            .del-dep-btn {
+              display: none !important;
+            }
+          }
+        }
       }
 
       .res-deps-wrap {
@@ -118,7 +130,6 @@
     }
   }
 
-
   .resource-file-input {
     .upload-state-wrap {
       float: left;
@@ -163,7 +174,7 @@
     }
 
     .resource-file-uploader {
-      .el-icon-plus{
+      .el-icon-plus {
         font-size: 30px;
         color: #333333;
         margin-right: 20px;
@@ -178,7 +189,6 @@
         font-size: 18px;
         display: inline-block;
       }
-
 
       .resource-file-sub-tip {
         color: #C3C3C3;
@@ -197,7 +207,7 @@
       font-weight: bold;
       margin-top: 10px;
     }
-    .el-icon-plus{
+    .el-icon-plus {
       font-size: 35px;
       color: #333333;
     }

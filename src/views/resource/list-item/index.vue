@@ -1,24 +1,45 @@
 <template>
   <div class="resource-item-info" :class="['resource-item-theme-type-'+type]">
-    <h4 class="res-title">{{resource.resourceName}}</h4>
-    <div class="res-intro-detail">
-      <div class="rt-actions" v-show="type === 'self'">
-        <slot name="actions" :resource="resource"></slot>
-        <el-button size="mini" type="primary" @click="gotoSchemeHandler">授权管理</el-button>
-      </div>
+    <div class="resource-item" :class="['resource-state-'+resource.status]">
+      <template v-if="type === 'self'">
+        <div class="res-intro-detail">
+          <div class="res-intro-bd">
+            <p>
+              <span class="res-name">{{resource.resourceName}}</span>
+              <span class="res-type">#{{resource.resourceType}}</span>
+            </p>
+            <p class="res-id">{{resource.resourceId}}</p>
+          </div>
+          <div class="res-intro-ft">
+            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+            <!--<span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>-->
+          </div>
+        </div>
 
-      <div @click="gotoDetail(resource)">
-        <div class="res-intro-bd">
-          <span class="res-type">#{{resource.resourceType}}</span>
-          <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
+        <router-link :to="resource._editInfoLink"
+                     v-if="resource._editInfoLink" class="res-nav-btn">更新基础信息
+        </router-link>
+        <router-link :to="resource._editSchemeLink"
+                     v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案
+        </router-link>
+
+
+        <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
+      </template>
+      <template v-else>
+        <div @click="gotoDetail(resource)">
+          <div class="res-intro-bd">
+            <span class="res-type">#{{resource.resourceType}}</span>
+            <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
+          </div>
+          <div class="res-intro-ft">
+            <span class="res-type">#{{resource.resourceType}}</span>
+            <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
+            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+            <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
+          </div>
         </div>
-        <div class="res-intro-ft">
-          <span class="res-type">#{{resource.resourceType}}</span>
-          <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
-          <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
-          <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
-        </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -26,15 +47,19 @@
 
 <script>
   import {onloadUserInfo} from '@/data/user/loader'
-  import {RESOURCE_STATUS} from '@/config/resource'
+  import {RESOURCE_STATUS, RESOURCE_STATUS_MAP} from '@/config/resource'
+  import ResourceButton from '@/components/ResourceButton'
 
   export default {
     name: 'resource-info-item',
 
     data() {
-      return {}
+      return {
+        RESOURCE_STATUS_MAP
+      }
     },
 
+    components: {ResourceButton},
     props: {
       resource: {
         type: Object,
@@ -49,6 +74,12 @@
       navTo: Function
     },
 
+    watch: {
+      'resource.resourceId'() {
+        this.format(this.resource)
+      }
+    },
+
     mounted() {
       this.format(this.resource)
     },
@@ -59,6 +90,9 @@
           return
         }
 
+        var editLink = `/resource/edit/${this.resource.resourceId}`
+        resource._editInfoLink = `${editLink}?view=edit`
+        resource._editSchemeLink = `${editLink}`
         resource._statusInfo = RESOURCE_STATUS[resource.status]
         onloadUserInfo(resource.userId).then((userInfo) => {
           this.$set(resource, '_userInfo', userInfo)
@@ -70,10 +104,6 @@
         } else {
           this.$router.push(`/resource/detail/${resource.resourceId}`)
         }
-      },
-      gotoSchemeHandler() {
-        window.open(`/resource/edit/${this.resource.resourceId}/auth_schemes`)
-        // this.$router.push(`/resource/edit/${this.resource.resourceId}/auth_schemes`)
       }
     }
   }

@@ -47,9 +47,8 @@ export default {
       this.loadData(query)
         .then(this.formatContracts)
         .then((contractList) => {
-          console.log(contractList)
           this.contractList = contractList
-          if (this.masterContract) {
+          if (this.masterContract.contractId) {
             this.showContractDetailHandler(this.masterContract)
           } else if (contractList.length) {
             this.showContractDetailHandler(contractList[0])

@@ -42,9 +42,7 @@ export default {
     ContractManager
   },
 
-  computed: {
-
-  },
+  computed: {},
 
   watch: {
     '$route': function () {
@@ -74,7 +72,7 @@ export default {
       return onloadPresentableDetail(params.presentableId)
         .then(presentable => {
 
-          presentable.contracts.some(contract=>{
+          presentable.contracts.some(contract => {
             if (contract.contractId === presentable.masterContractId) {
               contract.isMasterContract = true
               return true
@@ -83,7 +81,7 @@ export default {
 
           this.presentableInfo = {...presentable}
 
-          this.resourceInfo = Object.assign(presentable.resourceInfo, { resourceId: presentable.resourceId })
+          this.resourceInfo = Object.assign(presentable.resourceInfo, {resourceId: presentable.resourceId})
         })
     },
     loadPresentableScheme() {
@@ -127,7 +125,7 @@ export default {
     handleClick() {
       this.$router.push({
         path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
-        query: { tab: this.activeTabName }
+        query: {tab: this.activeTabName}
       })
     },
     savePresentableHandler(payload) {
@@ -136,6 +134,17 @@ export default {
           const {errcode, ret, msg} = res.data
           if (errcode === 0 && ret === 0) {
 
+          } else {
+            this.$error.showErrorMessage(msg)
+          }
+        })
+    },
+    savePoliciesHandler({data}) {
+      this.$services.presentables.put(this.$route.params.presentableId, data)
+        .then(res => {
+          const {errcode, ret, msg, data} = res.data
+          if (errcode === 0 && ret === 0) {
+            this.presentableInfo.policy = data.policy
           } else {
             this.$error.showErrorMessage(msg)
           }

@@ -2,11 +2,10 @@
   <div class="resource-items">
     <lazy-list-view :list="resources" :height="90" :fetch="fetchData">
       <template slot-scope="scope">
-        <resource-item :resource="scope.data" :type="type" :navTo="gotoEditHandler">
-          <template slot="actions" v-if="isSelf">
-            <el-button size="mini" type="primary" @click="gotoEditHandler(scope.data)">编辑</el-button>
-          </template>
-        </resource-item>
+        <resource-item :resource="scope.data"
+                       :type="type"
+                       class="my-res-item"
+                       :navTo="gotoEditHandler"></resource-item>
       </template>
       <div slot="empty" class="empty-resource-tip">
         {{isSelf?'没有自制资源' :'未收藏资源'}}
@@ -16,128 +15,135 @@
 </template>
 
 <script>
-import LazyListView from '@/components/LazyListView/index.vue'
-import ResourceItem from '../list-item/index.vue'
+  import LazyListView from '@/components/LazyListView/index.vue'
+  import ResourceItem from '../list-item/index.vue'
 
-export default {
-  name: 'resource-items',
+  export default {
+    name: 'resource-items',
 
-  data() {
-    return {
-      search: '',
-      resources: [],
-      loader: null
-    }
-  },
-
-  props: {
-    type: {
-      type: String,
-      default() {
-        return 'all'
+    data() {
+      return {
+        search: '',
+        resources: [],
+        loader: null
       }
     },
-    query: String
-  },
 
-  computed: {
-    isSelf(){
-      return this.type === 'self'
-    }
-  },
-
-  watch: {
-    type() {
-      this.initView()
-    },
-    query() {
-      this.initView()
-    }
-  },
-  components: { ResourceItem, LazyListView },
-  mounted() {
-    this.initView()
-  },
-
-  methods: {
-    gotoEditHandler(resource) {
-      if (this.type === 'self') {
-        this.$router.push({ path: `/resource/edit/${resource.resourceId}` })
-      } else {
-        this.$router.push({ path: `/resource/detail/${resource.resourceId}` })
-      }
-    },
-    initView() {
-      switch (this.type) {
-        case 'favor':
-          this.loader = this.getFavorResourcesLoader()
-          break
-        case 'self':
-          this.loader = this.getSelfResourcesLoader()
-          break
-        case 'all':
-        default:
-          break
-      }
-    },
-    fetchData(page) {
-      const pageSize = 10
-
-      if (!this.loader) {
-        return Promise.resolve({
-          canLoadMore: false,
-          dataList: []
-        })
-      }
-      return this.loader({ page }).then((data) => {
-        this.resources = this.resources.concat(data.dataList)
-        if (data.dataList.length < pageSize) {
-          data.canLoadMore = false
+    props: {
+      type: {
+        type: String,
+        default() {
+          return 'all'
         }
-        return data
-      })
+      },
+      query: String
     },
-    getSelfResourcesLoader() {
-      return this.createResourceLoader(param => this.$services.resource.get(param || {}).then(res => res.getData()))
+
+    computed: {
+      isSelf() {
+        return this.type === 'self'
+      }
     },
-    getFavorResourcesLoader() {
-      return this.createResourceLoader(param => this.$services.collections.get(param || {}).then(res => res.getData()))
+
+    watch: {
+      type() {
+        this.initView()
+      },
+      query() {
+        this.initView()
+      }
     },
-    createResourceLoader(loader) {
-      return (param) => {
-        param = param || {
-          pageSize: 10,
-          page: 1
+    components: {ResourceItem, LazyListView},
+    mounted() {
+      this.initView()
+    },
+
+    methods: {
+      gotoEditHandler(resource) {
+        if (this.type === 'self') {
+          this.$router.push({path: `/resource/edit/${resource.resourceId}`})
+        } else {
+          this.$router.push({path: `/resource/detail/${resource.resourceId}`})
+        }
+      },
+      initView() {
+        switch (this.type) {
+          case 'favor':
+            this.loader = this.getFavorResourcesLoader()
+            break
+          case 'self':
+            this.loader = this.getSelfResourcesLoader()
+            break
+          case 'all':
+          default:
+            break
+        }
+      },
+      fetchData(page) {
+        const pageSize = 10
+
+        if (!this.loader) {
+          return Promise.resolve({
+            canLoadMore: false,
+            dataList: []
+          })
+        }
+        return this.loader({page}).then((data) => {
+          this.resources = this.resources.concat(data.dataList)
+          if (data.dataList.length < pageSize) {
+            data.canLoadMore = false
+          }
+          return data
+        })
+      },
+      getSelfResourcesLoader() {
+        return this.createResourceLoader(param => this.$services.resource.get(param || {}).then(res => res.getData()))
+      },
+      getFavorResourcesLoader() {
+        return this.createResourceLoader(param => this.$services.collections.get(param || {}).then(res => res.getData()))
+      },
+      createResourceLoader(loader) {
+        return (param) => {
+          param = param || {
+            pageSize: 10,
+            page: 1
+          }
+          if (typeof param === 'object') {
+            param = {
+              params: Object.assign({
+                pageSize: 10,
+                page: 1
+              }, param)
+            }
+          }
+          return loader(param)
+        }
+      },
+      getAllResourcesLoader(param) {
+        param = {
+          pageSize: 1e2
         }
         if (typeof param === 'object') {
           param = {
-            params: Object.assign({
-              pageSize: 10,
-              page: 1
-            }, param)
+            params: param
           }
         }
-        return loader(param)
+        return this.$services.resource.get(param || {}).then(res => res.getData())
       }
-    },
-    getAllResourcesLoader(param) {
-      param = {
-        pageSize: 1e2
-      }
-      if (typeof param === 'object') {
-        param = {
-          params: param
-        }
-      }
-      return this.$services.resource.get(param || {}).then(res => res.getData())
     }
   }
-}
 </script>
 
 <style lang="less" scoped>
-  .empty-resource-tip {
-    font-size: 20px;
-    color: #999;
+  .resource-items {
+    .empty-resource-tip {
+      font-size: 20px;
+      color: #999;
+    }
+
+    .my-res-item {
+      border-bottom: 1px solid #E9E9E9;
+      padding-bottom: 10px;
+    }
   }
 </style>

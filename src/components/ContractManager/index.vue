@@ -18,7 +18,8 @@
           </div>
         </div>
         <div v-if="contractList.length">
-          <p class="sub-label-title">上抛资源 <span class="contracts-num">{{contractList.length}}</span></p>
+          <p class="sub-label-title"
+             v-if="masterContract.contractId">上抛资源 <span class="contracts-num">{{contractList.length}}</span></p>
           <ul class="contract-list">
             <li class="contract-item"
                 v-for="contract in contractList"
