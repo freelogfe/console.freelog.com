@@ -35,6 +35,7 @@
                       :contracts.sync="presentableInfo.contracts"
                       :resourceInfo="resourceInfo"
                       :presentableInfo="presentableInfo"
+                      authType="presentable"
               ></authorization-scheme-manage>
             </lazy-component>
           </div>

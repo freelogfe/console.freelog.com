@@ -9,13 +9,20 @@
             v-for="(resourceAuthScheme, index) in currentOpenedResources"
             :key="'resource' + index"
     >
-      <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 ">
+      <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 || authType === 'resource'">
         <h3>{{resourceAuthScheme.resourceName}}</h3>
         <div>
           <span>{{resourceAuthScheme.userName}}</span>
           <span>{{resourceAuthScheme.resourceDate}}</span>
           <span>{{resourceAuthScheme.resourceType}}</span>
         </div>
+      </div>
+      <div
+              class="s-p-resolve-btn"
+              :class="{'s-p-no-resolve': resourceAuthScheme.isNoResolved}"
+              v-if="authType === 'resource'"
+              @click="toggleResolveResource(resourceAuthScheme, index)">
+        不处理此资源
       </div>
       <scheme-detail
               :isCanUpdateContract.sync="isCanUpdateContract"
@@ -26,25 +33,17 @@
               :authSchemeIdentityAuthMap="authSchemeIdentityAuthMap"
               :selectedAuthSchemeTabIndex.sync="resourceAuthScheme.selectedAuthSchemeTabIndex"
               :activeAuthSchemeTabIndex.sync="resourceAuthScheme.activeAuthSchemeTabIndex"
+              :checkIsCanExchangeSelection="checkIsCanExchangeSelection"
               @show-upcast-resource-scheme="showUpcastResourceScheme"
               @refresh-opened-resource="refreshCurrentOpenedResource"
               @refresh-selected-auth-schemes="refreshSelectedAuthSchemes"
+              @cancel-scheme-selection="cancelSomeURSchemeSelection"
       ></scheme-detail>
+      <div class="s-p-mask" v-if="resourceAuthScheme.isNoResolved"></div>
     </div>
-    <div class="asb-scroll-guide-box" v-if="this.currentOpenedResources.length > 2">
-      <div class="red-bar" :style="redBarStyle"></div>
-    </div>
-    <div class="asb-footer">
-      <div
-              class="update-btn"
-              :class="{'active': isCanUpdateContract}"
-              @click="updateContract(isCanUpdateContract)">
-        {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
-      </div>
-    </div>
-    <div @click.stop="function() {}">
+    <div @click.stop="function() {}" v-if="authType === 'presentable'">
       <div class="suspension-ball" @click="toggleSuspensionSchemeList">
-        <span class="suspension-count" v-if="selectedAuthSchemes.length">{{selectedAuthSchemes.length}}</span>
+        <span class="suspension-count" v-if="selectedAuthSchemes.length || unResolveAuthSchemes.length">{{selectedAuthSchemes.length + unResolveAuthSchemes.length}}</span>
         <span class="suspension-icon-list" v-else>
           <span></span>
           <span></span>
@@ -64,8 +63,32 @@
             </div>
           </li>
         </ul>
-        <p v-else>请选择相应授权方案及策略……</p>
+
+        <p v-if="selectedAuthSchemes.length === 0 && unResolveAuthSchemes.length === 0">请选择相应授权方案及策略……</p>
+        <div class="unresolve-authschemes-box" v-if="unResolveAuthSchemes.length">
+          <h3>未处理资源列表</h3>
+          <ul>
+            <li
+                    v-for="(item, index) in unResolveAuthSchemes"
+                    :key="'unResolveAuthSchemes-'+index"
+            >
+              <div class="suspension-lb-row-1">{{item.resourceName}}</div>
+            </li>
+          </ul>
+        </div>
+
       </div>
+    </div>
+    <div class="asb-footer" v-if="isShowFooter">
+      <div
+              class="update-btn"
+              :class="{'active': isCanUpdateContract}"
+              @click="updateContract(isCanUpdateContract)">
+        {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
+      </div>
+    </div>
+    <div class="asb-scroll-guide-box" v-if="isScrollBar && this.currentOpenedResources.length > 2">
+      <div class="red-bar" :style="redBarStyle"></div>
     </div>
   </div>
 </template>
