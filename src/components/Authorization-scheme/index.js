@@ -27,6 +27,10 @@ export default {
     isPreventExchangeSelection: {
       type: Boolean,
       default: false
+    },
+    isAbandon: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -151,10 +155,13 @@ export default {
       }
       this.getAuthResolveState()
     },
-    // 已经发布的"授权方案"，阻止更改
+    // 已经发布或已废弃的"授权方案"，阻止更改
     checkIsCanExchangeSelection() {
       if(this.isPreventExchangeSelection){
-        Message.warning('已发布授权点，当前操作不可执行')
+        Message.warning('已发布该授权点，当前操作不可执行')
+        return false
+      } if(this.isAbandon) {
+        Message.warning('已废弃该授权点，当前操作不可执行')
         return false
       }else {
         return true

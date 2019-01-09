@@ -17,7 +17,7 @@
           <span class="line" v-show="index === selectedDependencyIndex"></span>
         </li>
       </ul>
-      <div class="r-d-btn-box" v-if="!isPublished">
+      <div class="r-d-btn-box" v-if="!isPreventExchangeSelection && !isAbandon">
         <div class="r-d-btn" @click="finishDependeciesHandler">
           创建授权点
         </div>
@@ -32,7 +32,8 @@
               :resourceInfo.sync="dependency"
               :contracts="contracts"
               :bubbleResourcesMap="bubbleResourcesMap"
-              :isPreventExchangeSelection="isPublished"
+              :isPreventExchangeSelection="isPreventExchangeSelection"
+              :isAbandon="isAbandon"
               :isShowFooter="false"
               :isScrollBar="false"
               @exchange-auth-resolve-state="exchangeAuthResolveState"
@@ -115,6 +116,12 @@
         })
         return bubbleResourcesMap
       },
+      isPreventExchangeSelection() {
+        return this.scheme.dutyStatements.length > 0 || this.scheme.bubbleResources.length > 0
+      },
+      isAbandon() {
+        return this.scheme.status === 4
+      }
     },
     methods: {
       getDependenciesDetail() {

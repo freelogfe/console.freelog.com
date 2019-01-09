@@ -313,6 +313,9 @@
       &.off-state {
         background-color: #E27C80;
       }
+      &.deleted-state {
+        background-color: #D8D8D8;
+      }
     }
 
     .add-new-scheme-tab-btn {
