@@ -61,7 +61,6 @@
       </div>
     </div>
 
-
     <el-dialog width="800px"
                :title="currentScheme.authSchemeName + '-依赖资源合同列表'"
                :append-to-body="true"
