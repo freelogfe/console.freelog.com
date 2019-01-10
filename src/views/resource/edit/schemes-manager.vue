@@ -98,11 +98,12 @@
 
     methods: {
       showSettingDialogHandler(scheme, index) {
-        this.showSettingDialog = true
         this.editingScheme = {
           authSchemeName: scheme.authSchemeName,
+          creating: scheme.creating,
           scheme: scheme
         }
+        this.showSettingDialog = true
       },
       hideSettingDialogHandler() {
         this.showSettingDialog = false
