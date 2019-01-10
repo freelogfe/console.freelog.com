@@ -44,7 +44,10 @@
             <ResourceSchemes class="res-schemes-content" :resource="resourceDetail.resourceInfo"></ResourceSchemes>
           </div>
 
-          <div class="res-detail-desc res-detail-info" ref="resDesc" v-html="resourceDetail.resourceInfo.description"></div>
+          <div class="res-detail-desc res-detail-info"
+               v-if="resourceDetail.resourceInfo.description"
+               ref="resDesc"
+               v-html="resourceDetail.resourceInfo.description"></div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
             <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
           </div>
