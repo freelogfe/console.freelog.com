@@ -64,7 +64,6 @@
     props: {
       resourceInfo: Object,
       boxStyle: Object,
-      isPublished: Boolean,
       scheme: Object,
     },
     data() {
@@ -131,7 +130,7 @@
       },
       // 获取"依赖授权"的处理结果
       getResolvedAuthScheme({resourceId, selectedAuthSchemes, unResolveAuthResources}) {
-        if (this.isPublished) return
+        if (this.isPreventExchangeSelection || this.isAbandon) return
         this.resolvedAuthSchemeMap[resourceId] = {
           selectedAuthSchemes, unResolveAuthResources
         }

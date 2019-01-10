@@ -23,9 +23,17 @@
         </el-tooltip>
       </li>
       <li class="ls-item">
+        <el-tooltip effect="dark" content="资源市场" placement="right" :disabled="!isMini">
+          <router-link to="/" class="nav-link ls-nav-link">
+            <i class="el-icon-fa-th"></i>
+            <span>资源市场</span>
+          </router-link>
+        </el-tooltip>
+      </li>
+      <li class="ls-item">
         <el-tooltip effect="dark" content="我的资源库" placement="right" :disabled="!isMini">
           <router-link to="/resource/list" class="nav-link ls-nav-link">
-            <i class="el-icon-menu"></i>
+            <i class="el-icon-fa-list"></i>
             <span>我的资源库</span>
           </router-link>
         </el-tooltip>
