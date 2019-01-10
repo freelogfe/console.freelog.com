@@ -61,11 +61,12 @@
 </script>
 
 <style lang="less" scoped>
+  @import '../../../styles/variables.less';
   .resource-detail-intro-wrap {
     height: 105px;
     background-color: #FAFBFB;
     .res-detail-intro-container {
-      width: 1190px;
+      width: @main-content-width;
       margin: auto;
       display: flex;
       align-items: center;

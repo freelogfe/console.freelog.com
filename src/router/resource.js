@@ -41,7 +41,7 @@ export default {
         title: '更新资源',
         type: 'resource',
         theme: 'gray',
-        hideSidebar: true
+        // hideSidebar: true
       },
       component: Views.resourceEditor,
     },

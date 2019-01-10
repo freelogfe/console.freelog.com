@@ -3,6 +3,7 @@
           class="left-sidebar"
           :class="{'sidebar-mini': isMini}"
           v-if="isShowSidebar"
+          @click.stop="function(){}"
   >
     <ul class="ls-list">
       <li class="ls-item ">

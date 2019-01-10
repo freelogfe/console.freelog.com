@@ -19,7 +19,11 @@ export default {
         .then(res => {
           this.nodes = res.dataList
         })
-    }
+    },
+    showMiniSidebar() {
+      this.isMini= true
+    },
+
   },
   watch: {
     '$route.fullPath'() {
@@ -34,5 +38,6 @@ export default {
     const { meta: { hideSidebar } } = this.$route
     this.isShowSidebar = !hideSidebar
     this.loadNodeList()
+    document.addEventListener('click', this.showMiniSidebar)
   }
 }

@@ -1,45 +1,48 @@
 <template>
   <div v-loading="isShowLoading" :style="boxStyle">
-    <div class="resource-dependencies" v-if="resourceDependencies.length">
-      <h3>依赖资源列表</h3>
-      <ul>
-        <li
-                v-for="(dependency, index) in resourceDependencies"
-                :key="'dependency-'+index"
-                :class="{
+    <template v-if="resourceDependencies.length">
+      <div class="resource-dependencies">
+        <h3>依赖资源列表</h3>
+        <ul>
+          <li
+                  v-for="(dependency, index) in resourceDependencies"
+                  :key="'dependency-'+index"
+                  :class="{
                     'selected': index === selectedDependencyIndex,
                     'active-1': dependency.authResolveState === 0,
                     'active-2': dependency.authResolveState === 1
                 }"
-                @click="exchangeDependencyIndex(index)"
-        >
-          <span>{{dependency.resourceName}}</span>
-          <span class="line" v-show="index === selectedDependencyIndex"></span>
-        </li>
-      </ul>
-      <div class="r-d-btn-box" v-if="!isPreventExchangeSelection && !isAbandon">
-        <div class="r-d-btn" @click="finishDependeciesHandler">
-          创建授权点
+                  @click="exchangeDependencyIndex(index)"
+          >
+            <span>{{dependency.resourceName}}</span>
+            <span class="line" v-show="index === selectedDependencyIndex"></span>
+          </li>
+        </ul>
+        <div class="r-d-btn-box" v-if="!isPreventExchangeSelection && !isAbandon">
+          <div class="r-d-btn" @click="finishDependeciesHandler">
+            创建授权点
+          </div>
         </div>
       </div>
-    </div>
-    <div class="dependencies-resolve-box">
-      <authorization-scheme-manage
-              v-for="(dependency, index) in resourceDependencies"
-              :key="'a-s-m-'+index"
-              v-show="index === selectedDependencyIndex"
-              authType="resource"
-              :resourceInfo.sync="dependency"
-              :contracts="contracts"
-              :bubbleResourcesMap="bubbleResourcesMap"
-              :isPreventExchangeSelection="isPreventExchangeSelection"
-              :isAbandon="isAbandon"
-              :isShowFooter="false"
-              :isScrollBar="false"
-              @exchange-auth-resolve-state="exchangeAuthResolveState"
-              @update-resolved-auth-scheme="getResolvedAuthScheme"
-      ></authorization-scheme-manage>
-    </div>
+      <div class="dependencies-resolve-box">
+        <authorization-scheme-manage
+                v-for="(dependency, index) in resourceDependencies"
+                :key="'a-s-m-'+index"
+                v-show="index === selectedDependencyIndex"
+                authType="resource"
+                :resourceInfo.sync="dependency"
+                :contracts="contracts"
+                :bubbleResourcesMap="bubbleResourcesMap"
+                :isPreventExchangeSelection="isPreventExchangeSelection"
+                :isAbandon="isAbandon"
+                :isShowFooter="false"
+                :isScrollBar="false"
+                @exchange-auth-resolve-state="exchangeAuthResolveState"
+                @update-resolved-auth-scheme="getResolvedAuthScheme"
+        ></authorization-scheme-manage>
+      </div>
+    </template>
+    <p class="no-resource-dependeny" v-else>没有需要处理的依赖资源</p>
     <el-dialog
             class="s-c-dialog"
             title="提示"
@@ -92,7 +95,7 @@
     },
     data() {
       return {
-        isShowLoading: true,
+        isShowLoading: false,
         isDialogVisible: false,
         selectedDependencyIndex: -1,
         resourceDependencies: [],
@@ -116,9 +119,6 @@
         })
         return bubbleResourcesMap
       },
-      isPreventExchangeSelection() {
-        return this.scheme.dutyStatements.length > 0 || this.scheme.bubbleResources.length > 0
-      },
       isAbandon() {
         return this.scheme.status === 4
       }
@@ -127,6 +127,7 @@
       getDependenciesDetail() {
         const resourceDependencies = this.resourceInfo.systemMeta.dependencies || []
         if(resourceDependencies.length === 0) return
+        this.isShowLoading = true
         var resourceIds = resourceDependencies.map(i => i.resourceId).join(',')
         this.$axios.get(`/v1/resources/list?resourceIds=${resourceIds}`)
           .then(res => res.data)
@@ -170,7 +171,8 @@
             selectedAuthSchemes.forEach(item => {
               const { resourceId, resourceName, authSchemeId, authSchemeName, segmentId, policyName } = item
               this.resolvedDutyStatements.push({
-                resourceId, resourceName, authSchemeId, authSchemeName, policyName,
+                resourceName, authSchemeName, policyName,
+                resourceId, authSchemeId,
                 policySegmentId: segmentId
               })
             })
@@ -198,7 +200,10 @@
       },
       signContract() {
         const data = {
-          dutyStatements: this.resolvedDutyStatements,
+          dutyStatements: this.resolvedDutyStatements.map(item => {
+            const { resourceId, authSchemeId, policySegmentId } = item
+            return { resourceId, authSchemeId, policySegmentId }
+          }),
           bubbleResources: this.resolvedBubbleResources
         }
         const { authSchemeId } = this.scheme
@@ -210,8 +215,12 @@
           .then(res => res.data)
           .then(res => {
             if(res.errcode === 0) {
-              const { dutyStatements } = res.data
+              const { dutyStatements, bubbleResources } = res.data
+              let scheme = this.scheme
+              scheme = Object.assign({}, scheme, { dutyStatements, bubbleResources })
+              this.$emit('update:scheme', scheme)
               this.contracts = [ this.contracts, ...dutyStatements ]
+              this.isPreventExchangeSelection = true
               Message.success('创建成功！')
             }else {
               Message.error(res.msg)
@@ -221,6 +230,7 @@
     },
     mounted() {
       this.contracts = this.scheme.dutyStatements || []
+      this.isPreventExchangeSelection = this.scheme.dutyStatements.length > 0 || this.scheme.bubbleResources.length > 0
       this.getDependenciesDetail()
     },
     destroyed() {},
@@ -283,11 +293,11 @@
 
   .resource-dependencies {
     position: absolute; top: -15px; bottom: 0; z-index: 5;
-    width: 300px; padding-top: 35px; padding-left: 40px; border-right: 1px solid #D8D8D8;
+    width: 340px; padding-top: 40px; border-right: 1px solid #D8D8D8;
 
     h3 {
       position: relative;
-      padding-left: 8px;
+      margin-left: 55px; padding-left: 8px;
       font-size: 14px;
       color: #666;
 
@@ -300,7 +310,7 @@
       }
     }
 
-    ul { margin-top: 20px;  }
+    ul { margin-top: 20px; margin-left: 55px;   }
 
     li {
       position: relative;
@@ -341,8 +351,7 @@
     }
 
     .r-d-btn-box {
-      position: fixed; left: 0; bottom: 40px;
-      width: 340px;
+      margin-top: 50px;
 
       .r-d-btn {
         width: 220px; margin: auto; padding: 10px 0; border: 1px solid #A5D1FF; border-radius: 21px;
@@ -355,5 +364,9 @@
 
   .dependencies-resolve-box {
     margin-left: 340px; padding: 0 30px;
+  }
+
+  .no-resource-dependeny {
+    font-size: 14px; text-align: center;
   }
 </style>

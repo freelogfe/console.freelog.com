@@ -89,10 +89,11 @@
 </script>
 
 <style scoped lang="less" type="text/less">
+  @import '../../../../styles/variables.less';
   .presentable-detail-header-wrap {
     background-color: #FAFBFB;
     .pdh-body {
-      width: 1160px;
+      width: @main-content-width;
       margin: auto;
       padding: 20px 0;
       display: flex;

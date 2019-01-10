@@ -8,7 +8,7 @@
             <scheme-content
                     :resourceInfo="detail.resource"
                     :isPublished="detail.isPublished"
-                    :scheme="detail.scheme"
+                    :scheme.sync="detail.scheme"
                     :boxStyle="schemeContentBoxStyle"
             ></scheme-content>
           </lazy-component>
