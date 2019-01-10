@@ -15,6 +15,7 @@
             <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
             <div class="res-origin-info">
               <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
+              <span class="res-type">{{resourceDetail.resourceInfo.resourceId}}</span>
               <span class="res-update-time">最近更新 {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
             </div>
           </div>
@@ -44,7 +45,10 @@
             <ResourceSchemes class="res-schemes-content" :resource="resourceDetail.resourceInfo"></ResourceSchemes>
           </div>
 
-          <div class="res-detail-desc res-detail-info" ref="resDesc" v-html="resourceDetail.resourceInfo.description"></div>
+          <div class="res-detail-desc res-detail-info"
+               v-if="resourceDetail.resourceInfo.description"
+               ref="resDesc"
+               v-html="resourceDetail.resourceInfo.description"></div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
             <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
           </div>
