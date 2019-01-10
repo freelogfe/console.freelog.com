@@ -43,48 +43,21 @@
       </div>
     </template>
     <p class="no-resource-dependeny" v-else>没有需要处理的依赖资源</p>
-    <el-dialog
-            class="s-c-dialog"
-            title="提示"
+    <scheme-sign-dialog
+            authType="resource"
             :visible.sync="isDialogVisible"
-            width="800px"
-            height="450px"
-            center
-    >
-      <div class="resolved-duty-statements" v-show="resolvedDutyStatements.length">
-        <h3>使用依赖资源需要与以下资源签约，请确认</h3>
-        <el-table
-                :data="resolvedDutyStatements"
-                stripe
-                style="width: 100%"
-        >
-          <el-table-column prop="resourceName" label="资源名称" width="350"></el-table-column>
-          <el-table-column prop="authSchemeName" label="授权方案"></el-table-column>
-          <el-table-column prop="policyName" label="授权策略"></el-table-column>
-        </el-table>
-      </div>
-      <div class="resolved-bubble-resources" v-show="resolvedBubbleResources.length">
-        <h3>上抛以下资源，请确认</h3>
-        <ul>
-          <li
-                  v-for="(item, index) in resolvedBubbleResources"
-                  :key="'r-b-r-' + index"
-          >
-            <span class="r-b-r-i-reousrce-name">{{item.resourceName}}</span>
-          </li>
-        </ul>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button class="cancel-btn" @click="isDialogVisible = false">取消</el-button>
-        <el-button class="sign-btn" type="primary" @click="signContract">签约</el-button>
-      </div>
-    </el-dialog>
+            :resolvedDutyStatements="resolvedDutyStatements"
+            :resolvedBubbleResources="resolvedBubbleResources"
+            :authSchemeId="scheme.authSchemeId"
+            @done="afterSginContract"
+    ></scheme-sign-dialog>
   </div>
 </template>
 
 <script>
   import {Message} from 'element-ui'
   import AuthorizationSchemeManage from '@/components/Authorization-scheme/index.vue'
+  import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
 
   export default {
     name: 'scheme-content',
@@ -108,6 +81,7 @@
     },
     components: {
       AuthorizationSchemeManage,
+      SchemeSignDialog,
     },
     computed: {
       resourceId() {
@@ -156,10 +130,10 @@
         this.resourceDependencies = this.resourceDependencies.slice()
       },
       // 获取"依赖授权"的处理结果
-      getResolvedAuthScheme({resourceId, selectedAuthSchemes, unResolveAuthSchemes}) {
+      getResolvedAuthScheme({resourceId, selectedAuthSchemes, unResolveAuthResources}) {
         if (this.isPublished) return
         this.resolvedAuthSchemeMap[resourceId] = {
-          selectedAuthSchemes, unResolveAuthSchemes
+          selectedAuthSchemes, unResolveAuthResources
         }
 
         this.resolvedDutyStatements = []
@@ -168,7 +142,7 @@
           const denpency = this.resourceDependencies[i]
           const map = this.resolvedAuthSchemeMap[denpency.resourceId]
           if (map) {
-            const {selectedAuthSchemes, unResolveAuthSchemes} = map
+            const {selectedAuthSchemes, unResolveAuthResources} = map
             selectedAuthSchemes.forEach(item => {
               const {resourceId, resourceName, authSchemeId, authSchemeName, segmentId, policyName} = item
               this.resolvedDutyStatements.push({
@@ -177,7 +151,7 @@
                 policySegmentId: segmentId
               })
             })
-            unResolveAuthSchemes.forEach(item => this.resolvedBubbleResources.push({
+            unResolveAuthResources.forEach(item => this.resolvedBubbleResources.push({
               resourceId: item.resourceId,
               resourceName: item.resourceName
             }))
@@ -199,13 +173,24 @@
 
         this.isDialogVisible = isFinish
       },
+      afterSginContract(data) {
+        const {dutyStatements, bubbleResources} = data
+        let scheme = this.scheme
+        scheme = Object.assign({}, scheme, {dutyStatements, bubbleResources})
+        this.$emit('update:scheme', scheme)
+        this.contracts = [this.contracts, ...dutyStatements]
+        this.isPreventExchangeSelection = true
+        Message.success('创建成功！')
+      },
       signContract() {
         const data = {
           dutyStatements: this.resolvedDutyStatements.map(item => {
             const {resourceId, authSchemeId, policySegmentId} = item
             return {resourceId, authSchemeId, policySegmentId}
           }),
-          bubbleResources: this.resolvedBubbleResources
+          bubbleResources: this.resolvedBubbleResources.map(item => {
+            return { resourceId: item.resourceId }
+          })
         }
         const {authSchemeId} = this.scheme
         this.$axios({

@@ -1,11 +1,13 @@
-import SchemeDetail from './scheme-detail.vue'
+
 import { Message } from 'element-ui'
+import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
+import SchemeDetail from './scheme-detail.vue'
 import {throttle} from 'lodash'
 
 export default {
   name: 'authorization-scheme-manage',
   components: {
-    SchemeDetail
+    SchemeDetail, SchemeSignDialog
   },
   props: {
     authType: String,
@@ -42,14 +44,15 @@ export default {
       isShowLoading: false,
       isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
-      currentOpenedResources: [],
+      currentOpenedResources: [],             // 当前页面已打开的资源
       resourceMap: {},
-      selectedAuthSchemes:[],
-      unResolveAuthSchemes: [],
+      selectedAuthSchemes:[],                 // 已选中的授权方案集合
+      unResolveAuthResources: [],             // 不处理授权方案的资源集合
       actIndex: 0,
       isRegisterGlobalClickEvent: false,
       authSchemeIdentityAuthMap: {},
-      throttleFn: null
+      throttleFn: null,
+      isShowDialog: false                     // 是否显示"签约提示"弹窗
     }
   },
   computed: {
@@ -188,9 +191,11 @@ export default {
         }
       }
     },
-    // 点击"更新合约"按钮
-    updateContract(isUpdateContract) {
+    // 点击"更新合约"或"生成合约"按钮
+    signContract(isUpdateContract) {
       if(!isUpdateContract) return
+      this.isShowDialog = true
+      return
 
       var contracts = this.selectedAuthSchemes.map(item => {
         const { resourceId, authSchemeId, segmentId, contractId = '' } = item
@@ -223,8 +228,11 @@ export default {
         }
         default: {}
       }
-
-
+    },
+    afterSginContract(data) {
+      var str = this.presentableInfo.contracts.length ? '更新' : '生成'
+      Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
+      this.reInitPresentableAuthSchemes(res.data.contracts)
     },
     resolveUpdateDate(updateDate) {
       const date = new Date(updateDate)
@@ -232,12 +240,12 @@ export default {
     },
     refreshSelectedAuthSchemes() {
       this.selectedAuthSchemes = []
-      this.unResolveAuthSchemes = []
+      this.unResolveAuthResources = []
       this.getSelectedAuthScheme(this.currentOpenedResources[0])
       this.$emit('update-resolved-auth-scheme',{
         resourceId: this.resourceInfo.resourceId,
         selectedAuthSchemes: this.selectedAuthSchemes,
-        unResolveAuthSchemes:this.unResolveAuthSchemes
+        unResolveAuthResources:this.unResolveAuthResources
       })
       this.getAuthResolveState()
     },
@@ -246,7 +254,7 @@ export default {
       if(authSchemesData) {
         const { isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex, contractId } = authSchemesData
         if(isNoResolved) {
-          this.unResolveAuthSchemes.push({ resourceName, resourceId })
+          this.unResolveAuthResources.push({ resourceName, resourceId })
           return
         }
         if(selectedAuthSchemeTabIndex !== -1) {
@@ -452,7 +460,7 @@ export default {
             })
             this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
           }else {
-            Message.error(res.msg)
+            Message.error(res.msg || '')
           }
         })
     },
