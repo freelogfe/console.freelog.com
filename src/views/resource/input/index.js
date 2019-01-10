@@ -1,7 +1,8 @@
-import { storage } from '@/lib'
-import { RESOURCE_TYPES } from '@/config/resource'
+import {storage} from '@/lib'
+import {RESOURCE_TYPES, RESOURCE_STATUS_MAP} from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
+import SearchResource from '../search/index.vue'
 
 const EDIT_MODES = {
   creator: 'creator',
@@ -12,7 +13,8 @@ export default {
   name: 'resource-input',
   components: {
     ResourceMetaInfo,
-    RichEditor
+    RichEditor,
+    SearchResource
   },
   data() {
     const validateResourceType = (rule, value, callback) => {
@@ -39,24 +41,27 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{ required: true, message: '请输入资源名称', trigger: 'blur' }],
+        resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'}],
         widgetName: [
-          { validator: validateWidgetName, trigger: 'blur' }
+          {validator: validateWidgetName, trigger: 'blur'}
         ],
         resourceType: [
-          { required: true, message: '请选择资源类型', trigger: 'blur' },
-          { validator: validateResourceType, trigger: 'blur' }
+          {required: true, message: '请选择资源类型', trigger: 'blur'},
+          {validator: validateResourceType, trigger: 'blur'}
         ]
       },
-      options: Object.keys(RESOURCE_TYPES).map(k => ({ label: k, value: RESOURCE_TYPES[k] })),
+      options: Object.keys(RESOURCE_TYPES).map(k => ({label: k, value: RESOURCE_TYPES[k]})),
 
       loading: false,
+      deps: [],
+      showSearchResourceDialog: false,
       formData: {
         resourceType: storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget,
         resourceName: '',
         widgetName: '',
         description: '',
-        previewImage: ''
+        previewImage: '',
+        widgetVersion: ''
       },
       // 上传到服务器的数据
       uploader: {
@@ -116,22 +121,26 @@ export default {
     },
     shouldShowThumbnailInput() {
       return this.formData.resourceType === RESOURCE_TYPES.pageBuild
+    },
+    canEditDependencies() {
+      return !this.data.resourceId || (this.data.status === RESOURCE_STATUS_MAP.unpublished)
     }
   },
 
   watch: {
     data() {
-      if (this.data.resourceId) {
+      var resource = this.data
+      if (resource.resourceId) {
         this.editMode = EDIT_MODES.editor
-        Object.assign(this.formData, this.data)
-        this.formData.widgetName = this.data.systemMeta.widgetName || ''
-
-        if (this.data.previewImages.length) {
-          this.formData.previewImage = this.data.previewImages[0]
+        Object.assign(this.formData, resource)
+        this.formData.widgetName = resource.systemMeta.widgetName || ''
+        this.deps = resource.systemMeta.dependencies
+        if (resource.previewImages.length) {
+          this.formData.previewImage = resource.previewImages[0]
         }
-        if (this.data.meta) {
+        if (resource.meta) {
           try {
-            this.meta = JSON.stringify(this.data.meta)
+            this.meta = JSON.stringify(resource.meta)
           } catch (e) {
             this.meta = '{}'
           }
@@ -156,7 +165,7 @@ export default {
       let error
 
       if (err.errcode !== undefined) {
-        error = { error: err.msg }
+        error = {error: err.msg}
       } else {
         switch (err.status) {
           case 400:
@@ -168,7 +177,7 @@ export default {
           default:
             errMsg = err.message
         }
-        error = { error: errMsg }
+        error = {error: errMsg}
       }
 
       this.$emit('uploadEnd', error)
@@ -182,7 +191,7 @@ export default {
         this.uploaderStates.resource.isUploading = false
         this.uploaderStates.resource.percentage = 0
         this.$message.error(res.msg)
-        this.$emit('uploadEnd', { error: res.msg })
+        this.$emit('uploadEnd', {error: res.msg})
       } else {
         this.uploaderStates.resource.sha1 = res.data.sha1
         this.uploaderStates.resource.isUploaded = true
@@ -198,6 +207,8 @@ export default {
         fileName.pop()
       }
       fileName = fileName.join('.')
+      this.formData.filename = file.name
+      this.formData.filesize = file.size
       if (!this.formData.widgetName && this.formData.resourceType === RESOURCE_TYPES.widget) {
         this.formData.widgetName = fileName
       }
@@ -205,6 +216,24 @@ export default {
       if (!this.formData.resourceName) {
         this.formData.resourceName = fileName
       }
+    },
+    humanizeSize(number) {
+      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+      if (!number) {
+        return ''
+      }
+
+      if (number < 1) {
+        return number + ' B';
+      }
+
+      const algorithm = 1024
+      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
+      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
+      const unit = UNITS[exponent];
+
+      return number + ' ' + unit;
     },
     fileChangeHandler(file, fileList) {
       this.fileLimitValidator(file, fileList)
@@ -250,6 +279,9 @@ export default {
         isUploaded: false,
         percentage: 0
       })
+    },
+    reuploadHandler(uploader) {
+      this.clearUploaderHandler(uploader)
     },
     beforeUploadHandler(file) {
       this.resetUploaderState(this.uploaderStates.resource, file)
@@ -332,7 +364,6 @@ export default {
         metaData = {}
       }
 
-
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
@@ -341,6 +372,10 @@ export default {
 
       if (formData.previewImage) {
         uploadData.previewImages = [formData.previewImage]
+      }
+
+      if (this.deps.length) {
+        metaData.dependencies = this.deps.map(res => res.resourceId)
       }
 
       uploadData.meta = metaData
@@ -408,6 +443,21 @@ export default {
       if (uploader) {
         uploader.percentage = parseInt(file.percentage.toFixed(), 10)
       }
+    },
+    addDepResourceHandler(resource) {
+      this.showSearchResourceDialog = false
+      this.deps.push(resource)
+    },
+    beforeCloseDialogHandler() {
+      this.showSearchResourceDialog = false
+    },
+    showSearchDialogHandler() {
+      if (this.canEditDependencies) {
+        this.showSearchResourceDialog = true
+      }
+    },
+    removeDepResourceHandler(resource, index) {
+      this.deps.splice(index, 1)
     }
   }
 }

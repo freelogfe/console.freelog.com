@@ -3,6 +3,7 @@
     <router-link to="/"  class="brand">
       <i>F</i>
       <span class="page-title">{{pageTitle}}</span>
+
     </router-link>
     <nav class="toolbar" v-if="session.user">
       <ul class="navbar-menu">
@@ -27,32 +28,6 @@
               <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
             </span>
             <ul class="my-profile-items">
-              <li class="my-profile-item center hover">
-                <router-link to="/resource/create" class="nav-link">
-                  <i class="el-icon-plus"></i>创建资源
-                </router-link>
-              </li>
-              <li class="my-profile-item center hover">
-                <router-link to="/resource/list" class="nav-link">
-                  <img class="tool-icon" src="../../../assets/img/icons/resource.png" alt="">我的资源库
-                </router-link>
-              </li>
-              <li class="my-profile-item">
-                <div style="padding: 12px;"><img class="tool-icon" src="../../../assets/img/icons/node.png" alt="">节点
-                  <router-link to="/node/create" class="nav-link create-node-btn"><i class="el-icon-plus"></i>
-                  </router-link>
-                </div>
-                <ul class="my-node-list" v-if="nodes&&nodes.length">
-                  <li class="node-item hover" :key="node.nodeId" v-for="node in nodes">
-                    <router-link :to="'/node/'+node.nodeId" class="nav-link">{{node.nodeName}}</router-link>
-                  </li>
-                </ul>
-              </li>
-              <li class="my-profile-item center hover">
-                <a class="nav-link" :href="`//www${domainPostfix}/user/profile`" target="_blank">
-                  <i class="el-icon-setting tool-icon"></i>设置
-                </a>
-              </li>
               <li class="my-profile-item center hover" @click="logout">
                 <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出
               </li>

@@ -1,7 +1,8 @@
 @leftSideWidth: 380px;
 
+@import '../../../styles/variables.less';
 .node-detail-container {
-  width: 1260px;
+  width: @main-content-width-1190;
   margin: auto;
   .node-info-wrap {
     padding: 20px 0;
@@ -22,5 +23,11 @@
       margin-left: 3px;
       width: 15px;
     }
+  }
+}
+
+@media screen and (max-width: 1366px) {
+  .node-detail-container {
+    width: @main-content-width-990;
   }
 }

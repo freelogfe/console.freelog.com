@@ -48,18 +48,22 @@
       <el-table-column
               width="250"
               label="">
-        <template slot-scope="scope">
-          <div class="presentable-nav-links">
-            <router-link :to="scope.row.detailLink + '?tab=policy'">
-              <el-button type="text">策略管理</el-button>
+        <template slot-scope="{row}">
+          <div class="presentable-nav-links active-status-0">
+            <router-link :to="row.detailLink + '?tab=policy'">
+              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
+              </el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="scope.row.detailLink + '?tab=contract'">
-              <el-button type="text" :disabled="!scope.row.hasContract">合约管理</el-button>
+            <router-link :to="row.detailLink + '?tab=contract'">
+              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
+                                                                                              v-if="row.hasContract && row.isContractActived === false"></i>
+              </el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="scope.row.detailLink + '?tab=schema'">
-              <el-button type="text">授权方案</el-button>
+            <router-link :to="row.detailLink + '?tab=schema'">
+              <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
+              </el-button>
             </router-link>
           </div>
         </template>
@@ -153,6 +157,8 @@
         var maps = {}
         var schemeIdMaps = {}
         var presentablesIdMap = {}
+        var promises = []
+        var promise
 
         list.forEach((item, index) => {
           let contract = this.getPresentableContract(item)
@@ -165,7 +171,7 @@
           }
 
           Object.assign(item, {
-            // isAcquireSignAuth: 1
+            isAcquireSignAuth: 1
           })
           maps[item.resourceId] = index
           presentablesIdMap[item.presentableId] = item
@@ -173,9 +179,8 @@
           this.resolvePresentable(item)
         })
 
-
         if (authSchemeIds.length) {
-          this.loadPresentablesSchemes(authSchemeIds)
+          promise = this.loadPresentablesSchemes(authSchemeIds)
             .then(schemes => {
               schemes.forEach(scheme => {
                 let {index, contract} = schemeIdMaps[scheme.authSchemeId]
@@ -184,32 +189,94 @@
               })
               schemeIdMaps = null
             })
+          promises.push(promise)
         }
 
         var presentableIds = Object.keys(presentablesIdMap)
         if (presentableIds.length) {
-          this.loadPresentablesAuth(presentableIds)
+          promise = this.loadPresentablesAuth(presentableIds)
             .then((auths) => {
               auths.forEach(auth => {
                 let presentable = presentablesIdMap[auth.presentableId]
                 presentable.isAcquireSignAuth = auth.isAcquireSignAuth
-                this.setWarningTip(presentable)
+                // this.setWarningTip(presentable)
               })
-              presentablesIdMap = null
             })
+
+          promises.push(promise)
+          promise = this.loadPresentablesContractState(presentableIds)
+            .then(states => {
+              states.forEach(state => {
+                let presentable = presentablesIdMap[state.presentableId]
+                presentable.isContractActived = (state.status === 1)
+              })
+            })
+          promises.push(promise)
+        }
+
+        if (promises.length) {
+          Promise.all(promises).then(() => {
+            this.fillWarningTips(list)
+          })
         }
 
         return list
       },
-      setWarningTip(presentable) {
+      fillWarningTips(presentables) {
+        //判断授权链上的策略包含presentable授权
         const tips = {
-          '0': '未获得授权',
-          '1': '已获得授权'
+          'no': '不能再二次授权',
+          'yes': '可再二次授权'
+        }
+        const contractTips = {
+          'no': '已签约合同未全部激活',
+          'yes': '全部激活'
+        }
+
+        presentables.forEach(presentable => {
+          let warningTips = []
+
+          if (presentable.isAcquireSignAuth === 0) {
+            warningTips.push(tips.no)
+          }
+          if (presentable.hasContract && !presentable.isContractActived) {
+
+            warningTips.push(contractTips.no)
+          }
+
+          if (warningTips.length) {
+            this.$set(presentable, 'warningTip', warningTips.join(','))
+          }
+        })
+      },
+      //查询presentable合同激活情况
+      loadPresentablesContractState(presentableIds) {
+        // /v1/presentables/getPresentableContractState?presentableIds={presentableId}&nodeId={nodeId}
+        return this.$axios.get(`/v1/presentables/getPresentableContractState`, {
+          params: {
+            presentableIds: presentableIds.join(','),
+            nodeId: this.$route.params.nodeId
+          }
+        }).then(res => {
+          const {ret, errcode, msg, data} = res.data
+          if (ret === 0 && errcode === 0) {
+            return data
+          } else {
+            throw new Error(msg)
+          }
+        })
+      },
+      setWarningTip(presentable) {
+        //包含presentable策略
+        const tips = {
+          '0': '不能再二次授权',
+          '1': '可再二次授权'
         }
 
         let warningTip = tips[presentable.isAcquireSignAuth.toString()] || ''
         this.$set(presentable, 'warningTip', warningTip)
       },
+      //查询presentable的授权链是否支持二次签约授权
       loadPresentablesAuth(presentableIds) {
         return this.$axios.get('/v1/auths/presentable/getPresentableSignAuth', {
           params: {
@@ -232,6 +299,7 @@
         item.hasContract = item.contracts.length > 0
         item.detailLink = `/node/${this.$route.params.nodeId}/presentable/${item.presentableId}`
       },
+      //加载presentable已签约方案&策略信息
       loadPresentablesSchemes(authSchemeIds) {
         return loadAuthSchemes({
           authSchemeIds: authSchemeIds
@@ -334,7 +402,22 @@
     .presentable-nav-links {
       span {
         color: #D8D8D8;
-        padding: 0 3px;
+        padding: 0 6px;
+      }
+
+      .nav-link-btn {
+        position: relative;
+      }
+
+      .dot {
+        position: absolute;
+        top: 0;
+        right: -11px;
+        &:after {
+          border-width: 4px;
+          width: 0;
+          height: 0;
+        }
       }
     }
   }

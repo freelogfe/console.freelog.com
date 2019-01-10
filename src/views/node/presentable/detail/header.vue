@@ -20,7 +20,7 @@
                        actionText="新标签"
                        @input="changeTagsHandler"></FreelogTags>
         </div>
-        <div class="res-info" v-if="resource&&resource.resourceName">{{resource.resourceName}} | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
+        <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId" target="_blank">{{resource.resourceName}}</a> | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
         </div>
         <p :class="contractStateCls"><i class="dot"></i>{{contractState}}</p>
@@ -87,12 +87,13 @@
     }
   }
 </script>
-
 <style scoped lang="less" type="text/less">
+  @import '../../../../styles/variables.less';
+
   .presentable-detail-header-wrap {
     background-color: #FAFBFB;
     .pdh-body {
-      width: 1160px;
+      width: @main-content-width-1190;
       margin: auto;
       padding: 20px 0;
       display: flex;
@@ -138,6 +139,9 @@
       color: #999999;
       font-size: 14px;
       margin-bottom: 10px;
+      a {
+        color: #999999;
+      }
     }
 
     .back-to-node-page {
@@ -149,6 +153,12 @@
           margin-right: 6px;
         }
       }
+    }
+  }
+
+  @media screen and (max-width: 1366px){
+    .presentable-detail-header-wrap .pdh-body{
+      width: @main-content-width-990;
     }
   }
 </style>

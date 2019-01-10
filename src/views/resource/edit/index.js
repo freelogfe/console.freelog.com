@@ -1,16 +1,19 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import { mapGetters } from 'vuex'
-import { onloadResourceDetail } from '@/data/resource/loader'
+import {mapGetters} from 'vuex'
+import {onloadResourceDetail} from '@/data/resource/loader'
 import ResourceInputs from '../input/index.vue'
+import ResourceDetailIntro from './intro.vue'
+import SchemesManager from './schemes-manager.vue'
 
 export default {
   name: 'resource-detail-edit',
   data() {
     return {
       isDev: process.env.NODE_ENV === 'development',
-      resourceDetail: {}
+      resourceDetail: {},
+      viewMode: this.$route.query.view || 'preview'  //edit or preview
     }
   },
   computed: {
@@ -23,7 +26,9 @@ export default {
     }
   },
   components: {
-    ResourceInputs
+    ResourceInputs,
+    ResourceDetailIntro,
+    SchemesManager
   },
   mounted() {
     const params = this.$route.params
@@ -72,8 +77,8 @@ export default {
         this.$message.success('更新成功')
       })
     },
-    gotoResourceSchemeDetailHandler() {
-      this.$router.push(`/resource/edit/${this.$route.params.resourceId}/auth_schemes`)
+    switchModeHandler(mode) {
+      this.viewMode = mode ? mode : (this.viewMode === 'edit' ? 'preview' : 'edit')
     }
   }
 }

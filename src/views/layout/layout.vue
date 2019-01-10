@@ -1,6 +1,7 @@
 <template>
   <div :class="[sidebar.openSidebar?'': 'collapse-sidebar']">
     <fl-header/>
+    <fl-sidebar></fl-sidebar>
     <section class="main" :class="themeCls">
       <main class="content">
         <transition name="content">
@@ -59,21 +60,13 @@ export default {
   .white-theme {
     background-color: white;
   }
-  /*fbfbfb*/
+
   .gray-theme {
     background-color: #FAFBFB;
   }
 
   .main-view {
     min-height: 100%;
-    /*padding-top: 20px;*/
-  }
-
-  .left-sidebar {
-    position: fixed;
-    top: @header-height;
-    left: 0;
-    bottom: 0;
   }
 
   .content {
@@ -93,6 +86,5 @@ export default {
     .content, .footer-wrap {
       margin-left: 30px;
     }
-
   }
 </style>

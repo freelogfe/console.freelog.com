@@ -21,8 +21,10 @@ export default FreelogSearchInput
 </script>
 
 <style lang="less" scoped>
-  i {
-    color: #666;
-    font-size: 18px;
+  .fl-search-input-wrap {
+    i {
+      color: #666;
+      font-size: 18px;
+    }
   }
 </style>

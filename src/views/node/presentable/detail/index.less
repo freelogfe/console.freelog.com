@@ -1,6 +1,7 @@
+@import '../../../../styles/variables.less';
 .presentable-detail-wrapper {
   .presentable-content-panels {
-    width: 1160px;
+    width: @main-content-width-1190;
     margin: auto;
   }
 
@@ -15,6 +16,14 @@
       text-align: center;
       font-size: 20px;
       color: #666;
+    }
+  }
+}
+
+@media screen and (max-width: 1366px) {
+  .presentable-detail-wrapper {
+    .presentable-content-panels {
+      width: @main-content-width-990;
     }
   }
 }

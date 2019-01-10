@@ -1,21 +1,27 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
-import { mapGetters } from 'vuex'
-import { loadDetail } from '@/data/resource/loader'
-import { onloadNodeList } from '@/data/node/loader'
-import { cssSupports } from '@/lib/utils'
-import AuthSchemeDetail from './auth-scheme/index.vue'
+import {mapGetters} from 'vuex'
+import {loadDetail} from '@/data/resource/loader'
+import {onloadNodeList} from '@/data/node/loader'
+import {cssSupports} from '@/lib/utils'
+import ResourceSchemes from './schemes.vue'
 
 export default {
   name: 'resource-detail',
   data() {
     return {
       resourceId: this.$route.params.resourceId,
-      activeTab: 'resDesc',
+      activeTab: 'resIntro',
       tabs: [{
+        name: 'resIntro',
+        title: '资源简介'
+      }, {
+        name: 'resSchemes',
+        title: '授权方案'
+      }, {
         name: 'resDesc',
-        title: '资源介绍'
+        title: '资源描述'
       }, {
         name: 'resMeta',
         title: 'meta信息'
@@ -24,12 +30,10 @@ export default {
         resourceInfo: {},
         isFavor: false
       },
-      showAuthSchemes: false,
       showOptionsDialog: false,
       selectedNode: '',
       nodes: [],
-      contentTransform: 'none',
-      selectedPolicy: {}
+      activeScheme: ''
     }
   },
   computed: Object.assign({
@@ -44,7 +48,7 @@ export default {
     session: 'session'
   })),
   components: {
-    AuthSchemeDetail
+    ResourceSchemes
   },
   mounted() {
     this.init()
@@ -61,9 +65,6 @@ export default {
           res.isOwner = false
         }
         this.resourceDetail.resourceInfo = res
-        // if (res.isOwner) {
-        //   this.showAuthSchemes = true
-        // }
       }).catch(() => {
         this.$router.push('/')
         // this.$error.showErrorMessage(err)
@@ -78,33 +79,32 @@ export default {
       this.initScrollEvent()
     },
     initScrollEvent() {
-      const $toolbar = document.querySelector('.nav-header')
+      const $header = document.querySelector('.nav-header')
       const $tabs = this.$refs.tabs
       const $upBtn = this.$refs.upBtn
-      const marginTop = $toolbar.getBoundingClientRect().height
-      const originTop = $tabs.getBoundingClientRect().top
-      const isSupportSticky = cssSupports('position', 'sticky')
+      const $body = this.$refs.detailBody
+      const marginTop = $header.getBoundingClientRect().height
+      const originLeft = $tabs.getBoundingClientRect().left
       let prevTop
       let st = +new Date()
-
+      let fixed = false
       this.scrollFn = () => {
         // throttle
         const et = +new Date()
         if (et - st < 20) return
         st = et
 
-        const rect = $tabs.getBoundingClientRect()
-
-        // nav tabs sticky兼容性处理
-        if (!isSupportSticky) {
-          if (rect.top <= originTop) {
-            $tabs.classList.remove('sticky-tabs')
-          } else if (rect.top <= marginTop) {
-            $tabs.classList.add('sticky-tabs')
-          }
+        const rect = $body.getBoundingClientRect()
+        if (rect.top <= marginTop && !fixed) {
+          fixed = true
+          $tabs.style.left = `${originLeft}px`
+          $tabs.classList.add('sticky-tabs')
+        } else if (rect.top >= marginTop && fixed) {
+          fixed = false
+          $tabs.style.left = `-130px`
+          $tabs.classList.remove('sticky-tabs')
         }
-
-        $upBtn.classList[(rect.top === prevTop) ? 'add' : 'remove']('show')
+        $upBtn.classList[(rect.top <= prevTop) ? 'add' : 'remove']('show')
         prevTop = rect.top
       }
       window.addEventListener('scroll', this.scrollFn)
@@ -116,15 +116,6 @@ export default {
         }
         throw new Error(res)
       })
-    },
-    showAuthSchemeHandler() {
-      this.showAuthSchemes = true
-      this.transformLeft = Math.min(250, Math.max(this.$refs.detailContent.offsetLeft - 20, 0))
-      this.contentTransform = `translate(-${this.transformLeft}px, 0)`
-    },
-    hideAuthSchemeHandler() {
-      this.contentTransform = 'none'
-      this.showAuthSchemes = false
     },
     previewHandler() {
       this.$message.warning('还没开发')
@@ -222,7 +213,7 @@ export default {
       this.hideOptionsDialogHandler()
       const selectedNodes = []
       this.nodes.forEach((node) => {
-        if (node.checked) {
+        if (node.checked && !node._presentable) {
           selectedNodes.push(node.nodeId)
         }
       })
@@ -247,10 +238,6 @@ export default {
         }
         return res.getData()
       })
-    },
-    selectPolicyHandler(scheme, policy) {
-      this.selectedPolicy.scheme = scheme
-      this.selectedPolicy.policy = policy
     },
     editDetailHandler() {
       this.$router.push(`/resource/edit/${this.resourceId}`)

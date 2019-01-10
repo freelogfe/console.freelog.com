@@ -1,16 +1,41 @@
-import SchemeDetail from './scheme-detail.vue'
+
 import { Message } from 'element-ui'
-import _ from 'lodash'
+import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
+import SchemeDetail from './scheme-detail.vue'
+import {throttle} from 'lodash'
 
 export default {
   name: 'authorization-scheme-manage',
   components: {
-    SchemeDetail
+    SchemeDetail, SchemeSignDialog
   },
   props: {
+    authType: String,
     presentableInfo: Object,
     resourceInfo: Object,
     contracts: Array,
+    bubbleResourcesMap: { // 不处理的上抛资源，作用于"资源编辑页面"
+      type: Object,
+      default: function() {
+        return {}
+      }
+    },
+    isShowFooter: {
+      type: Boolean,
+      default: true
+    },
+    isScrollBar: {
+      type: Boolean,
+      default: true
+    },
+    isPreventExchangeSelection: {
+      type: Boolean,
+      default: false
+    },
+    isAbandon: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -19,29 +44,22 @@ export default {
       isShowLoading: false,
       isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
-      currentOpenedResources: [],
+      currentOpenedResources: [],             // 当前页面已打开的资源
       resourceMap: {},
-      selectedAuthSchemes:[],
+      selectedAuthSchemes:[],                 // 已选中的授权方案集合
+      unResolveAuthResources: [],             // 不处理授权方案的资源集合
       actIndex: 0,
       isRegisterGlobalClickEvent: false,
       authSchemeIdentityAuthMap: {},
-      throttleFn: null
+      throttleFn: null,
+      isShowDialog: false                     // 是否显示"签约提示"弹窗
     }
   },
   computed: {
     qiHostname() {
       return window.location.hostname.replace(/^console/g, 'qi')
     },
-    nodeId() {
-      return this.presentableInfo.nodeId
-    },
-    presentableId() {
-      return this.presentableInfo.presentableId
-    },
-    presentableName() {
-      return this.presentableInfo.presentableName
-    },
-    presentableContractsMap() {
+    resourceContractsMap() {
       var map = {}
       this.contracts.forEach(contract => {
         const { resourceId } = contract
@@ -50,16 +68,23 @@ export default {
       return map
     },
     boxStyle() {
+      if(this.authType === 'resource') {
+        return {}
+      }
+
       if(this.currentOpenedResources.length > 1) {
         return {
           position: 'relative',
           left: (document.querySelector('#pane-schema-manager').offsetWidth - window.innerWidth) / 2 + 'px',
           width: window.innerWidth + 'px',
-          margin: 0
+          margin: 0,
+          "padding": "0 35px",
+          "box-sizing": "border-box",
         }
       }else {
         return {}
       }
+
     },
     redBarStyle() {
       var x = (this.authSchemeBoxScrollLeft / this.allPartitionBoxW).toFixed(4) * 150 + 'px'
@@ -74,7 +99,7 @@ export default {
       this.isShowLoading = true
       var resourceId = this.resourceInfo.resourceId
 
-      var resourceiDset = new Set(this.presentableInfo.contracts.map(c => c.resourceId))
+      var resourceiDset = new Set(this.contracts.map(c => c.resourceId))
       resourceiDset.add(resourceId)
 
       return this.getResourceSchemeDetail([...resourceiDset].join(','))
@@ -89,7 +114,7 @@ export default {
         })
         .catch((e) => {
           this.isShowLoading = false
-          Message.error(e)
+          Message.error(e.toString())
         })
     },
     reInitPresentableAuthSchemes(newContracts){
@@ -97,36 +122,117 @@ export default {
       newContracts.forEach(c => {
         this.resolveAuthSchemeParams(this.resourceMap[c.resourceId], c)
       })
-      this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
-        query: { tab: 'contract' }
-      })
+
+      switch (this.authType) {
+        case 'presentable': {
+          this.$router.push({
+            path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
+            query: { tab: 'contract' }
+          })
+          break
+        }
+        case 'resource': {
+          break
+        }
+        default: {}
+      }
     },
-    // 点击"更新合约"按钮
-    updateContract(isUpdateContract) {
-      if(isUpdateContract) {
-        var contracts = this.selectedAuthSchemes.map(item => {
-          const { resourceId, authSchemeId, segmentId, contractId = '' } = item
-          if(contractId && contractId !== '') {
-            return { resourceId, authSchemeId, policySegmentId: segmentId, contractId }
+    toggleResolveResource(resourceAuthScheme, resourceLevelIndex) {
+      if(!this.checkIsCanExchangeSelection()) return
+      resourceAuthScheme.isNoResolved = !resourceAuthScheme.isNoResolved
+
+      const { activeAuthSchemeTabIndex, authSchemeList, isNoResolved } = resourceAuthScheme
+
+      if(isNoResolved) {
+        var bubbleResources = authSchemeList[activeAuthSchemeTabIndex].bubbleResources.map(item => {
+          const { resourceId } = item
+          if(!this.resourceMap[resourceId]) {
+            item.selectedAuthSchemeTabIndex = -1
+            return item
           }else {
-            return { resourceId, authSchemeId, policySegmentId: segmentId }
+            return this.resourceMap[resourceId]
           }
         })
-
-        this.$axios.put(`//${this.qiHostname}/v1/presentables/${this.presentableId}`, {
-          contracts
-        })
-          .then(res => res.data)
-          .then(res => {
-            if(res.errcode === 0) {
-              var str = this.presentableInfo.contracts.length ? '更新' : '生成'
-              Message.success(`节点资源${this.presentableName}授权合约${str}成功！`)
-
-              this.reInitPresentableAuthSchemes(res.data.contracts)
-            }
-          })
+        resourceAuthScheme.selectedAuthSchemeTabIndex = -1
+        resourceAuthScheme.selectedPolicyIndex = -1
+        resourceAuthScheme.isFinishSelectedAuthScheme = false
+        authSchemeList[activeAuthSchemeTabIndex].selectedUpcastResourceIndex = -1
+        this.cancelSomeURSchemeSelection(bubbleResources)
+        this.currentOpenedResources = this.currentOpenedResources.slice(0, resourceLevelIndex + 1)
       }
+      this.getAuthResolveState()
+    },
+    // 已经发布或已废弃的"授权方案"，阻止更改
+    checkIsCanExchangeSelection() {
+      if(this.isPreventExchangeSelection){
+        Message.warning('已发布该授权点，当前操作不可执行')
+        return false
+      } if(this.isAbandon) {
+        Message.warning('已废弃该授权点，当前操作不可执行')
+        return false
+      }else {
+        return true
+      }
+    },
+    // 取消当前资源 所有下级资源的授权方案选择
+    cancelSomeURSchemeSelection(bubbleResources) {
+      for(let i = 0; i < bubbleResources.length; i++) {
+        const { resourceId } = bubbleResources[i]
+        let targResource = this.resourceMap[resourceId]
+        if(targResource) {
+          const { selectedAuthSchemeTabIndex, authSchemeList } = targResource
+          if(selectedAuthSchemeTabIndex !== -1) {
+            const { bubbleResources = [] } = authSchemeList[selectedAuthSchemeTabIndex]
+            targResource.selectedAuthSchemeTabIndex = -1
+            targResource.selectedPolicyIndex = -1
+            targResource.isFinishSelectedAuthScheme = false
+            this.cancelSomeURSchemeSelection(bubbleResources)
+          }
+        }
+      }
+    },
+    // 点击"更新合约"或"生成合约"按钮
+    signContract(isUpdateContract) {
+      if(!isUpdateContract) return
+      this.isShowDialog = true
+      return
+
+      var contracts = this.selectedAuthSchemes.map(item => {
+        const { resourceId, authSchemeId, segmentId, contractId = '' } = item
+        if(contractId && contractId !== '') {
+          return { resourceId, authSchemeId, policySegmentId: segmentId, contractId }
+        }else {
+          return { resourceId, authSchemeId, policySegmentId: segmentId }
+        }
+      })
+
+      switch (this.authType) {
+        case 'presentable': {
+          this.$axios.put(`//${this.qiHostname}/v1/presentables/${this.presentableInfo.presentableId}`, {
+            contracts
+          })
+            .then(res => res.data)
+            .then(res => {
+              if(res.errcode === 0) {
+                var str = this.presentableInfo.contracts.length ? '更新' : '生成'
+                Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
+                this.reInitPresentableAuthSchemes(res.data.contracts)
+              }else {
+                Message.error(res.msg)
+              }
+            })
+          break
+        }
+        case 'resource': {
+          break
+        }
+        default: {}
+      }
+    },
+    afterSginContract(data) {
+      var str = this.presentableInfo.contracts.length ? '更新' : '生成'
+      Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
+      this.reInitPresentableAuthSchemes(res.data.contracts)
     },
     resolveUpdateDate(updateDate) {
       const date = new Date(updateDate)
@@ -134,11 +240,23 @@ export default {
     },
     refreshSelectedAuthSchemes() {
       this.selectedAuthSchemes = []
+      this.unResolveAuthResources = []
       this.getSelectedAuthScheme(this.currentOpenedResources[0])
+      this.$emit('update-resolved-auth-scheme',{
+        resourceId: this.resourceInfo.resourceId,
+        selectedAuthSchemes: this.selectedAuthSchemes,
+        unResolveAuthResources:this.unResolveAuthResources
+      })
+      this.getAuthResolveState()
     },
+    // 获取选中的"授权方案和策略"与"未处理的资源（即上抛资源）"的信息
     getSelectedAuthScheme(authSchemesData) {
       if(authSchemesData) {
-        const { authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex, contractId } = authSchemesData
+        const { isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex, contractId } = authSchemesData
+        if(isNoResolved) {
+          this.unResolveAuthResources.push({ resourceName, resourceId })
+          return
+        }
         if(selectedAuthSchemeTabIndex !== -1) {
           const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
           let { policyName, segmentId } = policy[selectedPolicyIndex]
@@ -151,6 +269,29 @@ export default {
           })
         }
       }
+    },
+    // 获取"依赖"的处理状态： 1：完全处理，不包含上抛；0：不完全处理，包含上抛，-1：未处理
+    getAuthResolveState() {
+      var authResolveState = -1
+      var cOResources = this.currentOpenedResources
+      for(let i = 0; i < cOResources.length; i++){
+        const oR = cOResources[i]
+
+        if(oR.isFinishSelectedAuthScheme) {
+          authResolveState = 1
+          break
+        }
+        if(oR.isNoResolved) {
+          authResolveState = 0
+          break
+        }
+        if(oR.selectedAuthSchemeTabIndex === -1) {
+          authResolveState = -1
+          break
+        }
+      }
+      this.resourceInfo.authResolveState = authResolveState
+      this.$emit('exchange-auth-resolve-state')
     },
     refreshCurrentOpenedResource(resourceLevelIndex) {
       var targArr = this.currentOpenedResources.slice(0, resourceLevelIndex + 1)
@@ -232,7 +373,7 @@ export default {
     getResourceAuthSchemesList(resourceIds) {
       return this.$axios.get(`//${this.qiHostname}/v1/resources/authSchemes`, {
         params: {
-          policyStatus: 1,
+          policyStatus: 2,
           resourceIds
         }
       }).then(res => res.data)
@@ -246,19 +387,27 @@ export default {
                 map[resourceId].push(item)
               }
             })
+          }else {
+            Message.error(res.msg)
           }
           return Promise.resolve(map)
         })
     },
     resolveAuthSchemeListRes(authSchemeList, resourceId) {
-      const contractObj = this.presentableContractsMap[resourceId]
+      const contractObj = this.resourceContractsMap[resourceId]
+      var isNoResolved = false
+      if(this.authType === 'resource') {
+        isNoResolved = !!this.bubbleResourcesMap[resourceId]
+      }
+
       this.resourceMap[resourceId] = this.resourceMap[resourceId] || {
         resourceId,
         authSchemeList,
         selectedAuthSchemeTabIndex: -1,
         activeAuthSchemeTabIndex: 0,
         selectedPolicyIndex: -1,
-        isFinishSelectedAuthScheme: !!contractObj
+        isFinishSelectedAuthScheme: !!contractObj,
+        isNoResolved,
       }
 
       this.resolveAuthSchemeParams(this.resourceMap[resourceId], contractObj)
@@ -266,6 +415,7 @@ export default {
       var authSchemeIds = authSchemeList.map(item => item.authSchemeId).join(',')
       this.getAuthSchemeIdentityAuth(authSchemeIds)
     },
+    // 根据合同确定"授权方案与授权策略"的选中序号
     resolveAuthSchemeParams(tempResource, contractObj) {
       const { authSchemeList } = tempResource
       if(contractObj) {
@@ -291,8 +441,12 @@ export default {
     // 获取授权点的策略段身份认证结果
     getAuthSchemeIdentityAuth(authSchemeIds) {
       if(authSchemeIds.length === 0) return
-      var nodeId = this.nodeId
-      return this.$axios.get(`//${this.qiHostname}/v1/auths/authSchemeIdentityAuth?authSchemeIds=${authSchemeIds}&nodeId=${nodeId}`)
+      var url = `//${this.qiHostname}/v1/auths/authSchemeIdentityAuth?authSchemeIds=${authSchemeIds}`
+      if(this.authType === 'presentable') {
+        var nodeId = this.presentableInfo.nodeId
+        url = url + `&nodeId=${nodeId}`
+      }
+      return this.$axios.get(url)
         .then(res => res.data)
         .then(res => {
           if(res.errcode === 0) {
@@ -305,6 +459,8 @@ export default {
               })
             })
             this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
+          }else {
+            Message.error(res.msg || '')
           }
         })
     },
@@ -321,7 +477,6 @@ export default {
       }
     },
     authSchemeBoxScroll(e) {
-      console.log('scrollLeft ---', e.target.scrollLeft)
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
     },
   },
@@ -335,15 +490,17 @@ export default {
           this.allPartitionBoxW = allPartitionBoxW
         }
       })
-    }
+    },
   },
   beforeDestroy() {
     document.removeEventListener('click', this.hideSuspensionSchemeList)
-    document.removeEventListener('scroll', this.authSchemeBoxScroll)
+    document.removeEventListener('scroll', this.throttleFn)
   },
   mounted() {
     this.initPresentableAuthSchemes()
-    this.throttleFn = _.throttle(this.authSchemeBoxScroll, 17).bind(this)
-    document.querySelector('.authorization-scheme-box').addEventListener('scroll', this.throttleFn, false)
+    if(this.isScrollBar) {
+      this.throttleFn = throttle(this.authSchemeBoxScroll, 17).bind(this)
+      document.querySelector('.authorization-scheme-box').addEventListener('scroll', this.throttleFn, false)
+    }
   }
 }

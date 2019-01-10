@@ -25,6 +25,10 @@ export default {
       default() {
         return true
       }
+    },
+    autoSave: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -94,6 +98,9 @@ export default {
       this.policy.policyText += ` ${data.licenseId}`
     },
     changePolicyText(policy) {
+      if (this.autoSave) {
+        this.savePolicyHandler()
+      }
       // to validate
       console.log(policy)
     },

@@ -20,6 +20,7 @@
             </el-select>
           </li>
           <li>
+            <div>{{searchData.resourceType}}</div>
             <el-select v-model="searchData.resourceType"
                        @change="searchHandler(searchData)"
                        size="mini" placeholder="资源类型">
@@ -85,7 +86,7 @@
                                   inactive-text="下线"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
-                              v-if="row.isAcquireSignAuth!== 1"
+                              v-if="row.warningTip"
                               placement="right">
                     <div slot="content">
                       {{row.warningTip}}

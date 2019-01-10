@@ -11,7 +11,8 @@ export default {
       query: '',
       currentContract: {},
       contractList: [],
-      masterContract: {}
+      masterContract: {},
+      loading: false
     }
   },
   components: {
@@ -36,18 +37,40 @@ export default {
   },
   methods: {
     initView() {
-      if (!this.contracts.length) return
+
+      if (!this.contracts.length || this.shouldUpdate() === false) return
 
       this.masterContract = {}
-
       const query = this.$route.query
       Object.assign(query, this.$route.params)
+      this.loading = true
       this.loadData(query)
-        .then(this.formatContracts.bind(this))
+        .then(this.formatContracts)
         .then((contractList) => {
           this.contractList = contractList
-          this.showContractDetailHandler(this.masterContract)
+          if (this.masterContract.contractId) {
+            this.showContractDetailHandler(this.masterContract)
+          } else if (contractList.length) {
+            this.showContractDetailHandler(contractList[0])
+          }
         })
+        .finally(() => {
+          this.loading = false
+          this.shouldUpdate()  //更新key值
+        })
+    },
+    //避免重复请求合同数据
+    shouldUpdate() {
+      var updateKey = this.contracts.map(contract => {
+        return `${contract.contractId}_${contract.status}`
+      }).join('_')
+
+      if (this.updateKey !== updateKey) {
+        this.updateKey = updateKey
+        return true
+      } else {
+        return false
+      }
     },
     formatContracts({contracts, resources}) {
       var resourcesMap = {}

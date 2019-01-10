@@ -66,7 +66,7 @@ export default {
       const detail = this.resourceDetail
       this.executeNext(() => {
         if (detail.resourceId) {
-          this.$router.push(`/resource/edit/${detail.resourceId}/auth_schemes`)
+          this.$router.push(`/resource/edit/${detail.resourceId}`)
         }
       })
     },

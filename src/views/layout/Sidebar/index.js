@@ -1,94 +1,40 @@
 import { mapGetters } from 'vuex'
-import resourceRoute from '@/router/resource'
-import NavMenu from '../NavMenu/index.vue'
-
-function cloneArray(arr) {
-  return arr.map((item) => {
-    if (typeof item === 'object') {
-      return Object.assign({}, item)
-    }
-    return item
-  })
-}
-
-function filterHidden(navList) {
-  navList = navList.filter((nav) => {
-    if (nav.children && nav.children.length) {
-      nav.children = filterHidden(nav.children)
-    }
-
-    return !nav.hidden
-  })
-
-  return navList
-}
 
 export default {
   name: 'fl-sidebar',
-  components: {
-    'fl-nav-menu': NavMenu
-  },
   data() {
     return {
-      navList: []
+      isMini: true,
+      isShowSidebar: true
     }
   },
-  computed: mapGetters({
-    sidebar: 'sidebar'
-  }),
+  computed: {
+    ...mapGetters({
+      nodes: 'nodes'
+    }),
+    targetHostname() {
+      return window.location.hostname.replace(/^console/, 'www')
+    },
+  },
+
   methods: {
-    changeRouteHandler() {
-      let navList
-      let homePath
-      const routeType = this.$route.meta.type || ''
-
-      switch (routeType) {
-        case 'node':
-          break
-        case 'resource':
-          homePath = '/resource'
-          navList = cloneArray(resourceRoute.children) // 避免修改源数据
-          this.paddingPath(homePath, navList)
-          break
-        default:
-          break
-      }
-      if (navList) {
-        navList = filterHidden(navList)
-        this.checkActiveNav(navList)
-        this.navList = navList
-        this.$store.dispatch('openSidebar')
-      } else {
-        this.navList = []
-        this.$store.dispatch('closeSidebar') // hidesidebar?
-      }
+    showMiniSidebar() {
+      this.isMini= true
     },
-    paddingPath(prefix, navs) {
-      navs = navs.map((nav) => {
-        if (nav.path[0] !== '/') {
-          nav.path = [prefix, nav.path].join('/')
-        }
-        if (nav.children && nav.children.length) {
-          nav.children = this.paddingPath(nav.path, cloneArray(nav.children))
-        }
 
-        return nav
-      })
-      return navs
-    },
-    checkActiveNav(navList) {
-      const curPath = this.$route.path
-      navList.forEach((nav) => {
-        nav.isActive = (curPath === nav.path) || (curPath === nav.redirect)
-      })
-    }
   },
   watch: {
-    $route: 'changeRouteHandler'
+    '$route.fullPath'() {
+      const { meta: { hideSidebar } } = this.$route
+      this.isShowSidebar = !hideSidebar
+    }
   },
   created() {
-    this.changeRouteHandler()
+
   },
   mounted() {
+    const { meta: { hideSidebar } } = this.$route
+    this.isShowSidebar = !hideSidebar
+    document.addEventListener('click', this.showMiniSidebar)
   }
 }

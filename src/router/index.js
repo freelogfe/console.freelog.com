@@ -46,6 +46,14 @@ const router = new Router({
           title: '关于freelog'
         },
         component: Views.aboutView
+      },{
+        path: 'setting',
+        hidden: true,
+        meta: {
+          requiresAuth: true,
+          title: '账号设置'
+        },
+        component: Views.userView
       }, {
         path: 'help',
         hidden: true,
