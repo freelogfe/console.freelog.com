@@ -14,7 +14,9 @@ export default {
     contracts: Array,
     bubbleResourcesMap: { // 不处理的上抛资源，作用于"资源编辑页面"
       type: Object,
-      default: {}
+      default: function() {
+        return {}
+      }
     },
     isShowFooter: {
       type: Boolean,
