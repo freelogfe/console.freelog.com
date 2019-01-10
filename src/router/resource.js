@@ -66,7 +66,7 @@ export default {
         requiresAuth: true,
         title: '资源授权方案管理',
         type: 'resource',
-        hideSidebar: true
+        // hideSidebar: true
       },
       component: Views.resourceAuthSchemeEditor
     },

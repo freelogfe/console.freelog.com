@@ -68,7 +68,7 @@
         <div class="select-target-bd">
           <h4 class="opts-bd-title">获取资源授权至节点：</h4>
           <div class="opts-container">
-            <ul class="checkbox-group node-opts">
+            <ul class="checkbox-group node-opts" v-if="nodes.length">
               <li class="checkbox-item"
                   v-for="node in nodes"
                   :key="node.nodeId"
@@ -79,6 +79,9 @@
                 {{node.nodeName}}
               </li>
             </ul>
+            <div v-else>
+              未创建节点，<router-link to="/node/create">去创建节点</router-link>
+            </div>
           </div>
         </div>
         <div class="dialog-footer">

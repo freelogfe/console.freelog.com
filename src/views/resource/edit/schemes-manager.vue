@@ -387,6 +387,13 @@
     .el-dialog__header {
       border-bottom: 1px solid #DDDDDD;
     }
+
+    .schemes-nav-tabs  > .el-tabs__header {
+      width: 1190px;
+      margin: auto;
+    }
+
+
     .el-tabs__nav-wrap {
       &:after,
       .el-tabs__active-bar {
