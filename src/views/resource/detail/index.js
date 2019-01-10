@@ -103,7 +103,7 @@ export default {
           $tabs.classList.add('sticky-tabs')
         } else if (rect.top >= marginTop && fixed) {
           fixed = false
-          $tabs.style.left = `-150px`
+          $tabs.style.left = `-130px`
           $tabs.classList.remove('sticky-tabs')
         }
         $upBtn.classList[(rect.top <= prevTop) ? 'add' : 'remove']('show')

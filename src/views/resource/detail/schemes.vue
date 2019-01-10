@@ -5,7 +5,7 @@
         <div class="bubble-res-wrap" v-if="tabs.length">
           <h5>上抛资源</h5>
           <ul>
-            <li v-for="res in tab.scheme.bubbleResources"><i></i>{{res.resourceName||res.resourceId}}</li>
+            <li v-for="res in tab.scheme.bubbleResources"><i></i><a :href="`/resource/detail/${res.resourceId}`" target="_blank">{{res.resourceName||res.resourceId}}</a></li>
           </ul>
         </div>
 
@@ -125,6 +125,9 @@
         border-radius: 4px;
         li {
           margin-bottom: 10px;
+          a {
+            color: #333333;
+          }
         }
         i {
           display: inline-block;

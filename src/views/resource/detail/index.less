@@ -42,7 +42,7 @@
     //top: 62px;
     //top: 0;
     position: absolute;
-    left: -150px;
+    left: -130px;
 
     &.sticky-tabs {
       position: fixed;
@@ -175,6 +175,10 @@
 .res-detail-bd {
   padding-bottom: 40px;
 
+  .res-detail-desc {
+    padding: 5px;
+  }
+
   .res-schemes-content {
     padding: 20px 40px;
   }
@@ -203,7 +207,7 @@
   padding-bottom: 15px;
 
   .res-hd-wrap {
-    width: 1100px;
+    width: @main-content-width;
     margin: auto;
   }
   .res-author-info {
@@ -255,6 +259,20 @@
   }
 }
 
-.res-detail-desc {
-  margin-bottom: 25px;
+
+@media screen and (max-width: 1366px) {
+  @miniWidth: 990px;
+  .res-detail-wrap {
+    .res-detail-content {
+      width: @miniWidth;
+    }
+    //
+    //.res-detail-nav-tabs-wrap {
+    //  left: -130px;
+    //}
+
+    .res-hd-wrap {
+      width: @miniWidth;
+    }
+  }
 }

@@ -47,7 +47,7 @@
             class="s-c-dialog"
             title="提示"
             :visible.sync="isDialogVisible"
-            width="640px"
+            width="800px"
             height="450px"
             center
     >
@@ -58,7 +58,7 @@
                 stripe
                 style="width: 100%"
         >
-          <el-table-column prop="resourceName" label="资源名称" width="240"></el-table-column>
+          <el-table-column prop="resourceName" label="资源名称" width="350"></el-table-column>
           <el-table-column prop="authSchemeName" label="授权方案"></el-table-column>
           <el-table-column prop="policyName" label="授权策略"></el-table-column>
         </el-table>
@@ -83,8 +83,9 @@
 </template>
 
 <script>
-  import { Message } from 'element-ui'
+  import {Message} from 'element-ui'
   import AuthorizationSchemeManage from '@/components/Authorization-scheme/index.vue'
+
   export default {
     name: 'scheme-content',
     props: {
@@ -126,16 +127,16 @@
     methods: {
       getDependenciesDetail() {
         const resourceDependencies = this.resourceInfo.systemMeta.dependencies || []
-        if(resourceDependencies.length === 0) return
+        if (resourceDependencies.length === 0) return
         this.isShowLoading = true
         var resourceIds = resourceDependencies.map(i => i.resourceId).join(',')
         this.$axios.get(`/v1/resources/list?resourceIds=${resourceIds}`)
           .then(res => res.data)
           .then(res => {
-            if(res.errcode === 0) {
+            if (res.errcode === 0) {
               this.resourceDependencies = res.data
               this.selectedDependencyIndex = 0
-            }else {
+            } else {
               Message.error(res.msg)
             }
             this.isShowLoading = false
@@ -146,7 +147,7 @@
           })
       },
       exchangeDependencyIndex(index) {
-        if(index === this.selectedDependencyIndex) return
+        if (index === this.selectedDependencyIndex) return
         this.selectedDependencyIndex = index
 
       },
@@ -155,21 +156,21 @@
         this.resourceDependencies = this.resourceDependencies.slice()
       },
       // 获取"依赖授权"的处理结果
-      getResolvedAuthScheme({ resourceId, selectedAuthSchemes, unResolveAuthSchemes }) {
-        if(this.isPublished) return
+      getResolvedAuthScheme({resourceId, selectedAuthSchemes, unResolveAuthSchemes}) {
+        if (this.isPublished) return
         this.resolvedAuthSchemeMap[resourceId] = {
           selectedAuthSchemes, unResolveAuthSchemes
         }
 
         this.resolvedDutyStatements = []
         this.resolvedBubbleResources = []
-        for(let i = 0; i < this.resourceDependencies.length; i++) {
+        for (let i = 0; i < this.resourceDependencies.length; i++) {
           const denpency = this.resourceDependencies[i]
           const map = this.resolvedAuthSchemeMap[denpency.resourceId]
-          if(map) {
-            const { selectedAuthSchemes, unResolveAuthSchemes } = map
+          if (map) {
+            const {selectedAuthSchemes, unResolveAuthSchemes} = map
             selectedAuthSchemes.forEach(item => {
-              const { resourceId, resourceName, authSchemeId, authSchemeName, segmentId, policyName } = item
+              const {resourceId, resourceName, authSchemeId, authSchemeName, segmentId, policyName} = item
               this.resolvedDutyStatements.push({
                 resourceName, authSchemeName, policyName,
                 resourceId, authSchemeId,
@@ -187,9 +188,9 @@
       finishDependeciesHandler() {
         var isFinish = true
 
-        for(let i = 0; i < this.resourceDependencies.length; i++) {
+        for (let i = 0; i < this.resourceDependencies.length; i++) {
           const denpency = this.resourceDependencies[i]
-          if(denpency.authResolveState === -1 || typeof denpency.authResolveState === 'undefined') {
+          if (denpency.authResolveState === -1 || typeof denpency.authResolveState === 'undefined') {
             Message.error(`仍有资源未选择授权策略`)
             isFinish = false
             break
@@ -201,12 +202,12 @@
       signContract() {
         const data = {
           dutyStatements: this.resolvedDutyStatements.map(item => {
-            const { resourceId, authSchemeId, policySegmentId } = item
-            return { resourceId, authSchemeId, policySegmentId }
+            const {resourceId, authSchemeId, policySegmentId} = item
+            return {resourceId, authSchemeId, policySegmentId}
           }),
           bubbleResources: this.resolvedBubbleResources
         }
-        const { authSchemeId } = this.scheme
+        const {authSchemeId} = this.scheme
         this.$axios({
           method: 'PUT',
           url: `/v1/resources/authSchemes/${authSchemeId}/batchSignContracts`,
@@ -214,15 +215,15 @@
         })
           .then(res => res.data)
           .then(res => {
-            if(res.errcode === 0) {
-              const { dutyStatements, bubbleResources } = res.data
+            if (res.errcode === 0) {
+              const {dutyStatements, bubbleResources} = res.data
               let scheme = this.scheme
-              scheme = Object.assign({}, scheme, { dutyStatements, bubbleResources })
+              scheme = Object.assign({}, scheme, {dutyStatements, bubbleResources})
               this.$emit('update:scheme', scheme)
-              this.contracts = [ this.contracts, ...dutyStatements ]
+              this.contracts = [this.contracts, ...dutyStatements]
               this.isPreventExchangeSelection = true
               Message.success('创建成功！')
-            }else {
+            } else {
               Message.error(res.msg)
             }
           })
@@ -233,12 +234,13 @@
       this.isPreventExchangeSelection = this.scheme.dutyStatements.length > 0 || this.scheme.bubbleResources.length > 0
       this.getDependenciesDetail()
     },
-    destroyed() {},
+    destroyed() {
+    },
   }
 </script>
 
 <style type="text/less" lang="less">
-  .el-tabs__content{
+  .el-tabs__content {
     overflow: inherit;
   }
 
@@ -246,45 +248,67 @@
     h3 {
       position: relative;
       padding-left: 8px;
-      font-size: 14px; color: #666;
+      font-size: 14px;
+      color: #999999;
 
-      &:before{
-        position: absolute; left: 0; top: 50%; z-index: 1; transform: translateY(-50%);
-        content: ''; display: block;
-        width: 3px; height: 14px;
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 1;
+        transform: translateY(-50%);
+        content: '';
+        display: block;
+        width: 3px;
+        height: 14px;
         background-color: #666;
       }
     }
 
     .resolved-duty-statements {
-      .r-d-s-i-reousrce-name{ }
-      .r-d-s-i-auth-scheme-name{ }
-      .r-d-s-i-policy-name{ }
+      .r-d-s-i-reousrce-name {
+      }
+      .r-d-s-i-auth-scheme-name {
+      }
+      .r-d-s-i-policy-name {
+      }
     }
 
     .resolved-bubble-resources {
       margin-top: 30px;
 
-      li{ margin-top: 12px; }
-      .r-b-r-i-reousrce-name{}
+      li {
+        margin-top: 12px;
+      }
+      .r-b-r-i-reousrce-name {
+      }
     }
 
-    el-table .cell{
+    el-table .cell {
       white-space: nowrap;
-      .r-b-r-i-reousrce-name{}
+      .r-b-r-i-reousrce-name {
+      }
     }
 
-    .el-dialog__body { border-top: 1px solid #DDD; }
+    .el-dialog__body {
+      border-top: 1px solid #DDD;
+    }
     .el-dialog__footer {
-      height: 50px; padding: 0 20px; border-top: 1px solid #DDD;
-      line-height: 50px; text-align: right;
+      height: 50px;
+      padding: 0 20px;
+      border-top: 1px solid #DDD;
+      line-height: 50px;
+      text-align: right;
 
       .cancel-btn {
-        padding: 6px 30px; border-width: 0;
+        padding: 6px 30px;
+        border-width: 0;
       }
       .sign-btn {
-        padding: 6px 30px; border-radius: 17px;
-        background: #409EFF; color: #fff;
+        padding: 6px 30px;
+        border-radius: 17px;
+        background: #409EFF;
+        color: #fff;
       }
     }
   }
@@ -292,81 +316,137 @@
 <style lang="less" type="text/less" scoped>
 
   .resource-dependencies {
-    position: absolute; top: -15px; bottom: 0; z-index: 5;
-    width: 340px; padding-top: 40px; border-right: 1px solid #D8D8D8;
+    position: absolute;
+    top: -15px;
+    bottom: 0;
+    z-index: 5;
+    width: 340px;
+    padding-top: 40px;
+    border-right: 1px solid #D8D8D8;
 
     h3 {
       position: relative;
-      margin-left: 55px; padding-left: 8px;
+      margin-left: 55px;
+      padding-left: 8px;
       font-size: 14px;
       color: #666;
 
-      &:before{
-        position: absolute; left: 0; top: 50%; z-index: 1; transform: translateY(-50%);
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 1;
+        transform: translateY(-50%);
         content: '';
         display: block;
-        width: 3px; height: 14px;
+        width: 3px;
+        height: 14px;
         background-color: #666;
       }
     }
 
-    ul { margin-top: 20px; margin-left: 55px;   }
+    ul {
+      margin-top: 20px;
+      margin-left: 55px;
+    }
 
     li {
       position: relative;
-      padding-left: 20px; margin-bottom: 7px;
-      font-size: 14px; color: #333333; cursor: pointer;
+      padding-left: 20px;
+      margin-bottom: 7px;
+      font-size: 14px;
+      color: #333333;
+      cursor: pointer;
 
       &:before {
-         box-sizing: border-box;
-         position: absolute; left: 0; top: 50%; z-index: 8; transform: translateY(-50%);
-         content: ''; display: block;
-         width: 12px; height: 12px; border: 2px solid #EA7171; border-radius: 50%;
-       }
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 8;
+        transform: translateY(-50%);
+        content: '';
+        display: block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #EA7171;
+        border-radius: 50%;
+      }
 
-      &.active-1:before{
-         border: 3px solid #89D1AD; background-color: #fff;
-       }
+      &.active-1:before {
+        border: 3px solid #89D1AD;
+        background-color: #fff;
+      }
 
       &.active-2:before {
-         background-color: #89D1AD; border-color: #89D1AD;
-       }
+        background-color: #89D1AD;
+        border-color: #89D1AD;
+      }
 
       .line {
         &:before {
-           content: ''; display: block;
-           position: absolute; left: 30px; right: 0; top: 50%; z-index: -1;
-           height: 1px; background-color: #666;
-         }
+          content: '';
+          display: block;
+          position: absolute;
+          left: 30px;
+          right: 0;
+          top: 50%;
+          z-index: -1;
+          height: 1px;
+          background-color: #666;
+        }
 
         &:after {
-           content: ''; display: block; transform: translateY(-50%);
-           position: absolute; top: 50%; right: -10px; z-index: 5;
-           width: 16px; height: 16px; border-radius: 50%; border: 1px solid #666;
-           background-color: #fff;
-         }
+          content: '';
+          display: block;
+          transform: translateY(-50%);
+          position: absolute;
+          top: 50%;
+          right: -10px;
+          z-index: 5;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 1px solid #666;
+          background-color: #fff;
+        }
       }
-      span { padding-right: 6px; background-color: #fff; z-index: 10; }
-      span.history-text { color: #999; }
+      span {
+        padding-right: 6px;
+        background-color: #fff;
+        z-index: 10;
+      }
+      span.history-text {
+        color: #999;
+      }
     }
 
     .r-d-btn-box {
       margin-top: 50px;
 
       .r-d-btn {
-        width: 220px; margin: auto; padding: 10px 0; border: 1px solid #A5D1FF; border-radius: 21px;
-        background: #E9F4FF; color: #409EFF; font-size: 14px;
-        text-align: center; cursor: pointer;
+        width: 220px;
+        margin: auto;
+        padding: 10px 0;
+        border: 1px solid #A5D1FF;
+        border-radius: 21px;
+        background: #E9F4FF;
+        color: #409EFF;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
       }
     }
 
   }
 
   .dependencies-resolve-box {
-    margin-left: 340px; padding: 0 30px;
+    margin-left: 340px;
+    padding: 0 30px;
   }
 
   .no-resource-dependeny {
-    font-size: 14px; text-align: center;
+    font-size: 14px;
+    text-align: center;
   }
 </style>

@@ -14,14 +14,17 @@
         <div class="el-upload__tip" slot="tip">上传文件不超过50MB，只能上传一个文件</div>
       </el-upload>
     </div>
-    <resource-inputs class="res-base-info-inputs" :data="resourceDetail" :class="[viewMode+'-mode-info']" ref="inputArea">
-      <div class="btm-wrap clearfix">
-        <div class="rt-side">
-          <el-button class="ft-btn" type="primary" round
-                     @click="updateResourceHandler">更新资源</el-button>
+
+    <div class="res-base-info-inputs" :class="[viewMode+'-mode-info']">
+      <resource-inputs :data="resourceDetail" ref="inputArea">
+        <div class="btm-wrap clearfix">
+          <div class="rt-side">
+            <el-button class="ft-btn" type="primary" round
+                       @click="updateResourceHandler">更新资源</el-button>
+          </div>
         </div>
-      </div>
-    </resource-inputs>
+      </resource-inputs>
+    </div>
 
     <ResourceDetailIntro class="res-detail-intro-area"
                          :viewMode="viewMode"
