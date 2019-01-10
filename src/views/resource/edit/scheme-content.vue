@@ -92,7 +92,7 @@
     },
     data() {
       return {
-        isShowLoading: true,
+        isShowLoading: false,
         isDialogVisible: false,
         selectedDependencyIndex: -1,
         resourceDependencies: [],
