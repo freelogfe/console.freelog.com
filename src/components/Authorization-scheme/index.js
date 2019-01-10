@@ -72,7 +72,9 @@ export default {
           position: 'relative',
           left: (document.querySelector('#pane-schema-manager').offsetWidth - window.innerWidth) / 2 + 'px',
           width: window.innerWidth + 'px',
-          margin: 0
+          margin: 0,
+          "padding": "0 35px",
+          "box-sizing": "border-box",
         }
       }else {
         return {}
