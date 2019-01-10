@@ -66,8 +66,8 @@ export default {
         }
         this.resourceDetail.resourceInfo = res
       }).catch(() => {
+        console.error(err)
         this.$router.push('/')
-        // this.$error.showErrorMessage(err)
       })
 
       this.isFavorResource().then((isFavor) => {
