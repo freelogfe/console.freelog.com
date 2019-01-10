@@ -3,6 +3,7 @@
 .res-detail-wrap {
   margin: 0 auto;
   padding-top: 0;
+  padding-left: 50px;
   &.owner-resource {
     //padding-right: 430px;
     .edit-btn {
@@ -38,9 +39,6 @@
 
   .res-detail-nav-tabs-wrap {
     padding-bottom: 20px;
-    //position: sticky;
-    //top: 62px;
-    //top: 0;
     position: absolute;
     left: -130px;
 
@@ -260,11 +258,10 @@
 }
 
 
-@media screen and (max-width: 1366px) {
-  @miniWidth: 990px;
+@media screen and (max-width: 1500px) {
   .res-detail-wrap {
     .res-detail-content {
-      width: @miniWidth;
+      width: @main-content-width-990;
     }
     //
     //.res-detail-nav-tabs-wrap {
@@ -272,7 +269,7 @@
     //}
 
     .res-hd-wrap {
-      width: @miniWidth;
+      width: @main-content-width-990;
     }
   }
 }

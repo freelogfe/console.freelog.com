@@ -60,21 +60,13 @@ export default {
   .white-theme {
     background-color: white;
   }
-  /*fbfbfb*/
+
   .gray-theme {
     background-color: #FAFBFB;
   }
 
   .main-view {
     min-height: 100%;
-    /*padding-top: 20px;*/
-  }
-
-  .left-sidebar {
-    position: fixed;
-    top: @header-height;
-    left: 0;
-    bottom: 0;
   }
 
   .content {
@@ -94,6 +86,5 @@ export default {
     .content, .footer-wrap {
       margin-left: 30px;
     }
-
   }
 </style>

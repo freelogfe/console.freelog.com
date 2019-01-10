@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-schemes-manager-wrap">
+  <div class="resource-schemes-manager-wrap" v-loading="loading">
     <el-tabs v-model="curTabName" :before-leave="switchTabHandler" class="schemes-nav-tabs">
       <el-tab-pane
               v-for="(item, index) in tabs"
@@ -75,6 +75,7 @@
         tabs: [],
         showSettingDialog: false,
         editingScheme: {},
+        loading: false
       }
     },
 
@@ -135,11 +136,15 @@
       },
       querySchemes() {
         if (!this.resourceDetail.resourceId) return
+        this.loading = true
+
         onloadSchemesForResource(this.resourceDetail.resourceId, {policyStatus: 2}).then((authSchemes) => {
           if (authSchemes && authSchemes.length) {
             authSchemes.forEach(this.addTab)
             this.setActiveTab(0)
           }
+        }).finally(()=>{
+          this.loading = false
         })
       },
       setActiveTab(index) {
@@ -238,7 +243,7 @@
 <style lang="less" scoped>
   @import '../../../styles/variables.less';
   .resource-schemes-manager-wrap {
-    width: @main-content-width-1190;
+    width: 100%;
     margin: auto;
     padding-top: 10px;
 
@@ -332,6 +337,8 @@
 </style>
 
 <style lang="less">
+  @import "../../../styles/variables";
+
   .scheme-tip-dialog {
     .scheme-dialog-cancel-btn {
       border: none;
@@ -389,7 +396,7 @@
     }
 
     .schemes-nav-tabs  > .el-tabs__header {
-      width: 1190px;
+      width: @main-content-width-1190;
       margin: auto;
     }
 
@@ -408,6 +415,15 @@
         background: #409EFF;
         position: relative;
         top: -2px;
+      }
+    }
+  }
+
+
+  @media screen and (max-width: 1250px){
+    .resource-schemes-manager-wrap {
+      .schemes-nav-tabs  > .el-tabs__header {
+        width: @main-content-width-990;
       }
     }
   }

@@ -78,7 +78,6 @@
               if (this.schemes.length) {
                 this.activeSchemeName = this.schemes[0].authSchemeId
               }
-              console.log(this.schemes)
             }
           }).catch(this.$error.showErrorMessage)
       },

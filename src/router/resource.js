@@ -60,17 +60,6 @@ export default {
       redirect: '/resource/list',
     },
     {
-      path: 'edit/:resourceId/auth_schemes',
-      hidden: true,
-      meta: {
-        requiresAuth: true,
-        title: '资源授权方案管理',
-        type: 'resource',
-        // hideSidebar: true
-      },
-      component: Views.resourceAuthSchemeEditor
-    },
-    {
       path: 'detail/:resourceId',
       hidden: true,
       meta: {

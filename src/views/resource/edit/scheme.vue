@@ -66,7 +66,7 @@
       PolicyManager,
       SchemeContent,
     },
-    computed:{
+    computed: {
       wrapperWidth() {
         return document.querySelector('.resource-schemes-manager-wrap').offsetWidth
       },
@@ -95,7 +95,7 @@
           })
       }
     },
-    mounted(){
+    mounted() {
 
     },
   }
@@ -103,6 +103,8 @@
 
 
 <style lang="less" scoped>
+  @import "../../../styles/variables";
+
   .resource-scheme-manager-wrap {
     .panel-content {
       min-height: 500px;
@@ -111,6 +113,21 @@
       text-align: center;
       font-size: 20px;
       color: #666;
+    }
+
+    .policy-manager-wrap,
+    .contract-manager-wrap {
+      width: @main-content-width-1190;
+      margin: auto;
+    }
+  }
+
+  @media screen and (max-width: 1250px){
+    .resource-scheme-manager-wrap {
+      .policy-manager-wrap,
+      .contract-manager-wrap {
+        width: @main-content-width-990;
+      }
     }
   }
 </style>

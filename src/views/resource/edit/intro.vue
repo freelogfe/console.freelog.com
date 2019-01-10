@@ -105,4 +105,11 @@
       }
     }
   }
+
+
+  @media screen and (max-width: 1250px){
+    .resource-detail-intro-wrap .res-detail-intro-container {
+      width: @main-content-width-990;
+    }
+  }
 </style>

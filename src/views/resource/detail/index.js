@@ -5,7 +5,6 @@ import {mapGetters} from 'vuex'
 import {loadDetail} from '@/data/resource/loader'
 import {onloadNodeList} from '@/data/node/loader'
 import {cssSupports} from '@/lib/utils'
-import AuthSchemeDetail from './auth-scheme/index.vue'
 import ResourceSchemes from './schemes.vue'
 
 export default {
@@ -49,7 +48,6 @@ export default {
     session: 'session'
   })),
   components: {
-    AuthSchemeDetail,
     ResourceSchemes
   },
   mounted() {
