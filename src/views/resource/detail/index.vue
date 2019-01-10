@@ -15,6 +15,7 @@
             <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
             <div class="res-origin-info">
               <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
+              <span class="res-type">{{resourceDetail.resourceInfo.resourceId}}</span>
               <span class="res-update-time">最近更新 {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
             </div>
           </div>
