@@ -43,7 +43,7 @@
     </div>
     <div @click.stop="function() {}" v-if="authType === 'presentable'">
       <div class="suspension-ball" @click="toggleSuspensionSchemeList">
-        <span class="suspension-count" v-if="selectedAuthSchemes.length || unResolveAuthSchemes.length">{{selectedAuthSchemes.length + unResolveAuthSchemes.length}}</span>
+        <span class="suspension-count" v-if="selectedAuthSchemes.length || unResolveAuthResources.length">{{selectedAuthSchemes.length + unResolveAuthResources.length}}</span>
         <span class="suspension-icon-list" v-else>
           <span></span>
           <span></span>
@@ -64,29 +64,36 @@
           </li>
         </ul>
 
-        <p v-if="selectedAuthSchemes.length === 0 && unResolveAuthSchemes.length === 0">请选择相应授权方案及策略……</p>
-        <div class="unresolve-authschemes-box" v-if="unResolveAuthSchemes.length">
+        <p v-if="selectedAuthSchemes.length === 0 && unResolveAuthResources.length === 0">请选择相应授权方案及策略……</p>
+        <div class="unresolve-authschemes-box" v-if="unResolveAuthResources.length">
           <h3>未处理资源列表</h3>
           <ul>
             <li
-                    v-for="(item, index) in unResolveAuthSchemes"
-                    :key="'unResolveAuthSchemes-'+index"
+                    v-for="(item, index) in unResolveAuthResources"
+                    :key="'unResolveAuthResources-'+index"
             >
               <div class="suspension-lb-row-1">{{item.resourceName}}</div>
             </li>
           </ul>
         </div>
-
       </div>
     </div>
     <div class="asb-footer" v-if="isShowFooter">
       <div
               class="update-btn"
               :class="{'active': isCanUpdateContract}"
-              @click="updateContract(isCanUpdateContract)">
+              @click="signContract(isCanUpdateContract)">
         {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
       </div>
     </div>
+    <scheme-sign-dialog
+            v-if="authType ==='presentable'"
+            :authType="authType"
+            :visible.sync="isShowDialog"
+            :resolvedDutyStatements="selectedAuthSchemes"
+            :presentableId="presentableInfo.presentableId"
+            @done="afterSginContract"
+    ></scheme-sign-dialog>
     <div class="asb-scroll-guide-box" v-if="isScrollBar && this.currentOpenedResources.length > 2">
       <div class="red-bar" :style="redBarStyle"></div>
     </div>
