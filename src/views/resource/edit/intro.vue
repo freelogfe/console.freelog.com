@@ -66,7 +66,7 @@
     height: 105px;
     background-color: #FAFBFB;
     .res-detail-intro-container {
-      width: @main-content-width;
+      width: @main-content-width-1190;
       margin: auto;
       display: flex;
       align-items: center;

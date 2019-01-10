@@ -238,7 +238,7 @@
 <style lang="less" scoped>
   @import '../../../styles/variables.less';
   .resource-schemes-manager-wrap {
-    width: @main-content-width;
+    width: @main-content-width-1190;
     margin: auto;
     padding-top: 10px;
 
