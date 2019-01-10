@@ -14,7 +14,9 @@ export default {
     contracts: Array,
     bubbleResourcesMap: { // 不处理的上抛资源，作用于"资源编辑页面"
       type: Object,
-      default: {}
+      default: function() {
+        return {}
+      }
     },
     isShowFooter: {
       type: Boolean,
@@ -72,7 +74,9 @@ export default {
           position: 'relative',
           left: (document.querySelector('#pane-schema-manager').offsetWidth - window.innerWidth) / 2 + 'px',
           width: window.innerWidth + 'px',
-          margin: 0
+          margin: 0,
+          "padding": "0 35px",
+          "box-sizing": "border-box",
         }
       }else {
         return {}

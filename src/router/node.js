@@ -27,7 +27,7 @@ export const nodeItemRoute = {
             requiresAuth: true,
             title: '节点资源详情',
             type: 'node',
-            hideSidebar: true
+            // hideSidebar: true
           },
           component: Views.presentableDetail,
         }
