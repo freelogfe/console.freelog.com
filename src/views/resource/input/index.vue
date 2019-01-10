@@ -190,7 +190,7 @@
 
     <el-dialog
             :visible.sync="showSearchResourceDialog"
-            width="840px"
+            width="640px"
             :close-on-click-modal="true"
             :before-close="beforeCloseDialogHandler"
             top="10vh"

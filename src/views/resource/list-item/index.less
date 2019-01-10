@@ -1,3 +1,4 @@
+@import "../../../styles/mixin";
 .resource-item-info {
   margin-top: 20px;
   padding: 5px;
@@ -13,6 +14,19 @@
 
   .res-type {
     display: none;
+    font-size: 12px;
+    height: 16px;
+  }
+
+  .simple-res-view {
+    width: 100%;
+    cursor: pointer;
+    .res-desc {
+      .text-ellipsis;
+      vertical-align: sub;
+      max-width: 80%;
+      display: inline-block;
+    }
   }
 
   &.resource-item-theme-type-search {

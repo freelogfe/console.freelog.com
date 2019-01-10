@@ -13,7 +13,7 @@
     <div class="search-resource-bd">
       <el-tabs v-model="activeName">
         <el-tab-pane label="收藏资源" name="favor">
-          <lazy-list-view :list="favorResources" class="search-resource-list" :height="90" :fetch="fetchData">
+          <lazy-list-view :list="favorResources" class="search-resource-list" :height="60" :fetch="fetchData">
             <template slot-scope="scope">
               <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">添加</el-button>
               <resource-item :resource="scope.data" type="search" style="margin-right: 80px;"></resource-item>
@@ -24,10 +24,11 @@
           <lazy-list-view :list="searchResources"
                           ref="searchView"
                           class="search-resource-list"
-                          :height="90" :fetch="searchDataHandler">
+                          :height="60" :fetch="searchDataHandler">
             <template slot-scope="scope">
               <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">添加</el-button>
-              <resource-item :resource="scope.data" type="search" style="margin-right: 80px;"></resource-item>
+              <resource-item :resource="scope.data" type="search" style="margin-top: 10px;
+    padding: 10px 5px;margin-right: 80px;"></resource-item>
             </template>
           </lazy-list-view>
         </el-tab-pane>

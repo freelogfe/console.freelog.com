@@ -22,6 +22,7 @@
           <div class="res-placeholder-item"></div>
           <div class="res-placeholder-item"></div>
           <div class="res-placeholder-item"></div>
+          <div class="res-placeholder-item"></div>
         </template>
       </lazy-list-view>
     </div>

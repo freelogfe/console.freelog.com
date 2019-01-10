@@ -21,7 +21,7 @@
               <li class="scheme-action-item" @click="enableSchemeHandler(item.data.scheme, index)">
                 <i class="el-icon-circle-check"></i>启用授权方案
               </li>
-              <li class="scheme-action-item" @click="disableSchemeHandler(item.data.scheme, index)">
+              <li class="scheme-action-item" @click="disableSchemeHandler(item.data, index)">
                 <i class="el-icon-remove"></i>停用授权方案
               </li>
             </ul>
@@ -61,6 +61,7 @@
 
 <script>
   import {SCHEME_STATUS_MAP, SCHEME_PUBLISH_STATUS} from '@/config/scheme'
+  import {RESOURCE_STATUS_MAP} from '@/config/resource'
   import {onloadSchemesForResource} from '@/data/scheme/loader'
   import SchemeDetail from './scheme.vue'
 
@@ -113,26 +114,45 @@
       enableSchemeHandler(scheme, index) {
         this.updateAuthScheme({isOnline: 1}, scheme)
           .then(data => {
-            scheme.status = data.status
+            this.updateTabData(this.tabs[index], data)
           }).catch(this.$error.showErrorMessage)
       },
-      disableSchemeHandler(scheme, index) {
-        this.$confirm('当前资源中已无其他授权方案，停用此方案将会使资源下架, 是否确认操作？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          center: true,
-          showClose: false,
-          roundButton: true,
-          cancelButtonClass: 'scheme-dialog-cancel-btn',
-          customClass: 'scheme-tip-dialog'
-        }).then(() => {
-          this.updateAuthScheme({isOnline: 0}, scheme)
-            .then(data => {
-              scheme.status = data.status
-            }).catch(this.$error.showErrorMessage)
-        }).catch(err => {
-         //cancel
+      disableSchemeHandler(data, index) {
+        const {scheme} = data
+
+        this.shouldShowConfirmTip(data)
+          .then(()=>{
+            this.updateAuthScheme({isOnline: 0}, scheme)
+              .then(data => {
+                this.updateTabData(this.tabs[index], data)
+              }).catch(this.$error.showErrorMessage)
+          }).catch(()=>{})
+      },
+      updateTabData(tabData, data){
+        tabData.data.scheme.status = data.status
+        tabData.data.isEnabled = data.status === SCHEME_PUBLISH_STATUS.enabled
+      },
+      shouldShowConfirmTip(data){
+        const {isPublished} = data
+        var enabledCnt = 0
+        this.tabs.forEach(tab=>{
+           if (tab.data.isEnabled) {
+             enabledCnt++
+           }
         })
+        if (!isPublished || enabledCnt > 1) {
+          return Promise.resolve()
+        } else {
+          return this.$confirm('当前资源中已无其他授权方案，停用此方案将会使资源下架, 是否确认操作？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            center: true,
+            showClose: false,
+            roundButton: true,
+            cancelButtonClass: 'scheme-dialog-cancel-btn',
+            customClass: 'scheme-tip-dialog'
+          })
+        }
       },
       querySchemes() {
         if (!this.resourceDetail.resourceId) return
@@ -216,7 +236,8 @@
             id: newTabName,
             scheme,
             resource: this.resourceDetail,
-            isPublished: scheme.status === SCHEME_PUBLISH_STATUS.enabled
+            isPublished: RESOURCE_STATUS_MAP.published === this.resourceDetail.status,
+            isEnabled: scheme.status === SCHEME_PUBLISH_STATUS.enabled
           }
         }
         this.tabs.push(tabData)
