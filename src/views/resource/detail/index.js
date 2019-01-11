@@ -248,6 +248,11 @@ export default {
     },
     scrollInto(target) {
       const $el = this.$refs[target]
+
+      if (!$el) {
+        return console.error(`not found target ${target}`)
+      }
+
       this.activeTab = target
       if (typeof $el.scrollIntoView === 'function') {
         $el.scrollIntoView(true)
