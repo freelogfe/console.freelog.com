@@ -2,7 +2,7 @@
   <div class="resource-item-info" :class="['resource-item-theme-type-'+type]">
     <div class="resource-item" :class="['resource-state-'+resource.status]">
       <template v-if="type === 'self'">
-        <div class="res-intro-detail">
+        <div class="res-intro-detail" @click="gotoDetail(resource)">
           <div class="res-intro-bd">
             <p>
               <span class="res-name">{{resource.resourceName}}</span>
@@ -22,7 +22,6 @@
         <router-link :to="resource._editSchemeLink"
                      v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案
         </router-link>
-
 
         <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
       </template>

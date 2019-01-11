@@ -1,8 +1,8 @@
 <template>
   <div class="resource-scheme-manager-wrap">
-    <el-tabs tab-position="top" v-model="activeTabName" @tab-click="handleClick">
+    <el-tabs tab-position="top" v-model="activeTabName">
       <el-tab-pane :name="TAB_NAMES.scheme">
-        <span slot="label" class="panel-tab-name">授权签约管理</span>
+        <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
         <div class="panel-content">
           <lazy-component>
             <scheme-content
@@ -13,23 +13,22 @@
           </lazy-component>
         </div>
       </el-tab-pane>
-      <el-tab-pane :name="TAB_NAMES.contract" :lazy="true">
-        <span slot="label" class="panel-tab-name">合约管理</span>
+      <el-tab-pane :name="TAB_NAMES.contract">
+        <span slot="label" class="panel-tab-name">合约管理<i class="dot solid" v-if="!isContractsDone"></i></span>
         <div class="panel-content contract-manager-wrap">
-          <lazy-component>
-            <ContractManager :contracts="detail.scheme.dutyStatements"
-                             v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
-            <div class="empty-contract-tip" v-else>
-              未创建依赖关系
-              <router-link :to="$route.path + '?tab=scheme'">
-                <el-button type="text">去创建</el-button>
-              </router-link>
-            </div>
-          </lazy-component>
+          <ContractManager :contracts="detail.scheme.dutyStatements"
+                           @contracts-change="contractsChangeHandler"
+                           v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
+          <div class="empty-contract-tip" v-else>
+            未创建依赖关系
+            <router-link :to="$route.path + '?tab=scheme'">
+              <el-button type="text">去创建</el-button>
+            </router-link>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
-        <span slot="label" class="panel-tab-name">策略管理</span>
+        <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
         <div class="panel-content policy-manager-wrap">
           <PolicyManager :list="detail.scheme.policy" @save="savePoliciesHandler"></PolicyManager>
         </div>
@@ -54,7 +53,8 @@
       return {
         TAB_NAMES,
         activeTabName: TAB_NAMES.scheme,
-        resourceInfo: {}
+        resourceInfo: {},
+        contracts: []
       }
     },
     props: {
@@ -77,10 +77,29 @@
           margin: 0
         }
       },
+      isDependenciesDone() {
+        const {resource, scheme} = this.detail
+        return !resource.systemMeta.dependencies.length ||
+          (scheme.bubbleResources.length > 0 || scheme.dutyStatements.length > 0)
+      },
+      isContractsDone() {
+        const {scheme} = this.detail
+        var isValid = true
+        if (scheme.dutyStatements && scheme.dutyStatements.length > 0) {
+          isValid = this.contracts.every(contract=>{
+            return contract.status === 4
+          })
+        }
+
+        return isValid
+      },
+      isPoliciesDone() {
+        return this.detail.scheme.policy.length > 0
+      },
     },
     methods: {
-      handleClick() {
-
+      contractsChangeHandler(contracts) {
+        this.contracts = contracts
       },
       savePoliciesHandler({data}) {
         this.$services.authSchemes.put(this.detail.scheme.authSchemeId, data)
@@ -95,7 +114,6 @@
       }
     },
     mounted() {
-
     },
   }
 </script>
@@ -121,7 +139,7 @@
     }
   }
 
-  @media screen and (max-width: 1250px){
+  @media screen and (max-width: 1250px) {
     .resource-scheme-manager-wrap {
       .policy-manager-wrap,
       .contract-manager-wrap {

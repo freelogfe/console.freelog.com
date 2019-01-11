@@ -7,8 +7,7 @@
       <li :class="[itemClass]"
           v-for="(item, index) in previewList"
           :key="index"
-          class="show-up"
-          :style="{height: height + 'px'}">
+          class="show-up">
         <slot :data="item"></slot>
       </li>
       <slot name="append"></slot>

@@ -367,7 +367,12 @@ export default {
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
-        metaData.widgetName = formData.widgetName ? formData.widgetName : ''
+        if (formData.resourceType === RESOURCE_TYPES.widget) {
+          uploadData.widgetInfo = {
+            widgetName: formData.widgetName,
+            version: formData.widgetVersion
+          }
+        }
       }
 
       if (formData.previewImage) {
@@ -375,7 +380,7 @@ export default {
       }
 
       if (this.deps.length) {
-        metaData.dependencies = this.deps.map(res => res.resourceId)
+        uploadData.dependencies = this.deps.map(res => res.resourceId)
       }
 
       uploadData.meta = metaData

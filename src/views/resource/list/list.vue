@@ -1,11 +1,16 @@
 <template>
   <div class="resource-items">
-    <lazy-list-view :list="resources" :height="90" :fetch="fetchData">
-      <template slot-scope="scope">
+    <lazy-list-view :list="resources" :height="itemHeight" :fetch="fetchData">
+      <template slot-scope="scope" v-if="scope.data.isFavor !== false">
+        <el-button v-if="type === 'favor'"
+                   @click="delFavorResourceHandler(scope.data)"
+                   type="primary" plain round
+                   class="del-favor-resource-btn">取消收藏
+        </el-button>
         <resource-item :resource="scope.data"
                        :type="type"
                        class="my-res-item"
-                       :navTo="gotoEditHandler"></resource-item>
+                       :navTo="gotoDetailHandler"></resource-item>
       </template>
       <div slot="empty" class="empty-resource-tip">
         {{isSelf?'没有自制资源' :'未收藏资源'}}
@@ -33,7 +38,7 @@
       type: {
         type: String,
         default() {
-          return 'all'
+          return 'self'
         }
       },
       query: String
@@ -42,6 +47,9 @@
     computed: {
       isSelf() {
         return this.type === 'self'
+      },
+      itemHeight(){
+        return this.type === 'self' ? 90: 60
       }
     },
 
@@ -59,10 +67,8 @@
     },
 
     methods: {
-      gotoEditHandler(resource) {
-        if (this.type === 'self') {
-          this.$router.push({path: `/resource/edit/${resource.resourceId}`})
-        } else {
+      gotoDetailHandler(resource) {
+        if (resource.status === 2) {
           this.$router.push({path: `/resource/detail/${resource.resourceId}`})
         }
       },
@@ -100,7 +106,16 @@
         return this.createResourceLoader(param => this.$services.resource.get(param || {}).then(res => res.getData()))
       },
       getFavorResourcesLoader() {
-        return this.createResourceLoader(param => this.$services.collections.get(param || {}).then(res => res.getData()))
+        return this.createResourceLoader(param => {
+          return this.$services.collections.get(param || {}).then(res => res.getData()).then(data=>{
+            if (data && data.dataList) {
+              data.dataList.forEach(resource=>{
+                resource.isFavor = true
+              })
+            }
+            return data
+          })
+        })
       },
       createResourceLoader(loader) {
         return (param) => {
@@ -118,6 +133,16 @@
           }
           return loader(param)
         }
+      },
+      delFavorResourceHandler(resource) {
+        return this.$services.collections.delete(resource.resourceId).then((res) => {
+          if (res.data.errcode === 0) {
+            this.$message.success('已删除收藏')
+            resource.isFavor = false
+          } else {
+            this.$error.showErrorMessage(res)
+          }
+        })
       },
       getAllResourcesLoader(param) {
         param = {
@@ -139,6 +164,12 @@
     .empty-resource-tip {
       font-size: 20px;
       color: #999;
+    }
+
+    .del-favor-resource-btn {
+      float: right;
+      margin-top: 8px;
+      margin-right: 10px;
     }
 
     .my-res-item {
