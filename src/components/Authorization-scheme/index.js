@@ -99,10 +99,10 @@ export default {
       this.isShowLoading = true
       var resourceId = this.resourceInfo.resourceId
 
-      var resourceiDset = new Set(this.contracts.map(c => c.resourceId))
-      resourceiDset.add(resourceId)
+      var resourceIdSet = new Set(this.contracts.map(c => c.resourceId))
+      resourceIdSet.add(resourceId)
 
-      return this.getResourceSchemeDetail([...resourceiDset].join(','))
+      return this.getResourceSchemeDetail([...resourceIdSet].join(','))
         .then(() => {
           if(this.resourceMap[resourceId]) {
             this.currentOpenedResources = []
@@ -192,42 +192,12 @@ export default {
       }
     },
     // 点击"更新合约"或"生成合约"按钮
-    signContract(isUpdateContract) {
-      if(!isUpdateContract) return
-      this.isShowDialog = true
-      return
-
-      var contracts = this.selectedAuthSchemes.map(item => {
-        const { resourceId, authSchemeId, segmentId, contractId = '' } = item
-        if(contractId && contractId !== '') {
-          return { resourceId, authSchemeId, policySegmentId: segmentId, contractId }
-        }else {
-          return { resourceId, authSchemeId, policySegmentId: segmentId }
-        }
-      })
-
-      switch (this.authType) {
-        case 'presentable': {
-          this.$axios.put(`//${this.qiHostname}/v1/presentables/${this.presentableInfo.presentableId}`, {
-            contracts
-          })
-            .then(res => res.data)
-            .then(res => {
-              if(res.errcode === 0) {
-                var str = this.presentableInfo.contracts.length ? '更新' : '生成'
-                Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
-                this.reInitPresentableAuthSchemes(res.data.contracts)
-              }else {
-                Message.error(res.msg)
-              }
-            })
-          break
-        }
-        case 'resource': {
-          break
-        }
-        default: {}
+    signContract(isCanUpdateContract) {
+      if(!isCanUpdateContract) {
+        Message.error('仍有资源未选择授权策略')
+        return
       }
+      this.isShowDialog = true
     },
     afterSginContract(data) {
       var str = this.presentableInfo.contracts.length ? '更新' : '生成'
@@ -252,7 +222,7 @@ export default {
     // 获取选中的"授权方案和策略"与"未处理的资源（即上抛资源）"的信息
     getSelectedAuthScheme(authSchemesData) {
       if(authSchemesData) {
-        const { isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex, contractId } = authSchemesData
+        const { isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex } = authSchemesData
         if(isNoResolved) {
           this.unResolveAuthResources.push({ resourceName, resourceId })
           return
@@ -260,6 +230,7 @@ export default {
         if(selectedAuthSchemeTabIndex !== -1) {
           const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
           let { policyName, segmentId } = policy[selectedPolicyIndex]
+          const contractId = this.getContractIdBySchemeInfo({resourceId, authSchemeId, segmentId})
           this.selectedAuthSchemes.push({
             resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId
           })
@@ -269,6 +240,16 @@ export default {
           })
         }
       }
+    },
+    getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId }) {
+      const contract = this.resourceContractsMap[resourceId]
+      if(contract) {
+        const { contractId, policySegmentId } = contract
+        if(contract.authSchemeId === authSchemeId && segmentId === policySegmentId) {
+          return contractId
+        }
+      }
+      return
     },
     // 获取"依赖"的处理状态： 1：完全处理，不包含上抛；0：不完全处理，包含上抛，-1：未处理
     getAuthResolveState() {

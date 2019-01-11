@@ -8,7 +8,7 @@
               <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
             </p>
             <p>
-              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
             </p>
           </div>
           <div class="lf-side">
@@ -46,15 +46,16 @@
           </div>
 
           <div class="res-detail-desc res-detail-info"
-               v-if="resourceDetail.resourceInfo.description"
-               ref="resDesc"
-               v-html="resourceDetail.resourceInfo.description"></div>
+               ref="resDesc">
+            <div v-if="resourceDetail.resourceInfo.description" v-html="resourceDetail.resourceInfo.description"></div>
+            <div v-else class="empty-res-desc-text">暂无资源描述</div>
+          </div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
             <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
           </div>
         </div>
         <div class="res-detail-ft">
-          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
           <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
           <el-button type="primary" class="res-act-btn" @click="editDetailHandler" v-if="isOwnerResource">编辑</el-button>
         </div>
@@ -63,6 +64,8 @@
         <i class="el-icon-arrow-up"></i>
       </a>
     </div>
+
+
     <el-dialog width="640px" title="" :visible.sync="showOptionsDialog">
       <div class="opts-content-wrap">
         <div class="select-target-header">

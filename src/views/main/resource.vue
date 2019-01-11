@@ -124,6 +124,8 @@
     overflow: hidden;
     cursor: pointer;
     position: relative;
+    padding-bottom: 6px;
+    min-height: 200px;
 
     .res-scheme-info-wrap {
       position: absolute;
@@ -175,13 +177,14 @@
       display: flex;
       align-items: center;
       padding-left: 10px;
+      overflow: auto;
       .res-p-item {
         margin-right: 6px;
         border: 1px solid;
         border-radius: 11px;
-        /*padding: 0 6px;*/
         text-align: center;
         width: 22px;
+        min-width: 22px;
         /*无上抛*/
         &.status-0 {
           border-color: @status0Color;

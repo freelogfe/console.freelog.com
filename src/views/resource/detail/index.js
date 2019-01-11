@@ -38,7 +38,7 @@ export default {
   },
   computed: Object.assign({
     isOwnerResource() {
-      return this.resourceDetail.resourceInfo.isOwner
+      return this.resourceDetail.resourceInfo.isOwner && process.env.NODE_ENV === 'development'
     },
     avatarUrl() {
       const userId = this.resourceDetail.resourceInfo.userId
@@ -248,6 +248,11 @@ export default {
     },
     scrollInto(target) {
       const $el = this.$refs[target]
+
+      if (!$el) {
+        return console.error(`not found target ${target}`)
+      }
+
       this.activeTab = target
       if (typeof $el.scrollIntoView === 'function') {
         $el.scrollIntoView(true)
