@@ -7,7 +7,6 @@
           <lazy-component>
             <scheme-content
                     :resourceInfo="detail.resource"
-                    :isPublished="detail.isPublished"
                     :scheme.sync="detail.scheme"
                     :boxStyle="schemeContentBoxStyle"
             ></scheme-content>

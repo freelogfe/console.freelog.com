@@ -27,13 +27,13 @@
         <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
       </template>
       <template v-else>
-        <div @click="gotoDetail(resource)">
+        <div class="simple-res-view" @click="gotoDetail(resource)">
           <div class="res-intro-bd">
+            <span class="res-desc">{{resource.resourceName}}</span>
             <span class="res-type">#{{resource.resourceType}}</span>
-            <span class="res-desc">{{resource.resourceDesc}} {{resource.resourceId}}</span>
           </div>
           <div class="res-intro-ft">
-            <span class="res-type">#{{resource.resourceType}}</span>
+            <!--<span class="res-type">#{{resource.resourceType}}</span>-->
             <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
             <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
             <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
