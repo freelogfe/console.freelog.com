@@ -46,9 +46,10 @@
           </div>
 
           <div class="res-detail-desc res-detail-info"
-               v-if="resourceDetail.resourceInfo.description"
-               ref="resDesc"
-               v-html="resourceDetail.resourceInfo.description"></div>
+               ref="resDesc">
+            <div v-if="resourceDetail.resourceInfo.description" v-html="resourceDetail.resourceInfo.description"></div>
+            <div v-else class="empty-res-desc-text">暂无资源描述</div>
+          </div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
             <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
           </div>

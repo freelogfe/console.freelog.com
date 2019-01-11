@@ -13,7 +13,6 @@
         </div>
 
         <div class="policy-list-wrap">
-          <h5>授权方案策略</h5>
           <el-collapse accordion>
             <el-collapse-item v-for="policy in tab.scheme.policy">
               <template slot="title">
