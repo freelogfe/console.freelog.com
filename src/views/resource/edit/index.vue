@@ -1,5 +1,5 @@
 <template>
-  <section class="resource-detail-edit-wrap">
+  <section class="resource-detail-edit-wrap" :class="[`resource-${viewMode}-mode`]">
     <div class="update-res-file" v-if="isDev && viewMode === 'edit'">
       <el-upload
         class="upload-container"
@@ -15,7 +15,7 @@
       </el-upload>
     </div>
 
-    <div class="res-base-info-inputs" :class="[viewMode+'-mode-info']">
+    <div class="res-info-inputs-content">
       <resource-inputs :data="resourceDetail" ref="inputArea">
         <div class="btm-wrap clearfix">
           <div class="rt-side">
@@ -26,11 +26,11 @@
       </resource-inputs>
     </div>
 
-    <ResourceDetailIntro class="res-detail-intro-area"
+    <ResourceDetailIntro class="res-detail-intro-content"
                          :viewMode="viewMode"
                          :resource="resourceDetail" :class="[viewMode+'-mode-intro']" @switch="switchModeHandler"></ResourceDetailIntro>
-    <!--授权管理-->
-    <div class="schemes-manager-container">
+
+    <div class="schemes-manager-content">
       <SchemesManager :resourceDetail="resourceDetail"></SchemesManager>
     </div>
   </section>
@@ -45,9 +45,4 @@ export default ResourceDetail
 <style lang="less" scoped>
   @import "index.less";
   @import "../../../styles/footer.less";
-
-  .schemes-manager-container {
-    background-color: white;
-    min-height: 100vh;
-  }
 </style>

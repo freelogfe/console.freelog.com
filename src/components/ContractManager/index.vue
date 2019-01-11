@@ -27,7 +27,6 @@
                 :class="['contract-status-'+contract.status, {'current':currentContract.contractId===contract.contractId}]"
                 @click="showContractDetailHandler(contract)">
               <div>
-                <!--<i class="dot"></i>-->
                 <span class="res-contract-title" v-if="contract.resourceDetail.resourceName">{{contract.resourceDetail.resourceName}}</span>
                 <span class="res-contract-title" v-else>子资源合同ID： {{contract.contractId}}</span>
                 <span class="contract-state-tip" :class="['contract-state-'+contract.statusInfo.type]"

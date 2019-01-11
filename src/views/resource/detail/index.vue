@@ -8,7 +8,7 @@
               <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
             </p>
             <p>
-              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
             </p>
           </div>
           <div class="lf-side">
@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="res-detail-ft">
-          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'已收藏':'收藏'}}</el-button>
+          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
           <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
           <el-button type="primary" class="res-act-btn" @click="editDetailHandler" v-if="isOwnerResource">编辑</el-button>
         </div>
@@ -64,6 +64,8 @@
         <i class="el-icon-arrow-up"></i>
       </a>
     </div>
+
+
     <el-dialog width="640px" title="" :visible.sync="showOptionsDialog">
       <div class="opts-content-wrap">
         <div class="select-target-header">

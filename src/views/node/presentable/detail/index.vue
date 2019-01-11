@@ -5,29 +5,8 @@
                                @save="savePresentableHandler"></presentable-detail-header>
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
-        <el-tab-pane :name="TAB_NAMES.policy">
-          <span slot="label" class="panel-tab-name">策略管理</span>
-          <div class="panel-content policy-manager-wrap">
-            <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :name="TAB_NAMES.contract" :lazy="true">
-          <span slot="label" class="panel-tab-name">合约管理</span>
-          <div class="panel-content contract-manager-wrap">
-            <lazy-component>
-              <ContractManager :contracts="presentableInfo.contracts"
-                               v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
-              <div class="empty-contract-tip" v-else>
-                未创建合约
-                <router-link :to="$route.path + '?tab=schema'">
-                  <el-button type="text">去创建合约</el-button>
-                </router-link>
-              </div>
-            </lazy-component>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :name="TAB_NAMES.schema" :lazy="true">
-          <span slot="label" class="panel-tab-name">授权签约管理</span>
+        <el-tab-pane :name="TAB_NAMES.schema">
+          <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
           <div class="panel-content">
             <lazy-component>
               <authorization-scheme-manage
@@ -38,6 +17,26 @@
                       authType="presentable"
               ></authorization-scheme-manage>
             </lazy-component>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :name="TAB_NAMES.contract">
+          <span slot="label" class="panel-tab-name">合约管理<i class="dot solid" v-if="!isContractsDone"></i></span>
+          <div class="panel-content contract-manager-wrap">
+            <ContractManager :contracts="presentableInfo.contracts"
+                             @contracts-change="contractsChangeHandler"
+                             v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
+            <div class="empty-contract-tip" v-else>
+              未创建合约
+              <router-link :to="$route.path + '?tab=schema'">
+                <el-button type="text">去创建合约</el-button>
+              </router-link>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
+          <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
+          <div class="panel-content policy-manager-wrap">
+            <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
           </div>
         </el-tab-pane>
       </el-tabs>

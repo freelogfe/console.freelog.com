@@ -1,6 +1,6 @@
 <template>
   <div class="res-scheme-detail-container">
-    <el-breadcrumb class="res-schemes-breadcrumb" separator-class="el-icon-arrow-right" v-if="breadcrumbs.length > 1">
+    <el-breadcrumb class="res-schemes-breadcrumb" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item
               @click.native="switchResourceHandler(breadcrumb, index)"
               v-for="(breadcrumb,index) in breadcrumbs">
@@ -71,6 +71,7 @@
 
     .res-schemes-breadcrumb {
       margin-bottom: 6px;
+      cursor: pointer;
     }
   }
 </style>

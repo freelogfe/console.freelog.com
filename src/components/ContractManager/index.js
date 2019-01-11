@@ -53,6 +53,8 @@ export default {
           } else if (contractList.length) {
             this.showContractDetailHandler(contractList[0])
           }
+
+          this.fireContractsChange()
         })
         .finally(() => {
           this.loading = false
@@ -124,38 +126,19 @@ export default {
         }
       }).then(res => res.getData())
     },
-    previewHandler(row) {
-      const query = {}
-      if (row.presentableDetail) {
-        query.presentableId = row.presentableDetail.presentableId
-      } else {
-        query.contractId = row.contractId
-      }
-      this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/detail#contract`,
-        query
-      })
-    },
     showContractDetailHandler(contract) {
       if (!contract || !contract.contractId) {
         // this.$message.warning('未创建合同')
         return
       }
-      // this.$router.push({query: {contractId: contract.contractId}})
       this.currentContract = contract
     },
-    resolveContractCreatorLink(presentable) {
-      return `/node/${this.$route.params.nodeId}/presentable/${presentable.presentableId}/scheme_detail`
+    fireContractsChange(){
+      this.$emit('contracts-change', this.contractList.concat(this.masterContract))
     },
     updateContractHandler(contract) {
       Object.assign(this.currentContract, contract)
-    },
-    isActiveTab(presentable) {
-      const curContractId = this.currentContract.contractId
-
-      return curContractId && (presentable.masterContract ?
-        (curContractId === presentable.masterContract.contractId) :
-        (curContractId === presentable.contractId))
+      this.fireContractsChange()
     }
   }
 }

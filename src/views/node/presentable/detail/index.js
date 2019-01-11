@@ -30,11 +30,6 @@ export default {
     }
   },
 
-  props: {
-    detail: {
-      type: Object
-    }
-  },
   components: {
     AuthorizationSchemeManage,
     PresentableDetailHeader,
@@ -42,7 +37,25 @@ export default {
     ContractManager
   },
 
-  computed: {},
+  computed: {
+    isDependenciesDone() {
+      return this.presentableInfo.contracts.length > 0
+    },
+    isContractsDone() {
+      const {contracts} = this.presentableInfo
+      var isValid = true
+      if (contracts && contracts.length > 0) {
+        isValid = contracts.every(contract=>{
+          return contract.status === 4
+        })
+      }
+
+      return isValid
+    },
+    isPoliciesDone() {
+      return this.presentableInfo.policy.length > 0
+    },
+  },
 
   watch: {
     '$route': function () {
@@ -116,12 +129,6 @@ export default {
 
       return null
     },
-    gotoSchemeDetailHandler() {
-      this.$router.push({
-        path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}/scheme_detail`,
-        query: {resourceId: this.presentableInfo.resourceId}
-      })
-    },
     handleClick() {
       this.$router.push({
         path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
@@ -149,6 +156,9 @@ export default {
             this.$error.showErrorMessage(msg)
           }
         })
+    },
+    contractsChangeHandler(contracts) {
+      this.presentableInfo.contracts = contracts
     }
   }
 }
