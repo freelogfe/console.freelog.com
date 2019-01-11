@@ -38,7 +38,7 @@ export default {
   },
   computed: Object.assign({
     isOwnerResource() {
-      return this.resourceDetail.resourceInfo.isOwner
+      return this.resourceDetail.resourceInfo.isOwner && process.env.NODE_ENV === 'development'
     },
     avatarUrl() {
       const userId = this.resourceDetail.resourceInfo.userId

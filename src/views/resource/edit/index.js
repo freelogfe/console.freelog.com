@@ -72,13 +72,16 @@ export default {
       }
     },
     updateResourceHandler() {
-      // detail
       this.executeNext(() => {
         this.$message.success('更新成功')
+        this.switchModeHandler()
       })
     },
     switchModeHandler(mode) {
       this.viewMode = mode ? mode : (this.viewMode === 'edit' ? 'preview' : 'edit')
+      if (this.viewMode === 'preview') {
+        window.scrollTo(0,0)
+      }
     }
   }
 }

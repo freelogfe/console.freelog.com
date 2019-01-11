@@ -3,13 +3,49 @@
   margin: auto;
   position: relative;
   //padding-left: 50px;
-  .res-base-info-inputs {
+  .res-info-inputs-content {
     padding-top: 40px;
   }
 
-  .res-detail-intro-area,
-  .res-base-info-inputs {
-    transition: max-height 1s;
+  .schemes-manager-content {
+    background-color: white;
+    min-height: 100vh;
+  }
+
+  &.resource-preview-mode {
+    .res-info-inputs-content {
+      max-height: 0;
+      padding-top: 0;
+    }
+
+    .res-detail-intro-content {
+      max-height: 120px;
+    }
+    
+    .schemes-manager-content {
+      display: block;
+    }
+  }
+
+  &.resource-edit-mode {
+    .res-info-inputs-content {
+      max-height: 5000px;
+    }
+
+    .res-detail-intro-content {
+      max-height: 40px;
+      line-height: 40px;
+      margin-bottom: 20px;
+    }
+
+    .schemes-manager-content {
+      display: none;
+    }
+  }
+
+  .res-detail-intro-content,
+  .res-info-inputs-content {
+    transition: max-height .5s;
     overflow: hidden;
   }
 
@@ -23,25 +59,6 @@
     .rt-side {
       float: right;
     }
-  }
-
-  .preview-mode-info {
-    max-height: 0;
-    padding-top: 0;
-  }
-
-  .edit-mode-info {
-    max-height: 5000px;
-  }
-
-  .preview-mode-intro {
-    max-height: 120px;
-  }
-
-  .edit-mode-intro {
-    max-height: 40px;
-    line-height: 40px;
-    margin-bottom: 20px;
   }
 
   .update-res-file {

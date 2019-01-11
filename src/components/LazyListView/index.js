@@ -35,11 +35,6 @@ export default {
       default: [],
       twoWays: true
     },
-    // item height
-    height: {
-      type: Number,
-      default: 44
-    },
     itemClass: {
       type: String,
       default: ''
@@ -55,7 +50,6 @@ export default {
   data() {
     return {
       lastScrollTop: null,
-      distance: this.height,
       lineTopHeight: 0,
       lineBottomHeight: 0,
       previewList: [],
