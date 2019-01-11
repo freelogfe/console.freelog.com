@@ -151,17 +151,17 @@
         let isEffect = false
 
         if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
-          str = '切换策略'
+          str = '切换授权方案，将会导致之前选择的策略都将失效'
           isEffect = true
         }else if(this.curSchemeSelectedPolicyIndex === index) {
           if(this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
-            str = '取消当前选择'
+            str = '取消当前选择，将导致部分授权方案的选择失效'
             isEffect = true
           }
         }
 
         return {
-          isEffect, msg: `${str}，将会导致后续资源选择的策略都取消，确定吗？`
+          isEffect, msg: `${str}，确定继续？`
         }
       },
       exchangePolicyItem(index) {
@@ -296,6 +296,7 @@
     mounted() {
       this.curSchemeSelectedPolicyIndex = this.resourceAuthScheme.selectedPolicyIndex
       this.selectedUpcastResourceIndex = typeof this.activeScheme.selectedUpcastResourceIndex === 'undefined' ? -1: this.activeScheme.selectedUpcastResourceIndex
+      this.checkCanUpdateContract()
     },
   }
 

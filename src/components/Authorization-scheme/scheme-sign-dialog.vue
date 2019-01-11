@@ -1,23 +1,25 @@
 <template>
   <el-dialog
           class="s-c-dialog"
-          title="提示"
-          :visible="visible"
+          title="签约确认"
           width="800px"
-          center
-          :show-close="false"
           append-to-body
+          center
+          :visible="visible"
+          :show-close="false"
   >
     <div class="resolved-duty-statements" v-show="resolvedDutyStatements.length">
-      <h3>使用依赖资源需要与以下资源签约，请确认</h3>
+      <!--<h3>使用依赖资源需要与以下资源签约，请确认</h3>-->
       <el-table
-              :data="resolvedDutyStatements"
+              :data="renderDutyStatements"
+              :row-class-name="tableRowClassName"
               stripe
               style="width: 100%"
       >
         <el-table-column prop="resourceName" label="资源名称" width="350"></el-table-column>
         <el-table-column prop="authSchemeName" label="授权方案"></el-table-column>
         <el-table-column prop="policyName" label="授权策略"></el-table-column>
+        <el-table-column prop="signState" label="签约状态"></el-table-column>
       </el-table>
     </div>
     <div class="resolved-bubble-resources" v-show="false">
@@ -66,7 +68,18 @@
       presentableId: String,
       authSchemeId: String
     },
+    computed: {
+      renderDutyStatements() {
+        return this.formatResolvedDutyStatements(this.resolvedDutyStatements)
+      }
+    },
     methods: {
+      tableRowClassName({row, rowIndex}) {
+        if (!row.contractId) {
+          return 'warning-row'
+        }
+        return ''
+      },
       hideDialog() {
         this.$emit('update:visible', false)
       },
@@ -126,7 +139,98 @@
           default: {}
         }
 
-      }
+      },
+      formatResolvedDutyStatements(resolvedDutyStatements) {
+        return resolvedDutyStatements
+          .map(item => {
+            if(item.contractId) {
+              item.signState = '已签约'
+            }else {
+              item.signState = '未签约'
+            }
+            return item
+          })
+      },
     },
+    watch: {
+      resolvedDutyStatements() {
+      },
+    }
   }
 </script>
+
+<style lang="less" type="text/less">
+  .s-c-dialog {
+    h3 {
+      position: relative;
+      padding-left: 8px;
+      font-size: 14px;
+      color: #999999;
+
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 1;
+        transform: translateY(-50%);
+        content: '';
+        display: block;
+        width: 3px;
+        height: 14px;
+        background-color: #666;
+      }
+    }
+
+    .resolved-duty-statements {
+      .r-d-s-i-reousrce-name {
+      }
+      .r-d-s-i-auth-scheme-name {
+      }
+      .r-d-s-i-policy-name {
+      }
+    }
+
+    .resolved-bubble-resources {
+      margin-top: 30px;
+
+      li {
+        margin-top: 12px;
+      }
+      .r-b-r-i-reousrce-name {
+      }
+    }
+
+
+
+    .el-table {
+      .cell {
+        white-space: nowrap;
+      }
+      .warning-row {
+        color: #e6a23c;
+      }
+    }
+
+    .el-dialog__body {
+      padding-top: 0; border-top: 1px solid #DDD;
+    }
+    .el-dialog__footer {
+      height: 50px;
+      padding: 0 20px;
+      border-top: 1px solid #DDD;
+      line-height: 50px;
+      text-align: right;
+
+      .cancel-btn {
+        padding: 6px 30px;
+        border-width: 0;
+      }
+      .sign-btn {
+        padding: 6px 30px;
+        border-radius: 17px;
+        background: #409EFF;
+        color: #fff;
+      }
+    }
+  }
+</style>

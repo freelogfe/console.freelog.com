@@ -81,7 +81,7 @@
     <div class="asb-footer" v-if="isShowFooter">
       <div
               class="update-btn"
-              :class="{'active': isCanUpdateContract}"
+              :class="{'active': true}"
               @click="signContract(isCanUpdateContract)">
         {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
       </div>
