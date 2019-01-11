@@ -58,14 +58,14 @@
           </li>
         </ul>
       </li>
-      <li class="ls-item">
-        <el-tooltip effect="dark" content="合约列表" placement="right" :disabled="!isMini">
-          <a class="nav-link ls-nav-link" :href="`//${targetHostname}/user/resources`" target="_blank">
-            <i class="el-icon-tickets"></i>
-            <span>合约列表</span>
-          </a>
-        </el-tooltip>
-      </li>
+      <!--<li class="ls-item">-->
+        <!--<el-tooltip effect="dark" content="合约列表" placement="right" :disabled="!isMini">-->
+          <!--<a class="nav-link ls-nav-link" :href="`//${targetHostname}/user/resources`" target="_blank">-->
+            <!--<i class="el-icon-tickets"></i>-->
+            <!--<span>合约列表</span>-->
+          <!--</a>-->
+        <!--</el-tooltip>-->
+      <!--</li>-->
       <li class="ls-item">
         <el-tooltip effect="dark" content="设置" placement="right" :disabled="!isMini">
           <a class="nav-link ls-nav-link" href="/setting" target="_blank">
