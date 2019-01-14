@@ -11,9 +11,11 @@
               width="100">
         <template slot-scope="scope">
           <div>
-            <img :src="scope.row.resourceInfo.postImgUrl | padImage"
-                 :class="{'resource-default-preview':!scope.row.resourceInfo.postImgUrl}"
-                 alt="">
+            <a :href="`/resource/detail/${scope.row.resourceId}`" target="_blank">
+              <img :src="scope.row.resourceInfo.postImgUrl | padImage"
+                   :class="{'resource-default-preview':!scope.row.resourceInfo.postImgUrl}"
+                   alt="">
+            </a>
           </div>
         </template>
       </el-table-column>
