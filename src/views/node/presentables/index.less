@@ -16,7 +16,7 @@
       padding-right: 10px;
       li {
         margin-left: 30px;
-        max-width: 102px;
+        max-width: 115px;
         color: #333333;
         height: 28px;
       }
@@ -32,13 +32,28 @@
         font-weight: bold;
       }
     }
+
+    .add-presentable-btn {
+      display: inline-block;
+      width: 22px; height: 22px; line-height: 22px; margin-left: 10px; border-radius: 50%;
+      background-color: #409EFF; color: #fff;
+      font-size: 14px; font-weight: bolder; text-align: center; cursor: pointer;
+    }
+  }
+
+  .presentable-list-container {
+    .add-presentable-btn {
+      font-size: 16px; color: #999; cursor: pointer;
+    }
+
+    .el-icon-plus {
+      margin-right: 10px; font-weight: 600;
+    }
   }
 
   .no-present-list-wrap {
-    font-size: 20px;
-    text-align: center;
-    line-height: 80px;
-    color: #999;
+    font-size: 20px; line-height: 80px;
+    text-align: center; color: #999;
   }
 
   .status-item-wrap {
@@ -55,14 +70,7 @@
     }
   }
 
-  .add-presentable-btn {
-    color: #999999;
-    font-size: 16px;
-    display: inline-block;
-    padding: 5px 5px 5px 0;
-    cursor: pointer;
-    i {
-      margin-right: 10px;
-    }
+  .dialog-title {
+    font-size: 20px;
   }
 }

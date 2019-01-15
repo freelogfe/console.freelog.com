@@ -20,10 +20,15 @@
                            @contracts-change="contractsChangeHandler"
                            v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
           <div class="empty-contract-tip" v-else>
-            未创建依赖关系
-            <router-link :to="$route.path + '?tab=scheme'">
-              <el-button type="text">去创建</el-button>
-            </router-link>
+            <div v-if="isDependenciesDone">
+              无合约
+            </div>
+            <div v-else>
+              未创建依赖授权关系
+              <router-link :to="$route.path + '?tab=scheme'">
+                <el-button type="text">去创建</el-button>
+              </router-link>
+            </div>
           </div>
         </div>
       </el-tab-pane>
@@ -110,7 +115,7 @@
             } else {
               this.$error.showErrorMessage(msg)
             }
-          })
+          }).catch(this.$error.showErrorMessage)
       }
     },
     mounted() {
@@ -128,7 +133,7 @@
     }
     .empty-contract-tip {
       text-align: center;
-      font-size: 20px;
+      font-size: 14px;
       color: #666;
     }
 

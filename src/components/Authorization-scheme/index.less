@@ -3,9 +3,13 @@
 }
 
 .authorization-scheme-box {
-  position: relative; z-index: 5;
-  display: flex; overflow: auto;
-  margin: 0 -20px; min-height: 300px;
+  position: relative; z-index: 5; overflow: hidden;
+
+  .auth-s-b-content {
+    display: flex;
+    min-height: 300px;
+    transform: translateX(0); transition: transform .4s;
+  }
 
   .scheme-partition {
     position: relative;
@@ -69,7 +73,7 @@
 
   .asb-footer {
     position: fixed; bottom: 0; right: 0; z-index: 100;
-    width: 100%; padding: 15px 0; border-top: 1px solid #ccc;
+    width: 100%; padding: 8px 0; border-top: 1px solid #ccc;
     text-align: right; background-color: #fff;
 
     .update-btn {
@@ -83,47 +87,26 @@
     }
   }
 
-  .suspension-ball {
-    position: fixed; bottom: 105px; right: 50px; z-index: 20;
-    width: 46px; height: 46px; border-radius: 50%;
-    background-color: #FFFFFF; box-shadow: 0 2px 7px 0 rgba(68, 151, 236, .4); text-align: center; cursor: pointer;
+  .auth-s-b-nav {
+    position: fixed; left: 50%; bottom: 60px; z-index: 10; transform: translateX(-50%);
+    text-align: center;
 
-    .suspension-count { line-height: 46px; font-size: 16px; color: #4497EC; }
-    .suspension-icon-list {
-      display: block;
-      position: relative; top: 50%; transform: translateY(-50%);
-      text-align: center;
+    .auth-s-b-n-btn {
+      display: inline-block;
+      width: 40px; height: 40px; line-height: 44px; border-radius: 50%;
+      background-color: rgba(0, 0, 0, .6); color: #fff; text-align: center;
+      cursor: pointer;
 
-      span { display: block; width: 20px; height: 2px; margin: auto; background-color: #666; }
-      span:not(:first-child) {
-         margin-top: 5px;
+      &.prev {}
+      &.next { margin-left: 30px; }
+      &.disabled {
+        opacity: .4; cursor: not-allowed;
       }
-    }
-  }
-
-  .suspension-list-box {
-    overflow-y: auto;
-    position: fixed; bottom: 130px; right: 75px; z-index: 5;
-    width: 390px; max-height: 460px; padding: 20px;
-    border: 1px solid #DADADA; border-radius: 4px;
-    background-color: #FFFFFF;
-
-    li { margin-bottom: 10px; border-bottom: 1px solid #D8D8D8; }
-    p { margin-top: 180px; font-size: 14px; color: #999999; text-align: center; }
-
-    .suspension-lb-row-1{ margin-bottom: 10px; font-size: 14px; color: #333333; }
-    .suspension-lb-row-2 {
-      margin-bottom: 10px; color: #409EFF;
 
       span {
-        padding-right: 10px;
-        &:not(:first-child) { padding-left: 10px; border-left: 1px solid #979797; }
+        font-size: 20px;
       }
     }
 
-    .nresolve-authschemes-box {
-      h3 {}
-    }
   }
-
 }
