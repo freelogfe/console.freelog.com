@@ -27,7 +27,7 @@
               <span class="user-profile">
                 <img v-if="avatarUrl" :src="avatarUrl" alt="" @error="errorImageHandler">
                 <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
-              </span><span style="color: #fff;">{{session.user.nickname}}</span>
+              </span><span style="margin-left: 5px; color: #fff;">{{session.user.nickname}}</span>
             </template>
 
             <ul class="my-profile-items">

@@ -36,7 +36,7 @@ export default FreelogTags
   }
   .el-tag {
     margin-right: 10px;
-    border-radius: 20px;
+    /*border-radius: 20px;*/
     height: 28px;
     line-height: 24px;
     padding-left: 10px;
