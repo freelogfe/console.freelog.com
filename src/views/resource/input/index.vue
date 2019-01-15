@@ -32,7 +32,6 @@
                 </el-upload>
               </div>
               <div class="resource-upload-state clearfix" v-show="shouldShowResourceUploader === false">
-                <!--<div class="resource-type-desc">资源文件类型：{{formData.resourceType}}</div>-->
                 <div class="upload-state-wrap">
                   <i class="el-icon-document">
                     <span v-if="!shouldShowResourceUploader && uploaderStates.resource.percentage < 100">{{uploaderStates.resource.percentage}}</span>
@@ -56,12 +55,22 @@
               </el-form-item>
             </div>
             <div class="require-input input-item">
+              <el-popover
+                      ref="typePopTip"
+                      placement="top"
+                      title=""
+                      width="200"
+                      trigger="hover"
+                      :disabled="enabledEditResourceType">
+                已上传资源文件不能修改资源类型{{showCreatorInputItem? '，如需修改，请重新上传资源': ''}}
+              </el-popover>
               <el-select
-                      :disabled="!showCreatorInputItem"
+                      :disabled="!enabledEditResourceType"
                       v-model="formData.resourceType"
                       allow-create
                       filterable
                       @change="resourceTypeChange"
+                      v-popover:typePopTip
                       class="resource-type"
                       placeholder="资源类型">
                 <el-option
@@ -83,7 +92,7 @@
                 </el-form-item>
               </div>
               <div class="require-input input-item">
-                <el-form-item prop="widgetName">
+                <el-form-item prop="widgetVersion">
                   <input type="text" v-model="formData.widgetVersion"
                          class="input-rect"
                          :disabled="!showCreatorInputItem"

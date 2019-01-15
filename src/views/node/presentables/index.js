@@ -79,19 +79,35 @@ export default {
       if (presentable.isLoading) return
 
       if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
-        this.$confirm(`确定${presentable.isOnline ? '下' : '上'}线${presentable.presentableName}?上线后将自动替换当前页面样式`)
-          .then(() => {
-            return this.changePresentableStatus(presentable)
+        this.isHadPageBuild().then(is => {
+          if (is) {
+            let text =presentable.isOnline? `确定下线${presentable.presentableName}?下线后节点将无法正常访问`: `确定上线${presentable.presentableName}?上线后将自动替换当前页面样式`
+            this.$confirm(text)
               .then(() => {
-                this.$refs.pagebuildRef.refresh()
+                return this.changePageBuild()
               })
-          })
-          .catch(() => {
-            presentable.isOnlineChecked = !!presentable.isOnline
-          })
+              .catch(() => {
+                presentable.isOnlineChecked = !!presentable.isOnline
+              })
+          } else {
+            return this.changePageBuild()
+          }
+        })
       } else {
         this.changePresentableStatus(presentable)
       }
+    },
+    changePageBuild(presentable) {
+      return this.changePresentableStatus(presentable)
+        .then(() => {
+          this.$refs.pagebuildRef.refresh()
+        })
+    },
+    isHadPageBuild() {
+      return this.$store.dispatch('loadNodeDetail', this.$route.params.nodeId)
+        .then(nodeInfo => {
+          return !!nodeInfo.pageBuildId
+        })
     },
     changePresentableStatus(presentable) {
       presentable.isLoading = true
@@ -165,7 +181,7 @@ export default {
         }).catch(() => {
       })
     },
-    refresh(){
+    refresh() {
       this.$refs.presentableList.refresh()
     },
     showSeachInputHandler(flag) {

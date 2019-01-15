@@ -12,7 +12,8 @@ const TAB_NAMES = {
   policy: 'policy-manager',
   contract: 'contract-manager',
   schema: 'schema-manager',
-  base: 'base-manager'
+  base: 'base-manager',
+  scheme: 'scheme-manager'
 }
 
 export default {
@@ -22,7 +23,7 @@ export default {
       params: {},
       loading: false,
       TAB_NAMES,
-      activeTabName: TAB_NAMES.policy, //contract-manager, schema-manager
+      activeTabName: TAB_NAMES.policy, //contract-manager, scheme-manager
       resourceInfo: {},
       presentableInfo: {
         policy: [],
@@ -58,11 +59,6 @@ export default {
     },
   },
 
-  watch: {
-    '$route': function () {
-      this.initView()
-    }
-  },
   mounted() {
     this.initView()
   },
@@ -159,7 +155,7 @@ export default {
         })
     },
     contractsChangeHandler(contracts) {
-      this.presentableInfo.contracts = contracts
+      this.$set(this.presentableInfo, 'contracts', contracts)
     }
   }
 }

@@ -1,11 +1,15 @@
 <template>
   <div class="resource-item-info" :class="['resource-item-theme-type-'+type]">
     <div class="resource-item" :class="['resource-state-'+resource.status]">
+      <img :src="previewImage | padImage"
+           class="res-preview-img"
+           :class="{'resource-default-preview':!previewImage}"
+           alt="">
       <template v-if="type === 'self'">
-        <div class="res-intro-detail" @click="gotoDetail(resource)">
+        <div class="res-intro-detail">
           <div class="res-intro-bd">
             <p>
-              <span class="res-name">{{resource.resourceName}}</span>
+              <span class="res-name" @click="gotoDetail(resource)">{{resource.resourceName}}</span>
               <span class="res-type">#{{resource.resourceType}}</span>
             </p>
             <p class="res-id">{{resource.resourceId}}</p>
@@ -71,6 +75,12 @@
         default: 'list'
       },
       navTo: Function
+    },
+
+    computed: {
+      previewImage() {
+        return (this.resource.previewImages && this.resource.previewImages[0]) || ''
+      },
     },
 
     watch: {

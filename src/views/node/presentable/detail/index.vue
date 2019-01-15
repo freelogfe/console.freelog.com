@@ -37,7 +37,7 @@
                              v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
             <div class="empty-contract-tip" v-else>
               未创建合约
-              <router-link :to="$route.path + '?tab=schema'">
+              <router-link :to="$route.path + '?tab=scheme'">
                 <el-button type="text">去创建合约</el-button>
               </router-link>
             </div>

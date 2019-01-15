@@ -5,7 +5,7 @@
     <section class="main" :class="themeCls">
       <main class="content">
         <transition name="content">
-          <router-view class="main-view" :key="key"></router-view>
+          <router-view class="main-view"></router-view>
         </transition>
       </main>
     </section>
@@ -24,7 +24,6 @@ export default {
   name: 'fl-layout',
   data() {
     return {
-      key: `layout-${this.$route.path}`
     }
   },
   computed: {

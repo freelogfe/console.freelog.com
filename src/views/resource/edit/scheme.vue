@@ -91,7 +91,7 @@
         const {scheme} = this.detail
         var isValid = true
         if (scheme.dutyStatements && scheme.dutyStatements.length > 0) {
-          isValid = this.contracts.every(contract=>{
+          isValid = this.contracts.every(contract => {
             return contract.status === 4
           })
         }
@@ -119,6 +119,13 @@
       }
     },
     mounted() {
+      if (!this.isDependenciesDone) {
+        this.activeTabName = TAB_NAMES.scheme
+      } else if (!this.isContractsDone) {
+        this.activeTabName = TAB_NAMES.contract
+      } else if (!this.isPoliciesDone) {
+        this.activeTabName = TAB_NAMES.policy
+      }
     },
   }
 </script>
