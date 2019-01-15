@@ -23,10 +23,13 @@
             style="padding: 0;"
             popper-class="nav-list-pop-wrap"
             trigger="hover">
-            <span class="user-profile" slot="reference">
-              <img v-if="avatarUrl" :src="avatarUrl" alt="" @error="errorImageHandler">
-              <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
-            </span>
+            <template slot="reference">
+              <span class="user-profile">
+                <img v-if="avatarUrl" :src="avatarUrl" alt="" @error="errorImageHandler">
+                <i v-else class="el-icon-fa-user-circle" :title="session.user.nickname"></i>
+              </span><span style="color: #fff;">{{session.user.nickname}}</span>
+            </template>
+
             <ul class="my-profile-items">
               <li class="my-profile-item center hover" @click="logout">
                 <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出

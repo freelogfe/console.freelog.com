@@ -38,12 +38,26 @@ export default {
       }
     }
 
+    const validateWidgetVersion = (rule, value, callback) => {
+      // 格式为freelog-xxx-yyyy，最少4个字符
+      const VERSION_REG = /^\d+\.\d+\.\d+$/
+
+      if (this.formData.resourceType === RESOURCE_TYPES.widget && !VERSION_REG.test(value)) {
+        callback(new Error('版本号需符合semver规范，例如0.0.1'))
+      } else {
+        callback()
+      }
+    }
+
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
         resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'}],
         widgetName: [
-          {validator: validateWidgetName, trigger: 'blur'}
+          {validator: validateWidgetName, trigger: 'change'}
+        ],
+        widgetVersion: [
+          {validator: validateWidgetVersion, trigger: 'change'}
         ],
         resourceType: [
           {required: true, message: '请选择资源类型', trigger: 'blur'},
@@ -124,6 +138,9 @@ export default {
     },
     canEditDependencies() {
       return !this.data.resourceId
+    },
+    enabledEditResourceType(){
+      return this.showCreatorInputItem && !this.uploaderStates.resource.isUploaded
     }
   },
 
@@ -134,6 +151,7 @@ export default {
         this.editMode = EDIT_MODES.editor
         Object.assign(this.formData, resource)
         this.formData.widgetName = resource.systemMeta.widgetName || ''
+        this.formData.widgetVersion = resource.systemMeta.version || ''
         this.deps = resource.systemMeta.dependencies
         if (resource.previewImages.length) {
           this.formData.previewImage = resource.previewImages[0]
@@ -405,7 +423,10 @@ export default {
             if (!this.data.resourceId) {
               this.createResource(data).then(resolve).catch(reject)
             } else if (this.isChanged()) {
-              this.updateResource(data).then(resolve).catch(reject)
+              this.updateResource(data).then(detail=>{
+                if (detail && detail.resourceId)resolve(detail)
+                else resolve(this.formData)
+              }).catch(reject)
             } else {
               resolve()
             }
@@ -422,7 +443,7 @@ export default {
             } else {
               resolve(res.data.data)
             }
-          })
+          }).catch(reject)
         } else {
           reject(new Error('无上传文件'))
         }

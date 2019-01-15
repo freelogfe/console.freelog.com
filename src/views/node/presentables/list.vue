@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column
               label="">
-        <template slot-scope="scope"><p class="resource-name">{{ scope.row.presentableName }}</p></template>
+        <template slot-scope="scope"><p class="resource-name">{{ scope.row.presentableName }} </p></template>
       </el-table-column>
       <el-table-column
               width="220"
@@ -32,7 +32,7 @@
                       {'is-presentable-online':scope.row.isOnlineChecked}
                     ]">
             <i class="dot"></i>
-            <div class="schema-state">
+            <div class="scheme-state">
               <div>
                 <template v-if="scope.row.hasContract">已签约</template>
                 <template v-else>
@@ -41,7 +41,7 @@
                   </el-button>
                 </template>
               </div>
-              <p class="schema-info" v-if="scope.row.scheme && scope.row.scheme.selectedPolicy">
+              <p class="scheme-info" v-if="scope.row.scheme && scope.row.scheme.selectedPolicy">
                 {{scope.row.scheme.authSchemeName}}/{{scope.row.scheme.selectedPolicy.policyName}}</p>
             </div>
           </div>
@@ -63,7 +63,7 @@
               </el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="row.detailLink + '?tab=schema'">
+            <router-link :to="row.detailLink + '?tab=scheme'">
               <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
             </router-link>
@@ -368,7 +368,7 @@
       display: flex;
       align-items: center;
       width: 100%;
-      .schema-state {
+      .scheme-state {
         display: inline-block;
         width: 95%;
         i {
@@ -377,7 +377,7 @@
           vertical-align: middle;
         }
       }
-      .schema-info {
+      .scheme-info {
         .text-ellipsis;
         font-size: 12px;
       }

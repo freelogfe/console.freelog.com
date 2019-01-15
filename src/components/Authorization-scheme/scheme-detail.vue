@@ -256,8 +256,9 @@
       policyList() {
         var { authSchemeId } = this.activeScheme
         var tempMap = this.authSchemeIdentityAuthMap[authSchemeId]
+
         return this.activeScheme.policy.map(p => {
-          if(tempMap) {
+          if(tempMap && tempMap[p.segmentId]) {
             const { status, authResult: { isAuth }  } = tempMap[p.segmentId]
             p.isDisbale = status === 0 || !isAuth
           }else {

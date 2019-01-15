@@ -5,6 +5,11 @@
     <div>
       <div class="presentables-header-wrap">
         <span class="title">节点资源列表</span>
+        <el-tooltip class="item" effect="dark" content="添加节点资源" placement="right">
+          <span class="add-presentable-btn" @click="showSearchResourceHandler">
+            <i class="el-icon-plus"></i>
+          </span>
+        </el-tooltip>
         <ul class="list-actions">
           <li>
             <el-select v-model="searchData.isSignContract"
