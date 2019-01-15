@@ -43,6 +43,11 @@
       </div>
     </template>
     <p class="no-resource-dependeny" v-else>没有需要处理的依赖资源</p>
+    <scheme-suspension-ball
+            :isShow="!isAbandon && !isPreventExchangeSelection"
+            :selectedAuthSchemes="resolvedDutyStatements"
+            :unResolveAuthResources="resolvedBubbleResources"
+    ></scheme-suspension-ball>
     <scheme-sign-dialog
             authType="resource"
             :visible.sync="isDialogVisible"
@@ -58,6 +63,7 @@
   import {Message} from 'element-ui'
   import AuthorizationSchemeManage from '@/components/Authorization-scheme/index.vue'
   import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
+  import SchemeSuspensionBall from '@/components/Authorization-scheme/scheme-suspension-ball.vue'
 
   export default {
     name: 'scheme-content',
@@ -75,12 +81,14 @@
         resolvedAuthSchemeMap: {},
         resolvedBubbleResources: [],
         resolvedDutyStatements: [],
-        contracts: []
+        contracts: [],
+        isPreventExchangeSelection: false,
       }
     },
     components: {
       AuthorizationSchemeManage,
       SchemeSignDialog,
+      SchemeSuspensionBall,
     },
     computed: {
       resourceId() {

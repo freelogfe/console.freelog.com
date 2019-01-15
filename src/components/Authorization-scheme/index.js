@@ -1,13 +1,14 @@
 
 import { Message } from 'element-ui'
 import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
+import SchemeSuspensionBall from '@/components/Authorization-scheme/scheme-suspension-ball.vue'
 import SchemeDetail from './scheme-detail.vue'
 import {throttle} from 'lodash'
 
 export default {
   name: 'authorization-scheme-manage',
   components: {
-    SchemeDetail, SchemeSignDialog
+    SchemeDetail, SchemeSignDialog, SchemeSuspensionBall
   },
   props: {
     authType: String,
@@ -44,6 +45,7 @@ export default {
       isShowLoading: false,
       isCanUpdateContract: false,
       isShowSuspensionSchemeList: false,
+      isShowNavBar: false,
       currentOpenedResources: [],             // 当前页面已打开的资源
       resourceMap: {},
       selectedAuthSchemes:[],                 // 已选中的授权方案集合
@@ -52,7 +54,7 @@ export default {
       isRegisterGlobalClickEvent: false,
       authSchemeIdentityAuthMap: {},
       throttleFn: null,
-      isShowDialog: false                     // 是否显示"签约提示"弹窗
+      isShowDialog: false,                    // 是否显示"签约提示"弹窗
     }
   },
   computed: {
@@ -202,7 +204,7 @@ export default {
     afterSginContract(data) {
       var str = this.presentableInfo.contracts.length ? '更新' : '生成'
       Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
-      this.reInitPresentableAuthSchemes(res.data.contracts)
+      this.reInitPresentableAuthSchemes(data.contracts)
     },
     resolveUpdateDate(updateDate) {
       const date = new Date(updateDate)
@@ -230,7 +232,8 @@ export default {
         if(selectedAuthSchemeTabIndex !== -1) {
           const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
           let { policyName, segmentId } = policy[selectedPolicyIndex]
-          const contractId = this.getContractIdBySchemeInfo({resourceId, authSchemeId, segmentId})
+          const contractId = this.getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId })
+
           this.selectedAuthSchemes.push({
             resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId
           })
@@ -244,9 +247,8 @@ export default {
     getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId }) {
       const contract = this.resourceContractsMap[resourceId]
       if(contract) {
-        const { contractId, policySegmentId } = contract
-        if(contract.authSchemeId === authSchemeId && segmentId === policySegmentId) {
-          return contractId
+        if(contract.targetId === authSchemeId && segmentId === contract.segmentId) {
+          return contract.contractId
         }
       }
       return
@@ -400,14 +402,14 @@ export default {
     resolveAuthSchemeParams(tempResource, contractObj) {
       const { authSchemeList } = tempResource
       if(contractObj) {
-        const { authSchemeId, policySegmentId } = contractObj
+        const { targetId, segmentId } = contractObj
         for(let i = 0; i < authSchemeList.length; i++) {
-          if(authSchemeList[i].authSchemeId === authSchemeId) {
+          if(authSchemeList[i].authSchemeId === targetId) {
             tempResource.activeAuthSchemeTabIndex = tempResource.selectedAuthSchemeTabIndex = i
 
             const { policy } = authSchemeList[i]
             for(let j = 0; j < policy.length; j++) {
-              if(policy[j].segmentId === policySegmentId) {
+              if(policy[j].segmentId === segmentId) {
                 tempResource.selectedPolicyIndex = j
                 policy[j].isHasSignHistory = true
               }else {
@@ -445,18 +447,6 @@ export default {
           }
         })
     },
-    toggleSuspensionSchemeList() {
-      this.isShowSuspensionSchemeList = !this.isShowSuspensionSchemeList
-      if(!this.isRegisterGlobalClickEvent) {
-        this.isRegisterGlobalClickEvent = true
-        document.addEventListener('click', this.hideSuspensionSchemeList)
-      }
-    },
-    hideSuspensionSchemeList() {
-      if(this.isShowSuspensionSchemeList) {
-        this.toggleSuspensionSchemeList()
-      }
-    },
     authSchemeBoxScroll(e) {
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
     },
@@ -469,6 +459,7 @@ export default {
         if($partitionBox) {
           var allPartitionBoxW = $partitionBox.offsetWidth * this.currentOpenedResources.length
           this.allPartitionBoxW = allPartitionBoxW
+          // this.isShowNavBar = window.innerWidth < this.allPartitionBoxW
         }
       })
     },
@@ -479,9 +470,12 @@ export default {
   },
   mounted() {
     this.initPresentableAuthSchemes()
-    if(this.isScrollBar) {
-      this.throttleFn = throttle(this.authSchemeBoxScroll, 17).bind(this)
-      document.querySelector('.authorization-scheme-box').addEventListener('scroll', this.throttleFn, false)
-    }
+    // if(this.isScrollBar) {
+    //   this.throttleFn = throttle(this.authSchemeBoxScroll, 17).bind(this)
+    //   const $box = document.querySelector('.authorization-scheme-box')
+    //   if($box) {
+    //     $box.addEventListener('scroll', this.throttleFn, false)
+    //   }
+    // }
   }
 }
