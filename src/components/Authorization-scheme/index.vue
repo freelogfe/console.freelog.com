@@ -2,50 +2,62 @@
   <div
           v-loading="isShowLoading"
           class="authorization-scheme-box"
-          :style="boxStyle"
+          :style="[ boxStyle ]"
   >
     <div
-            class="scheme-partition"
-            v-for="(resourceAuthScheme, index) in currentOpenedResources"
-            :key="'resource' + index"
+            class="auth-s-b-content"
+            :style="[ contentBoxStyle ]"
     >
-      <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 || authType === 'resource'">
-        <h3>{{resourceAuthScheme.resourceName}}</h3>
-        <div>
-          <span>{{resourceAuthScheme.userName}}</span>
-          <span>{{resourceAuthScheme.resourceDate}}</span>
-          <span>{{resourceAuthScheme.resourceType}}</span>
-        </div>
-      </div>
       <div
-              class="s-p-resolve-btn"
-              :class="{'s-p-no-resolve': resourceAuthScheme.isNoResolved}"
-              v-if="authType === 'resource'"
-              @click="toggleResolveResource(resourceAuthScheme, index)">
-        不处理此资源
+              class="scheme-partition"
+              v-for="(resourceAuthScheme, index) in currentOpenedResources"
+              :key="'resource' + index"
+      >
+        <div class="upcast-resource-head" v-if="currentOpenedResources.length > 1 || authType === 'resource'">
+          <h3>{{resourceAuthScheme.resourceName}}</h3>
+          <div>
+            <span>{{resourceAuthScheme.userName}}</span>
+            <span>{{resourceAuthScheme.resourceDate}}</span>
+            <span>{{resourceAuthScheme.resourceType}}</span>
+          </div>
+        </div>
+        <div
+                class="s-p-resolve-btn"
+                :class="{'s-p-no-resolve': resourceAuthScheme.isNoResolved}"
+                v-if="authType === 'resource'"
+                @click="toggleResolveResource(resourceAuthScheme, index)">
+          不处理此资源
+        </div>
+        <scheme-detail
+                :isCanUpdateContract.sync="isCanUpdateContract"
+                :resourceAuthScheme="resourceAuthScheme"
+                :currentOpenedResources="currentOpenedResources"
+                :resourceLevelIndex="index"
+                :resourceMap="resourceMap"
+                :authSchemeIdentityAuthMap="authSchemeIdentityAuthMap"
+                :selectedAuthSchemeTabIndex.sync="resourceAuthScheme.selectedAuthSchemeTabIndex"
+                :activeAuthSchemeTabIndex.sync="resourceAuthScheme.activeAuthSchemeTabIndex"
+                :checkIsCanExchangeSelection="checkIsCanExchangeSelection"
+                @show-upcast-resource-scheme="showUpcastResourceScheme"
+                @refresh-opened-resource="refreshCurrentOpenedResource"
+                @refresh-selected-auth-schemes="refreshSelectedAuthSchemes"
+                @cancel-scheme-selection="cancelSomeURSchemeSelection"
+        ></scheme-detail>
+        <div class="s-p-mask" v-if="resourceAuthScheme.isNoResolved"></div>
       </div>
-      <scheme-detail
-              :isCanUpdateContract.sync="isCanUpdateContract"
-              :resourceAuthScheme="resourceAuthScheme"
-              :currentOpenedResources="currentOpenedResources"
-              :resourceLevelIndex="index"
-              :resourceMap="resourceMap"
-              :authSchemeIdentityAuthMap="authSchemeIdentityAuthMap"
-              :selectedAuthSchemeTabIndex.sync="resourceAuthScheme.selectedAuthSchemeTabIndex"
-              :activeAuthSchemeTabIndex.sync="resourceAuthScheme.activeAuthSchemeTabIndex"
-              :checkIsCanExchangeSelection="checkIsCanExchangeSelection"
-              @show-upcast-resource-scheme="showUpcastResourceScheme"
-              @refresh-opened-resource="refreshCurrentOpenedResource"
-              @refresh-selected-auth-schemes="refreshSelectedAuthSchemes"
-              @cancel-scheme-selection="cancelSomeURSchemeSelection"
-      ></scheme-detail>
-      <div class="s-p-mask" v-if="resourceAuthScheme.isNoResolved"></div>
     </div>
+
     <div class="auth-s-b-nav" v-if="isShowNavBar">
-      <div class="auth-s-b-n-btn prev">
+      <div
+              class="auth-s-b-n-btn prev"
+              :class="{ 'disabled': contentBoxTX >= maxTX }"
+              @click="contentScroll('left')">
         <span class="el-icon-arrow-left"></span>
       </div>
-      <div class="auth-s-b-n-btn next">
+      <div
+              class="auth-s-b-n-btn next"
+              :class="{ 'disabled': contentBoxTX === 0 }"
+              @click="contentScroll('right')">
         <span class="el-icon-arrow-right"></span>
       </div>
     </div>

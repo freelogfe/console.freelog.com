@@ -41,6 +41,9 @@ export default {
   data() {
     return {
       allPartitionBoxW: 0,
+      contentBoxTX: 0,
+      contentBoxStyle: {},
+      maxTX: 0,
       authSchemeBoxScrollLeft: 0,
       isShowLoading: false,
       isCanUpdateContract: false,
@@ -86,7 +89,6 @@ export default {
       }else {
         return {}
       }
-
     },
     redBarStyle() {
       var x = (this.authSchemeBoxScrollLeft / this.allPartitionBoxW).toFixed(4) * 150 + 'px'
@@ -450,6 +452,28 @@ export default {
     authSchemeBoxScroll(e) {
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
     },
+    contentScroll(type) {
+      const $partitionBox = document.querySelector('.scheme-partition')
+      var contentBoxTX = this.contentBoxTX
+      const maxTX = this.maxTX
+      console.log('allPartitionBoxW --', this.allPartitionBoxW, 'innerWidth --', window.innerWidth, ' --- ', maxTX)
+
+      switch (type) {
+        case 'left': {
+          contentBoxTX = contentBoxTX + $partitionBox.offsetWidth
+          contentBoxTX = contentBoxTX > maxTX ? maxTX : contentBoxTX
+          break
+        }
+        case 'right': {
+          contentBoxTX = contentBoxTX - $partitionBox.offsetWidth
+          contentBoxTX = contentBoxTX < 0 ? 0 : contentBoxTX
+          break
+        }
+      }
+      console.log('contentBoxTX ---', contentBoxTX, 'maxTX ---', maxTX)
+      this.contentBoxTX = contentBoxTX
+      this.contentBoxStyle = { "transform": `translateX(-${contentBoxTX}px)` }
+    },
   },
   watch: {
     currentOpenedResources() {
@@ -459,7 +483,8 @@ export default {
         if($partitionBox) {
           var allPartitionBoxW = $partitionBox.offsetWidth * this.currentOpenedResources.length
           this.allPartitionBoxW = allPartitionBoxW
-          // this.isShowNavBar = window.innerWidth < this.allPartitionBoxW
+          this.maxTX = this.allPartitionBoxW - window.innerWidth + 70
+          this.isShowNavBar = window.innerWidth < this.allPartitionBoxW
         }
       })
     },

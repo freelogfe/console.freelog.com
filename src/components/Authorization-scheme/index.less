@@ -3,9 +3,13 @@
 }
 
 .authorization-scheme-box {
-  position: relative; z-index: 5;
-  display: flex; overflow: auto;
-  margin: 0 -20px; min-height: 300px;
+  position: relative; z-index: 5; overflow: hidden;
+
+  .auth-s-b-content {
+    display: flex;
+    min-height: 300px;
+    transform: translateX(0); transition: transform .4s;
+  }
 
   .scheme-partition {
     position: relative;
@@ -79,7 +83,7 @@
   }
 
   .auth-s-b-nav {
-    position: fixed; left: 50%; bottom: 65px; z-index: 10; transform: translateX(-50%);
+    position: fixed; left: 50%; bottom: 60px; z-index: 10; transform: translateX(-50%);
     text-align: center;
 
     .auth-s-b-n-btn {
@@ -90,6 +94,9 @@
 
       &.prev {}
       &.next { margin-left: 30px; }
+      &.disabled {
+        opacity: .4; cursor: not-allowed;
+      }
 
       span {
         font-size: 20px;
