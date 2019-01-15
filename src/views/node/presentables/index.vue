@@ -25,7 +25,6 @@
             </el-select>
           </li>
           <li>
-            <div>{{searchData.resourceType}}</div>
             <el-select v-model="searchData.resourceType"
                        @change="searchHandler(searchData)"
                        size="mini" placeholder="资源类型">

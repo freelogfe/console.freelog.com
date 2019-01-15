@@ -4,7 +4,8 @@
              :type="btnOpt.type"
              :plain="btnOpt.plain"
              :disabled="btnOpt.disabled"
-             v-if="btnOpt.text">{{btnOpt.text}}</el-button>
+             v-if="btnOpt.text">{{btnOpt.text}}
+  </el-button>
 </template>
 
 <script>
@@ -13,16 +14,16 @@
   export default {
     name: 'fl-resource-button',
 
-    data(){
+    data() {
       return {}
     },
 
-    props:{
+    props: {
       resource: Object
     },
 
     computed: {
-      btnOpt(){
+      btnOpt() {
         var opt = {
           plain: true,
           disabled: false,
@@ -57,7 +58,8 @@
               disabled: true
             })
             break
-          default: break;
+          default:
+            break;
         }
 
         return opt
@@ -67,18 +69,23 @@
     methods: {
       publishHandler(isOnline) {
         if (!Number.isInteger(isOnline)) return
+        var tips = ['下架', '发布']
+        this.$confirm(`确定${tips[isOnline]}资源？`, {
+          center: true
+        }).then(() => {
+          this.$services.resource.put(this.resource.resourceId, {
+            isOnline: isOnline
+          }).then(res => {
+            const {errcode, ret, msg, data} = res.data
+            if (errcode === 0 && ret === 0) {
+              this.resource.status = (isOnline === 0) ? RESOURCE_STATUS_MAP.unpublished : RESOURCE_STATUS_MAP.published
+              this.$message.success(`${tips[isOnline]}成功`)
+            } else {
+              this.$message.error(msg || `${tips[isOnline]}失败`)
+            }
+          })
+        }).catch(() => {
 
-        this.$services.resource.put(this.resource.resourceId, {
-          isOnline: isOnline
-        }).then(res => {
-          const {errcode, ret, msg, data} = res.data
-          var tips = ['下架', '发布']
-          if (errcode === 0 && ret === 0) {
-            this.resource.status = (isOnline === 0) ? RESOURCE_STATUS_MAP.unpublished : RESOURCE_STATUS_MAP.published
-            this.$message.success(`${tips[isOnline]}成功`)
-          } else {
-            this.$message.error(msg || `${tips[isOnline]}失败`)
-          }
         })
       },
     }

@@ -5,7 +5,8 @@ export const RESOURCE_TYPES = {
   markdown: 'markdown',
   pageBuild: 'page_build',
   revealSlide: 'reveal_slide',
-  license: 'license'
+  license: 'license',
+  video: 'video'
 }
 
 
