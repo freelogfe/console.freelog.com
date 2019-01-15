@@ -123,7 +123,7 @@ export default {
       return this.formData.resourceType === RESOURCE_TYPES.pageBuild
     },
     canEditDependencies() {
-      return !this.data.resourceId || (this.data.status === RESOURCE_STATUS_MAP.unpublished)
+      return !this.data.resourceId
     }
   },
 

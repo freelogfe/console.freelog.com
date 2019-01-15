@@ -99,7 +99,9 @@ export default {
       var resourceIds = []
 
       this.contracts.map(contract => {
-        contractIds.push(contract.contractId)
+        if (contract.contractId){
+          contractIds.push(contract.contractId)
+        }
         resourceIds.push(contract.resourceId)
         if (contract.isMasterContract) {
           this.masterContract = contract
@@ -122,7 +124,7 @@ export default {
     loadContractInfos(contractIds) {
       return this.$services.contractRecords.get({
         params: {
-          contractIds: contractIds.join(',')
+          contractIds: contractIds.filter(id=>id).join(',')
         }
       }).then(res => res.getData())
     },

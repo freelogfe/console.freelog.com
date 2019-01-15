@@ -202,7 +202,7 @@ export default {
     afterSginContract(data) {
       var str = this.presentableInfo.contracts.length ? '更新' : '生成'
       Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
-      this.reInitPresentableAuthSchemes(res.data.contracts)
+      this.reInitPresentableAuthSchemes(data.contracts)
     },
     resolveUpdateDate(updateDate) {
       const date = new Date(updateDate)
