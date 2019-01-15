@@ -64,7 +64,7 @@ export default {
     //避免重复请求合同数据
     shouldUpdate() {
       var updateKey = this.contracts.map(contract => {
-        return `${contract.contractId}_${contract.status}`
+        return `${contract.contractId}`
       }).join('_')
 
       if (this.updateKey !== updateKey) {
@@ -99,7 +99,9 @@ export default {
       var resourceIds = []
 
       this.contracts.map(contract => {
-        contractIds.push(contract.contractId)
+        if (contract.contractId){
+          contractIds.push(contract.contractId)
+        }
         resourceIds.push(contract.resourceId)
         if (contract.isMasterContract) {
           this.masterContract = contract
@@ -122,7 +124,7 @@ export default {
     loadContractInfos(contractIds) {
       return this.$services.contractRecords.get({
         params: {
-          contractIds: contractIds.join(',')
+          contractIds: contractIds.filter(id=>id).join(',')
         }
       }).then(res => res.getData())
     },
@@ -134,7 +136,12 @@ export default {
       this.currentContract = contract
     },
     fireContractsChange(){
-      this.$emit('contracts-change', this.contractList.concat(this.masterContract))
+      var contracts = this.contractList
+      if (this.masterContract.contractId) {
+        contracts = contracts.concat(this.masterContract)
+      }
+
+      this.$emit('contracts-change', contracts)
     },
     updateContractHandler(contract) {
       Object.assign(this.currentContract, contract)

@@ -80,7 +80,7 @@ export default {
       if(this.currentOpenedResources.length > 1) {
         return {
           position: 'relative',
-          left: (document.querySelector('#pane-schema-manager').offsetWidth - window.innerWidth) / 2 + 'px',
+          left: (document.querySelector('#pane-scheme-manager').offsetWidth - window.innerWidth) / 2 + 'px',
           width: window.innerWidth + 'px',
           margin: 0,
           "padding": "0 35px",

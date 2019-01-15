@@ -5,7 +5,7 @@
                                @save="savePresentableHandler"></presentable-detail-header>
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
-        <el-tab-pane :name="TAB_NAMES.schema">
+        <el-tab-pane :name="TAB_NAMES.scheme">
           <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
           <div class="panel-content">
             <lazy-component>
@@ -27,7 +27,7 @@
                              v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
             <div class="empty-contract-tip" v-else>
               未创建合约
-              <router-link :to="$route.path + '?tab=schema'">
+              <router-link :to="$route.path + '?tab=scheme'">
                 <el-button type="text">去创建合约</el-button>
               </router-link>
             </div>
