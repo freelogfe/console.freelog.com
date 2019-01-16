@@ -148,7 +148,7 @@
     }
   }
 
-  @media screen and (max-width: 1366px) {
+  @media screen and (max-width: 1250px) {
     .presentable-detail-header-wrap .pdh-body {
       width: @main-content-width-990;
     }

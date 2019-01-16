@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column
               label="">
-        <template slot-scope="scope"><p class="resource-name">{{ scope.row.presentableName }} </p></template>
+        <template slot-scope="scope"><p class="resource-name" :title="scope.row.presentableName">{{ scope.row.presentableName }} </p></template>
       </el-table-column>
       <el-table-column
               width="220"
@@ -71,7 +71,7 @@
         </template>
       </el-table-column>
       <el-table-column
-              width="180"
+              width="150"
               label="资源类型">
         <template slot-scope="scope">
           <div>
@@ -394,6 +394,9 @@
       padding: 6px 12px;
       font-size: 14px;
       color: #666666;
+      max-width: 110px;
+      display: inline-block;
+      .text-ellipsis;
       &.is-page_build {
         color: #E89D1F;
         border-color: #E89D1F;
