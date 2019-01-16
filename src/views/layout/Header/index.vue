@@ -58,8 +58,19 @@ export default Header
 </style>
 
 
-<style>
+<style lang="less">
   .el-popover.nav-list-pop-wrap {
     padding: 0;
+  }
+
+  .nav-header {
+    .nav-right-menu-item {
+      .fl-search-input-wrap {
+        .el-button {
+          padding: 0;
+          vertical-align: middle;
+        }
+      }
+    }
   }
 </style>

@@ -70,9 +70,10 @@ export default FreelogTags
   }
   .button-new-tag {
     background-color: white;
+    vertical-align: top;
   }
   .input-new-tag {
-    width: 90px;
+    width: 90px; margin-right: 20px;
     vertical-align: bottom;
   }
 
