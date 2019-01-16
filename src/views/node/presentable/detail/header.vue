@@ -64,6 +64,13 @@
         return `/node/${this.$route.params.nodeId}`
       }
     },
+
+    watch: {
+      'presentable.scheme'() {
+        console.log('change scheme')
+      }
+    },
+
     methods: {}
   }
 </script>

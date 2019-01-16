@@ -60,6 +60,12 @@ export default {
     },
   },
 
+  watch: {
+    'presentableInfo.contracts' ()  {
+
+    },
+  },
+
   mounted() {
     this.initView()
   },
@@ -99,17 +105,7 @@ export default {
       const contract = this.getPresentableContract()
       if (contract) {
         onloadSchemeDetail(contract.authSchemeId).then((scheme) => {
-          if (scheme) {
-            for (let i = 0; i < scheme.policy.length; i += 1) {
-              const policy = scheme.policy[i]
-              if (policy.segmentId === contract.policySegmentId) {
-                scheme.selectedPolicy = policy
-                break
-              }
-            }
-
-            this.$set(this.presentableInfo, 'scheme', scheme)
-          }
+          this.getPresentableScheme({contract, scheme})
         })
       }
     },
@@ -126,6 +122,25 @@ export default {
       }
 
       return null
+    },
+    getPresentableScheme({contract, scheme}) {
+      const tempScheme = { ...scheme }
+      if (tempScheme) {
+        for (let i = 0; i < tempScheme.policy.length; i += 1) {
+          const policy = tempScheme.policy[i]
+          let segmentId = contract.segmentId || contract.policySegmentId
+
+          if (policy.segmentId === segmentId) {
+            tempScheme.selectedPolicy = policy
+            break
+          }
+        }
+
+        this.$set(this.presentableInfo, 'scheme', tempScheme)
+      }
+    },
+    updateSelectedScheme(scheme, contract) {
+      this.getPresentableScheme({contract, scheme})
     },
     handleClick() {
       this.$router.push({
