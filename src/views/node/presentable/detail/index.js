@@ -23,7 +23,7 @@ export default {
       params: {},
       loading: false,
       TAB_NAMES,
-      activeTabName: TAB_NAMES.policy, //contract-manager, scheme-manager
+      activeTabName: TAB_NAMES.base, //contract-manager, scheme-manager
       resourceInfo: {},
       presentableInfo: {
         policy: [],

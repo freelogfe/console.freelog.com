@@ -148,7 +148,7 @@
         &:before {
           content: '';
           display: inline-block;
-          width: 2px;
+          width: 3px;
           background: #666666;
           height: 14px;
           margin-right: 5px;
