@@ -19,7 +19,11 @@ export default {
       default() {
         return 'New Tag'
       }
-    }
+    },
+    isCanCURD: {
+      type: Boolean,
+      default: true
+    },
   },
   watch: {
     value(val) {

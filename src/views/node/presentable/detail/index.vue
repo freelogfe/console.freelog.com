@@ -11,7 +11,11 @@
           </span>
           <div class="panel-content">
             <lazy-component>
-
+              <presentable-detail-base
+                      :resource="resourceInfo"
+                      :presentable="presentableInfo"
+                      @save="savePresentableHandler">
+              </presentable-detail-base>
             </lazy-component>
           </div>
         </el-tab-pane>
