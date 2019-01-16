@@ -6,6 +6,7 @@ import {onloadSchemeDetail} from '@/data/scheme/loader'
 import {onloadPresentableDetail} from '@/data/presentable/loader'
 
 import PresentableDetailHeader from './header.vue'
+import PresentableDetailBase from './base.vue'
 
 
 const TAB_NAMES = {
@@ -36,7 +37,8 @@ export default {
     AuthorizationSchemeManage,
     PresentableDetailHeader,
     PolicyList,
-    ContractManager
+    ContractManager,
+    PresentableDetailBase,
   },
 
   computed: {
