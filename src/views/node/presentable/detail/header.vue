@@ -2,26 +2,18 @@
   <div class="presentable-detail-header-wrap">
     <div class="pdh-body">
       <div class="lf-side">
-        <div class="presentable-info clearfix">
-          <div style="float: left; margin-right: 60px">
-            <template v-if="editing === false">
-              <span class="p-name">{{presentable.presentableName}}</span>
-              <!--<el-button type="text" @click="setEdtingHandler(true)"><i class="el-icon-edit"></i></el-button>-->
-            </template>
-            <template v-else>
-              <input type="text" class="presentable-name-input p-name"
-                     @blur="changePresentableNameHandler"
-                     @keyup.enter="changePresentableNameHandler"
-                     v-model="presentable.presentableName">
-            </template>
+        <div class="presentable-info">
+          <div class="p-presentable-name">
+            <span class="p-name">{{presentable.presentableName}}</span>
           </div>
           <FreelogTags v-model="presentable.userDefinedTags"
                        class="p-user-tags"
                        actionText="新标签"
-                       :isCanCURD="false"
-                       @input="changeTagsHandler"></FreelogTags>
+                       :isCanCURD="false"></FreelogTags>
         </div>
-        <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId" target="_blank">{{resource.resourceName}}</a> | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
+        <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId"
+                                                                        target="_blank">{{resource.resourceName}}</a> |
+          {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
         </div>
         <p :class="contractStateCls"><i class="dot"></i>{{contractState}}</p>
@@ -41,9 +33,7 @@
   export default {
     name: 'presentable-detail-header',
     data() {
-      return {
-        editing: false
-      }
+      return {}
     },
 
     props: {
@@ -51,7 +41,7 @@
       resource: Object
     },
 
-    components:{
+    components: {
       FreelogTags,
     },
 
@@ -74,18 +64,7 @@
         return `/node/${this.$route.params.nodeId}`
       }
     },
-    methods: {
-      changePresentableNameHandler() {
-        this.setEdtingHandler(false)
-        this.$emit('save', {presentableName: this.presentable.presentableName})
-      },
-      setEdtingHandler(flag) {
-        this.editing = flag
-      },
-      changeTagsHandler(){
-        this.$emit('save', {userDefinedTags: this.presentable.userDefinedTags})
-      }
-    }
+    methods: {}
   }
 </script>
 <style scoped lang="less" type="text/less">
@@ -104,7 +83,13 @@
         flex: 1;
       }
       .presentable-info {
+        position: relative;
         margin-bottom: 10px;
+        display: flex;
+        .p-presentable-name {
+          white-space: nowrap;
+          margin-right: 60px;
+        }
         i {
           color: #333333;
           font-size: 18px;
@@ -112,7 +97,7 @@
         }
 
         .p-user-tags {
-          padding-top: 7px;
+          display: inline;
         }
 
         .presentable-name-input {
@@ -157,8 +142,8 @@
     }
   }
 
-  @media screen and (max-width: 1366px){
-    .presentable-detail-header-wrap .pdh-body{
+  @media screen and (max-width: 1366px) {
+    .presentable-detail-header-wrap .pdh-body {
       width: @main-content-width-990;
     }
   }
