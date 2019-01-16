@@ -11,7 +11,6 @@ import PresentableDetailHeader from './header.vue'
 const TAB_NAMES = {
   policy: 'policy-manager',
   contract: 'contract-manager',
-  schema: 'schema-manager',
   base: 'base-manager',
   scheme: 'scheme-manager'
 }

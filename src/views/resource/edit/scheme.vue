@@ -1,6 +1,12 @@
 <template>
   <div class="resource-scheme-manager-wrap">
     <el-tabs tab-position="top" v-model="activeTabName">
+      <el-tab-pane :name="TAB_NAMES.info" :lazy="true">
+        <span slot="label" class="panel-tab-name">授权方案信息</span>
+        <div class="panel-content info-manager-wrap">
+          <SchemeInfo :scheme="detail.scheme"></SchemeInfo>
+        </div>
+      </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.scheme">
         <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
         <div class="panel-content">
@@ -46,11 +52,13 @@
   import ContractManager from '@/components/ContractManager/index.vue'
   import PolicyManager from '@/components/PolicyList/index.vue'
   import SchemeContent from './scheme-content.vue'
+  import SchemeInfo from './scheme-info.vue'
 
   const TAB_NAMES = {
     policy: 'policy-manager',
     contract: 'contract-manager',
-    scheme: 'scheme-manager'
+    scheme: 'scheme-manager',
+    info: 'info-manager'
   }
   export default {
     name: 'resource-scheme-manager',
@@ -69,6 +77,7 @@
       ContractManager,
       PolicyManager,
       SchemeContent,
+      SchemeInfo
     },
     computed: {
       wrapperWidth() {
@@ -125,6 +134,8 @@
         this.activeTabName = TAB_NAMES.contract
       } else if (!this.isPoliciesDone) {
         this.activeTabName = TAB_NAMES.policy
+      } else {
+        this.activeTabName = TAB_NAMES.info
       }
     },
   }
@@ -145,6 +156,7 @@
     }
 
     .policy-manager-wrap,
+    .info-manager-wrap,
     .contract-manager-wrap {
       width: @main-content-width-1190;
       margin: auto;
