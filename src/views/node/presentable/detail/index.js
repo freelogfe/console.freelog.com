@@ -134,17 +134,6 @@ export default {
         query: {tab: this.activeTabName}
       })
     },
-    savePresentableHandler(payload) {
-      this.$services.presentables.put(this.$route.params.presentableId, payload)
-        .then(res => {
-          const {errcode, ret, msg} = res.data
-          if (errcode === 0 && ret === 0) {
-
-          } else {
-            this.$error.showErrorMessage(msg)
-          }
-        })
-    },
     savePoliciesHandler({data}) {
       this.$services.presentables.put(this.$route.params.presentableId, data)
         .then(res => {

@@ -13,7 +13,7 @@
         {{tag}}
       </el-tag>
     </div>
-
+   
     <el-input
       class="input-new-tag"
       v-if="inputVisible"
@@ -70,9 +70,10 @@ export default FreelogTags
   }
   .button-new-tag {
     background-color: white;
+    vertical-align: top;
   }
   .input-new-tag {
-    width: 90px;
+    width: 90px; margin-right: 20px;
     vertical-align: bottom;
   }
 

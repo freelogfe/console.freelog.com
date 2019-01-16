@@ -1,8 +1,7 @@
 <template>
   <section class="presentable-detail-wrapper">
     <presentable-detail-header :resource="resourceInfo"
-                               :presentable="presentableInfo"
-                               @save="savePresentableHandler"></presentable-detail-header>
+                               :presentable="presentableInfo"></presentable-detail-header>
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane :name="TAB_NAMES.base">
@@ -13,8 +12,7 @@
             <lazy-component>
               <presentable-detail-base
                       :resource="resourceInfo"
-                      :presentable="presentableInfo"
-                      @save="savePresentableHandler">
+                      :presentable="presentableInfo">
               </presentable-detail-base>
             </lazy-component>
           </div>

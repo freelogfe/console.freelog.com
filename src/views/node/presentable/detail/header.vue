@@ -3,23 +3,13 @@
     <div class="pdh-body">
       <div class="lf-side">
         <div class="presentable-info">
-          <div style="float: left; margin-right: 60px">
-            <template v-if="editing === false">
-              <span class="p-name">{{presentable.presentableName}}</span>
-              <!--<el-button type="text" @click="setEdtingHandler(true)"><i class="el-icon-edit"></i></el-button>-->
-            </template>
-            <template v-else>
-              <input type="text" class="presentable-name-input p-name"
-                     @blur="changePresentableNameHandler"
-                     @keyup.enter="changePresentableNameHandler"
-                     v-model="presentable.presentableName">
-            </template>
+          <div style="display: inline-block; margin-right: 60px">
+            <span class="p-name">{{presentable.presentableName}}</span>
           </div>
           <FreelogTags v-model="presentable.userDefinedTags"
                        class="p-user-tags"
                        actionText="新标签"
-                       :isCanCURD="false"
-                       @input="changeTagsHandler"></FreelogTags>
+                       :isCanCURD="false"></FreelogTags>
         </div>
         <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId" target="_blank">{{resource.resourceName}}</a> | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
           {{resource.resourceType}}
@@ -42,7 +32,6 @@
     name: 'presentable-detail-header',
     data() {
       return {
-        editing: false
       }
     },
 
@@ -75,16 +64,6 @@
       }
     },
     methods: {
-      changePresentableNameHandler() {
-        this.setEdtingHandler(false)
-        this.$emit('save', {presentableName: this.presentable.presentableName})
-      },
-      setEdtingHandler(flag) {
-        this.editing = flag
-      },
-      changeTagsHandler(){
-        this.$emit('save', {userDefinedTags: this.presentable.userDefinedTags})
-      }
     }
   }
 </script>
@@ -104,7 +83,7 @@
         flex: 1;
       }
       .presentable-info {
-        margin-bottom: 10px;
+        position: relative; margin-bottom: 10px;
         i {
           color: #333333;
           font-size: 18px;
@@ -112,7 +91,8 @@
         }
 
         .p-user-tags {
-          padding-top: 7px;
+          display: inline-block;
+          position: absolute; top: -7px; padding-top: 7px;
         }
 
         .presentable-name-input {
