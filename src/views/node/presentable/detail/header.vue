@@ -97,7 +97,6 @@
         }
 
         .p-user-tags {
-          display: inline;
         }
 
         .presentable-name-input {
