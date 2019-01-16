@@ -1,7 +1,8 @@
 <template>
   <section class="presentable-detail-wrapper">
     <presentable-detail-header :resource="resourceInfo"
-                               :presentable="presentableInfo"></presentable-detail-header>
+                               :presentable="presentableInfo"
+                               :contracts.sync="presentableInfo.contracts"></presentable-detail-header>
     <div class="presentable-content-panels">
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane :name="TAB_NAMES.base">
@@ -27,6 +28,7 @@
                       :resourceInfo="resourceInfo"
                       :presentableInfo="presentableInfo"
                       authType="presentable"
+                      @update-selected-scheme="updateSelectedScheme"
               ></authorization-scheme-manage>
             </lazy-component>
           </div>

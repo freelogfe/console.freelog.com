@@ -1,19 +1,19 @@
 <template>
   <section>
     <div class="policy-input-item"
-         :class="[{'disabled-policy': policy.disabled, 'published-policy': !!policy.segmentId}, mode+'-mode']">
+         :class="[{'disabled-policy': disabledPolicy, 'published-policy': !!policy.segmentId}, mode+'-mode']">
       <div class="policy-name-input-item clearfix">
         <div class="policy-name-input-placeholder">
           <pre class="policy-name-pre">{{policy.policyName}}</pre>
-          <input type="text" class="policy-name-input" @blur="changePolicyNameHandler" :disabled="policy.disabled" v-model="policy.policyName">
+          <input type="text" class="policy-name-input" @blur="changePolicyNameHandler" :disabled="disabledPolicy" v-model="policy.policyName">
         </div>
-        <div class="del-policy-btn">
+        <div class="policy-actions-btn">
           <el-button round class="off-line-btn" size="mini"
-                     v-if="policy.disabled===false"
+                     v-if="disabledPolicy===false"
                      @click="switchPolicyStatusHandler(true)">下架
           </el-button>
           <el-button round class="on-line-btn" size="mini"
-                     v-if="policy.disabled===true"
+                     v-if="disabledPolicy===true"
                      @click="switchPolicyStatusHandler(false)">上架
           </el-button>
         </div>

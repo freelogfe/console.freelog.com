@@ -64,6 +64,13 @@
         return `/node/${this.$route.params.nodeId}`
       }
     },
+
+    watch: {
+      'presentable.scheme'() {
+        console.log('change scheme')
+      }
+    },
+
     methods: {}
   }
 </script>
@@ -97,7 +104,6 @@
         }
 
         .p-user-tags {
-          display: inline;
         }
 
         .presentable-name-input {
@@ -142,7 +148,7 @@
     }
   }
 
-  @media screen and (max-width: 1366px) {
+  @media screen and (max-width: 1250px) {
     .presentable-detail-header-wrap .pdh-body {
       width: @main-content-width-990;
     }

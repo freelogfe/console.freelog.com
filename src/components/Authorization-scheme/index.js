@@ -123,6 +123,7 @@ export default {
     },
     reInitPresentableAuthSchemes(newContracts){
       this.$emit('update:contracts', newContracts)
+      this.updatePresentableScheme(newContracts)
       newContracts.forEach(c => {
         this.resolveAuthSchemeParams(this.resourceMap[c.resourceId], c)
       })
@@ -140,6 +141,22 @@ export default {
         }
         default: {}
       }
+    },
+    updatePresentableScheme(newContracts) {
+      const tempOR = this.currentOpenedResources[0]
+      if(tempOR) {
+        const { authSchemeList, selectedAuthSchemeTabIndex, resourceId } = tempOR
+        var contract = null
+
+        for(let i = 0; i < newContracts.length; i++) {
+          if(newContracts[i].resourceId === resourceId) {
+            contract = newContracts[i]
+            break
+          }
+        }
+        this.$emit('update-selected-scheme', authSchemeList[selectedAuthSchemeTabIndex], contract)
+      }
+
     },
     toggleResolveResource(resourceAuthScheme, resourceLevelIndex) {
       if(!this.checkIsCanExchangeSelection()) return
@@ -403,8 +420,11 @@ export default {
     // 根据合同确定"授权方案与授权策略"的选中序号
     resolveAuthSchemeParams(tempResource, contractObj) {
       const { authSchemeList } = tempResource
+
       if(contractObj) {
-        const { targetId, segmentId } = contractObj
+        let targetId = contractObj.targetId || contractObj.authSchemeId
+        let segmentId = contractObj.segmentId || contractObj.policySegmentId
+
         for(let i = 0; i < authSchemeList.length; i++) {
           if(authSchemeList[i].authSchemeId === targetId) {
             tempResource.activeAuthSchemeTabIndex = tempResource.selectedAuthSchemeTabIndex = i
@@ -456,7 +476,6 @@ export default {
       const $partitionBox = document.querySelector('.scheme-partition')
       var contentBoxTX = this.contentBoxTX
       const maxTX = this.maxTX
-      console.log('allPartitionBoxW --', this.allPartitionBoxW, 'innerWidth --', window.innerWidth, ' --- ', maxTX)
 
       switch (type) {
         case 'left': {
@@ -470,7 +489,7 @@ export default {
           break
         }
       }
-      console.log('contentBoxTX ---', contentBoxTX, 'maxTX ---', maxTX)
+
       this.contentBoxTX = contentBoxTX
       this.contentBoxStyle = { "transform": `translateX(-${contentBoxTX}px)` }
     },
