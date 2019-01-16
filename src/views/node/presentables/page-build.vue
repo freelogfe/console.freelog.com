@@ -8,7 +8,7 @@
                      :params="params">
       <template slot="append">
         <el-table-column
-                width="150"
+                width="140"
                 label="上线状态">
           <template slot-scope="scope">
             <div>

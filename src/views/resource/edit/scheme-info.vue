@@ -15,7 +15,7 @@
         </div>
       </el-form-item>
       <el-form-item class="ft-wrap">
-        <el-button @click="resetSchemeDetail" class="ft-btn" round>取消</el-button>
+        <!--<el-button @click="resetSchemeDetail" class="ft-btn" round>取消</el-button>-->
         <el-button @click="updateSchemeDetail" class="ft-btn" round type="primary">保存</el-button>
       </el-form-item>
     </el-form>
@@ -56,9 +56,13 @@
 
     mounted() {
       this.setData(this.scheme)
+      // this.$on('show', this.showHandler)
     },
 
     methods: {
+      showHandler(){
+        // this.resetSchemeDetail()
+      },
       setData(scheme) {
         this.form.isOnline = (scheme.status === 1) ? 1 : 0
         this.form.authSchemeName = scheme.authSchemeName
@@ -70,6 +74,7 @@
         if (this.loading) return
 
         this.loading = true
+
         this.$services.authSchemes.put(this.scheme.authSchemeId, this.form)
           .then(res => {
             const {errcode, ret, msg, data} = res.data

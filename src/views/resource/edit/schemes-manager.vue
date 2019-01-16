@@ -26,10 +26,10 @@
             width="450px"
             :show-close="false"
             center>
-      <div slot="title" class="scheme-dialog-title">{{editingScheme.creating?'添加授权方案': '修改方案名称'}}</div>
+      <div slot="title" class="scheme-dialog-title">添加授权方案</div>
       <div class="scheme-dialog-bd">
         <el-input placeholder="请输入授权方案名称..." v-model="editingScheme.authSchemeName"></el-input>
-        <span class="scheme-dialog-create-tip" v-if="editingScheme.creating">方案添加成功后无法删除</span>
+        <span class="scheme-dialog-create-tip">方案添加成功后无法删除</span>
       </div>
       <div slot="footer" class="scheme-dialog-footer">
         <el-button type="text" style="color: #999999;margin-right: 10px;"
@@ -85,7 +85,6 @@
       showSettingDialogHandler(scheme, index) {
         this.editingScheme = {
           authSchemeName: scheme.authSchemeName,
-          creating: scheme.creating,
           scheme: scheme
         }
         this.showSettingDialog = true
@@ -93,12 +92,6 @@
       hideSettingDialogHandler() {
         this.showSettingDialog = false
         this.editingScheme = {}
-      },
-      enableSchemeHandler(scheme, index) {
-        this.updateAuthScheme({isOnline: 1}, scheme)
-          .then(data => {
-            this.updateTabData(this.tabs[index], data)
-          }).catch(this.$error.showErrorMessage)
       },
       disableSchemeHandler(data, index) {
         const {scheme} = data
@@ -167,16 +160,16 @@
         }
       },
       showCreateSchemeDialog() {
-        this.showSettingDialogHandler({creating: true, authSchemeName: ''})
+        this.showSettingDialogHandler({authSchemeName: ''})
       },
       createTab(scheme) {
         return this.createAuthScheme({
           authSchemeName: scheme.authSchemeName,
           resourceId: this.resourceDetail.resourceId
-        }).then(this.addTab)
+        })
+          .then(this.addTab)
           .then((tabData) => {
             this.curTabName = tabData.name
-            this.hideSettingDialogHandler()
           })
       },
       createAuthScheme(data) {
@@ -199,16 +192,7 @@
       },
       saveSchemeHandler() {
         var editingScheme = this.editingScheme
-
-        if (editingScheme.creating) {
-          this.createTab(editingScheme)
-        } else {
-          this.updateAuthScheme({authSchemeName: editingScheme.authSchemeName}, editingScheme.scheme)
-            .then(() => {
-              editingScheme.scheme.authSchemeName = editingScheme.authSchemeName
-              this.hideSettingDialogHandler()
-            })
-        }
+        this.createTab(editingScheme).then(this.hideSettingDialogHandler)
       },
       addTab(scheme) {
         const newTabName = scheme.authSchemeId
@@ -224,17 +208,11 @@
             isEnabled: scheme.status === SCHEME_PUBLISH_STATUS.enabled
           }
         }
+
         this.tabs.push(tabData)
         scheme.tabId = newTabName
 
         return tabData
-      },
-      inputDownHandler(ev) {
-        const keyCode = ev.keyCode
-        // 屏蔽elementUI左右快捷键的操作
-        if ([37, 38, 39, 40].indexOf(keyCode) !== -1) {
-          ev.stopPropagation()
-        }
       },
       handleInputConfirm(scheme, ev) {
         this.updateAuthScheme({authSchemeName: scheme.authSchemeName}, scheme)

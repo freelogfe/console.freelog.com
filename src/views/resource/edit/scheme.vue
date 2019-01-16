@@ -1,10 +1,10 @@
 <template>
   <div class="resource-scheme-manager-wrap">
-    <el-tabs tab-position="top" v-model="activeTabName">
+    <el-tabs tab-position="top" v-model="activeTabName" @tab-click="changeTabHandler">
       <el-tab-pane :name="TAB_NAMES.info" :lazy="true">
-        <span slot="label" class="panel-tab-name">授权方案信息</span>
+        <span slot="label" class="panel-tab-name">授权方案信息<i class="dot solid" v-if="isSchemeReady"></i></span>
         <div class="panel-content info-manager-wrap">
-          <SchemeInfo :scheme="detail.scheme"></SchemeInfo>
+          <SchemeInfo :scheme="detail.scheme" ref="info"></SchemeInfo>
         </div>
       </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.scheme">
@@ -15,6 +15,7 @@
                     :resourceInfo="detail.resource"
                     :scheme.sync="detail.scheme"
                     :boxStyle="schemeContentBoxStyle"
+                    ref="scheme"
             ></scheme-content>
           </lazy-component>
         </div>
@@ -24,6 +25,7 @@
         <div class="panel-content contract-manager-wrap">
           <ContractManager :contracts="detail.scheme.dutyStatements"
                            @contracts-change="contractsChangeHandler"
+                           ref="contract"
                            v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
           <div class="empty-contract-tip" v-else>
             <div v-if="isDependenciesDone">
@@ -41,7 +43,9 @@
       <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
         <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
         <div class="panel-content policy-manager-wrap">
-          <PolicyManager :list="detail.scheme.policy" @save="savePoliciesHandler"></PolicyManager>
+          <PolicyManager :list="detail.scheme.policy"
+                         ref="policy"
+                         @save="savePoliciesHandler"></PolicyManager>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -51,6 +55,7 @@
 <script>
   import ContractManager from '@/components/ContractManager/index.vue'
   import PolicyManager from '@/components/PolicyList/index.vue'
+  import {SCHEME_PUBLISH_STATUS} from '@/config/scheme'
   import SchemeContent from './scheme-content.vue'
   import SchemeInfo from './scheme-info.vue'
 
@@ -110,6 +115,12 @@
       isPoliciesDone() {
         return this.detail.scheme.policy.length > 0
       },
+      isEnabled(){
+        return this.detail.scheme.status === SCHEME_PUBLISH_STATUS.enabled
+      },
+      isSchemeReady(){
+        return this.isDependenciesDone && this.isContractsDone && this.isPoliciesDone && !this.isEnabled
+      }
     },
     methods: {
       contractsChangeHandler(contracts) {
@@ -125,6 +136,13 @@
               this.$error.showErrorMessage(msg)
             }
           }).catch(this.$error.showErrorMessage)
+      },
+      changeTabHandler(tab){
+        var name = tab.name.split('-')[0]
+        var $panel = this.$refs[name]
+        if ($panel) {
+          $panel.$emit('show')
+        }
       }
     },
     mounted() {
@@ -151,7 +169,7 @@
     }
     .empty-contract-tip {
       text-align: center;
-      font-size: 14px;
+      font-size: 18px;
       color: #666;
     }
 

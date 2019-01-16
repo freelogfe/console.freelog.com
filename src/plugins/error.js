@@ -17,6 +17,8 @@ export default (Vue) => {
         msg = err.message
       } else if (err.msg) {
         msg = err.msg
+      } else if (err.data && err.data.msg) {
+        msg = err.data.msg
       } else {
         msg = err.toString()
       }

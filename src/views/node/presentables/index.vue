@@ -78,7 +78,7 @@
                          class="node-presentable-list">
           <template slot="append">
             <el-table-column
-                    width="160"
+                    width="140"
                     label="上线状态">
               <template slot-scope="{row}">
                 <div class="status-item-wrap">

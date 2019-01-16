@@ -32,6 +32,12 @@ export default {
     }
   },
 
+  computed: {
+    disabledPolicy(){
+      return this.policy.status === 0
+    }
+  },
+
   components: {PolicyTemplateSelector, QueryPolicyLicense},
   watch: {
     policy() {
@@ -102,14 +108,13 @@ export default {
         this.savePolicyHandler()
       }
       // to validate
-      console.log(policy)
     },
     switchPolicyStatusHandler() {
       var policy = this.policy
       if (policy.policySegmentId) {
         this.$confirm(`确定${policy.disabled ? '上' : '下'}架策略 <${policy.policyName}>？`)
           .then(() => {
-            policy.disabled = !policy.disabled
+            policy.disabled = !this.disabledPolicy
             this.$emit('save', this.policy)
           }).catch(() => {
         })

@@ -15,7 +15,6 @@
       </div>
     </div>
     <div class="p-d-b-w-row save-box">
-      <el-button @click="cancel">取消</el-button>
       <el-button type="primary" @click="onSubmit">保存</el-button>
     </div>
   </div>
@@ -59,9 +58,6 @@
               this.$error.showErrorMessage(msg)
             }
           }).catch(this.$error.showErrorMessage)
-      },
-      cancel() {
-        this.setData(this.presentable)
       },
       setData(presentable) {
         if (!presentable.presentableId) return
