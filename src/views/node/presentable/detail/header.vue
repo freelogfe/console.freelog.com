@@ -2,7 +2,7 @@
   <div class="presentable-detail-header-wrap">
     <div class="pdh-body">
       <div class="lf-side">
-        <div class="presentable-info">
+        <div class="presentable-info clearfix">
           <div style="float: left; margin-right: 60px">
             <template v-if="editing === false">
               <span class="p-name">{{presentable.presentableName}}</span>
