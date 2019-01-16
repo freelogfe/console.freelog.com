@@ -4,15 +4,29 @@
          :class="[checked? 'active-switch': 'inactive-switch']"
          @click="switchHandler">
       <i class="switch-mesh"></i>
-      <span class="switch-label">{{checked? activeText: inactiveText}}</span>
+      <span class="switch-label">
+        <template v-if="checked">
+          <template v-if="activeText">
+            {{activeText}}
+          </template>
+          <slot name="active"></slot>
+        </template>
+        <template v-else>
+          <template v-if="inactiveText">
+            {{inactiveText}}
+          </template>
+          <slot name="inactive"></slot>
+        </template>
+        <!--{{checked? activeText: inactiveText}}-->
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-import SwitchWidget from './index'
+  import SwitchWidget from './index'
 
-export default SwitchWidget
+  export default SwitchWidget
 </script>
 
 <style lang="less" scoped>

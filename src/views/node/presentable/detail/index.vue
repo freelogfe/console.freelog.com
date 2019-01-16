@@ -17,7 +17,7 @@
             </lazy-component>
           </div>
         </el-tab-pane>
-        <el-tab-pane :name="TAB_NAMES.schema">
+        <el-tab-pane :name="TAB_NAMES.scheme">
           <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
           <div class="panel-content">
             <lazy-component>

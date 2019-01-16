@@ -4,6 +4,7 @@
       <img :src="previewImage | padImage"
            class="res-preview-img"
            :class="{'resource-default-preview':!previewImage}"
+           @click="gotoDetail(resource)"
            alt="">
       <template v-if="type === 'self'">
         <div class="res-intro-detail">

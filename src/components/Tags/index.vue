@@ -13,7 +13,7 @@
         {{tag}}
       </el-tag>
     </div>
-   
+
     <el-input
       class="input-new-tag"
       v-if="inputVisible"

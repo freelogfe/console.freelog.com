@@ -84,13 +84,13 @@ export default {
             let text =presentable.isOnline? `确定下线${presentable.presentableName}?下线后节点将无法正常访问`: `确定上线${presentable.presentableName}?上线后将自动替换当前页面样式`
             this.$confirm(text)
               .then(() => {
-                return this.changePageBuild()
+                return this.changePageBuild(presentable)
               })
               .catch(() => {
                 presentable.isOnlineChecked = !!presentable.isOnline
               })
           } else {
-            return this.changePageBuild()
+            return this.changePageBuild(presentable)
           }
         })
       } else {

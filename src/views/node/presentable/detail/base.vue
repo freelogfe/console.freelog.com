@@ -2,7 +2,11 @@
   <div class="presentable-detail-base-wrap">
     <div class="p-d-b-w-row">
       <label>节点资源名称</label>
+<<<<<<< HEAD
       <el-input v-model="presentableName"></el-input>
+=======
+      <el-input v-model="presentable.presentableName" size="medium"></el-input>
+>>>>>>> 69bbd68d573c59e9e886be53b7abd7788f5f0988
     </div>
     <div class="p-d-b-w-row">
       <label>节点资源标签</label>
@@ -15,8 +19,13 @@
       </div>
     </div>
     <div class="p-d-b-w-row save-box">
+<<<<<<< HEAD
       <el-button type="primary" @click="onSubmit">保存</el-button>
       <el-button @click="cancel">取消</el-button>
+=======
+      <el-button>取消</el-button>
+      <el-button type="primary" @click="onSubmit">保存</el-button>
+>>>>>>> 69bbd68d573c59e9e886be53b7abd7788f5f0988
     </div>
   </div>
 </template>
@@ -111,7 +120,7 @@
       margin-top: 50px;
 
       &.save-box {
-        padding-left: 180px;
+        padding-left: 150px;
       }
       .el-button {
         width: 90px;

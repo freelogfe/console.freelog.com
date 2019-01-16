@@ -12,7 +12,6 @@ import PresentableDetailBase from './base.vue'
 const TAB_NAMES = {
   policy: 'policy-manager',
   contract: 'contract-manager',
-  schema: 'schema-manager',
   base: 'base-manager',
   scheme: 'scheme-manager'
 }
@@ -24,7 +23,7 @@ export default {
       params: {},
       loading: false,
       TAB_NAMES,
-      activeTabName: TAB_NAMES.policy, //contract-manager, scheme-manager
+      activeTabName: TAB_NAMES.base, //contract-manager, scheme-manager
       resourceInfo: {},
       presentableInfo: {
         policy: [],

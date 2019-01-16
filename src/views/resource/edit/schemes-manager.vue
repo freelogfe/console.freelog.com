@@ -6,28 +6,11 @@
               :key="index"
               :name="item.name">
         <div slot="label" class="scheme-title" :class="['scheme-title-status-'+item.data.scheme.status]">
-          <el-button class="auth-name" type="text">
+          <el-button class="auth-name" type="text" :class="[SCHEME_STATUS_MAP[item.data.scheme.status].className]">
+            <i class="el-icon-remove"></i>
+            <i class="el-icon-circle-check"></i>
             {{item.data.scheme.authSchemeName}}
           </el-button>
-          <el-popover
-                  placement="bottom"
-                  width="140"
-                  popper-class="scheme-popper"
-                  trigger="hover">
-            <ul class="scheme-actions">
-              <li class="scheme-action-item"
-                  @click="showSettingDialogHandler(item.data.scheme, index)">修改方案名称
-              </li>
-              <li class="scheme-action-item" @click="enableSchemeHandler(item.data.scheme, index)">
-                <i class="el-icon-circle-check"></i>启用授权方案
-              </li>
-              <li class="scheme-action-item" @click="disableSchemeHandler(item.data, index)">
-                <i class="el-icon-remove"></i>停用授权方案
-              </li>
-            </ul>
-            <span slot="reference" class="scheme-state-text"
-                  :class="[SCHEME_STATUS_MAP[item.data.scheme.status].className]">{{SCHEME_STATUS_MAP[item.data.scheme.status].desc}}</span>
-          </el-popover>
         </div>
         <lazy-component>
           <SchemeDetail :detail="item.data"></SchemeDetail>
@@ -121,24 +104,25 @@
         const {scheme} = data
 
         this.shouldShowConfirmTip(data)
-          .then(()=>{
+          .then(() => {
             this.updateAuthScheme({isOnline: 0}, scheme)
               .then(data => {
                 this.updateTabData(this.tabs[index], data)
               }).catch(this.$error.showErrorMessage)
-          }).catch(()=>{})
+          }).catch(() => {
+        })
       },
-      updateTabData(tabData, data){
+      updateTabData(tabData, data) {
         tabData.data.scheme.status = data.status
         tabData.data.isEnabled = data.status === SCHEME_PUBLISH_STATUS.enabled
       },
-      shouldShowConfirmTip(data){
+      shouldShowConfirmTip(data) {
         const {isPublished} = data
         var enabledCnt = 0
-        this.tabs.forEach(tab=>{
-           if (tab.data.isEnabled) {
-             enabledCnt++
-           }
+        this.tabs.forEach(tab => {
+          if (tab.data.isEnabled) {
+            enabledCnt++
+          }
         })
         if (!isPublished || enabledCnt > 1) {
           return Promise.resolve()
@@ -163,7 +147,7 @@
             authSchemes.forEach(this.addTab)
             this.setActiveTab(0)
           }
-        }).finally(()=>{
+        }).finally(() => {
           this.loading = false
         })
       },
@@ -263,6 +247,7 @@
 
 <style lang="less" scoped>
   @import '../../../styles/variables.less';
+
   .resource-schemes-manager-wrap {
     width: 100%;
     margin: auto;
@@ -321,28 +306,31 @@
         font-size: 16px;
         margin-left: 3px;
         border-radius: 0;
+        i {
+          font-size: 20px;
+          vertical-align: middle;
+          display: none;
+        }
+
+        .el-icon-circle-check {
+          color: #84CCA8;
+        }
+        .el-icon-remove {
+          color: #E27C80;
+        }
+
+        &.on-state .el-icon-circle-check,
+        &.off-state .el-icon-remove {
+          display: inline-block;
+        }
+
+        &.deleted-state {
+          color: #D8D8D8;
+        }
       }
 
       .scheme-title-status-4 {
 
-      }
-    }
-
-    .scheme-state-text {
-      color: white;
-      border-radius: 8px;
-      font-size: 12px;
-      padding: 3px 5px;
-      margin-left: 8px;
-      &.on-state {
-        background-color: #84CCA8;
-      }
-
-      &.off-state {
-        background-color: #E27C80;
-      }
-      &.deleted-state {
-        background-color: #D8D8D8;
       }
     }
 
@@ -378,49 +366,15 @@
     }
   }
 
-  .el-popover.scheme-popper {
-    padding: 0;
-    min-width: 0;
-  }
-
-  .scheme-actions {
-    text-align: center;
-
-    .scheme-action-item {
-      cursor: pointer;
-      color: #333333;
-      font-size: 14px;
-      height: 40px;
-      line-height: 40px;
-      &:hover {
-        background-color: #E9F4FF;
-      }
-
-      i {
-        font-size: 18px;
-        margin-right: 6px;
-        vertical-align: middle;
-      }
-    }
-
-    .el-icon-circle-check {
-      color: #84CCA8;
-    }
-    .el-icon-remove {
-      color: #E27C80;
-    }
-  }
-
   .resource-schemes-manager-wrap {
     .el-dialog__header {
       border-bottom: 1px solid #DDDDDD;
     }
 
-    .schemes-nav-tabs  > .el-tabs__header {
+    .schemes-nav-tabs > .el-tabs__header {
       width: @main-content-width-1190;
       margin: auto;
     }
-
 
     .el-tabs__nav-wrap {
       &:after,
@@ -440,10 +394,9 @@
     }
   }
 
-
-  @media screen and (max-width: 1250px){
+  @media screen and (max-width: 1250px) {
     .resource-schemes-manager-wrap {
-      .schemes-nav-tabs  > .el-tabs__header {
+      .schemes-nav-tabs > .el-tabs__header {
         width: @main-content-width-990;
       }
     }
