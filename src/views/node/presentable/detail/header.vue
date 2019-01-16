@@ -6,7 +6,7 @@
           <div style="float: left; margin-right: 60px">
             <template v-if="editing === false">
               <span class="p-name">{{presentable.presentableName}}</span>
-              <el-button type="text" @click="setEdtingHandler(true)"><i class="el-icon-edit"></i></el-button>
+              <!--<el-button type="text" @click="setEdtingHandler(true)"><i class="el-icon-edit"></i></el-button>-->
             </template>
             <template v-else>
               <input type="text" class="presentable-name-input p-name"
@@ -18,6 +18,7 @@
           <FreelogTags v-model="presentable.userDefinedTags"
                        class="p-user-tags"
                        actionText="新标签"
+                       :isCanCURD="false"
                        @input="changeTagsHandler"></FreelogTags>
         </div>
         <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId" target="_blank">{{resource.resourceName}}</a> | {{resource.userName}} | {{resource.updateDate|fmtDate}} |
