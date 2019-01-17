@@ -161,6 +161,10 @@
 
 <style lang="less" type="text/less">
   .s-c-dialog {
+    .no-resolved-duty-statements {
+      text-align: center;
+      margin-top: 30px;
+    }
     h3 {
       position: relative;
       padding-left: 8px;
