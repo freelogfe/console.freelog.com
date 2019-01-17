@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="isShowLoading" :style="boxStyle">
+  <div v-loading="isShowLoading" :style="[boxStyle]" >
     <template v-if="resourceDependencies.length">
       <div class="resource-dependencies">
         <h3>依赖资源列表</h3>
