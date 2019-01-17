@@ -70,7 +70,7 @@ export default {
       deps: [],
       showSearchResourceDialog: false,
       formData: {
-        resourceType: storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget,
+        resourceType: '', //storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
         resourceName: '',
         widgetName: '',
         description: '',

@@ -3,6 +3,16 @@ import lozad from 'lozad'
 
 const winHeight = (window.innerHeight || document.documentElement.clientHeight)
 
+function isCross(r1, r2) {
+  var r = {};
+  r.top = Math.max(r1.top, r2.top);
+  r.bottom = Math.min(r1.bottom, r2.bottom);
+  r.left = Math.max(r1.left, r2.left);
+  r.right = Math.min(r1.right, r2.right);
+  return r.bottom >= r.top && r.right >= r.left;
+}
+
+
 function isElementInViewport(el, diff) {
   var rect = el.getBoundingClientRect();
   var containerRect = {
@@ -18,12 +28,7 @@ function isElementInViewport(el, diff) {
     containerRect.right += diff.right || 0
   }
 
-  return (
-    rect.top >= containerRect.top &&
-    rect.left >= containerRect.left &&
-    rect.bottom <= containerRect.bottom &&
-    rect.right <= containerRect.right
-  );
+  return isCross(rect, containerRect);
 }
 
 export default {
@@ -72,49 +77,45 @@ export default {
       const $hide = this.$refs.loading
       const diffBtm = parseInt(winHeight, 10)
 
-      $hide.classList.remove('hide')
-
+      this.reset()
       const hideFn = () => {
         $hide.classList.add('hide')
       }
-      $hide.dataset.loaded = false
-
       this.observer = lozad($hide, {
         loaded(el) {
           if (self.canLoadMore === false) {
             return hideFn()
           }
+
           const inView = isElementInViewport($hide, {bottom: diffBtm})
           const reobserve = () => {
             el.dataset.loaded = false
             self.observer.observe(el)
           }
+          const loadFn = () => {
+            self.isLoading += 1
+            self.load().then(() => {
+              self.isLoading -= 1
+              if (self.canLoadMore === false) {
+                hideFn()
+              } else {
+                reobserve()
+              }
+            }).catch((err) => {
+              console.log(err)
+              self.isLoading -= 1
+              hideFn()
+            })
+          }
 
           if (!inView) {
-            const fn = () => {
-              if (!el.dataset.loaded) return
-              reobserve()
-              window.removeEventListener('scroll', fn)
+            if (self.canLoadMore && self.index < 2) {
+              loadFn()
             }
-            setTimeout(() => {
-              window.addEventListener('scroll', fn)
-            }, 20)
             return
           }
 
-          self.isLoading += 1
-          self.load().then(() => {
-            self.isLoading -= 1
-            if (self.canLoadMore === false) {
-              hideFn()
-            } else {
-              reobserve()
-            }
-          }).catch((err) => {
-            console.log(err)
-            self.isLoading -= 1
-            hideFn()
-          })
+          loadFn()
         },
         rootMargin: `${diffBtm}px ${diffBtm}px`, // syntax similar to that of CSS Margin
         threshold: 0.1 // ratio of element convergence
@@ -139,14 +140,19 @@ export default {
         observer.disconnect()
       }
     },
-    refresh() {
+    reset(){
       const $hide = this.$refs.loading
-
       this.canLoadMore = true
       this.previewList = []
       this.index = 1
-      // this.disconnect()
+      this.isLoading = 0
+      $hide.classList.remove('hide')
       $hide.dataset.loaded = false
+    },
+    refresh() {
+      const $hide = this.$refs.loading
+      // this.disconnect()
+      this.reset()
       this.observer.observe($hide)
       this.observer.triggerLoad($hide)
     },

@@ -1,5 +1,5 @@
 <template>
-  <section class="res-detail-wrap" :class="{'owner-resource': isOwnerResource}">
+  <section class="res-detail-wrap" :class="{'owner-resource': isOwnerResource, 'off-line-resource': resourceDetail.resourceInfo.status !== 2}">
     <div class="res-detail-hd clearfix"  ref="resIntro">
       <div class="res-hd-wrap">
         <div class="res-digest">
@@ -12,7 +12,7 @@
             </p>
           </div>
           <div class="lf-side">
-            <div class="res-title">{{resourceDetail.resourceInfo.resourceName}}</div>
+            <div class="res-title">{{resourceDetail.resourceInfo.resourceName}} <span class="off-line-tip">(已下架)</span></div>
             <div class="res-origin-info">
               <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
               <span class="res-type">{{resourceDetail.resourceInfo.resourceId}}</span>
@@ -51,7 +51,7 @@
             <div v-else class="empty-res-desc-text">暂无资源描述</div>
           </div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
-            <pre class="meta-info">{{JSON.stringify(resourceDetail.resourceInfo.meta, null, 4)}}</pre>
+            <pre class="meta-info">{{formatMeta()}}</pre>
           </div>
         </div>
         <div class="res-detail-ft">
