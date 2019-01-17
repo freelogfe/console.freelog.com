@@ -29,6 +29,7 @@
           不处理此资源
         </div>
         <scheme-detail
+                :authType="authType"
                 :isCanUpdateContract.sync="isCanUpdateContract"
                 :resourceAuthScheme="resourceAuthScheme"
                 :currentOpenedResources="currentOpenedResources"

@@ -95,7 +95,7 @@
 
   .suspension-list-box {
     overflow-y: auto;
-    position: fixed; bottom: 130px; right: 75px; z-index: 5;
+    position: fixed; bottom: 85px; right: 75px; z-index: 5;
     width: 390px; max-height: 420px; padding: 20px;
     border: 1px solid #DADADA; border-radius: 4px;
     background-color: #FFF;
