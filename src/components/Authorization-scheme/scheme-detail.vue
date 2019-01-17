@@ -55,7 +55,8 @@
               <span class="p-item-check" v-if="index !== curSchemeSelectedPolicyIndex"></span>
               {{policy.policyName}}
               <span class="has-sign-history-text" v-if="policy.isHasSignHistory">(存在历史签约)</span>
-              <span class="disabled-text" v-if="policy.isDisbale">(不可用/已下架)</span>
+              <span class="disabled-text" v-if="policy.isDisbale">(不可用)</span>
+              <span class="disabled-text" v-if="policy.isOffline">(已下架)</span>
             </div>
             <div class="policy-detail">
               <pre class="policy-segment-text">{{fmtPolicyTextList[index]}}</pre>
@@ -266,9 +267,11 @@
         return this.activeScheme.policy.map(p => {
           if(tempMap && tempMap[p.segmentId]) {
             const { status, authResult: { isAuth }, purpose } = tempMap[p.segmentId]
-            p.isDisbale = status === 0 || !isAuth || (( purpose & 2 ) !== 2 && this.authType === 'presentable')
+            p.isDisbale = !isAuth || (( purpose & 2 ) !== 2 && this.authType === 'presentable') || (( purpose & 1 ) !== 1 && this.authType === 'resource')
+            p.isOffline = status === 0
           }else {
             p.isDisbale = false
+            p.isOffline = false
           }
           return p
         })
