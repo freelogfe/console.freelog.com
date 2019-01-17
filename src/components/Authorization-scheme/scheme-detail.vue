@@ -81,6 +81,7 @@
       }
     },
     props: {
+      authType: String,
       isCanUpdateContract: Boolean,
       currentOpenedResources: Array,
       resourceAuthScheme: Object,
@@ -265,7 +266,7 @@
         return this.activeScheme.policy.map(p => {
           if(tempMap && tempMap[p.segmentId]) {
             const { status, authResult: { isAuth }, purpose } = tempMap[p.segmentId]
-            p.isDisbale = status === 0 || !isAuth || ( purpose & 2 ) !== 2
+            p.isDisbale = status === 0 || !isAuth || (( purpose & 2 ) !== 2 && this.authType === 'presentable')
           }else {
             p.isDisbale = false
           }
