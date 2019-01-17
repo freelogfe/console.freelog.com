@@ -49,6 +49,7 @@
                   :key="'policy'+index"
                   class="policy-item"
                   :class="{ 'active': index === curSchemeSelectedPolicyIndex, 'has-sign-history': policy.isHasSignHistory, 'disabled': policy.isDisbale }"
+                  v-if="policy.status === 1"
           >
             <div class="p-item-name" @click="selectPolicyItem(index, policy)">
               <i class="el-icon-circle-check" v-if="index === curSchemeSelectedPolicyIndex"></i>
@@ -56,7 +57,7 @@
               {{policy.policyName}}
               <span class="has-sign-history-text" v-if="policy.isHasSignHistory">(存在历史签约)</span>
               <span class="disabled-text" v-if="policy.isDisbale">(不可用)</span>
-              <span class="disabled-text" v-if="policy.isOffline">(已下架)</span>
+              <!--<span class="disabled-text" v-if="policy.status === 0">(已下架)</span>-->
             </div>
             <div class="policy-detail">
               <pre class="policy-segment-text">{{fmtPolicyTextList[index]}}</pre>
@@ -268,10 +269,8 @@
           if(tempMap && tempMap[p.segmentId]) {
             const { status, authResult: { isAuth }, purpose } = tempMap[p.segmentId]
             p.isDisbale = !isAuth || (( purpose & 2 ) !== 2 && this.authType === 'presentable') || (( purpose & 1 ) !== 1 && this.authType === 'resource')
-            p.isOffline = status === 0
           }else {
             p.isDisbale = false
-            p.isOffline = false
           }
           return p
         })
