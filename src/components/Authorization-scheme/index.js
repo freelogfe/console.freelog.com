@@ -78,10 +78,11 @@ export default {
       }
 
       if(this.currentOpenedResources.length > 1) {
+        let clientWidth = document.body.clientWidth || document.documentElement.clientWidth
         return {
           position: 'relative',
-          left: (document.querySelector('#pane-scheme-manager').offsetWidth - window.innerWidth) / 2 + 'px',
-          width: window.innerWidth + 'px',
+          left: (document.querySelector('#pane-scheme-manager').offsetWidth - clientWidth) / 2 + 'px',
+          width: clientWidth + 'px',
           margin: 0,
           "padding": "0 35px",
           "box-sizing": "border-box",

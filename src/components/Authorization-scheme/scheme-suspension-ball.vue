@@ -76,7 +76,7 @@
 <style type="text/less" lang="less" scoped>
 
   .suspension-ball {
-    position: fixed; bottom: 105px; right: 50px; z-index: 20;
+    position: fixed; bottom: 65px; right: 50px; z-index: 20;
     width: 46px; height: 46px; border-radius: 50%;
     background-color: #FFFFFF; box-shadow: 0 2px 7px 0 rgba(68, 151, 236, .4); text-align: center; cursor: pointer;
 
@@ -96,7 +96,7 @@
   .suspension-list-box {
     overflow-y: auto;
     position: fixed; bottom: 130px; right: 75px; z-index: 5;
-    width: 390px; max-height: 460px; padding: 20px;
+    width: 390px; max-height: 420px; padding: 20px;
     border: 1px solid #DADADA; border-radius: 4px;
     background-color: #FFF;
 
