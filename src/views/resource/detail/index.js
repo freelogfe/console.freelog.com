@@ -142,6 +142,10 @@ export default {
         }
       })
     },
+    formatMeta(){
+      var meta = this.resourceDetail.resourceInfo.meta || {}
+      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : '暂无meta信息'
+    },
     favorHandler() {
       if (this.favoring) {
         return

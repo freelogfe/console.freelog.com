@@ -13,8 +13,8 @@
         </div>
 
         <div class="policy-list-wrap">
-          <el-collapse accordion>
-            <el-collapse-item v-for="policy in tab.scheme.policy">
+          <el-collapse v-model="tab.activePolicy">
+            <el-collapse-item v-for="policy in tab.scheme.policy" :name="policy._index">
               <template slot="title">
                 {{policy.policyName}}
               </template>
@@ -93,11 +93,12 @@
           }).catch(this.$error.showErrorMessage)
       },
       showSchemes(schemes) {
-        this.tabs = schemes.map(scheme => {
+        this.tabs = schemes.map((scheme, index) => {
           return {
             label: scheme.authSchemeName,
             name: scheme.authSchemeId,
-            scheme
+            scheme,
+            activePolicy: `${scheme.authSchemeId}_0`
           }
         })
 
@@ -111,12 +112,14 @@
             return false
           }
 
-          scheme.policy.forEach((p) => {
+          scheme.policy.forEach((p, index) => {
             try {
               p._fmtPolicyText = beautify(p.policyText)
             } catch (e) {
               p._fmtPolicyText = p.policyText
             }
+
+            p._index = `${scheme.authSchemeId}_${index}`
           })
           return scheme
         })

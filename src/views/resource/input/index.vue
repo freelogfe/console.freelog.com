@@ -5,8 +5,51 @@
         <h4>资源信息</h4>
         <div class="input-area res-info-input-wrap">
           <div class="input-lf-side">
+            <div class="require-input input-item">
+              <el-form-item prop="resourceName">
+                <input type="text" class="input-rect" v-model="formData.resourceName" placeholder="资源标题">
+              </el-form-item>
+            </div>
+            <div class="require-input input-item">
+              <el-popover
+                      ref="typePopTip"
+                      placement="top"
+                      title=""
+                      width="200"
+                      trigger="hover"
+                      :disabled="enabledEditResourceType">
+                已上传资源文件不能修改资源类型{{showCreatorInputItem? '，如需修改，请重新上传资源': ''}}
+              </el-popover>
+              <el-select
+                      :disabled="!enabledEditResourceType"
+                      v-model="formData.resourceType"
+                      allow-create
+                      filterable
+                      @change="resourceTypeChange"
+                      v-popover:typePopTip
+                      class="resource-type"
+                      placeholder="请选择资源类型">
+                <el-option
+                        label="请选择资源类型"
+                        value="">
+                </el-option>
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
             <div class="resource-file-input input-item" v-if="showCreatorInputItem">
               <div class="resource-file-uploader-wrap require-input" v-show="shouldShowResourceUploader === true">
+                <el-popover
+                        ref="uploadPopTip"
+                        placement="bottom-start"
+                        title=""
+                        width="200"
+                        trigger="hover"
+                        :disabled="!!formData.resourceType">选择资源类型后方可上传资源文件</el-popover>
                 <el-upload
                         v-if="showCreatorInputItem"
                         class="resource-file-uploader"
@@ -22,7 +65,9 @@
                         :on-change="fileChangeHandler"
                         :on-success="successHandler"
                         :show-file-list="false"
+                        :disabled="!formData.resourceType"
                         :on-progress="uploadProgressHandler"
+                        v-popover:uploadPopTip
                         :auto-upload="true">
                   <i class="el-icon-plus"></i>
                   <div class="resource-file-tip">
@@ -48,38 +93,6 @@
                   <p class="resource-file-size"> {{humanizeSize(formData.filesize)}}</p>
                 </div>
               </div>
-            </div>
-            <div class="require-input input-item">
-              <el-form-item prop="resourceName">
-                <input type="text" class="input-rect" v-model="formData.resourceName" placeholder="资源标题">
-              </el-form-item>
-            </div>
-            <div class="require-input input-item">
-              <el-popover
-                      ref="typePopTip"
-                      placement="top"
-                      title=""
-                      width="200"
-                      trigger="hover"
-                      :disabled="enabledEditResourceType">
-                已上传资源文件不能修改资源类型{{showCreatorInputItem? '，如需修改，请重新上传资源': ''}}
-              </el-popover>
-              <el-select
-                      :disabled="!enabledEditResourceType"
-                      v-model="formData.resourceType"
-                      allow-create
-                      filterable
-                      @change="resourceTypeChange"
-                      v-popover:typePopTip
-                      class="resource-type"
-                      placeholder="资源类型">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
             </div>
 
             <template v-if="formData.resourceType === ResourceTypes.widget">

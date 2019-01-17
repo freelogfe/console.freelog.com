@@ -64,7 +64,7 @@ export default {
             return r.resourceId
           })
 
-          return loadAuthSchemes({ resourceIds: rids }).then((schemes) => {
+          return loadAuthSchemes({ resourceIds: rids, authSchemeStatus: 1 }).then((schemes) => {
             schemes.forEach((scheme) => {
               const rid = scheme.resourceId
               resourcesMap[rid].schemes = resourcesMap[rid].schemes || []

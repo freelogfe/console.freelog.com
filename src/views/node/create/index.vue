@@ -7,16 +7,12 @@
       </el-form-item>
       <el-form-item prop="nodeName" class="node-creator-input-item">
         <input type="text" v-model="dataForm.nodeName" class="node-creator-input" placeholder="输入节点名称">
-        <!--<el-input v-model="dataForm.nodeName" class="node-creator-input" placeholder="输入节点名称"></el-input>-->
+      </el-form-item>
+      <el-form-item class="ft-btns">
+        <el-button class="ft-btn" round @click="goBackHandler">取消</el-button>
+        <el-button class="ft-btn" round type="primary" @click="submitForm('dataForm')">创建节点</el-button>
       </el-form-item>
     </el-form>
-
-    <div class="ft clearfix">
-      <div class="rt-side">
-        <el-button class="ft-btn gray-btn" @click="goBackHandler">取消</el-button>
-        <el-button class="ft-btn deep-color-btn" type="primary" @click="submitForm('dataForm')">创建节点</el-button>
-      </div>
-    </div>
   </section>
 </template>
 

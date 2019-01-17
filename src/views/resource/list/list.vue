@@ -68,7 +68,7 @@
 
     methods: {
       gotoDetailHandler(resource) {
-        if (resource.status === 2) {
+        if (resource.status === 2 || this.type !== 'self') {
           this.$router.push({path: `/resource/detail/${resource.resourceId}`})
         }
       },
@@ -98,6 +98,8 @@
           this.resources = this.resources.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
+          } else {
+            data.canLoadMore = true
           }
           return data
         })
