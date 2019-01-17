@@ -95,7 +95,7 @@
         display: flex;
         .p-presentable-name {
           white-space: nowrap;
-          margin-right: 60px;
+          margin-right: 20px;
         }
         i {
           color: #333333;

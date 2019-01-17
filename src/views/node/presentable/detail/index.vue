@@ -7,7 +7,7 @@
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane :name="TAB_NAMES.base">
           <span slot="label" class="panel-tab-name">
-            节点资源基础信息<i class="dot solid" v-if="!isDependenciesDone"></i>
+            节点资源基础信息
           </span>
           <div class="panel-content">
             <lazy-component>
