@@ -65,12 +65,6 @@
       }
     },
 
-    watch: {
-      'presentable.scheme'() {
-        console.log('change scheme')
-      }
-    },
-
     methods: {}
   }
 </script>

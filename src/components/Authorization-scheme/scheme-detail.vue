@@ -50,7 +50,7 @@
                   class="policy-item"
                   :class="{ 'active': index === curSchemeSelectedPolicyIndex, 'has-sign-history': policy.isHasSignHistory, 'disabled': policy.isDisbale }"
           >
-            <div class="p-item-name" @click="selectPolicyItem(index)">
+            <div class="p-item-name" @click="selectPolicyItem(index, policy)">
               <i class="el-icon-circle-check" v-if="index === curSchemeSelectedPolicyIndex"></i>
               <span class="p-item-check" v-if="index !== curSchemeSelectedPolicyIndex"></span>
               {{policy.policyName}}
@@ -105,8 +105,13 @@
         this.$emit('show-upcast-resource-scheme', this.upcastResourcesArr[index], this.resourceLevelIndex)
       },
       // 选择"授权策略"
-      selectPolicyItem(index) {
+      selectPolicyItem(index, policy) {
         var self = this
+        if(policy.isDisbale) {
+          Message.error('此策略不可用！')
+          return
+        }
+
         if(this.checkIsCanExchangeSelection) {
           if(!this.checkIsCanExchangeSelection()) {
             return
@@ -259,8 +264,8 @@
 
         return this.activeScheme.policy.map(p => {
           if(tempMap && tempMap[p.segmentId]) {
-            const { status, authResult: { isAuth }  } = tempMap[p.segmentId]
-            p.isDisbale = status === 0 || !isAuth
+            const { status, authResult: { isAuth }, purpose } = tempMap[p.segmentId]
+            p.isDisbale = status === 0 || !isAuth || ( purpose & 2 ) !== 2
           }else {
             p.isDisbale = false
           }

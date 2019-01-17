@@ -6,6 +6,12 @@ const freePolicy = `for public:
     terminate
   `
 
+const PresentableFreePolicy = `for public:
+  initial:
+    active
+    terminate
+  `
+
 export const resource = [
   {
     template: freePolicy,
@@ -33,7 +39,7 @@ export const resource = [
 
 export const presentable = [
   {
-    template: freePolicy,
+    template: PresentableFreePolicy,
     name: '免费'
   },
   {
