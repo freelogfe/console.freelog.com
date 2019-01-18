@@ -19,7 +19,7 @@
     </ul>
     <div class="tab-pane">
       <div class="tab-row row-resource" v-if="upcastResourcesArr.length">
-        <h3>上抛资源</h3>
+        <h3>待签资源</h3>
         <ul>
           <li
                   v-for="(upcastResource, index) in upcastResourcesArr"

@@ -38,7 +38,12 @@
     </div>
     <div slot="footer" class="dialog-footer">
       <el-button class="cancel-btn" @click="hideDialog">取消</el-button>
-      <el-button class="sign-btn" type="primary" @click="signContract">签约</el-button>
+      <el-button
+              type="primary"
+              class="sign-btn"
+              :class="{ 'disabled': !isNeedResignContracts }"
+              @click="signContract"
+      >签约</el-button>
     </div>
   </el-dialog>
 </template>
@@ -71,6 +76,11 @@
     computed: {
       renderDutyStatements() {
         return this.formatResolvedDutyStatements(this.resolvedDutyStatements)
+      }
+    },
+    data() {
+      return {
+        isNeedResignContracts: false
       }
     },
     methods: {
@@ -107,45 +117,48 @@
         return data
       },
       signContract() {
-        switch (this.authType) {
-          case 'presentable': {
-            this.$axios.put(`/v1/presentables/${this.presentableId}`, {
-              contracts: this.getPresentableSignData()
-            })
-              .then(res => res.data)
-              .then(res => {
-                if(res.errcode === 0) {
-                  this.hideDialog()
-                  this.$emit('done', res.data)
-                }else {
-                  Message.error(res.msg)
-                }
+        if(this.isNeedResignContracts) {
+          switch (this.authType) {
+            case 'presentable': {
+              this.$axios.put(`/v1/presentables/${this.presentableId}`, {
+                contracts: this.getPresentableSignData()
               })
-            break
+                .then(res => res.data)
+                .then(res => {
+                  if(res.errcode === 0) {
+                    this.hideDialog()
+                    this.$emit('done', res.data)
+                  }else {
+                    Message.error(res.msg)
+                  }
+                })
+              break
+            }
+            case 'resource': {
+              this.$axios.put(`/v1/resources/authSchemes/${this.authSchemeId}/batchSignContracts`, this.getResourceSignData())
+                .then(res => res.data)
+                .then(res => {
+                  if (res.errcode === 0) {
+                    this.hideDialog()
+                    this.$emit('done', res.data)
+                  } else {
+                    Message.error(res.msg)
+                  }
+                })
+              break
+            }
+            default: {}
           }
-          case 'resource': {
-            this.$axios.put(`/v1/resources/authSchemes/${this.authSchemeId}/batchSignContracts`, this.getResourceSignData())
-              .then(res => res.data)
-              .then(res => {
-                if (res.errcode === 0) {
-                  this.hideDialog()
-                  this.$emit('done', res.data)
-                } else {
-                  Message.error(res.msg)
-                }
-              })
-            break
-          }
-          default: {}
         }
-
       },
       formatResolvedDutyStatements(resolvedDutyStatements) {
+        this.isNeedResignContracts = false
         return resolvedDutyStatements
           .map(item => {
             if(item.contractId) {
               item.signState = '已签约'
             }else {
+              this.isNeedResignContracts = true
               item.signState = '未签约'
             }
             return item
@@ -234,6 +247,10 @@
         border-radius: 17px;
         background: #409EFF;
         color: #fff;
+
+        &.disabled {
+          background-color: #D8D8D8; border-color: #D8D8D8; cursor: not-allowed;
+        }
       }
     }
   }
