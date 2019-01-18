@@ -1,10 +1,12 @@
 <template>
   <header class="nav-header">
-    <router-link to="/"  class="brand">
-      <i>F</i>
+    <div class="brand">
+      <router-link to="/"  class="">
+        <i>F</i>
+      </router-link>
       <span class="page-title">{{pageTitle}}</span>
+    </div>
 
-    </router-link>
     <nav class="toolbar" v-if="session.user">
       <ul class="navbar-menu">
         <li class="nav-right-menu-item">
