@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-editor-wrapper">
+  <div class="rich-editor-wrapper" :class="{'full-screen': isFullscreen}">
     <quill-rich-editor v-model="content"
                        class="rich-text-editor"
                        ref="richEditor"

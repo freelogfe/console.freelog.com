@@ -18,7 +18,7 @@
         </el-table-column>
       </template>
       <div class="no-pb-selected-wrap" slot="empty">
-        <p>请在资源列表中上线一个pagebuild资源作为页面样式，
+        <p>请在下面节点资源列表中上线一个资源类型为pagebuild的资源作为页面样式，
           <el-button type="text" @click="searchPageBuildHandler">快速筛选</el-button>
         </p>
       </div>

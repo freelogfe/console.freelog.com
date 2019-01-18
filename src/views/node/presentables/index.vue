@@ -106,7 +106,7 @@
             </el-table-column>
           </template>
           <div class="no-present-list-wrap" slot="empty">
-            暂无数据
+            暂未添加任何节点资源
           </div>
         </PresentableList>
       </div>

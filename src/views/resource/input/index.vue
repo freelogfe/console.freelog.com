@@ -41,15 +41,15 @@
                 </el-option>
               </el-select>
             </div>
-            <div class="resource-file-input input-item" v-if="showCreatorInputItem">
-              <div class="resource-file-uploader-wrap require-input" v-show="shouldShowResourceUploader === true">
+            <div class="resource-file-input require-input input-item" v-if="showCreatorInputItem">
+              <div class="resource-file-uploader-wrap" v-show="shouldShowResourceUploader === true">
                 <el-popover
                         ref="uploadPopTip"
                         placement="bottom-start"
                         title=""
                         width="200"
                         trigger="hover"
-                        :disabled="!!formData.resourceType">选择资源类型后方可上传资源文件</el-popover>
+                        :disabled="!!formData.resourceType">选择资源类型后方可上传资源</el-popover>
                 <el-upload
                         v-if="showCreatorInputItem"
                         class="resource-file-uploader"

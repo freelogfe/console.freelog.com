@@ -230,8 +230,8 @@
       fillWarningTips(presentables) {
         //判断授权链上的策略包含presentable授权
         const tips = {
-          'no': '不能再二次授权',
-          'yes': '可再二次授权'
+          'no': '未获得授权', //合同未到达presentable状态，无法让c端用户签约
+          'yes': '已获得授权'
         }
         const contractTips = {
           'no': '已签约合同未全部激活',
