@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       searchInput: '',
-      activeName: 'favor',
+      activeName: 'search',
       favorResources: [],
       searchResources: []
     }

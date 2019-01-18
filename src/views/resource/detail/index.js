@@ -27,7 +27,9 @@ export default {
         title: 'meta信息'
       }],
       resourceDetail: {
-        resourceInfo: {},
+        resourceInfo: {
+          status: 2
+        },
         isFavor: false
       },
       showOptionsDialog: false,

@@ -1,6 +1,10 @@
 <template>
   <div class="presentable-detail-base-wrap">
     <div class="p-d-b-w-row">
+      <label>节点资源ID</label>
+      {{presentable.presentableId}}
+    </div>
+    <div class="p-d-b-w-row">
       <label>节点资源名称</label>
       <el-input v-model="presentableName" size="medium"></el-input>
     </div>
