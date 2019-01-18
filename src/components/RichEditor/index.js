@@ -15,6 +15,7 @@ export default {
       editor: null,
       showImgUploader: false,
       content: '',
+      isFullscreen: false,
       editorOption: {
         // some quill options
         placeholder: this.placeholder,
@@ -102,6 +103,10 @@ export default {
       if (screenfull.enabled) {
         customButton.addEventListener('click', () => {
           screenfull.toggle(this.$el)
+        })
+
+        screenfull.on('change', () => {
+          this.isFullscreen = screenfull.isFullscreen
         })
       } else {
         customButton.remove()

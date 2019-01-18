@@ -67,7 +67,7 @@ const router = new Router({
         hidden: true,
         meta: {
           requiresAuth: false,
-          title: '首页',
+          title: '资源市场',
           theme: 'gray'
         },
         component: Views.mainView
