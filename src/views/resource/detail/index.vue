@@ -45,8 +45,7 @@
             <ResourceSchemes class="res-schemes-content" :resource="resourceDetail.resourceInfo"></ResourceSchemes>
           </div>
 
-          <div class="res-detail-desc res-detail-info"
-               ref="resDesc">
+          <div class="res-detail-desc res-detail-info" ref="resDesc">
             <div v-if="resourceDetail.resourceInfo.description" v-html="resourceDetail.resourceInfo.description"></div>
             <div v-else class="empty-res-desc-text">暂无资源描述</div>
           </div>

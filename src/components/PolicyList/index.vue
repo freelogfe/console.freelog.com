@@ -6,7 +6,7 @@
                    @delete="deletePolicyHandler"></policy-editor>
     <div>
       <el-button type="text" class="add-new-policy-btn" @click="addNewPolicyHandler">
-        <span><i class="el-icon-plus"></i>添加新策略</span>
+        <span><i class="el-icon-plus"></i>添加新策略<i class="dot solid" v-if="!policyList.length"></i></span>
       </el-button>
     </div>
   </div>
@@ -107,7 +107,7 @@
         height: 40px;
         display: flex;
         align-items: center;
-        i {
+        .el-icon-plus {
           display: inline-block;
           background-color: #EEEEEE;
           width: 40px;
@@ -116,6 +116,10 @@
           border-radius: 50%;
           font-size: 25px;
           margin-right: 10px;
+        }
+
+        .dot {
+          margin-top: -22px;
         }
       }
     }

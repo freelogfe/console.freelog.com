@@ -48,7 +48,7 @@ export default {
       const {contracts} = this.presentableInfo
       var isValid = true
       if (contracts && contracts.length > 0) {
-        isValid = contracts.every(contract=>{
+        isValid = contracts.every(contract => {
           return contract.status === 4
         })
       }
@@ -61,9 +61,12 @@ export default {
   },
 
   watch: {
-    'presentableInfo.contracts' ()  {
+    'presentableInfo.contracts'() {
 
     },
+    $route() {
+      this.setActiveTab(this.$route.query.tab)
+    }
   },
 
   mounted() {
@@ -76,14 +79,22 @@ export default {
         return this.$error.showErrorMessage('缺乏presentable参数')
       }
 
-      const tab = this.$route.query.tab
-
-      if (Object.keys(TAB_NAMES).includes(tab)) {
-        this.activeTabName = TAB_NAMES[tab]
-      }
+      this.setActiveTab(this.$route.query.tab)
 
       this.loadPresentableData(this.params)
         .then(this.loadPresentableScheme.bind(this))
+    },
+    setActiveTab(tab) {
+      var activeTab
+      if (Object.values(TAB_NAMES).includes(tab)) {
+        activeTab = tab
+      } else if (Object.keys(TAB_NAMES).includes(tab)) {
+        activeTab = TAB_NAMES[tab]
+      }
+
+      if (this.activeTabName !== activeTab) {
+        this.activeTabName = activeTab
+      }
     },
     loadPresentableData(params) {
       return onloadPresentableDetail(params.presentableId)
@@ -124,7 +135,7 @@ export default {
       return null
     },
     getPresentableScheme({contract, scheme}) {
-      const tempScheme = { ...scheme }
+      const tempScheme = {...scheme}
       if (tempScheme) {
         for (let i = 0; i < tempScheme.policy.length; i += 1) {
           const policy = tempScheme.policy[i]
