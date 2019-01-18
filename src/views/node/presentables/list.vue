@@ -21,10 +21,13 @@
       </el-table-column>
       <el-table-column
               label="">
-        <template slot-scope="scope"><p class="resource-name" :title="scope.row.presentableName">{{ scope.row.presentableName }} </p></template>
+        <template slot-scope="scope">
+          <p class="resource-name" :title="scope.row.presentableName">{{ scope.row.presentableName }} </p>
+          <p class="resource-name" :title="scope.row.presentableId">{{ scope.row.presentableId }} </p>
+        </template>
       </el-table-column>
       <el-table-column
-              width="220"
+              width="180"
               label="签约状态">
         <template slot-scope="scope">
           <div class="contract-state-info" :class="[
@@ -384,7 +387,8 @@
     }
 
     .resource-name {
-      .text-ellipsis
+      .text-ellipsis;
+      width: 100%;
     }
 
     .resource-type {

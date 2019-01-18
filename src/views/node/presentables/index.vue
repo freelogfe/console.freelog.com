@@ -149,6 +149,7 @@
       height: 55px;
       display: flex;
       align-items: center;
+      flex-flow: wrap;
     }
 
     .el-select .el-input__inner {

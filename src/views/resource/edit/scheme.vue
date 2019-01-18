@@ -194,8 +194,11 @@
 <style lang="less">
   .resource-scheme-manager-wrap {
     .el-tabs__nav {
-      width: 700px;
+      width: 800px;
       min-width: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
     }
 
     .el-tabs__nav-scroll {
@@ -216,10 +219,6 @@
       &:after {
         display: block !important;
       }
-    }
-
-    .el-tabs__item {
-      margin-right: 180px;
     }
   }
 </style>
