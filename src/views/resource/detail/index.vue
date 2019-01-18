@@ -1,5 +1,5 @@
 <template>
-  <section class="res-detail-wrap" :class="{'owner-resource': isOwnerResource, 'off-line-resource': resourceDetail.resourceInfo.status !== 2}">
+  <section class="res-detail-wrap" :class="[{'owner-resource': isOwnerResource}, resourceDetail.resourceInfo.status === 2? 'on-line-resource': 'off-line-resource']">
     <div class="res-detail-hd clearfix"  ref="resIntro">
       <div class="res-hd-wrap">
         <div class="res-digest">

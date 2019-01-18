@@ -6,7 +6,7 @@
              :class="{'resource-default-preview':!previewImage}"
              alt="">
         <p class="res-name">{{resource.resourceName}}</p>
-        <p class="res-type">{{resource.resourceType}}</p>
+        <p class="res-type">{{resource.resourceType}} | {{resource.resourceId}}</p>
       </div>
 
       <div class="pull-panel-btn" @click="pullHandler">更新资源 <i class="el-icon-arrow-down"></i></div>
