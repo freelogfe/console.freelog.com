@@ -17,7 +17,7 @@
           <h3>{{resourceAuthScheme.resourceName}}</h3>
           <div>
             <span>{{resourceAuthScheme.userName}}</span>
-            <span>{{resourceAuthScheme.resourceDate}}</span>
+            <span>{{resourceAuthScheme.updateDate|fmtDate}}</span>
             <span>{{resourceAuthScheme.resourceType}}</span>
           </div>
         </div>

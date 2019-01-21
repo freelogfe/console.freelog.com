@@ -1,5 +1,6 @@
 
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
 import SchemeSuspensionBall from '@/components/Authorization-scheme/scheme-suspension-ball.vue'
 import SchemeDetail from './scheme-detail.vue'
@@ -98,6 +99,9 @@ export default {
         transform: `translateX(${x})`,
       }
     },
+    ...mapGetters({
+      session: 'session',
+    }),
   },
   methods: {
     initPresentableAuthSchemes() {
@@ -348,12 +352,13 @@ export default {
                 if(authSchemeListRes[resourceId]) {
                   this.resolveAuthSchemeListRes(authSchemeListRes[resourceId], resourceId)
 
-                  var resourceDate = this.resolveUpdateDate(updateDate)
+                  // var resourceDate = this.resolveUpdateDate(updateDate)
                   Object.assign(this.resourceMap[resourceId], {
-                    resourceName, resourceType, userName, resourceDate,
+                    resourceName, resourceType, userName,updateDate
                   })
                 }
               })
+              this.getResourcesContractSignState(detailListRes, authSchemeListRes)
             }
             return Promise.resolve()
           })
@@ -469,6 +474,56 @@ export default {
             Message.error(res.msg || '')
           }
         })
+    },
+    getResourcesContractSignState(detailListRes, authSchemeListRes) {
+
+      if(detailListRes.data) {
+        const resourceIDs = detailListRes.data.map(item => item.resourceId)
+        const ids = resourceIDs.join(',')
+        let targetIds = '', partyTwo = ''
+        switch (this.authType) {
+          case 'presentable': {
+            let arr = []
+            resourceIDs.forEach(id => {
+              const tempAuthSchemeIdArr = authSchemeListRes[id]
+              if(tempAuthSchemeIdArr) {
+                tempAuthSchemeIdArr.forEach(({authSchemeId}) => arr.push(authSchemeId))
+              }
+            })
+            targetIds = arr.join(',')
+            partyTwo = this.presentableInfo.nodeId
+            break
+          }
+          case 'resource': {
+            targetIds = this.resourceInfo.resourceId
+            break
+          }
+          default: {}
+        }
+        return this.$axios.get(`/v1/contracts/contractRecords?resourceIds=${ids}&targetIds=${targetIds}&partyTwo=${partyTwo}`)
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              const contracts = res.data
+              for(let i = 0; i < contracts.length; i++) {
+                const { resourceId, segmentId, targetId } = contracts[i]
+                const tempResource = this.resourceMap[resourceId]
+                tempResource.authSchemeList.forEach(item => {
+                  if(item.authSchemeId === targetId) {
+                    item.policy.forEach(p => {
+                      if(p.segmentId === segmentId) {
+                        p.isHasSignHistory = true
+                      }
+                    })
+                  }
+
+                })
+              }
+              console.log(contracts)
+            }
+          })
+      }
+      return
     },
     authSchemeBoxScroll(e) {
       this.authSchemeBoxScrollLeft = e.target.scrollLeft

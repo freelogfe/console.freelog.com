@@ -80,7 +80,7 @@
     },
     data() {
       return {
-        isNeedResignContracts: false
+        isNeedResignContracts: true
       }
     },
     methods: {
@@ -152,17 +152,21 @@
         }
       },
       formatResolvedDutyStatements(resolvedDutyStatements) {
-        this.isNeedResignContracts = false
-        return resolvedDutyStatements
-          .map(item => {
-            if(item.contractId) {
-              item.signState = '已签约'
-            }else {
-              this.isNeedResignContracts = true
-              item.signState = '未签约'
-            }
-            return item
-          })
+        if(resolvedDutyStatements.length) {
+          this.isNeedResignContracts = this.resolvedBubbleResources.length > 0
+          return resolvedDutyStatements
+            .map(item => {
+              if(item.contractId) {
+                item.signState = '已签约'
+              }else {
+                this.isNeedResignContracts = true
+                item.signState = '未签约'
+              }
+              return item
+            })
+        }else {
+          return this.resolvedDutyStatements
+        }
       },
     },
     watch: {
