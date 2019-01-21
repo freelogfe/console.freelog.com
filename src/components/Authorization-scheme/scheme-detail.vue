@@ -55,7 +55,7 @@
               <i class="el-icon-circle-check" v-if="index === curSchemeSelectedPolicyIndex"></i>
               <span class="p-item-check" v-if="index !== curSchemeSelectedPolicyIndex"></span>
               {{policy.policyName}}
-              <span class="has-sign-history-text" v-if="policy.isHasSignHistory">(存在历史签约)</span>
+              <span class="has-sign-history-text" v-if="policy.isHasSignHistory && !policy.isDisbale">(存在历史签约)</span>
               <span class="disabled-text" v-if="policy.isDisbale">(不可用)</span>
               <!--<span class="disabled-text" v-if="policy.status === 0">(已下架)</span>-->
             </div>

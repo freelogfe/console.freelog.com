@@ -1,7 +1,7 @@
 <template>
   <el-dialog
           class="s-c-dialog"
-          title="签约确认"
+          :title="dialogTitle"
           width="800px"
           append-to-body
           center
@@ -43,7 +43,7 @@
               class="sign-btn"
               :class="{ 'disabled': !isNeedResignContracts }"
               @click="signContract"
-      >签约</el-button>
+      >{{signBtnText}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -80,7 +80,9 @@
     },
     data() {
       return {
-        isNeedResignContracts: false
+        isNeedResignContracts: true,
+        dialogTitle: '签约确认',
+        signBtnText: '确认'
       }
     },
     methods: {
@@ -152,17 +154,32 @@
         }
       },
       formatResolvedDutyStatements(resolvedDutyStatements) {
-        this.isNeedResignContracts = false
-        return resolvedDutyStatements
-          .map(item => {
-            if(item.contractId) {
-              item.signState = '已签约'
-            }else {
-              this.isNeedResignContracts = true
-              item.signState = '未签约'
-            }
-            return item
-          })
+        if(resolvedDutyStatements.length) {
+          this.isNeedResignContracts = this.resolvedBubbleResources.length > 0
+          let isAllHasSignHistory = true
+          const targetArr = resolvedDutyStatements
+            .map(item => {
+              const { isHasSignHistory, contractId } = item
+              if(isHasSignHistory) {
+                item.signState = '已签约'
+              }else {
+                isAllHasSignHistory = false
+                item.signState = '未签约'
+              }
+              if(!contractId) {
+                this.isNeedResignContracts = true
+              }
+              return item
+            })
+          if(isAllHasSignHistory) {
+            this.dialogTitle = '合约切换'
+          }else {
+            this.dialogTitle = '签约确认'
+          }
+          return targetArr
+        }else {
+          return this.resolvedDutyStatements
+        }
       },
     },
     watch: {
