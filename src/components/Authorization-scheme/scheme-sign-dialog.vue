@@ -155,7 +155,6 @@
       },
       formatResolvedDutyStatements(resolvedDutyStatements) {
         if(resolvedDutyStatements.length) {
-          this.isNeedResignContracts = this.resolvedBubbleResources.length > 0
           let isAllHasSignHistory = true
           const targetArr = resolvedDutyStatements
             .map(item => {
@@ -166,9 +165,7 @@
                 isAllHasSignHistory = false
                 item.signState = '未签约'
               }
-              if(!contractId) {
-                this.isNeedResignContracts = true
-              }
+
               return item
             })
           if(isAllHasSignHistory) {
