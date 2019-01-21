@@ -255,11 +255,11 @@ export default {
         }
         if(selectedAuthSchemeTabIndex !== -1) {
           const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
-          let { policyName, segmentId } = policy[selectedPolicyIndex]
+          let { policyName, segmentId, isHasSignHistory } = policy[selectedPolicyIndex]
           const contractId = this.getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId })
 
           this.selectedAuthSchemes.push({
-            resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId
+            resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId, isHasSignHistory
           })
           bubbleResources.forEach(bResource => {
             const { resourceId } = bResource
@@ -476,54 +476,42 @@ export default {
         })
     },
     getResourcesContractSignState(detailListRes, authSchemeListRes) {
-
-      if(detailListRes.data) {
-        const resourceIDs = detailListRes.data.map(item => item.resourceId)
-        const ids = resourceIDs.join(',')
-        let targetIds = '', partyTwo = ''
-        switch (this.authType) {
-          case 'presentable': {
-            let arr = []
-            resourceIDs.forEach(id => {
-              const tempAuthSchemeIdArr = authSchemeListRes[id]
-              if(tempAuthSchemeIdArr) {
-                tempAuthSchemeIdArr.forEach(({authSchemeId}) => arr.push(authSchemeId))
-              }
-            })
-            targetIds = arr.join(',')
-            partyTwo = this.presentableInfo.nodeId
-            break
-          }
-          case 'resource': {
-            targetIds = this.resourceInfo.resourceId
-            break
-          }
-          default: {}
-        }
-        return this.$axios.get(`/v1/contracts/contractRecords?resourceIds=${ids}&targetIds=${targetIds}&partyTwo=${partyTwo}`)
-          .then(res => res.data)
-          .then(res => {
-            if(res.errcode === 0) {
-              const contracts = res.data
-              for(let i = 0; i < contracts.length; i++) {
-                const { resourceId, segmentId, targetId } = contracts[i]
-                const tempResource = this.resourceMap[resourceId]
-                tempResource.authSchemeList.forEach(item => {
-                  if(item.authSchemeId === targetId) {
-                    item.policy.forEach(p => {
-                      if(p.segmentId === segmentId) {
-                        p.isHasSignHistory = true
-                      }
-                    })
-                  }
-
-                })
-              }
-              console.log(contracts)
+      if(this.authType === 'presentable') {
+        if(detailListRes.data) {
+          const resourceIDs = detailListRes.data.map(item => item.resourceId)
+          const ids = resourceIDs.join(',')
+          let arr = []
+          resourceIDs.forEach(id => {
+            const tempAuthSchemeIdArr = authSchemeListRes[id]
+            if(tempAuthSchemeIdArr) {
+              tempAuthSchemeIdArr.forEach(({authSchemeId}) => arr.push(authSchemeId))
             }
           })
+          let targetIds = arr.join(',')
+          let partyTwo = this.presentableInfo.nodeId
+
+          return this.$axios.get(`/v1/contracts/contractRecords?resourceIds=${ids}&targetIds=${targetIds}&partyTwo=${partyTwo}`)
+            .then(res => res.data)
+            .then(res => {
+              if(res.errcode === 0) {
+                const contracts = res.data
+                for(let i = 0; i < contracts.length; i++) {
+                  const { resourceId, segmentId, targetId } = contracts[i]
+                  const tempResource = this.resourceMap[resourceId]
+                  tempResource.authSchemeList.forEach(item => {
+                    if(item.authSchemeId === targetId) {
+                      item.policy.forEach(p => {
+                        if(p.segmentId === segmentId) {
+                          p.isHasSignHistory = true
+                        }
+                      })
+                    }
+                  })
+                }
+              }
+            })
+        }
       }
-      return
     },
     authSchemeBoxScroll(e) {
       this.authSchemeBoxScrollLeft = e.target.scrollLeft
