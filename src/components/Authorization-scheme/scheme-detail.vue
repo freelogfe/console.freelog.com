@@ -97,7 +97,7 @@
     methods: {
       // 切换"授权方案"Tab
       exchnageActiveTab(index) {
-        if(this.activeAuthSchemeTabIndex !== index) {
+        if (this.activeAuthSchemeTabIndex !== index) {
           this.$emit('update:activeAuthSchemeTabIndex', index)
         }
         this.$emit('refresh-opened-resource', this.resourceLevelIndex)
@@ -110,35 +110,40 @@
       // 选择"授权策略"
       selectPolicyItem(index, policy) {
         var self = this
-        if(policy.isDisbale) {
-          Message.error('此策略不可用！')
+        if (policy.isDisbale) {
           return
         }
 
-        if(this.checkIsCanExchangeSelection) {
-          if(!this.checkIsCanExchangeSelection()) {
+        if (this.checkIsCanExchangeSelection) {
+          if (!this.checkIsCanExchangeSelection()) {
             return
           }
         }
 
+        self.exchangePolicyItem(index)
+        self.checkIsFinishAllAuth()
+        this.$emit('refresh-selected-auth-schemes')
+
+        return
+        // 以下代码功能暂留 2019/01/21
         // 存在parentResourceId即为upcastResource，须确认父级资源是否已选中授权方案
-        if((this.resourceLevelIndex - 1) >= 0) {
-          let { selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex, resourceName, authSchemeList } = this.currentOpenedResources[this.resourceLevelIndex - 1]
-          if(selectedAuthSchemeTabIndex === -1) {
+        if ((this.resourceLevelIndex - 1) >= 0) {
+          let {selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex, resourceName, authSchemeList} = this.currentOpenedResources[this.resourceLevelIndex - 1]
+          if (selectedAuthSchemeTabIndex === -1) {
             Message.error(`父级资源"${resourceName}"未选中授权方案`)
             return
-          }else if(selectedAuthSchemeTabIndex !== activeAuthSchemeTabIndex) {
+          } else if (selectedAuthSchemeTabIndex !== activeAuthSchemeTabIndex) {
             var parentResourceActiveScheme = authSchemeList[activeAuthSchemeTabIndex]
             Message.error(`父级资源"${resourceName}"的授权方案"${parentResourceActiveScheme.authSchemeName}"未选中`)
             return
           }
         }
 
-        const { isEffect, msg } = this.isEffectSelectedScheme(index)
-        if(isEffect) {
+        const {isEffect, msg} = this.isEffectSelectedScheme(index)
+        if (isEffect) {
           MessageBox.confirm(msg, {
-            callback (action) {
-              if(action === 'confirm') {
+            callback(action) {
+              if (action === 'confirm') {
                 self.$emit('cancel-scheme-selection', self.upcastResourcesArr)
                 self.exchangePolicyItem(index)
                 self.checkIsFinishAllAuth()
@@ -146,7 +151,7 @@
               }
             }
           })
-        }else {
+        } else {
           self.exchangePolicyItem(index)
           self.checkIsFinishAllAuth()
           this.$emit('refresh-selected-auth-schemes')
@@ -158,11 +163,11 @@
         let str = ''
         let isEffect = false
 
-        if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
+        if (this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
           str = '切换授权方案，将会导致之前选择的策略都将失效'
           isEffect = true
-        }else if(this.curSchemeSelectedPolicyIndex === index) {
-          if(this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
+        } else if (this.curSchemeSelectedPolicyIndex === index) {
+          if (this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
             str = '取消当前选择，将导致部分授权方案的选择失效'
             isEffect = true
           }
@@ -173,75 +178,41 @@
         }
       },
       exchangePolicyItem(index) {
-        if(this.curSchemeSelectedPolicyIndex === index) {
+        if (this.curSchemeSelectedPolicyIndex === index) {
           this.curSchemeSelectedPolicyIndex = -1
           this.$emit('update:selectedAuthSchemeTabIndex', -1)
-        }else {
+        } else {
           this.curSchemeSelectedPolicyIndex = index
           this.$emit('update:selectedAuthSchemeTabIndex', this.activeAuthSchemeTabIndex)
         }
         this.resourceAuthScheme.selectedPolicyIndex = this.curSchemeSelectedPolicyIndex
       },
-      // 是否所有资源（包括上抛资源）都已选择策略，是否可以"更新合同"
+      // 是否所有资源（包括上抛资源）都已选择策略
       checkIsFinishAllAuth() {
         var leng = this.currentOpenedResources.length
-        const tempAuthSchemeData = this.currentOpenedResources[leng - 1]
-        const { activeAuthSchemeTabIndex, authSchemeList, selectedAuthSchemeTabIndex, isFinishSelectedAuthScheme, isResovled } = tempAuthSchemeData
-        var isFinishSelectedAS = false
-
-        const { bubbleResources } = authSchemeList[activeAuthSchemeTabIndex]
-
-        // 是否已选中"授权方案"，否则isFinishSelectedAS = false
-        if(selectedAuthSchemeTabIndex !== -1) {
-          // 是否存在"上抛资源"，不存在则isFinishSelectedAS = true
-          if(bubbleResources.length === 0) {
-            isFinishSelectedAS = true
-          }else {
-            // 判断所有"上抛资源"是否都已选中"授权方案"
-            let isFinishSelection = true
-            for(let i = 0; i < bubbleResources.length; i++) {
-              const { resourceId } = bubbleResources[i]
-              if(!this.resourceMap[resourceId] || !this.resourceMap[resourceId].isFinishSelectedAuthScheme) {
-                isFinishSelection = false
-                break
-              }
-            }
-            isFinishSelectedAS = isFinishSelection
-          }
-        }
-
         for(let i = leng - 1; i >= 0; i--) {
+          let isFinishSelectedAS = false
+          const { authSchemeList, selectedAuthSchemeTabIndex, resourceName } = this.currentOpenedResources[i]
+          if(selectedAuthSchemeTabIndex !== -1) {
+            const { bubbleResources } = authSchemeList[selectedAuthSchemeTabIndex]
+            if(bubbleResources.length) {
+              let isFinishBubbleSelections = true
+              for(let j = 0; j < bubbleResources.length; j++) {
+                const { resourceId } =  bubbleResources[j]
+                if(!this.resourceMap[resourceId] || !this.resourceMap[resourceId].isFinishSelectedAuthScheme ) {
+                  isFinishBubbleSelections = false
+                  break
+                }
+              }
+              isFinishSelectedAS = isFinishBubbleSelections
+            }else {
+              isFinishSelectedAS = true
+            }
+          }
           this.currentOpenedResources[i].isFinishSelectedAuthScheme = isFinishSelectedAS
         }
 
-        this.checkCanUpdateContract()
       },
-      // 检测是否能点击"更新合同"
-      checkCanUpdateContract() {
-        var isCanUpdateContract = true
-        const { authSchemeList, selectedAuthSchemeTabIndex } = this.currentOpenedResources[0]
-        if(selectedAuthSchemeTabIndex !== -1) {
-          const { bubbleResources } = authSchemeList[selectedAuthSchemeTabIndex]
-          for(let i = 0; i < bubbleResources.length; i++) {
-            const { resourceId } = bubbleResources[i]
-            const tempAuthSchemeData = this.resourceMap[resourceId]
-            if(tempAuthSchemeData) {
-              const { isFinishSelectedAuthScheme } = tempAuthSchemeData
-              if(!isFinishSelectedAuthScheme) {
-                isCanUpdateContract = false
-                break
-              }
-            }else {
-              isCanUpdateContract = false
-              break
-            }
-          }
-        }else {
-          isCanUpdateContract = false
-        }
-
-        this.$emit('update:isCanUpdateContract', isCanUpdateContract)
-      }
     },
     computed: {
       authSchemeList() {
@@ -252,24 +223,24 @@
       },
       upcastResourcesArr() {
         return this.activeScheme.bubbleResources.map(item => {
-          const { resourceId } = item
-          if(!this.resourceMap[resourceId]) {
+          const {resourceId} = item
+          if (!this.resourceMap[resourceId]) {
             item.selectedAuthSchemeTabIndex = -1
             return item
-          }else {
+          } else {
             return this.resourceMap[resourceId]
           }
         })
       },
       policyList() {
-        var { authSchemeId } = this.activeScheme
+        var {authSchemeId} = this.activeScheme
         var tempMap = this.authSchemeIdentityAuthMap[authSchemeId]
 
         return this.activeScheme.policy.map(p => {
-          if(tempMap && tempMap[p.segmentId]) {
-            const { status, authResult: { isAuth }, purpose } = tempMap[p.segmentId]
-            p.isDisbale = !isAuth || (( purpose & 2 ) !== 2 && this.authType === 'presentable') || (( purpose & 1 ) !== 1 && this.authType === 'resource')
-          }else {
+          if (tempMap && tempMap[p.segmentId]) {
+            const {status, authResult: {isAuth}, purpose} = tempMap[p.segmentId]
+            p.isDisbale = !isAuth || ((purpose & 2) !== 2 && this.authType === 'presentable') || ((purpose & 1) !== 1 && this.authType === 'resource')
+          } else {
             p.isDisbale = false
           }
           return p
@@ -287,25 +258,24 @@
         this.$emit('refresh-selected-auth-schemes')
       },
       selectedAuthSchemeTabIndex() {
-        if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {
+        if (this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {
           this.curSchemeSelectedPolicyIndex = -1
-        }else {
+        } else {
           this.curSchemeSelectedPolicyIndex = this.resourceAuthScheme.selectedPolicyIndex
         }
       },
       activeScheme() {
-        if(this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {
+        if (this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex) {
           this.curSchemeSelectedPolicyIndex = -1
-        }else {
+        } else {
           this.curSchemeSelectedPolicyIndex = this.resourceAuthScheme.selectedPolicyIndex
         }
-        this.selectedUpcastResourceIndex = typeof this.activeScheme.selectedUpcastResourceIndex === 'undefined' ? -1: this.activeScheme.selectedUpcastResourceIndex
+        this.selectedUpcastResourceIndex = typeof this.activeScheme.selectedUpcastResourceIndex === 'undefined' ? -1 : this.activeScheme.selectedUpcastResourceIndex
       }
     },
     mounted() {
       this.curSchemeSelectedPolicyIndex = this.resourceAuthScheme.selectedPolicyIndex
-      this.selectedUpcastResourceIndex = typeof this.activeScheme.selectedUpcastResourceIndex === 'undefined' ? -1: this.activeScheme.selectedUpcastResourceIndex
-      this.checkCanUpdateContract()
+      this.selectedUpcastResourceIndex = typeof this.activeScheme.selectedUpcastResourceIndex === 'undefined' ? -1 : this.activeScheme.selectedUpcastResourceIndex
     },
   }
 
