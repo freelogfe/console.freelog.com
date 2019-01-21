@@ -22,8 +22,9 @@
 
     li{
       position: relative;
-      flex: 1; padding: 7px 0;  border: 1px solid #D8D8D8;
-      text-align: center; color: #666; cursor: pointer;
+      flex: 1; padding: 5px 10px;  border: 1px solid #D8D8D8;
+      line-height: 26px; text-align: center; color: #666; cursor: pointer;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 
       &:not(:first-child) { border-left-width: 0; }
       &.active {
@@ -32,11 +33,11 @@
 
       .el-icon-circle-check {
         display: none;
-        position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+        margin-right: 5px; transform: translateY(3px);
         color: #4497EC; font-size: 20px;
 
         &.selected {
-          display: block;
+          display: inline-block;
         }
       }
     }

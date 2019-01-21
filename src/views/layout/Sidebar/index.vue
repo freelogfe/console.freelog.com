@@ -68,10 +68,14 @@
       <!--</li>-->
       <li class="ls-item">
         <el-tooltip effect="dark" content="设置" placement="right" :disabled="!isMini">
-          <a class="nav-link ls-nav-link" :href="`//${targetHostname}/user/profile`" target="_blank">
+          <router-link to="/setting" class="nav-link ls-nav-link">
             <i class="el-icon-setting"></i>
             <span>设置</span>
-          </a>
+          </router-link>
+          <!--<a class="nav-link ls-nav-link" :href="`//${targetHostname}/user/profile`" target="_blank">-->
+            <!--<i class="el-icon-setting"></i>-->
+            <!--<span>设置</span>-->
+          <!--</a>-->
         </el-tooltip>
       </li>
     </ul>

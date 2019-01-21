@@ -218,12 +218,33 @@ export default {
       }
     },
     // 点击"更新合约"或"生成合约"按钮
-    signContract(isCanUpdateContract) {
-      if(!isCanUpdateContract) {
-        Message.error('仍有资源未选择授权策略')
+    signContract() {
+      const arr = this.checkIsExistUnselectedScheme(this.currentOpenedResources[0])
+      if(arr.length) {
+        Message.error(`资源"${arr.join('"、"')}"未选择授权策略`)
         return
       }
       this.isShowDialog = true
+    },
+    // 检测是否能点击"更新合同"
+    checkIsExistUnselectedScheme(openResource) {
+      var arr = []
+      const { resourceName, authSchemeList, selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex } = openResource
+      if(selectedAuthSchemeTabIndex === -1) {
+        arr.push(resourceName)
+      }
+
+      const { bubbleResources = [] } = authSchemeList[activeAuthSchemeTabIndex]
+      for(let i = 0; i < bubbleResources.length; i++) {
+        const { resourceId, resourceName } = bubbleResources[i]
+        const tempAuthSchemeData = this.resourceMap[resourceId]
+        if(tempAuthSchemeData) {
+          arr = [ ...arr, ...this.checkIsExistUnselectedScheme(tempAuthSchemeData)]
+        }else {
+          arr.push(resourceName)
+        }
+      }
+      return arr
     },
     afterSginContract(data) {
       var str = this.presentableInfo.contracts.length ? '更新' : '生成'
@@ -440,8 +461,6 @@ export default {
               if(policy[j].segmentId === segmentId) {
                 tempResource.selectedPolicyIndex = j
                 policy[j].isHasSignHistory = true
-              }else {
-                policy[j].isHasSignHistory = false
               }
             }
             break
