@@ -11,6 +11,7 @@ import Views from '@/views/index'
 import store from '../store'
 import nodeRoute from './node'
 import resourceRoute from './resource'
+import {gotoLogin} from "../lib/utils";
 
 Vue.use(Router)
 
@@ -95,11 +96,18 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   store.dispatch('checkUserSession')
-    .then(isLogined => {
-      if (isLogined) {
+    .then(isSameSession => {
+      if (isSameSession) {
         next()
       } else {
-        window.location = to.fullPath
+        store.dispatch('getCurrentUserInfo')
+          .then(user => {
+            if (user) {
+              window.location = to.fullPath
+            } else {
+              gotoLogin()
+            }
+          })
       }
     })
 })
