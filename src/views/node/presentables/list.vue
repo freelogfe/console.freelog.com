@@ -237,9 +237,24 @@
           'no': '已签约合同未全部激活',
           'yes': '全部激活'
         }
+        const policyTips = {
+          'no': '未有可用策略',
+          'yes': '已有策略'
+        }
 
         presentables.forEach(presentable => {
           let warningTips = []
+
+          if(presentable.policy.length) {
+            for(let i = 0; i < presentable.policy.length; i++) {
+              if(presentable.policy[i].status === 0) {
+                warningTips.push(policyTips.no)
+                break
+              }
+            }
+          }else {
+            warningTips.push(policyTips.no)
+          }
 
           if (presentable.isAcquireSignAuth === 0) {
             warningTips.push(tips.no)
