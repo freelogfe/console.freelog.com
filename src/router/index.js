@@ -8,7 +8,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Views from '@/views/index'
-
+import store from '../store'
 import nodeRoute from './node'
 import resourceRoute from './resource'
 
@@ -36,7 +36,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      meta: { title: '资源市场' },
+      meta: {title: '资源市场'},
       component: Views.layout,
       children: [resourceRoute, nodeRoute, {
         path: 'about',
@@ -46,7 +46,7 @@ const router = new Router({
           title: '关于freelog'
         },
         component: Views.aboutView
-      },{
+      }, {
         path: 'setting',
         hidden: true,
         meta: {
@@ -94,7 +94,13 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  //do sth
-  next()
+  store.dispatch('checkUserSession')
+    .then(isLogined => {
+      if (isLogined) {
+        next()
+      } else {
+        window.location = to.fullPath
+      }
+    })
 })
 export default router
