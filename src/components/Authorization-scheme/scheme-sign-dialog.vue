@@ -9,7 +9,7 @@
           :show-close="false"
   >
     <div class="resolved-duty-statements" v-show="resolvedDutyStatements.length">
-      <!--<h3>使用依赖资源需要与以下资源签约，请确认</h3>-->
+      <h3>签约的依赖资源（共{{resolvedDutyStatements.length}}个）</h3>
       <el-table
               :data="renderDutyStatements"
               :row-class-name="tableRowClassName"
@@ -22,8 +22,8 @@
         <el-table-column prop="signState" label="签约状态"></el-table-column>
       </el-table>
     </div>
-    <div class="resolved-bubble-resources" v-show="false">
-      <h3>上抛以下资源，请确认</h3>
+    <div class="resolved-bubble-resources" v-show="resolvedBubbleResources.length">
+      <h3>不处理的依赖资源（共{{resolvedBubbleResources.length}}个）</h3>
       <ul>
         <li
                 v-for="(item, index) in resolvedBubbleResources"
@@ -33,7 +33,7 @@
         </li>
       </ul>
     </div>
-    <div class="no-resolved-duty-statements" v-if="resolvedDutyStatements.length === 0">
+    <div class="no-resolved-duty-statements" v-if="false">
       当前方案选择不处理依赖资源，是否确认签约？
     </div>
     <div slot="footer" class="dialog-footer">
@@ -194,9 +194,9 @@
     }
     h3 {
       position: relative;
-      padding-left: 8px;
+      margin-top: 30px; padding-left: 8px;
       font-size: 14px;
-      color: #999999;
+      color: #333333;
 
       &:before {
         position: absolute;
@@ -222,7 +222,6 @@
     }
 
     .resolved-bubble-resources {
-      margin-top: 30px;
 
       li {
         margin-top: 12px;

@@ -94,11 +94,11 @@ export default {
           }
         })
       } else {
-        this.changePresentableStatus(presentable)
+        this.presentableOnlineOrOffline(presentable)
       }
     },
     changePageBuild(presentable) {
-      return this.changePresentableStatus(presentable)
+      return this.presentableOnlineOrOffline(presentable)
         .then(() => {
           this.$refs.pagebuildRef.refresh()
         })
@@ -133,6 +133,29 @@ export default {
               return Promise.reject(res.data.msg || '更新失败')
             }
           })
+        })
+        .catch((err) => {
+          presentable.isLoading = false
+          presentable.isOnlineChecked = !presentable.isOnlineChecked
+          presentable.isOnline = presentable.isOnlineChecked ? 1 : 0
+          this.$error.showErrorMessage(err)
+        })
+    },
+    presentableOnlineOrOffline(presentable) {
+      presentable.isLoading = true
+      if (presentable.isOnlineChecked) {
+        presentable.isOnline = 1
+      } else {
+        presentable.isOnline = 0
+      }
+      return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
+        isOnline: presentable.isOnline
+      })
+        .then((res) => {
+          presentable.isLoading = false
+          if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+            return Promise.reject(res.data.msg || '更新失败')
+          }
         })
         .catch((err) => {
           presentable.isLoading = false
