@@ -9,7 +9,8 @@ const types = {
   USER_LOGIN: 'userLogin',
   USER_LOGOUT: 'userLogout',
   CHECK_USER_SESSION: 'checkUserSession',
-  CHANGE_AVATAR: 'changeAvatar'
+  CHANGE_AVATAR: 'changeAvatar',
+  GET_CURRENT_USER_INFO: 'getCurrentUserInfo'
 }
 
 
@@ -84,6 +85,16 @@ const user = {
         return res.data.data
       })
     },
+    [types.GET_CURRENT_USER_INFO]({getters}) {
+      return new Promise(resolve=>{
+        const userInfo = getters.session.user
+        if (userInfo && userInfo.userId) {
+           resolve(userInfo)
+        } else {
+          resolve(null)
+        }
+      })
+    },
     [types.CHANGE_SESSION]({commit}, data) {
       commit(types.CHANGE_SESSION, data)
     },
@@ -91,7 +102,7 @@ const user = {
       const session = getters.session
       let userId = cookieStore.get('uid') || ''
       return new Promise((resolve) => {
-        const logged = (session && session.user && session.user.userId === userId)
+        const logged = (userId && session && session.user && session.user.userId === userId)
         resolve(logged)
       })
     },
