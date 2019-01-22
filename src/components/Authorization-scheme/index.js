@@ -560,13 +560,24 @@ export default {
   watch: {
     currentOpenedResources() {
       setTimeout(() => {
-        var $partitionBox = document.querySelector('.scheme-partition')
+        const $partitionBox = document.querySelector('.scheme-partition')
+        const $wrapperBox = document.querySelector('.dependencies-resolve-box')
 
         if($partitionBox) {
           var allPartitionBoxW = $partitionBox.offsetWidth * this.currentOpenedResources.length
           this.allPartitionBoxW = allPartitionBoxW
-          this.maxTX = this.allPartitionBoxW - window.innerWidth + 70
-          this.isShowNavBar = window.innerWidth < this.allPartitionBoxW
+          switch (this.authType) {
+            case 'presentable': {
+              this.maxTX = this.allPartitionBoxW - window.innerWidth + 70
+              this.isShowNavBar = window.innerWidth < this.allPartitionBoxW
+              break
+            }
+            case 'resource': {
+              this.maxTX = this.allPartitionBoxW - $wrapperBox.offsetWidth + 60
+              this.isShowNavBar = $wrapperBox.offsetWidth < this.allPartitionBoxW
+              break
+            }
+          }
         }
       })
     },
