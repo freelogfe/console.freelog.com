@@ -175,9 +175,6 @@
             }
           }
 
-          Object.assign(item, {
-            isAcquireSignAuth: 1
-          })
           maps[item.resourceId] = index
           presentablesIdMap[item.presentableId] = item
           item.resourceInfo.postImgUrl = this.resolvePostImgUrl(item.resourceInfo)
@@ -203,8 +200,7 @@
             .then((auths) => {
               auths.forEach(auth => {
                 let presentable = presentablesIdMap[auth.presentableId]
-                presentable.isAcquireSignAuth = auth.isAcquireSignAuth
-                // this.setWarningTip(presentable)
+                presentable.authResult = Number.isInteger(auth.authResult)? auth.authResult: -1
               })
             })
 
@@ -256,13 +252,12 @@
             warningTips.push(policyTips.no)
           }
 
-          if (presentable.isAcquireSignAuth === 0) {
+          if (presentable.authResult !== 1) {
             warningTips.push(tips.no)
           }
-          if (presentable.hasContract && !presentable.isContractActived) {
-
-            warningTips.push(contractTips.no)
-          }
+          // if (presentable.hasContract && !presentable.isContractActived) {
+          //   warningTips.push(contractTips.no)
+          // }
 
           if (warningTips.length) {
             this.$set(presentable, 'warningTip', warningTips.join(','))
@@ -286,21 +281,12 @@
           }
         })
       },
-      setWarningTip(presentable) {
-        //包含presentable策略
-        const tips = {
-          '0': '不能再二次授权',
-          '1': '可再二次授权'
-        }
-
-        let warningTip = tips[presentable.isAcquireSignAuth.toString()] || ''
-        this.$set(presentable, 'warningTip', warningTip)
-      },
       //查询presentable的授权链是否支持二次签约授权
       loadPresentablesAuth(presentableIds) {
-        return this.$axios.get('/v1/auths/presentable/getPresentableSignAuth', {
+        return this.$axios.get('/v1/auths/presentables/getPresentableContractChainAuth', {
           params: {
-            presentableIds: presentableIds.join(',')
+            presentableIds: presentableIds.join(','),
+            nodeId: this.$route.params.nodeId
           }
         }).then(res => {
           const {ret, errcode, msg, data} = res.data
