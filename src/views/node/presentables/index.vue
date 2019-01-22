@@ -95,7 +95,7 @@
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
                               v-if="row.warningTip"
-                              placement="right">
+                              placement="top">
                     <div slot="content">
                       {{row.warningTip}}
                     </div>
@@ -174,15 +174,15 @@
         }
       }
 
-      &[x-placement^=right] {
+      &[x-placement^=top] {
         .popper__arrow {
-          border-right-color: @backColor !important;
+          border-top-color: @backColor !important;
           &:after {
-            border-right-color: @backColor !important;
-
+            border-top-color: @backColor !important;
           }
         }
       }
     }
+
   }
 </style>
