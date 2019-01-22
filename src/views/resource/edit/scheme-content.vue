@@ -365,6 +365,7 @@
   }
 
   .dependencies-resolve-box {
+    overflow: hidden;
     margin-left: 340px;
     padding: 0 30px;
   }

@@ -90,7 +90,7 @@
                                   v-model="row.isOnlineChecked"
                                   @change="changePresentableOnlineHandler(row)"
                                   active-text="上线"
-                                  :disabled="row.isAcquireSignAuth!== 1"
+                                  :disabled="!!row.warningTip"
                                   inactive-text="下线"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
