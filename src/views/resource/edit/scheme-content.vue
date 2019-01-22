@@ -20,7 +20,7 @@
         </ul>
         <div class="r-d-btn-box" v-if="!isPreventExchangeSelection && !isAbandon">
           <div class="r-d-btn" @click="finishDependeciesHandler">
-            创建授权点
+            签约
           </div>
         </div>
       </div>
