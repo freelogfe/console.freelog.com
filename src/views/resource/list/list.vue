@@ -176,7 +176,7 @@
 
     .my-res-item {
       border-bottom: 1px solid #E9E9E9;
-      padding-bottom: 10px;
+      /*padding-bottom: 10px;*/
     }
   }
 </style>
