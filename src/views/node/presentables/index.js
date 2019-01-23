@@ -142,7 +142,7 @@ export default {
         })
     },
     presentableOnlineOrOffline(presentable) {
-      
+
       presentable.isLoading = true
       if (presentable.isOnlineChecked) {
         presentable.isOnline = 1

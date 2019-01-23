@@ -71,6 +71,7 @@
       resourceInfo: Object,
       boxStyle: Object,
       scheme: Object,
+      activeTabName: String,
     },
     data() {
       return {
@@ -188,6 +189,7 @@
         this.contracts = [this.contracts, ...dutyStatements]
         this.isPreventExchangeSelection = true
         Message.success('创建成功！')
+        this.$emit('update:activeTabName', 'contract-manager')
       },
       signContract() {
         const data = {
