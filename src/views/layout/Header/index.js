@@ -28,7 +28,7 @@ export default {
   },
 
   created() {
-    this.listenWindowVisibility()
+    // this.listenWindowVisibility()
   },
   mounted() {
     if (this.session && this.session.user && this.session.user.userId) {

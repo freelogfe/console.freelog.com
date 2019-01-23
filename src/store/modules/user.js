@@ -9,7 +9,8 @@ const types = {
   USER_LOGIN: 'userLogin',
   USER_LOGOUT: 'userLogout',
   CHECK_USER_SESSION: 'checkUserSession',
-  CHANGE_AVATAR: 'changeAvatar'
+  CHANGE_AVATAR: 'changeAvatar',
+  GET_CURRENT_USER_INFO: 'getCurrentUserInfo'
 }
 
 
@@ -17,9 +18,31 @@ function resolveAvatarUrl(userId) {
   return `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image`
 }
 
+function getUserInfoFromCookie() {
+  var authInfo = cookieStore.get('authInfo') || ''
+  var userInfo = {}
+  if (authInfo) {
+    try {
+      const jwt = authInfo.split('.')
+      userInfo = atob(jwt[1])
+      userInfo = JSON.parse(userInfo)
+
+      Object.keys(userInfo).forEach(key=>{
+        if (['userName', 'nickname'].includes(key)) {
+          userInfo[key] = decodeURIComponent(userInfo[key])
+        }
+      })
+    } catch (err) {
+      console.error(err)
+      userInfo = {}
+    }
+  }
+  return userInfo
+}
+
 const user = {
   state: {
-    session: sessionStore.get('user_session') || {user: {}, token: null}, // sessionStore.get('user_session')
+    session: {user: getUserInfoFromCookie(), token: null},
   },
 
   mutations: {
@@ -62,31 +85,31 @@ const user = {
         return res.data.data
       })
     },
+    [types.GET_CURRENT_USER_INFO]({getters}) {
+      return new Promise(resolve=>{
+        const userInfo = getters.session.user
+        if (userInfo && userInfo.userId) {
+           resolve(userInfo)
+        } else {
+          resolve(null)
+        }
+      })
+    },
     [types.CHANGE_SESSION]({commit}, data) {
       commit(types.CHANGE_SESSION, data)
     },
     [types.CHECK_USER_SESSION]({getters}) {
-      const session = getters.session || sessionStore.get('user_session')
-      let authInfo = (session && session.user)
-      let userInfo = {}
-      if (!authInfo || !authInfo.userId) {
-        authInfo = cookieStore.get('authInfo') || ''
-        if (authInfo) {
-          try {
-            const jwt = authInfo.split('.')
-            userInfo = atob(jwt[1])
-            userInfo = JSON.parse(userInfo)
-          } catch (err) {
-            console.error(err)
-            userInfo = {}
-          }
-        }
-      } else {
-        userInfo = authInfo
-      }
+      const session = getters.session
+      let userId = cookieStore.get('uid') || ''
       return new Promise((resolve) => {
-        const logged = (getters.session && userInfo.userId && getters.session.user && getters.session.user.userId === userInfo.userId)
-        resolve(logged)
+        var logined
+        if (userId) {
+          logined = !!(session && session.user && session.user.userId === userId)
+        } else {
+          logined = !!(session && session.user && session.user.userId)
+        }
+
+        resolve(logined)
       })
     },
     [types.USER_LOGIN]({commit}, data) {
