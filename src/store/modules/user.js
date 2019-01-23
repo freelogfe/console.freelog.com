@@ -102,8 +102,14 @@ const user = {
       const session = getters.session
       let userId = cookieStore.get('uid') || ''
       return new Promise((resolve) => {
-        const logged = (userId && session && session.user && session.user.userId === userId)
-        resolve(logged)
+        var logined
+        if (userId) {
+          logined = !!(session && session.user && session.user.userId === userId)
+        } else {
+          logined = !!(session && session.user && session.user.userId)
+        }
+
+        resolve(logined)
       })
     },
     [types.USER_LOGIN]({commit}, data) {

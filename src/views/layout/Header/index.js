@@ -98,7 +98,6 @@ export default {
         .then((valid) => {
           if (!valid) {
             this.$store.dispatch('getCurrentUser').then(() => {
-              debugger
               window.location.reload()
             })
           }
