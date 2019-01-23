@@ -1,6 +1,6 @@
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import SearchInput from '@/components/SearchInput/index.vue'
-import { gotoLogin } from '../../../lib/utils'
+import {gotoLogin} from '../../../lib/utils'
 
 export default {
   name: 'fl-header',
@@ -34,8 +34,14 @@ export default {
     if (this.session && this.session.user && this.session.user.userId) {
       this.initData()
     } else {
-      this.$store.dispatch('getCurrentUser').then(() => {
-        this.initData()
+      this.$store.dispatch('getCurrentUserInfo').then(userInfo => {
+        if (!userInfo) {
+          this.$store.dispatch('getCurrentUser').then(() => {
+            this.initData()
+          })
+        } else {
+          this.initData()
+        }
       })
     }
   },
@@ -47,7 +53,7 @@ export default {
         this.avatarUrl = `${this.session.user.headImage}?x-oss-process=style/head-image`
       }
     },
-    errorImageHandler(){
+    errorImageHandler() {
       this.avatarUrl = '' //失败展示昵称
     },
     listenWindowVisibility() {
@@ -111,7 +117,7 @@ export default {
         .catch(this.$error.showErrorMessage)
     },
     searchHandler(qs) {
-      this.$router.push({ path: '/', query: { q: qs } })
+      this.$router.push({path: '/', query: {q: qs}})
     }
   }
 }
