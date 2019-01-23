@@ -234,7 +234,7 @@ export default {
         'yes': '全部激活'
       }
       const policyTips = {
-        'no': '未有可用策略',
+        'no': '没有可用策略',
         'yes': '已有策略'
       }
 
