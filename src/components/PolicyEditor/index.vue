@@ -5,7 +5,10 @@
       <div class="policy-name-input-item clearfix">
         <div class="policy-name-input-placeholder">
           <pre class="policy-name-pre">{{policy.policyName}}</pre>
-          <input type="text" class="policy-name-input" @blur="changePolicyNameHandler" :disabled="disabledPolicy" v-model="policy.policyName">
+          <input type="text" class="policy-name-input"
+                 @blur="changePolicyNameHandler"
+                 maxlength="19"
+                 :disabled="disabledPolicy" v-model="policy.policyName">
         </div>
         <div class="policy-actions-btn">
           <el-button round class="off-line-btn" size="mini"
