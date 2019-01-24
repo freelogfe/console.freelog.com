@@ -71,6 +71,7 @@
       resourceInfo: Object,
       boxStyle: Object,
       scheme: Object,
+      activeTabName: String,
     },
     data() {
       return {
@@ -183,11 +184,12 @@
       afterSginContract(data) {
         const {dutyStatements, bubbleResources} = data
         let scheme = this.scheme
-        scheme = Object.assign({}, scheme, {dutyStatements, bubbleResources})
+        Object.assign(scheme, {dutyStatements, bubbleResources})
         this.$emit('update:scheme', scheme)
         this.contracts = [this.contracts, ...dutyStatements]
         this.isPreventExchangeSelection = true
         Message.success('创建成功！')
+        this.$emit('update:activeTabName', 'contract-manager')
       },
       signContract() {
         const data = {

@@ -15,6 +15,7 @@
                     :resourceInfo="detail.resource"
                     :scheme.sync="detail.scheme"
                     :boxStyle="schemeContentBoxStyle"
+                    :activeTabName.sync="activeTabName"
                     ref="scheme"
             ></scheme-content>
           </lazy-component>

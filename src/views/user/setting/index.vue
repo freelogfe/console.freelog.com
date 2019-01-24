@@ -10,17 +10,17 @@
                    :upload-success="uploadSuccessHandler"></CropImage>
       </el-form-item>
       <el-form-item class="flex-grid" label="用户姓名">
-        <el-input v-model="userInfo.userName" class="input-area" placeholder="未设置用户姓名"></el-input>
+        <el-input v-model="userInfo.userName" disabled class="input-area" placeholder="未设置用户姓名"></el-input>
       </el-form-item>
       <el-form-item class="flex-grid" label="用户昵称">
-        <el-input v-model="userInfo.nickname" class="input-area" placeholder="未设置用户昵称"></el-input>
+        <el-input v-model="userInfo.nickname" disabled class="input-area" placeholder="未设置用户昵称"></el-input>
       </el-form-item>
       <el-form-item class="flex-grid" label="邮箱">
-        <el-input v-model="userInfo.email" :disabled="!!userInfo.email" class="input-area"
+        <el-input v-model="userInfo.email" disabled class="input-area"
                   placeholder="未设置邮箱"></el-input>
       </el-form-item>
       <el-form-item class="flex-grid" label="手机号码">
-        <el-input v-model="userInfo.mobile" :disabled="!!userInfo.mobile" class="input-area"
+        <el-input v-model="userInfo.mobile" disabled class="input-area"
                   placeholder="未设置手机号码"></el-input>
       </el-form-item>
       <el-form-item class="form-footer">
