@@ -1,8 +1,7 @@
 export default {
   name: 'fl-switch',
   data() {
-    return {
-    }
+    return {}
   },
   props: {
     width: {
@@ -29,8 +28,8 @@ export default {
   },
   methods: {
     switchHandler() {
-      if (this.disabled)return
-      this.$emit('input', !this.value)
+      if (this.disabled) return
+      // this.$emit('input', !this.value)
       this.$emit('change', !this.value)
     }
   }
