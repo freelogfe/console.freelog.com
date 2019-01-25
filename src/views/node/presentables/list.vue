@@ -60,14 +60,14 @@
               </el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="row.detailLink + '?tab=contract'">
-              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
-                                                                                              v-if="row.hasContract && row.isContractActived === false"></i>
+            <router-link :to="row.detailLink + '?tab=scheme'">
+              <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
             </router-link>
             <span>|</span>
-            <router-link :to="row.detailLink + '?tab=scheme'">
-              <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
+            <router-link :to="row.detailLink + '?tab=contract'">
+              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
+                                                                                              v-if="row.hasContract && row.isContractActived === false"></i>
               </el-button>
             </router-link>
           </div>
