@@ -194,7 +194,7 @@
     }
     h3 {
       position: relative;
-      margin-top: 30px; padding-left: 8px;
+      margin-top: 30px; padding-left: 10px;
       font-size: 14px;
       color: #333333;
 
@@ -222,6 +222,7 @@
     }
 
     .resolved-bubble-resources {
+      ul { padding-left: 10px; }
 
       li {
         margin-top: 12px;
