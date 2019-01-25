@@ -63,11 +63,6 @@
               label="">
         <template slot-scope="{row}">
           <div class="presentable-nav-links active-status-0">
-            <router-link :to="row.detailLink + '?tab=policy'">
-              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
-              </el-button>
-            </router-link>
-            <span>|</span>
             <router-link :to="row.detailLink + '?tab=scheme'">
               <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
@@ -76,6 +71,11 @@
             <router-link :to="row.detailLink + '?tab=contract'">
               <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
                                                                                               v-if="row.hasContract && row.isContractActived === false"></i>
+              </el-button>
+            </router-link>
+            <span>|</span>
+            <router-link :to="row.detailLink + '?tab=policy'">
+              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
               </el-button>
             </router-link>
           </div>
