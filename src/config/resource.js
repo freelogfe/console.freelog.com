@@ -1,4 +1,5 @@
 export const RESOURCE_TYPES = {
+  json: 'json',
   widget: 'widget',
   image: 'image',
   audio: 'audio',
