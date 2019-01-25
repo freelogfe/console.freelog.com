@@ -16,12 +16,12 @@
         </span>
         <ul class="list-actions">
           <li>
-            <el-select v-model="searchData.isSignContract"
+            <el-select v-model="searchData.resourceType"
                        @change="searchHandler(searchData)"
-                       popper-class="opt-cls" size="mini" placeholder="签约状态">
-              <el-option label="签约状态" value=""></el-option>
+                       size="mini" placeholder="资源类型">
+              <el-option label="资源类型" value=""></el-option>
               <el-option
-                      v-for="item in contractStateOptions"
+                      v-for="item in resourceTypeOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -29,12 +29,12 @@
             </el-select>
           </li>
           <li>
-            <el-select v-model="searchData.resourceType"
+            <el-select v-model="searchData.isSignContract"
                        @change="searchHandler(searchData)"
-                       size="mini" placeholder="资源类型">
-              <el-option label="资源类型" value=""></el-option>
+                       popper-class="opt-cls" size="mini" placeholder="签约状态">
+              <el-option label="签约状态" value=""></el-option>
               <el-option
-                      v-for="item in resourceTypeOptions"
+                      v-for="item in contractStateOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">

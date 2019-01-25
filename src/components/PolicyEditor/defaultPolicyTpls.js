@@ -15,7 +15,7 @@ const PresentableFreePolicy = `for public:
 export const resource = [
   {
     template: freePolicy,
-    name: '免费'
+    name: '免费策略'
   },
   {
     template: `for public:
@@ -23,24 +23,28 @@ export const resource = [
   custom event acceptor.customEvent
 
   initial:
-    proceed to auth on acct exceed 10 feather
+    recontractable
+    proceed to auth on acct exceed 1 feather
   auth:
     presentable
+    recontractable
     active
     proceed to refund on acct.confiscated
   refund:
+    recontractable
     proceed to finish on acct.refunded
   finish:
+    recontractable
     terminate
   `,
-    name: '收费'
+    name: '收费策略'
   }
 ]
 
 export const presentable = [
   {
     template: PresentableFreePolicy,
-    name: '免费'
+    name: '免费策略'
   },
   {
     template: `for public:
@@ -48,7 +52,7 @@ export const presentable = [
   custom event acceptor.customEvent
 
   initial:
-    proceed to auth on acct exceed 10 feather
+    proceed to auth on acct exceed 1 feather
   auth:
     presentable
     active
@@ -57,7 +61,7 @@ export const presentable = [
     proceed to finish on acct.refunded
   finish:
     terminate`,
-    name: '收费'
+    name: '收费策略'
   }
 ]
 
