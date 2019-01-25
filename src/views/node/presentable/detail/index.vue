@@ -18,12 +18,6 @@
             </lazy-component>
           </div>
         </el-tab-pane>
-        <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
-          <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
-          <div class="panel-content policy-manager-wrap">
-            <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
-          </div>
-        </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.scheme">
           <span slot="label" class="panel-tab-name">授权方案管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
           <div class="panel-content">
@@ -51,6 +45,12 @@
                 <el-button type="text">去创建合约</el-button>
               </router-link>
             </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
+          <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
+          <div class="panel-content policy-manager-wrap">
+            <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
           </div>
         </el-tab-pane>
       </el-tabs>

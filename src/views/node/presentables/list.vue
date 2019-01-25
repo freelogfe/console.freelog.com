@@ -23,7 +23,15 @@
               label="">
         <template slot-scope="scope">
           <p class="resource-name" :title="scope.row.presentableName">{{ scope.row.presentableName }} </p>
-          <p class="resource-name" :title="scope.row.presentableId">{{ scope.row.presentableId }} </p>
+        </template>
+      </el-table-column>
+      <el-table-column
+              width="150"
+              label="资源类型">
+        <template slot-scope="scope">
+          <div>
+            <span class="resource-type" :class="['is-'+scope.row.resourceInfo.resourceType]">{{scope.row.resourceInfo.resourceType}}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -55,11 +63,6 @@
               label="">
         <template slot-scope="{row}">
           <div class="presentable-nav-links active-status-0">
-            <router-link :to="row.detailLink + '?tab=policy'">
-              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
-              </el-button>
-            </router-link>
-            <span>|</span>
             <router-link :to="row.detailLink + '?tab=scheme'">
               <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
@@ -70,15 +73,11 @@
                                                                                               v-if="row.hasContract && row.isContractActived === false"></i>
               </el-button>
             </router-link>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-              width="150"
-              label="资源类型">
-        <template slot-scope="scope">
-          <div>
-            <span class="resource-type" :class="['is-'+scope.row.resourceInfo.resourceType]">{{scope.row.resourceInfo.resourceType}}</span>
+            <span>|</span>
+            <router-link :to="row.detailLink + '?tab=policy'">
+              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
+              </el-button>
+            </router-link>
           </div>
         </template>
       </el-table-column>
@@ -392,9 +391,8 @@ export default {
 
     .resource-type {
       background-color: #F1F1F1;
-      border: 1px solid #E0E0E0;
       border-radius: 4px;
-      padding: 6px 12px;
+      padding: 3px 10px;
       font-size: 14px;
       color: #666666;
       max-width: 110px;
@@ -402,7 +400,6 @@ export default {
       .text-ellipsis;
       &.is-page_build {
         color: #E89D1F;
-        border-color: #E89D1F;
         background-color: rgba(249, 191, 93, .2);
       }
     }
