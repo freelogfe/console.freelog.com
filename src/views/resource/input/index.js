@@ -271,7 +271,7 @@ export default {
       this.fileLimitValidator(file, fileList)
     },
     validateImageHandler(file) {
-      if (!/\.(jpg|png|gif|tiff|webp)$/.test(file.name)) {
+      if (!/\.(jpg|png|gif|jpeg)$/.test(file.name)) {
         this.$message.error('不支持的图片类型')
         return false
       }
