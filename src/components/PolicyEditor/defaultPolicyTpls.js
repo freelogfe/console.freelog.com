@@ -23,14 +23,18 @@ export const resource = [
   custom event acceptor.customEvent
 
   initial:
+    recontractable
     proceed to auth on acct exceed 1 feather
   auth:
     presentable
+    recontractable
     active
     proceed to refund on acct.confiscated
   refund:
+    recontractable
     proceed to finish on acct.refunded
   finish:
+    recontractable
     terminate
   `,
     name: '收费策略'
