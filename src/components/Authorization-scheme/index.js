@@ -136,7 +136,7 @@ export default {
       switch (this.authType) {
         case 'presentable': {
           this.$router.push({
-            path: `/node/${this.$route.params.nodeId}/presentable/${this.presentableInfo.presentableId}`,
+            path: `/node/${this.$route.params.nodeId}/presentable/${this.$route.params.presentableId}`,
             query: { tab: 'contract' }
           })
           break

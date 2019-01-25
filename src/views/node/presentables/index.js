@@ -81,13 +81,12 @@ export default {
       if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
         this.isHadPageBuild().then(is => {
           if (is) {
-            let text =presentable.isOnline? `确定下线${presentable.presentableName}?下线后节点将无法正常访问`: `确定上线${presentable.presentableName}?上线后将自动替换当前页面样式`
+            let text = presentable.isOnline ? `确定下线${presentable.presentableName}?下线后节点将无法正常访问` : `确定上线${presentable.presentableName}?上线后将自动替换当前页面样式`
             this.$confirm(text)
               .then(() => {
                 return this.changePageBuild(presentable)
               })
               .catch(() => {
-                presentable.isOnlineChecked = !!presentable.isOnline
               })
           } else {
             return this.changePageBuild(presentable)
@@ -101,6 +100,7 @@ export default {
       return this.presentableOnlineOrOffline(presentable)
         .then(() => {
           this.$refs.pagebuildRef.refresh()
+          this.$refs.presentableList.refresh()
         })
     },
     isHadPageBuild() {
@@ -142,13 +142,8 @@ export default {
         })
     },
     presentableOnlineOrOffline(presentable) {
-
       presentable.isLoading = true
-      if (presentable.isOnlineChecked) {
-        presentable.isOnline = 1
-      } else {
-        presentable.isOnline = 0
-      }
+      presentable.isOnline = presentable.isOnlineChecked ? 0 : 1
       return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
         isOnline: presentable.isOnline
       })
@@ -156,11 +151,12 @@ export default {
           presentable.isLoading = false
           if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
             return Promise.reject(res.data.msg || '更新失败')
+          } else {
+            presentable.isOnlineChecked = !!presentable.isOnline
           }
         })
         .catch((err) => {
           presentable.isLoading = false
-          presentable.isOnlineChecked = !presentable.isOnlineChecked
           presentable.isOnline = presentable.isOnlineChecked ? 1 : 0
           this.$error.showErrorMessage(err)
         })
