@@ -21,11 +21,11 @@
           </div>
         </div>
 
-        <router-link :to="resource._editInfoLink"
-                     v-if="resource._editInfoLink" class="res-nav-btn">更新基础信息
+        <router-link :to="_editInfoLink"
+                     v-if="_editInfoLink" class="res-nav-btn">更新基础信息
         </router-link>
-        <router-link :to="resource._editSchemeLink"
-                     v-if="resource._editSchemeLink" class="res-nav-btn">管理授权方案
+        <router-link :to="_editSchemeLink"
+                     v-if="_editSchemeLink" class="res-nav-btn">管理授权方案
         </router-link>
 
         <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
@@ -37,8 +37,6 @@
             <span class="res-type">#{{resource.resourceType}}</span>
           </div>
           <div class="res-intro-ft">
-            <!--<span class="res-type">#{{resource.resourceType}}</span>-->
-            <!--<span class="res-author" v-if="resource._userInfo">by: {{resource._userInfo.nickname}}</span>-->
             <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
             <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
           </div>
@@ -82,6 +80,13 @@
       previewImage() {
         return (this.resource.previewImages && this.resource.previewImages[0]) || ''
       },
+      _editInfoLink(){
+        var editLink = `/resource/edit/${this.resource.resourceId}`
+        return this.resource.resourceId? `${editLink}?view=edit` : ''
+      },
+      _editSchemeLink(){
+        return this.resource.resourceId? `/resource/edit/${this.resource.resourceId}`: ''
+      }
     },
 
     watch: {
@@ -100,13 +105,7 @@
           return
         }
 
-        var editLink = `/resource/edit/${this.resource.resourceId}`
-        resource._editInfoLink = `${editLink}?view=edit`
-        resource._editSchemeLink = `${editLink}`
         resource._statusInfo = RESOURCE_STATUS[resource.status]
-        onloadUserInfo(resource.userId).then((userInfo) => {
-          this.$set(resource, '_userInfo', userInfo)
-        })
       },
       gotoDetail(resource) {
         if (typeof this.navTo === 'function') {

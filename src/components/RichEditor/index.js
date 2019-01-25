@@ -69,6 +69,12 @@ export default {
 
   watch: {},
 
+  computed: {
+    qiHostname(){
+      return ((window.g_freelog && window.g_freelog.Env.qiOrigin) || '') + '/v1/resources/uploadPreviewImage'
+    }
+  },
+
   mounted() {
     this.createEditor()
     if (this.$route.params.resourceId) {
