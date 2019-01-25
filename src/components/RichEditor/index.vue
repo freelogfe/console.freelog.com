@@ -14,7 +14,8 @@
       <el-upload
         class="rich-editor-upload-img"
         drag
-        action="/api/v1/resources/uploadPreviewImage"
+        :with-credentials="true"
+        :action="qiHostname"
         ref="imgUploader"
         :on-success="uploadImageSuccessHandler"
         :on-error="uploadImageErrorHandler"
