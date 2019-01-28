@@ -472,7 +472,13 @@ export default {
     },
     addDepResourceHandler(resource) {
       this.showSearchResourceDialog = false
-      this.deps.push(resource)
+
+      const added = this.deps.some(res=>res.resourceId===resource.resourceId)
+      if (added) {
+        this.$message.error('不能重复添加依赖资源')
+      } else {
+        this.deps.push(resource)
+      }
     },
     beforeCloseDialogHandler() {
       this.showSearchResourceDialog = false
