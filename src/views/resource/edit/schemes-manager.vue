@@ -28,11 +28,21 @@
             center>
       <div slot="title" class="scheme-dialog-title">添加授权方案</div>
       <div class="scheme-dialog-bd">
+        <!--<el-alert-->
+                <!--title="方案添加成功后无法删除"-->
+                <!--type="warning"-->
+                <!--show-icon-->
+                <!--:closable="false"-->
+        <!--&gt;-->
+        <!--</el-alert>-->
         <el-input placeholder="请输入授权方案名称..." v-model="editingScheme.authSchemeName"></el-input>
-        <span class="scheme-dialog-create-tip">方案添加成功后无法删除</span>
+        <span class="scheme-dialog-create-tip">
+          <i class="el-icon-warning"></i>
+          方案添加成功后无法删除
+        </span>
       </div>
       <div slot="footer" class="scheme-dialog-footer">
-        <el-button type="text" style="color: #999999;margin-right: 10px;"
+        <el-button type="text" class="sdf-cancel-btn" style="color: #999999;margin-right: 10px;"
                    @click="hideSettingDialogHandler"> 取消
         </el-button>
         <el-button type="primary" style="padding: 8px 30px;" size="medium" round @click="saveSchemeHandler"> 确定
@@ -238,12 +248,17 @@
 
     .scheme-dialog-footer {
       margin-top: 20px;
+
+      .sdf-cancel-btn {
+        margin-right: 10px; padding: 8px 30px; border: 1px solid #ddd; border-radius: 20px;
+        color: #999;
+      }
     }
 
     .scheme-dialog-bd {
-      margin-top: 30px;
+      margin-top: 10px;
       .scheme-dialog-create-tip {
-        color: #CCCCCC;
+        color: #e6a23c;
         font-size: 12px;
         float: right;
         margin-top: 10px;
@@ -346,7 +361,7 @@
 
   .resource-schemes-manager-wrap {
     .el-dialog__header {
-      border-bottom: 1px solid #DDDDDD;
+      /*border-bottom: 1px solid #DDDDDD;*/
     }
 
     .schemes-nav-tabs > .el-tabs__header {
