@@ -217,7 +217,7 @@
             :before-close="beforeCloseDialogHandler"
             top="10vh"
             center>
-      <p slot="title" class="dialog-title">添加资源</p>
+      <p slot="title" class="dialog-title" :style="{fontSize: '20px'}">添加资源</p>
       <SearchResource class="add-resource-input" @add="addDepResourceHandler"></SearchResource>
     </el-dialog>
   </div>
