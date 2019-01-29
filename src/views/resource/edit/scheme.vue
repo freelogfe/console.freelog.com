@@ -170,7 +170,7 @@
     }
     .empty-contract-tip {
       text-align: center;
-      font-size: 18px;
+      font-size: 14px;
       color: #666;
     }
 
