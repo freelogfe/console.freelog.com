@@ -45,8 +45,10 @@
             <ResourceSchemes class="res-schemes-content" :resource="resourceDetail.resourceInfo"></ResourceSchemes>
           </div>
 
-          <div class="res-detail-desc res-detail-info" ref="resDesc">
-            <div v-if="resourceDetail.resourceInfo.description" v-html="resourceDetail.resourceInfo.description"></div>
+          <div class="res-detail-desc res-detail-info ql-snow" ref="resDesc">
+            <div v-if="resourceDetail.resourceInfo.description"
+                 class="ql-editor"
+                 v-html="resourceDetail.resourceInfo.description"></div>
             <div v-else class="empty-res-desc-text">暂无资源描述</div>
           </div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
