@@ -1,6 +1,11 @@
 /*
 policy更新后，后续签订的policy按新的来，已签约过的按更新前的
  */
+
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.bubble.css'
+
 import {mapGetters} from 'vuex'
 import {loadDetail} from '@/data/resource/loader'
 import {onloadNodeList} from '@/data/node/loader'
