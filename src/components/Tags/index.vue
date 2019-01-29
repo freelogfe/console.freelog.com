@@ -69,6 +69,7 @@ export default FreelogTags
 
   }
   .button-new-tag {
+    margin-bottom: 10px;
     background-color: white;
     vertical-align: top;
   }
