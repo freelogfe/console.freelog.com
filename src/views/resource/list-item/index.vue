@@ -16,16 +16,16 @@
             <p class="res-id">{{resource.resourceId}}</p>
           </div>
           <div class="res-intro-ft">
-            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
+            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.createDate|fmtDate}}</span>
             <!--<span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>-->
           </div>
         </div>
 
         <router-link :to="_editInfoLink"
-                     v-if="_editInfoLink" class="res-nav-btn">更新基础信息
+                     v-if="_editInfoLink" class="res-nav-btn">{{$t('listResourceItem.updateInfo')}}
         </router-link>
         <router-link :to="_editSchemeLink"
-                     v-if="_editSchemeLink" class="res-nav-btn">管理授权方案
+                     v-if="_editSchemeLink" class="res-nav-btn">{{$t('listResourceItem.schemes')}}
         </router-link>
 
         <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
@@ -37,8 +37,8 @@
             <span class="res-type">#{{resource.resourceType}}</span>
           </div>
           <div class="res-intro-ft">
-            <span class="update-time">最近更新时间：{{resource.createDate|fmtDate}}</span>
-            <span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>
+            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.createDate|fmtDate}}</span>
+            <span style="margin-left: 6px" v-if="resource._statusInfo">{{$t('listResourceItem.state')}}{{resource._statusInfo.desc}}</span>
           </div>
         </div>
       </template>

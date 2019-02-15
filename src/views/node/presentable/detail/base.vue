@@ -1,25 +1,25 @@
 <template>
   <div class="presentable-detail-base-wrap">
     <div class="p-d-b-w-row">
-      <label>节点资源ID</label>
+      <label>{{$t('presentable.id')}}</label>
       {{presentable.presentableId}}
     </div>
     <div class="p-d-b-w-row">
-      <label>节点资源名称</label>
+      <label>{{$t('presentable.name')}}</label>
       <el-input v-model="presentableName" size="medium"></el-input>
     </div>
     <div class="p-d-b-w-row">
-      <label>节点资源标签</label>
+      <label>{{$t('presentable.label')}}</label>
       <div style="padding-left: 150px;">
         <FreelogTags v-model="userDefinedTags"
                      class="p-user-tags"
-                     actionText="新标签"
+                     :actionText="$t('presentable.addLabel')"
                      @input="changeTagsHandler">
         </FreelogTags>
       </div>
     </div>
     <div class="p-d-b-w-row save-box">
-      <el-button type="primary" @click="onSubmit">保存</el-button>
+      <el-button type="primary" @click="onSubmit">{{$t('common.save')}}</el-button>
     </div>
   </div>
 </template>

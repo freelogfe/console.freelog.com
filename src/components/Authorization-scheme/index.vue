@@ -26,7 +26,7 @@
                 :class="{'s-p-no-resolve': resourceAuthScheme.isNoResolved}"
                 v-if="authType === 'resource'"
                 @click="toggleResolveResource(resourceAuthScheme, index)">
-          不处理此资源
+          {{$t('components.authScheme.notHandleResource')}}
         </div>
         <scheme-detail
                 :authType="authType"
@@ -67,7 +67,7 @@
               class="update-btn"
               :class="{'active': true}"
               @click="signContract(isCanUpdateContract)">
-        {{presentableInfo.contracts.length ? "更新合约" : "生成合约"}}
+        {{presentableInfo.contracts.length ? $t('components.authScheme.updateContract') : $t('components.authScheme.createContract')}}
       </div>
     </div>
     <scheme-suspension-ball

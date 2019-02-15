@@ -1,6 +1,6 @@
 <template>
   <div class="node-pb-setting-wrap">
-    <h4 class="title">页面样式(pagebuild)</h4>
+    <h4 class="title">{{ $t('node.pageStyle') }}</h4>
 
     <PresentableList class="pb-container"
                      :showFooter="false"
@@ -9,17 +9,17 @@
       <template slot="append">
         <el-table-column
                 width="140"
-                label="上线状态">
+                :label="$t('onlineState')">
           <template slot-scope="scope">
             <div>
-              <el-button type="text" @click="searchPageBuildHandler">切换样式</el-button>
+              <el-button type="text" @click="searchPageBuildHandler">{{ $t('node.switchPageStyle')}}</el-button>
             </div>
           </template>
         </el-table-column>
       </template>
       <div class="no-pb-selected-wrap" slot="empty">
-        <p>请在下面节点资源列表中上线一个资源类型为pagebuild的资源作为页面样式，
-          <el-button type="text" @click="searchPageBuildHandler">快速筛选</el-button>
+        <p>{{ $t('node.choosePageBuildTip') }}，
+          <el-button type="text" @click="searchPageBuildHandler">{{ $t('node.quickFilterText') }}</el-button>
         </p>
       </div>
     </PresentableList>

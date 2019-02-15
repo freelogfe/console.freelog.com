@@ -2,16 +2,16 @@
   <section>
     <div class="node-top-sec">
       <router-link class="route-link" to="/node/create">
-        <el-button type="primary">创建新节点</el-button>
+        <el-button type="primary">{{$t('node.createNode')}}</el-button>
       </router-link>
     </div>
     <table-view class="node-list" :loader="loader()">
       <el-table-column
         prop="nodeName"
-        label="节点名">
+        :label="$t('node.nodeName')">
       </el-table-column>
       <el-table-column
-        label="节点地址">
+        :label="$t('node.nodeDomain')">
         <template slot-scope="scope">
           {{resolveDomain(scope.row)}}
           <clip-board
@@ -26,23 +26,23 @@
       </el-table-column>
       <el-table-column
         prop="nodeId"
-        label="节点ID">
+        :label="$t('node.nodeId')">
       </el-table-column>
       <el-table-column
-        label="节点状态">
+        :label="$t('node.nodeState')">
         <template slot-scope="scope">
           <el-tag :type="NODE_STATUS[scope.row.status].type">{{NODE_STATUS[scope.row.status].text}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column :label="$t('common.operation')">
         <template slot-scope="scope">
           <el-button
             size="small"
-            @click="gotoNodeHandler(scope.row)">进入节点
+            @click="gotoNodeHandler(scope.row)">{{$t('common.gotoNodeDetail')}}
           </el-button>
           <el-button
             size="small"
-            @click="handleEdit(scope.row)">详情
+            @click="handleEdit(scope.row)">{{$t('common.detail')}}
           </el-button>
         </template>
       </el-table-column>

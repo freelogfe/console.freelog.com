@@ -18,10 +18,12 @@
                   :show-file-list="false"
                   :on-change="changeImageHandler"
                   :on-success="handleAvatarSuccess">
-            <el-button v-if="imageUrl">重新上传</el-button>
+            <el-button v-if="imageUrl">{{ $t('components.cropImage.reUpload')}}</el-button>
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-button class="save-crop-img-btn" v-if="imageUrl" type="primary" @click="saveCropImageHandler">保存
+          <el-button class="save-crop-img-btn"
+                     v-if="imageUrl" type="primary"
+                     @click="saveCropImageHandler">{{ $t('common.save')}}
           </el-button>
         </div>
         <div v-if="imageUrl" class="crop-img-preview"></div>

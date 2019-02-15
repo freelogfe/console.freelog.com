@@ -1,23 +1,27 @@
 <template>
   <div class="fl-contract-detail-wrap" v-if="contractDetail.contractId">
-    <h4 class="label-title">合约详情</h4>
+    <h4 class="label-title">{{$t('components.contractDetail.title')}}</h4>
 
     <contract-detail-info :detail="contractDetail"
                           :showRefreshing="true"
                           :labelWidth="85">
       <template slot="prepend">
-        <el-form-item label="资源名称">{{resourceDetail.resourceName}}</el-form-item>
-        <el-form-item label="资源类型">{{resourceDetail.resourceType}}</el-form-item>
+        <el-form-item :label="$t('components.contractDetail.resourceName')">{{resourceDetail.resourceName}}</el-form-item>
+        <el-form-item :label="$t('components.contractDetail.resourceType')">{{resourceDetail.resourceType}}</el-form-item>
       </template>
-      <el-form-item label="激活合同" v-if="contractDetail.status === 1" class="flex-grid">
+      <el-form-item :label="$t('components.contractDetail.activateContract')"
+                    v-if="contractDetail.status === 1" class="flex-grid">
         <el-button @click="activateContractHandler(contractDetail)"
-                   size="small">立即激活
+                   size="small">{{$t('components.contractDetail.triggerContract')}}
         </el-button>
       </el-form-item>
     </contract-detail-info>
 
     <div class="contract-policy-content-wrap">
-      <div class="contract-policy-title">授权策略1<label>授权状态：{{contractDetail.statusInfo.desc }}</label></div>
+      <div class="contract-policy-title">
+        {{contractDetail.contractClause.policyName|| $t('components.contractDetail.defaultPolicyName')}}
+        <label>{{$t('components.contractDetail.authState')}}{{contractDetail.statusInfo.desc }}</label>
+      </div>
       <contract-content
               class="contract-policy-content"
               :contract.sync="contractDetail"
@@ -118,7 +122,7 @@
           }
         }).then((res) => {
           if (res.data.errcode === 0) {
-            this.$message.success('成功激活合同')
+            this.$message.success(this.$i18n.t('components.contractDetail.activateContractSuccess'))
             this.loadContractDetail(contract.contractId).then((contractDetail) => {
               Object.assign(contract, contractDetail)
               this.$emit('update', ContractUtils.format(contract))

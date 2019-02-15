@@ -21,7 +21,7 @@ export default {
       const NAME_REG = /^[a-z]{1}[0-9a-z_]{2,19}[0-9a-z]{1}$/
 
       if (!NAME_REG.test(value)) {
-        callback(new Error(`命名格式有误，需满足${NAME_REG.toString()}`))
+        callback(new Error(this.$i18n.t('resourceEditView.resourceTypeRule',{rule: NAME_REG.toString()})))
       } else {
         callback()
       }
@@ -32,7 +32,7 @@ export default {
       const NAME_REG = /^freelog-[a-z0-9._-]{3,15}-[a-z0-9._-]{2,14}[a-z0-9]$/
 
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error('例如freelog-namespace-widgetname，namespace和widgetname至少3个字符'))
+        callback(new Error(this.$i18n.t('resourceEditView.widgetNameRule')))
       } else {
         callback()
       }
@@ -43,7 +43,7 @@ export default {
       const VERSION_REG = /^\d+\.\d+\.\d+$/
 
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !VERSION_REG.test(value)) {
-        callback(new Error('版本号需符合semver规范，例如0.0.1'))
+        callback(new Error(this.$i18n.t('resourceEditView.versionRule')))
       } else {
         callback()
       }
@@ -52,7 +52,7 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{required: true, message: '请输入资源名称', trigger: 'blur'}],
+        resourceName: [{required: true, message: this.$i18n.t('resourceEditView.inputNameTip'), trigger: 'blur'}],
         widgetName: [
           {validator: validateWidgetName, trigger: 'change'}
         ],
@@ -60,7 +60,7 @@ export default {
           {validator: validateWidgetVersion, trigger: 'change'}
         ],
         resourceType: [
-          {required: true, message: '请选择资源类型', trigger: 'blur'},
+          {required: true, message: this.$i18n.t('resourceEditView.selectTypeTip'), trigger: 'blur'},
           {validator: validateResourceType, trigger: 'blur'}
         ]
       },
@@ -187,10 +187,10 @@ export default {
       } else {
         switch (err.status) {
           case 400:
-            errMsg = '不支持的文件类型'
+            errMsg = this.$i18n.t('resourceEditView.noSupportTip')
             break
           case 401:
-            errMsg = '权限未经验证'
+            errMsg = this.$i18n.t('resourceEditView.authFailTip')
             break
           default:
             errMsg = err.message
@@ -272,7 +272,7 @@ export default {
     },
     validateImageHandler(file) {
       if (!/\.(jpg|png|gif|jpeg)$/.test(file.name)) {
-        this.$message.error('不支持的图片类型')
+        this.$message.error(this.$i18n.t('resourceEditView.noSupportImageTip'))
         return false
       }
 
@@ -330,9 +330,9 @@ export default {
             let errMsg
             if (this.editMode === EDIT_MODES.creator) {
               if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
-                errMsg = '资源文件正在上传中，等上传完再点击创建'
+                errMsg = this.$i18n.t('resourceEditView.uploadingTip')
               } else if (!reourceUploader.sha1) {
-                errMsg = '未上传资源文件'
+                errMsg = this.$i18n.t('resourceEditView.noFileTip')
               }
             }
 
@@ -344,7 +344,7 @@ export default {
                 resolve()
               } catch (error) {
                 console.error(error)
-                reject(new Error(`meta格式有误: ${error}`))
+                reject(new Error(this.$i18n.t('resourceEditView.metaError', {error})))
               }
             }
           } else {
@@ -445,7 +445,7 @@ export default {
             }
           }).catch(reject)
         } else {
-          reject(new Error('无上传文件'))
+          reject(new Error(this.$i18n.t('resourceEditView.noFileTip')))
         }
       })
     },
@@ -475,7 +475,7 @@ export default {
 
       const added = this.deps.some(res=>res.resourceId===resource.resourceId)
       if (added) {
-        this.$message.error('不能重复添加依赖资源')
+        this.$message.error(this.$i18n.t('resourceEditView.donotRepeatUpload'))
       } else {
         this.deps.push(resource)
       }

@@ -2,7 +2,7 @@
   <div v-loading="isShowLoading" :style="[boxStyle]" >
     <template v-if="resourceDependencies.length">
       <div class="resource-dependencies">
-        <h3>依赖资源列表</h3>
+        <h3>{{ $t('resourceEditView.depsListTitle')}}</h3>
         <ul>
           <li
                   v-for="(dependency, index) in resourceDependencies"
@@ -42,7 +42,7 @@
         ></authorization-scheme-manage>
       </div>
     </template>
-    <p class="no-resource-dependeny" v-else>没有需要处理的依赖资源</p>
+    <p class="no-resource-dependeny" v-else>{{ $t('resourceEditView.noDepsTip')}}</p>
     <scheme-suspension-ball
             :isShow="!isAbandon && !isPreventExchangeSelection"
             :selectedAuthSchemes="resolvedDutyStatements"
@@ -173,7 +173,7 @@
         for (let i = 0; i < this.resourceDependencies.length; i++) {
           const denpency = this.resourceDependencies[i]
           if (denpency.authResolveState === -1 || typeof denpency.authResolveState === 'undefined') {
-            Message.error(`仍有资源未选择授权策略`)
+            Message.error(this.$i18n.t('resourceEditView.requiredDepsTip'))
             isFinish = false
             break
           }
@@ -188,7 +188,7 @@
         this.$emit('update:scheme', scheme)
         this.contracts = [this.contracts, ...dutyStatements]
         this.isPreventExchangeSelection = true
-        Message.success('创建成功！')
+        Message.success(this.$i18n.t('resourceEditView.createSuccess'))
         this.$emit('update:activeTabName', 'contract-manager')
       },
       signContract() {
@@ -216,7 +216,7 @@
               this.$emit('update:scheme', scheme)
               this.contracts = [this.contracts, ...dutyStatements]
               this.isPreventExchangeSelection = true
-              Message.success('创建成功！')
+              Message.success(this.$i18n.t('resourceEditView.createSuccess'))
             } else {
               Message.error(res.msg)
             }

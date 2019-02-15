@@ -20,16 +20,16 @@ export default {
       activeTab: 'resIntro',
       tabs: [{
         name: 'resIntro',
-        title: '资源简介'
+        title: this.$i18n.t('resourceDetailView.tabs[0]')
       }, {
         name: 'resSchemes',
-        title: '授权方案'
+        title: this.$i18n.t('resourceDetailView.tabs[1]')
       }, {
         name: 'resDesc',
-        title: '资源描述'
+        title: this.$i18n.t('resourceDetailView.tabs[2]')
       }, {
         name: 'resMeta',
-        title: 'meta信息'
+        title: this.$i18n.t('resourceDetailView.tabs[3]')
       }],
       resourceDetail: {
         resourceInfo: {
@@ -43,6 +43,7 @@ export default {
       activeScheme: ''
     }
   },
+
   computed: Object.assign({
     isOwnerResource() {
       return this.resourceDetail.resourceInfo.isOwner && process.env.NODE_ENV === 'development'
@@ -125,14 +126,14 @@ export default {
       })
     },
     previewHandler() {
-      this.$message.warning('还没开发')
+      this.$message.warning('todo')
     },
     favorResource() {
       return this.$services.collections.post({
         resourceId: this.resourceId
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success('收藏成功')
+          this.$message.success(this.$i18n.t('resourceDetailView.favorSuccessText'))
           this.resourceDetail.isFavor = true
         } else {
           this.$error.showErrorMessage(res)
@@ -142,7 +143,7 @@ export default {
     deleteFavorResource() {
       return this.$services.collections.delete(this.resourceId).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success('已删除收藏')
+          this.$message.success(this.$i18n.t('resourceDetailView.deleteFavorSuccessText'))
           this.resourceDetail.isFavor = false
         } else {
           this.$error.showErrorMessage(res)
@@ -151,7 +152,7 @@ export default {
     },
     formatMeta(){
       var meta = this.resourceDetail.resourceInfo.meta || {}
-      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : '暂无meta信息'
+      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : this.$i18n.t('resourceDetailView.noMetaTip')
     },
     favorHandler() {
       if (this.favoring) {
@@ -233,7 +234,7 @@ export default {
         const promises = selectedNodes.map(nodeId => this.createPresentable(nodeId))
 
         Promise.all(promises).then(() => {
-          this.$message.success('获取成功')
+          this.$message.success(this.$18n.t('resourceDetailView.addPresentableSuccessText'))
         }).catch(this.$error.showErrorMessage)
       }
     },
@@ -249,9 +250,6 @@ export default {
         }
         return res.getData()
       })
-    },
-    editDetailHandler() {
-      this.$router.push(`/resource/edit/${this.resourceId}`)
     },
     nodeOptCheckHandler(node) {
       node.checked = !node.checked

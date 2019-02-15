@@ -22,21 +22,21 @@ export default {
       contractStateOptions: [
         {
           value: '0',
-          label: '未签约'
+          label: this.$i18n.t('presentable.unsignedText')
         },
         {
           value: '1',
-          label: '已签约'
+          label: this.$i18n.t('presentable.signedText')
         }
       ],
       onlineStateOptions: [
         {
           value: '0',
-          label: '下线'
+          label: this.$i18n.t('presentable.offlineText')
         },
         {
           value: '1',
-          label: '上线'
+          label: this.$i18n.t('presentable.onlineText')
         }
       ],
       resourceTypeOptions: Object.keys(RESOURCE_TYPES).map(type => {
@@ -73,7 +73,7 @@ export default {
     },
     changePresentableOnlineHandler(presentable) {
       if (presentable.status & 3 !== 3) {
-        return this.$error.showErrorMessage('合同不完备或不存在可用策略')
+        return this.$error.showErrorMessage(this.$i18n.t('presentable.contractStateError'))
       }
 
       if (presentable.isLoading) return
@@ -81,7 +81,9 @@ export default {
       if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
         this.isHadPageBuild().then(is => {
           if (is) {
-            let text = presentable.isOnline ? `确定下线${presentable.presentableName}?下线后节点将无法正常访问` : `确定上线${presentable.presentableName}?上线后将自动替换当前页面样式`
+            let text = presentable.isOnline ?
+              this.$i18n.t('presentable.confirmOffline',{presentableName:presentable.presentableName}) :
+              this.$i18n.t('presentable.confirmOnline',{presentableName:presentable.presentableName})
             this.$confirm(text)
               .then(() => {
                 return this.changePageBuild(presentable)
@@ -117,7 +119,7 @@ export default {
           const {errcode, ret, msg, data} = res.data
           if (errcode !== 0 || ret !== 0 || data.isAuth === false) {
             presentable.isLoading = false
-            return Promise.reject(data.isAuth === false ? '未获得授权' : msg)
+            return Promise.reject(data.isAuth === false ? this.$i18n.t('presentable.unAuthError') : msg)
           }
 
           if (presentable.isOnlineChecked) {
@@ -130,7 +132,7 @@ export default {
           }).then((res) => {
             presentable.isLoading = false
             if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
-              return Promise.reject(res.data.msg || '更新失败')
+              return Promise.reject(res.data.msg || this.$i18n.t('presentable.updateFailTip'))
             }
           })
         })
@@ -150,7 +152,7 @@ export default {
         .then((res) => {
           presentable.isLoading = false
           if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
-            return Promise.reject(res.data.msg || '更新失败')
+            return Promise.reject(res.data.msg || this.$i18n.t('presentable.updateFailTip'))
           } else {
             presentable.isOnlineChecked = !!presentable.isOnline
           }
@@ -186,13 +188,13 @@ export default {
       })
     },
     deletePresentableHandler(presentable) {
-      this.$confirm(`确定删除${presentable.presentableName}?`)
+      this.$confirm(this.$i18n.t('presentable.deletePresentableText', {presentableName: presentable.presentableName}))
         .then(() => {
           this.$services.presentables.delete(presentable.presentableId)
             .then(({data}) => {
               var {ret, errcode, msg} = data
               if (ret === 0 && errcode === 0 && data.data) {
-                this.$message.success('成功删除')
+                this.$message.success(this.$i18n.t('presentable.deleteSuccessTip'))
                 this.refresh()
               } else {
                 this.$message.fail(msg)

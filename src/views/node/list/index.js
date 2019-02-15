@@ -35,7 +35,7 @@ export default {
       })
     },
     copyDoneHandler() {
-      this.$message.success('已复制节点地址')
+      this.$message.success(this.$i18n.t('node.detailView.copySuccess'))
     },
     handleEdit(nodeDetail) {
       this.$router.push({ path: `/node/${nodeDetail.nodeId}` })

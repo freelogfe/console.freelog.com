@@ -9,21 +9,21 @@
           :show-close="false"
   >
     <div class="resolved-duty-statements" v-show="resolvedDutyStatements.length">
-      <h3>签约的依赖资源（共{{resolvedDutyStatements.length}}个）</h3>
+      <h3>{{$t('components.authScheme.signedDepsTip',{length: resolvedDutyStatements.length})}}</h3>
       <el-table
               :data="renderDutyStatements"
               :row-class-name="tableRowClassName"
               stripe
               style="width: 100%"
       >
-        <el-table-column prop="resourceName" label="资源名称" width="350"></el-table-column>
-        <el-table-column prop="authSchemeName" label="授权方案"></el-table-column>
-        <el-table-column prop="policyName" label="授权策略"></el-table-column>
-        <el-table-column prop="signState" label="签约状态"></el-table-column>
+        <el-table-column prop="resourceName" :label="$t('components.authScheme.resourceName')" width="350"></el-table-column>
+        <el-table-column prop="authSchemeName" :label="$t('components.authScheme.authSchemeName')" ></el-table-column>
+        <el-table-column prop="policyName" :label="$t('components.authScheme.policyName')" ></el-table-column>
+        <el-table-column prop="signState" :label="$t('components.authScheme.signState')" ></el-table-column>
       </el-table>
     </div>
     <div class="resolved-bubble-resources" v-show="resolvedBubbleResources.length">
-      <h3>不处理的依赖资源（共{{resolvedBubbleResources.length}}个）</h3>
+      <h3>{{$t('components.authScheme.unsignedDepsTip',{length: resolvedBubbleResources.length})}}</h3>
       <ul>
         <li
                 v-for="(item, index) in resolvedBubbleResources"
@@ -34,10 +34,10 @@
       </ul>
     </div>
     <div class="no-resolved-duty-statements" v-if="false">
-      当前方案选择不处理依赖资源，是否确认签约？
+      {{$t('components.authScheme.noResolvedTip')}}
     </div>
     <div slot="footer" class="dialog-footer">
-      <el-button class="cancel-btn" @click="hideDialog">取消</el-button>
+      <el-button class="cancel-btn" @click="hideDialog">{{$t('common.cancel')}}</el-button>
       <el-button
               type="primary"
               class="sign-btn"
@@ -81,8 +81,8 @@
     data() {
       return {
         isNeedResignContracts: true,
-        dialogTitle: '签约确认',
-        signBtnText: '确认'
+        dialogTitle: this.$i18n.t('components.authScheme.signConfirmTitle'),
+        signBtnText: this.$i18n.t('components.authScheme.signConfirmText')
       }
     },
     methods: {
@@ -160,18 +160,18 @@
             .map(item => {
               const { isHasSignHistory, contractId } = item
               if(isHasSignHistory) {
-                item.signState = '已签约'
+                item.signState = this.$i18n.t('contract.signedText')
               }else {
                 isAllHasSignHistory = false
-                item.signState = '未签约'
+                item.signState = this.$i18n.t('contract.unsignedText')
               }
 
               return item
             })
           if(isAllHasSignHistory) {
-            this.dialogTitle = '合约切换'
+            this.dialogTitle = this.$i18n.t('components.authScheme.dialogTitles[0]')
           }else {
-            this.dialogTitle = '签约确认'
+            this.dialogTitle = this.$i18n.t('components.authScheme.dialogTitles[1]')
           }
           return targetArr
         }else {

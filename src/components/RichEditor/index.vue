@@ -21,8 +21,7 @@
         :on-error="uploadImageErrorHandler"
         :auto-upload="true">
         <i class="el-icon-upload"></i>
-        <div class="el-upload__text">点击上传或将图片拖到此处</div>
-        <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
+        <div class="el-upload__text">{{$t('components.richEditor.uploadTip')}}</div>
       </el-upload>
     </el-dialog>
 

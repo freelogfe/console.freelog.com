@@ -5,16 +5,16 @@
     <el-form-item label="ID">
       {{data.id}}
     </el-form-item>
-    <el-form-item label="策略模板描述">
+    <el-form-item :label="$t('policy.tplName')">
       {{data.name}}
     </el-form-item>
-    <el-form-item label="策略模板类型">
+    <el-form-item :label="$t('policy.policyType')">
       {{resolveType(data.templateType)}}
     </el-form-item>
-    <el-form-item label="状态">
+    <el-form-item :label="$t('policy.state')">
       {{resolveStatus(data.status)}}
     </el-form-item>
-    <el-form-item label="创建时间">
+    <el-form-item :label="$t('policy.createDate')">
       {{data.createDate|fmtDate}}
     </el-form-item>
     <slot></slot>
@@ -38,10 +38,10 @@ export default {
 
   methods: {
     resolveType(type) {
-      return type === 1 ? '资源策略模板' : '用户策略模板'
+      return type === 1 ? this.$i18n.t('policy.types.resource') : this.$i18n.t('policy.types.user')
     },
     resolveStatus(status) {
-      return status === 0 ? '正常' : '已删除'
+      return status === 0 ? this.$i18n.t('policy.states[0]') : this.$i18n.t('policy.states[1]')
     }
   }
 }

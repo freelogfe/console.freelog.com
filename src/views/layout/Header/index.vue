@@ -34,14 +34,14 @@
 
             <ul class="my-profile-items">
               <li class="my-profile-item center hover" @click="logout">
-                <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">登出
+                <img class="tool-icon" src="../../../assets/img/icons/logout.png" alt="">{{ $t('common.logout')}}
               </li>
             </ul>
           </el-popover>
         </li>
         <li class="nav-right-menu-item my-profile" v-else>
           <router-link to="/user/login" class="nav-link">
-            登录/注册
+            {{ $t('common.login')}}/{{ $t('common.register')}}
           </router-link>
         </li>
       </ul>

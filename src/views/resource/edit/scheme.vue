@@ -2,13 +2,13 @@
   <div class="resource-scheme-manager-wrap">
     <el-tabs tab-position="top" v-model="activeTabName" @tab-click="changeTabHandler">
       <el-tab-pane :name="TAB_NAMES.info" :lazy="true">
-        <span slot="label" class="panel-tab-name">授权方案信息<i class="dot solid" v-if="isSchemeReady"></i></span>
+        <span slot="label" class="panel-tab-name">{{ $t('resourceEditView.panelsTabName[0]')}}<i class="dot solid" v-if="isSchemeReady"></i></span>
         <div class="panel-content info-manager-wrap">
           <SchemeInfo :scheme="detail.scheme" ref="info"></SchemeInfo>
         </div>
       </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.scheme">
-        <span slot="label" class="panel-tab-name">授权签约管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
+        <span slot="label" class="panel-tab-name">{{ $t('resourceEditView.panelsTabName[1]')}}<i class="dot solid" v-if="!isDependenciesDone"></i></span>
         <div class="panel-content">
           <lazy-component>
             <scheme-content
@@ -22,7 +22,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.contract">
-        <span slot="label" class="panel-tab-name">合约管理<i class="dot solid" v-if="!isContractsDone"></i></span>
+        <span slot="label" class="panel-tab-name">{{ $t('resourceEditView.panelsTabName[2]')}}<i class="dot solid" v-if="!isContractsDone"></i></span>
         <div class="panel-content contract-manager-wrap">
           <ContractManager :contracts="detail.scheme.dutyStatements"
                            @contracts-change="contractsChangeHandler"
@@ -30,19 +30,19 @@
                            v-if="detail.scheme.dutyStatements&&detail.scheme.dutyStatements.length"></ContractManager>
           <div class="empty-contract-tip" v-else>
             <div v-if="isDependenciesDone">
-              无合约
+              {{ $t('resourceEditView.noContractTip')}}
             </div>
             <div v-else>
-              未创建依赖授权关系
+              {{ $t('resourceEditView.createContractTip')}}
               <router-link :to="$route.path + '?tab=scheme'">
-                <el-button type="text">去创建</el-button>
+                <el-button type="text">{{ $t('resourceEditView.createContractText')}}</el-button>
               </router-link>
             </div>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
-        <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
+        <span slot="label" class="panel-tab-name">{{ $t('resourceEditView.panelsTabName[3]')}}<i class="dot solid" v-if="!isPoliciesDone"></i></span>
         <div class="panel-content policy-manager-wrap">
           <PolicyManager :list="detail.scheme.policy"
                          ref="policy"

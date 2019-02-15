@@ -1,4 +1,5 @@
 import Views from '@/views'
+import i18n from '../lib/i18n'
 
 // 节点操作相关的页面
 export const nodeItemRoute = {
@@ -7,7 +8,7 @@ export const nodeItemRoute = {
   hidden: true,
   meta: {
     requiresAuth: true,
-    title: ':nodeId节点' // :key 可动态通过route.params上的k-v进行替换
+    title: `:nodeId${i18n.t('routes.node')}` // :key 可动态通过route.params上的k-v进行替换
   },
   children: [
     {
@@ -25,7 +26,7 @@ export const nodeItemRoute = {
           path: ':presentableId',
           meta: {
             requiresAuth: true,
-            title: '节点资源详情',
+            title: i18n.t('routes.presentableDetail'),
             type: 'node',
             // hideSidebar: true
           },
@@ -40,7 +41,7 @@ export default {
   path: 'node',
   meta: {
     requiresAuth: true,
-    title: '节点管理系统'
+    title: i18n.t('routes.nodesSystem')
   },
   component: Views.container,
   redirect: '/',
@@ -50,7 +51,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '创建节点'
+        title: i18n.t('routes.createNode')
       },
       component: Views.nodeCreator
     },
@@ -59,7 +60,7 @@ export default {
       meta: {
         requiresAuth: true,
         type: 'node',
-        title: '节点列表'
+        title: i18n.t('routes.nodeList')
       },
       component: Views.nodeList
     },
@@ -67,7 +68,7 @@ export default {
       path: 'policy_tpl/list',
       meta: {
         requiresAuth: true,
-        title: '策略模板列表',
+        title: i18n.t('routes.policyList'),
         type: 'node'
       },
       component: Views.policyTplList
@@ -87,7 +88,7 @@ export default {
           hidden: true,
           meta: {
             requiresAuth: true,
-            title: '创建策略模板',
+            title: i18n.t('routes.createPolicyTpl'),
             type: 'node'
           },
           component: Views.policyTplCreator
@@ -97,7 +98,7 @@ export default {
           hidden: true,
           meta: {
             requiresAuth: true,
-            title: '策略模板详情',
+            title: i18n.t('routes.policyTplDetail'),
             type: 'node'
           },
           component: Views.policyTplDetail
@@ -109,7 +110,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '节点详情'
+        title: i18n.t('routes.nodeDetail')
       },
       component: Views.nodeDetail,
       redirect(to) {
@@ -119,14 +120,14 @@ export default {
         path: 'presentables',
         meta: {
           requiresAuth: true,
-          title: '节点详情'
+          title: i18n.t('routes.nodeDetail')
         },
         component: Views.presentableList,
       }, {
         path: 'preview',
         meta: {
           requiresAuth: true,
-          title: '节点详情'
+          title: i18n.t('routes.nodeDetail')
         },
         component: Views.nodePreview,
       }]

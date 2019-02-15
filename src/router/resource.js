@@ -2,13 +2,15 @@
  * 资源管理系统
  */
 import Views from '@/views'
+import i18n from '../lib/i18n'
+
 
 export default {
   name: 'resource',
   path: 'resource',
   meta: {
     requiresAuth: true,
-    title: '资源管理系统'
+    title: i18n.t('routes.resourceSystem')
   },
   component: Views.container,
   redirect: '/resource/list',
@@ -17,7 +19,7 @@ export default {
       path: 'policy_tpl/list',
       meta: {
         requiresAuth: true,
-        title: '资源策略模板列表',
+        title: i18n.t('routes.resourcePolicyTplList'),
         type: 'resource'
       },
       component: Views.policyTplList
@@ -27,7 +29,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '创建资源',
+        title: i18n.t('routes.createResource'),
         type: 'resource',
         theme: 'gray'
       },
@@ -38,7 +40,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '更新资源',
+        title: i18n.t('routes.updateResource'),
         type: 'resource',
         theme: 'gray',
         // hideSidebar: true
@@ -49,7 +51,7 @@ export default {
       path: 'list',
       meta: {
         requiresAuth: true,
-        title: '我的资源',
+        title: i18n.t('routes.myResources'),
         type: 'resource'
       },
       component: Views.resourceList
@@ -64,20 +66,11 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: '资源详情',
+        title: i18n.t('routes.resourceDetail'),
         type: 'resource',
         theme: 'gray'
       },
       component: Views.resourceDetail
-    },
-    {
-      path: 'policy_tpl/list',
-      meta: {
-        requiresAuth: true,
-        title: '资源策略模板列表',
-        type: 'resource'
-      },
-      component: Views.policyTplList
     },
     {
       path: 'policy_tpl',
@@ -94,7 +87,7 @@ export default {
           hidden: true,
           meta: {
             requiresAuth: true,
-            title: '创建资源策略模板',
+            title: i18n.t('routes.createResourcePolicyTpl'),
             type: 'resource'
           },
           component: Views.policyTplCreator
@@ -104,7 +97,7 @@ export default {
           hidden: true,
           meta: {
             requiresAuth: true,
-            title: '资源策略模板详情',
+            title: i18n.t('routes.resourcePolicyTplDetail'),
             type: 'resource'
           },
           component: Views.policyTplDetail

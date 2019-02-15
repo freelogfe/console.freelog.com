@@ -4,7 +4,7 @@
       class="search-input"
       v-model="queryInput"
       :fetch-suggestions="querySearchAsync"
-      placeholder="请输入内容License ID"
+      :placeholder="$t('components.policyEditor.licensePlaceholder')"
       @select="handleSelect">
       <i class="el-icon-search el-input__icon" slot="prefix"></i>
       <clip-board
@@ -54,7 +54,7 @@ export default {
       if (!this.selectedLicenseId) {
         return
       }
-      this.$message.success('已复制')
+      this.$message.success(this.$i18n.t('components.policyEditor.copyDone'))
       if (typeof this.callback === 'function') {
         this.callback({
           name: 'selectLicenseId',

@@ -13,11 +13,11 @@
       <slot name="append"></slot>
     </ul>
     <slot name="empty" v-if="!isLoading && previewList.length === 0">
-      <div style="font-size: 20px; text-align: center;">暂无查询结果</div>
+      <div style="font-size: 20px; text-align: center;">{{$t('components.lazyListView.noContentTip')}}</div>
     </slot>
     <slot name="loading">
       <div class="load-more-gif" ref="loading"
-           element-loading-text="拼命加载中"
+           :element-loading-text="$t('components.lazyListView.loadingTip')"
            element-loading-background="rgba(0,0,0,0)"
            v-loading="isLoading > 0"></div>
     </slot>

@@ -8,7 +8,7 @@
           </div>
           <FreelogTags v-model="presentable.userDefinedTags"
                        class="p-user-tags"
-                       actionText="新标签"
+                       :actionText="$t('presentable.addLabel')"
                        :isCanCURD="false"></FreelogTags>
         </div>
         <div class="res-info" v-if="resource&&resource.resourceName"><a :href="'/resource/detail/'+resource.resourceId"
@@ -20,7 +20,7 @@
       </div>
 
       <router-link :to="nodeIndexUrl" class="back-to-node-page">
-        <el-button type="primary" plain round class="back-btn"><i class="el-icon-back"></i>节点首页</el-button>
+        <el-button type="primary" plain round class="back-btn"><i class="el-icon-back"></i>{{$t('presentable.nodeIndex')}}</el-button>
       </router-link>
     </div>
   </div>
@@ -51,9 +51,9 @@
         var text
 
         if (!scheme) {
-          text = '未签约'
+          text = this.$i18n.t('presentable.unsignedText')
         } else {
-          text = `已签约 (${scheme.authSchemeName}/${scheme.selectedPolicy.policyName})`
+          text = `${this.$i18n.t('presentable.signedText')} (${scheme.authSchemeName}/${scheme.selectedPolicy.policyName})`
         }
         return text
       },

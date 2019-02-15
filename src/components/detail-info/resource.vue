@@ -2,25 +2,25 @@
   <el-form label-position="right"
            class="small-el-form"
            label-width="100px">
-    <el-form-item label="资源ID">
+    <el-form-item :label="$t('resource.resourceId')">
       {{data.resourceId}}
     </el-form-item>
-    <el-form-item label="资源名称">
+    <el-form-item :label="$t('resource.name')">
       {{data.resourceName}}
     </el-form-item>
-    <el-form-item label="资源类型">
+    <el-form-item :label="$t('resource.type')">
       {{data.resourceType}}
     </el-form-item>
-    <el-form-item label="版本" v-if="data.systemMeta && data.systemMeta.version">
+    <el-form-item :label="$t('resource.version')" v-if="data.systemMeta && data.systemMeta.version">
       {{data.systemMeta.version}}
     </el-form-item>
-    <el-form-item label="资源状态" v-if="data.statusInfo">
+    <el-form-item :label="$t('resource.status')" v-if="data.statusInfo">
       <el-tag :type="data.statusInfo.type">{{data.statusInfo.desc}}</el-tag>
     </el-form-item>
-    <el-form-item label="资源作者" v-if="data.authorInfo">
+    <el-form-item :label="$t('resource.author')" v-if="data.authorInfo">
       {{data.authorInfo.nickname}}
     </el-form-item>
-    <el-form-item label="创建时间">
+    <el-form-item :label="$t('resource.createDate')">
       {{data.createDate|fmtDate}}
     </el-form-item>
     <slot></slot>

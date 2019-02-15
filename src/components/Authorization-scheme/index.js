@@ -1,6 +1,6 @@
-
-import { Message } from 'element-ui'
-import { mapGetters } from 'vuex'
+import {Message} from 'element-ui'
+import {mapGetters} from 'vuex'
+import i18n from '@/lib/i18n'
 import SchemeSignDialog from '@/components/Authorization-scheme/scheme-sign-dialog.vue'
 import SchemeSuspensionBall from '@/components/Authorization-scheme/scheme-suspension-ball.vue'
 import SchemeDetail from './scheme-detail.vue'
@@ -18,7 +18,7 @@ export default {
     contracts: Array,
     bubbleResourcesMap: { // 不处理的上抛资源，作用于"资源编辑页面"
       type: Object,
-      default: function() {
+      default: function () {
         return {}
       }
     },
@@ -52,7 +52,7 @@ export default {
       isShowNavBar: false,
       currentOpenedResources: [],             // 当前页面已打开的资源
       resourceMap: {},
-      selectedAuthSchemes:[],                 // 已选中的授权方案集合
+      selectedAuthSchemes: [],                 // 已选中的授权方案集合
       unResolveAuthResources: [],             // 不处理授权方案的资源集合
       actIndex: 0,
       isRegisterGlobalClickEvent: false,
@@ -68,17 +68,17 @@ export default {
     resourceContractsMap() {
       var map = {}
       this.contracts.forEach(contract => {
-        const { resourceId } = contract
+        const {resourceId} = contract
         map[resourceId] = contract
       })
       return map
     },
     boxStyle() {
-      if(this.authType === 'resource') {
+      if (this.authType === 'resource') {
         return {}
       }
 
-      if(this.currentOpenedResources.length > 1) {
+      if (this.currentOpenedResources.length > 1) {
         let clientWidth = document.body.clientWidth || document.documentElement.clientWidth
         return {
           position: 'relative',
@@ -88,7 +88,7 @@ export default {
           "padding": "0 35px",
           "box-sizing": "border-box",
         }
-      }else {
+      } else {
         return {}
       }
     },
@@ -113,7 +113,7 @@ export default {
 
       return this.getResourceSchemeDetail([...resourceIdSet].join(','))
         .then(() => {
-          if(this.resourceMap[resourceId]) {
+          if (this.resourceMap[resourceId]) {
             this.currentOpenedResources = []
             this.currentOpenedResources.push(this.resourceMap[resourceId])
             this.refreshSelectedAuthSchemes()
@@ -126,7 +126,7 @@ export default {
           Message.error(e.toString())
         })
     },
-    reInitPresentableAuthSchemes(newContracts){
+    reInitPresentableAuthSchemes(newContracts) {
       this.$emit('update:contracts', newContracts)
       this.updatePresentableScheme(newContracts)
       newContracts.forEach(c => {
@@ -137,24 +137,25 @@ export default {
         case 'presentable': {
           this.$router.push({
             path: `/node/${this.$route.params.nodeId}/presentable/${this.$route.params.presentableId}`,
-            query: { tab: 'contract' }
+            query: {tab: 'contract'}
           })
           break
         }
         case 'resource': {
           break
         }
-        default: {}
+        default: {
+        }
       }
     },
     updatePresentableScheme(newContracts) {
       const tempOR = this.currentOpenedResources[0]
-      if(tempOR) {
-        const { authSchemeList, selectedAuthSchemeTabIndex, resourceId } = tempOR
+      if (tempOR) {
+        const {authSchemeList, selectedAuthSchemeTabIndex, resourceId} = tempOR
         var contract = null
 
-        for(let i = 0; i < newContracts.length; i++) {
-          if(newContracts[i].resourceId === resourceId) {
+        for (let i = 0; i < newContracts.length; i++) {
+          if (newContracts[i].resourceId === resourceId) {
             contract = newContracts[i]
             break
           }
@@ -164,18 +165,18 @@ export default {
 
     },
     toggleResolveResource(resourceAuthScheme, resourceLevelIndex) {
-      if(!this.checkIsCanExchangeSelection()) return
+      if (!this.checkIsCanExchangeSelection()) return
       resourceAuthScheme.isNoResolved = !resourceAuthScheme.isNoResolved
 
-      const { activeAuthSchemeTabIndex, authSchemeList, isNoResolved } = resourceAuthScheme
+      const {activeAuthSchemeTabIndex, authSchemeList, isNoResolved} = resourceAuthScheme
 
-      if(isNoResolved) {
+      if (isNoResolved) {
         var bubbleResources = authSchemeList[activeAuthSchemeTabIndex].bubbleResources.map(item => {
-          const { resourceId } = item
-          if(!this.resourceMap[resourceId]) {
+          const {resourceId} = item
+          if (!this.resourceMap[resourceId]) {
             item.selectedAuthSchemeTabIndex = -1
             return item
-          }else {
+          } else {
             return this.resourceMap[resourceId]
           }
         })
@@ -190,25 +191,26 @@ export default {
     },
     // 已经发布或已废弃的"授权方案"，阻止更改
     checkIsCanExchangeSelection() {
-      if(this.isPreventExchangeSelection){
-        Message.warning('已发布该授权点，当前操作不可执行')
+      if (this.isPreventExchangeSelection) {
+        Message.warning(i18n.t('components.authScheme.checkMessages[0]'))
         return false
-      } if(this.isAbandon) {
-        Message.warning('已废弃该授权点，当前操作不可执行')
+      }
+      if (this.isAbandon) {
+        Message.warning(i18n.t('components.authScheme.checkMessages[1]'))
         return false
-      }else {
+      } else {
         return true
       }
     },
     // 取消当前资源 所有下级资源的授权方案选择
     cancelSomeURSchemeSelection(bubbleResources) {
-      for(let i = 0; i < bubbleResources.length; i++) {
-        const { resourceId } = bubbleResources[i]
+      for (let i = 0; i < bubbleResources.length; i++) {
+        const {resourceId} = bubbleResources[i]
         let targResource = this.resourceMap[resourceId]
-        if(targResource) {
-          const { selectedAuthSchemeTabIndex, authSchemeList } = targResource
-          if(selectedAuthSchemeTabIndex !== -1) {
-            const { bubbleResources = [] } = authSchemeList[selectedAuthSchemeTabIndex]
+        if (targResource) {
+          const {selectedAuthSchemeTabIndex, authSchemeList} = targResource
+          if (selectedAuthSchemeTabIndex !== -1) {
+            const {bubbleResources = []} = authSchemeList[selectedAuthSchemeTabIndex]
             targResource.selectedAuthSchemeTabIndex = -1
             targResource.selectedPolicyIndex = -1
             targResource.isFinishSelectedAuthScheme = false
@@ -220,8 +222,8 @@ export default {
     // 点击"更新合约"或"生成合约"按钮
     signContract() {
       const arr = this.checkIsExistUnselectedScheme(this.currentOpenedResources[0])
-      if(arr.length) {
-        Message.error(`资源"${arr.join('"、"')}"未选择授权策略`)
+      if (arr.length) {
+        Message.error(i18n.t('components.authScheme.signContractError', {resource: arr.join('"、"')}))
         return
       }
       this.isShowDialog = true
@@ -229,26 +231,30 @@ export default {
     // 检测是否能点击"更新合同"
     checkIsExistUnselectedScheme(openResource) {
       var arr = []
-      const { resourceName, authSchemeList, selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex } = openResource
-      if(selectedAuthSchemeTabIndex === -1) {
+      const {resourceName, authSchemeList, selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex} = openResource
+      if (selectedAuthSchemeTabIndex === -1) {
         arr.push(resourceName)
       }
 
-      const { bubbleResources = [] } = authSchemeList[activeAuthSchemeTabIndex]
-      for(let i = 0; i < bubbleResources.length; i++) {
-        const { resourceId, resourceName } = bubbleResources[i]
+      const {bubbleResources = []} = authSchemeList[activeAuthSchemeTabIndex]
+      for (let i = 0; i < bubbleResources.length; i++) {
+        const {resourceId, resourceName} = bubbleResources[i]
         const tempAuthSchemeData = this.resourceMap[resourceId]
-        if(tempAuthSchemeData) {
-          arr = [ ...arr, ...this.checkIsExistUnselectedScheme(tempAuthSchemeData)]
-        }else {
+        if (tempAuthSchemeData) {
+          arr = [...arr, ...this.checkIsExistUnselectedScheme(tempAuthSchemeData)]
+        } else {
           arr.push(resourceName)
         }
       }
       return arr
     },
     afterSginContract(data) {
-      var str = this.presentableInfo.contracts.length ? '更新' : '生成'
-      Message.success(`节点资源${this.presentableInfo.presentableName}授权合约${str}成功！`)
+      var str = this.presentableInfo.contracts.length ? i18n.t('components.authScheme.update') : i18n.t('components.authScheme.generate')
+      Message.success(i18n.t('components.authScheme.signSuccessMsg', {
+          presentableName: this.presentableInfo.presentableName,
+          msg: str
+        }
+      ))
       this.reInitPresentableAuthSchemes(data.contracts)
     },
     resolveUpdateDate(updateDate) {
@@ -259,40 +265,40 @@ export default {
       this.selectedAuthSchemes = []
       this.unResolveAuthResources = []
       this.getSelectedAuthScheme(this.currentOpenedResources[0])
-      this.$emit('update-resolved-auth-scheme',{
+      this.$emit('update-resolved-auth-scheme', {
         resourceId: this.resourceInfo.resourceId,
         selectedAuthSchemes: this.selectedAuthSchemes,
-        unResolveAuthResources:this.unResolveAuthResources
+        unResolveAuthResources: this.unResolveAuthResources
       })
       this.getAuthResolveState()
     },
     // 获取选中的"授权方案和策略"与"未处理的资源（即上抛资源）"的信息
     getSelectedAuthScheme(authSchemesData) {
-      if(authSchemesData) {
-        const { isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex } = authSchemesData
-        if(isNoResolved) {
-          this.unResolveAuthResources.push({ resourceName, resourceId })
+      if (authSchemesData) {
+        const {isNoResolved, authSchemeList, resourceName, resourceId, selectedAuthSchemeTabIndex, selectedPolicyIndex} = authSchemesData
+        if (isNoResolved) {
+          this.unResolveAuthResources.push({resourceName, resourceId})
           return
         }
-        if(selectedAuthSchemeTabIndex !== -1) {
-          const { authSchemeName, policy, bubbleResources, authSchemeId } = authSchemeList[selectedAuthSchemeTabIndex]
-          let { policyName, segmentId, isHasSignHistory } = policy[selectedPolicyIndex]
-          const contractId = this.getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId })
+        if (selectedAuthSchemeTabIndex !== -1) {
+          const {authSchemeName, policy, bubbleResources, authSchemeId} = authSchemeList[selectedAuthSchemeTabIndex]
+          let {policyName, segmentId, isHasSignHistory} = policy[selectedPolicyIndex]
+          const contractId = this.getContractIdBySchemeInfo({resourceId, authSchemeId, segmentId})
 
           this.selectedAuthSchemes.push({
             resourceName, resourceId, authSchemeName, authSchemeId, policyName, segmentId, contractId, isHasSignHistory
           })
           bubbleResources.forEach(bResource => {
-            const { resourceId } = bResource
+            const {resourceId} = bResource
             this.getSelectedAuthScheme(this.resourceMap[resourceId])
           })
         }
       }
     },
-    getContractIdBySchemeInfo({ resourceId, authSchemeId, segmentId }) {
+    getContractIdBySchemeInfo({resourceId, authSchemeId, segmentId}) {
       const contract = this.resourceContractsMap[resourceId]
-      if(contract) {
-        if(contract.targetId === authSchemeId && segmentId === contract.segmentId) {
+      if (contract) {
+        if (contract.targetId === authSchemeId && segmentId === contract.segmentId) {
           return contract.contractId
         }
       }
@@ -302,18 +308,18 @@ export default {
     getAuthResolveState() {
       var authResolveState = -1
       var cOResources = this.currentOpenedResources
-      for(let i = 0; i < cOResources.length; i++){
+      for (let i = 0; i < cOResources.length; i++) {
         const oR = cOResources[i]
 
-        if(oR.isFinishSelectedAuthScheme) {
+        if (oR.isFinishSelectedAuthScheme) {
           authResolveState = 1
           break
         }
-        if(oR.isNoResolved) {
+        if (oR.isNoResolved) {
           authResolveState = 0
           break
         }
-        if(oR.selectedAuthSchemeTabIndex === -1) {
+        if (oR.selectedAuthSchemeTabIndex === -1) {
           authResolveState = -1
           break
         }
@@ -325,20 +331,20 @@ export default {
       var targArr = this.currentOpenedResources.slice(0, resourceLevelIndex + 1)
       var tempResource = this.currentOpenedResources[resourceLevelIndex]
 
-      while(tempResource !== null){
-        const { activeAuthSchemeTabIndex, authSchemeList } = tempResource
+      while (tempResource !== null) {
+        const {activeAuthSchemeTabIndex, authSchemeList} = tempResource
 
-        const { bubbleResources, selectedUpcastResourceIndex = -1 } = authSchemeList[activeAuthSchemeTabIndex]
+        const {bubbleResources, selectedUpcastResourceIndex = -1} = authSchemeList[activeAuthSchemeTabIndex]
 
-        if(selectedUpcastResourceIndex === -1) {
+        if (selectedUpcastResourceIndex === -1) {
           tempResource = null
-        }else {
-          const { resourceId } = bubbleResources[selectedUpcastResourceIndex]
+        } else {
+          const {resourceId} = bubbleResources[selectedUpcastResourceIndex]
 
-          if(this.resourceMap[resourceId]) {
+          if (this.resourceMap[resourceId]) {
             targArr.push(this.resourceMap[resourceId])
             tempResource = this.resourceMap[resourceId]
-          }else {
+          } else {
             tempResource = null
           }
         }
@@ -347,35 +353,35 @@ export default {
     },
     // 显示 上抛资源 的授权方案
     showUpcastResourceScheme(upcastResource, resourceLevelIndex) {
-      const { resourceId } = upcastResource
+      const {resourceId} = upcastResource
 
-      if(!this.resourceMap[resourceId] || this.resourceMap[resourceId].authSchemeList.length  === 0) {
+      if (!this.resourceMap[resourceId] || this.resourceMap[resourceId].authSchemeList.length === 0) {
         this.getResourceSchemeDetail(resourceId, resourceLevelIndex)
           .then(() => {
             this.refreshCurrentOpenedResource(resourceLevelIndex)
           })
-      }else {
+      } else {
         this.refreshCurrentOpenedResource(resourceLevelIndex)
       }
     },
     // 获取资源的授权方案详情
     getResourceSchemeDetail(resourceIds) {
-      if(resourceIds !== '') {
+      if (resourceIds !== '') {
         return Promise.all([
           this.getResourceDetailList(resourceIds),
           this.getResourceAuthSchemesList(resourceIds)
         ])
-          .then(([ detailListRes, authSchemeListRes ]) => {
+          .then(([detailListRes, authSchemeListRes]) => {
 
-            if(detailListRes.errcode === 0) {
+            if (detailListRes.errcode === 0) {
               detailListRes.data.forEach(item => {
-                const { resourceId, resourceName, resourceType, userName, updateDate } = item
-                if(authSchemeListRes[resourceId]) {
+                const {resourceId, resourceName, resourceType, userName, updateDate} = item
+                if (authSchemeListRes[resourceId]) {
                   this.resolveAuthSchemeListRes(authSchemeListRes[resourceId], resourceId)
 
                   // var resourceDate = this.resolveUpdateDate(updateDate)
                   Object.assign(this.resourceMap[resourceId], {
-                    resourceName, resourceType, userName,updateDate
+                    resourceName, resourceType, userName, updateDate
                   })
                 }
               })
@@ -383,7 +389,7 @@ export default {
             }
             return Promise.resolve()
           })
-      }else {
+      } else {
         return Promise.reject()
       }
 
@@ -408,15 +414,15 @@ export default {
       }).then(res => res.data)
         .then(res => {
           var map = {}
-          if(res.errcode === 0) {
+          if (res.errcode === 0) {
             res.data.forEach(item => {
-              const { resourceId, status } = item
-              if(status === 1) {
+              const {resourceId, status} = item
+              if (status === 1) {
                 map[resourceId] = map[resourceId] || []
                 map[resourceId].push(item)
               }
             })
-          }else {
+          } else {
             Message.error(res.msg)
           }
           return Promise.resolve(map)
@@ -425,7 +431,7 @@ export default {
     resolveAuthSchemeListRes(authSchemeList, resourceId) {
       const contractObj = this.resourceContractsMap[resourceId]
       var isNoResolved = false
-      if(this.authType === 'resource') {
+      if (this.authType === 'resource') {
         isNoResolved = !!this.bubbleResourcesMap[resourceId]
       }
 
@@ -446,19 +452,19 @@ export default {
     },
     // 根据合同确定"授权方案与授权策略"的选中序号
     resolveAuthSchemeParams(tempResource, contractObj) {
-      const { authSchemeList } = tempResource
+      const {authSchemeList} = tempResource
 
-      if(contractObj) {
+      if (contractObj) {
         let targetId = contractObj.targetId || contractObj.authSchemeId
         let segmentId = contractObj.segmentId || contractObj.policySegmentId
 
-        for(let i = 0; i < authSchemeList.length; i++) {
-          if(authSchemeList[i].authSchemeId === targetId) {
+        for (let i = 0; i < authSchemeList.length; i++) {
+          if (authSchemeList[i].authSchemeId === targetId) {
             tempResource.activeAuthSchemeTabIndex = tempResource.selectedAuthSchemeTabIndex = i
 
-            const { policy } = authSchemeList[i]
-            for(let j = 0; j < policy.length; j++) {
-              if(policy[j].segmentId === segmentId) {
+            const {policy} = authSchemeList[i]
+            for (let j = 0; j < policy.length; j++) {
+              if (policy[j].segmentId === segmentId) {
                 tempResource.selectedPolicyIndex = j
                 policy[j].isHasSignHistory = true
               }
@@ -470,18 +476,18 @@ export default {
     },
     // 获取授权点的策略段身份认证结果
     getAuthSchemeIdentityAuth(authSchemeIds) {
-      if(authSchemeIds.length === 0) return
+      if (authSchemeIds.length === 0) return
       var url = `//${this.qiHostname}/v1/auths/authSchemeIdentityAuth?authSchemeIds=${authSchemeIds}`
-      if(this.authType === 'presentable') {
+      if (this.authType === 'presentable') {
         var nodeId = this.presentableInfo.nodeId
         url = url + `&nodeId=${nodeId}`
       }
       return this.$axios.get(url)
         .then(res => res.data)
         .then(res => {
-          if(res.errcode === 0) {
+          if (res.errcode === 0) {
             res.data.forEach(item => {
-              const { authSchemeId, policy } = item
+              const {authSchemeId, policy} = item
               this.authSchemeIdentityAuthMap[authSchemeId] = this.authSchemeIdentityAuthMap[authSchemeId] || {}
               const tempMap = this.authSchemeIdentityAuthMap[authSchemeId]
               policy.forEach(p => {
@@ -489,20 +495,20 @@ export default {
               })
             })
             this.authSchemeIdentityAuthMap = Object.assign({}, this.authSchemeIdentityAuthMap)
-          }else {
+          } else {
             Message.error(res.msg || '')
           }
         })
     },
     getResourcesContractSignState(detailListRes, authSchemeListRes) {
-      if(this.authType === 'presentable') {
-        if(detailListRes.data) {
+      if (this.authType === 'presentable') {
+        if (detailListRes.data) {
           const resourceIDs = detailListRes.data.map(item => item.resourceId)
           const ids = resourceIDs.join(',')
           let arr = []
           resourceIDs.forEach(id => {
             const tempAuthSchemeIdArr = authSchemeListRes[id]
-            if(tempAuthSchemeIdArr) {
+            if (tempAuthSchemeIdArr) {
               tempAuthSchemeIdArr.forEach(({authSchemeId}) => arr.push(authSchemeId))
             }
           })
@@ -512,15 +518,15 @@ export default {
           return this.$axios.get(`/v1/contracts/contractRecords?resourceIds=${ids}&targetIds=${targetIds}&partyTwo=${partyTwo}`)
             .then(res => res.data)
             .then(res => {
-              if(res.errcode === 0) {
+              if (res.errcode === 0) {
                 const contracts = res.data
-                for(let i = 0; i < contracts.length; i++) {
-                  const { resourceId, segmentId, targetId } = contracts[i]
+                for (let i = 0; i < contracts.length; i++) {
+                  const {resourceId, segmentId, targetId} = contracts[i]
                   const tempResource = this.resourceMap[resourceId]
                   tempResource.authSchemeList.forEach(item => {
-                    if(item.authSchemeId === targetId) {
+                    if (item.authSchemeId === targetId) {
                       item.policy.forEach(p => {
-                        if(p.segmentId === segmentId) {
+                        if (p.segmentId === segmentId) {
                           p.isHasSignHistory = true
                         }
                       })
@@ -554,7 +560,7 @@ export default {
       }
 
       this.contentBoxTX = contentBoxTX
-      this.contentBoxStyle = { "transform": `translateX(-${contentBoxTX}px)` }
+      this.contentBoxStyle = {"transform": `translateX(-${contentBoxTX}px)`}
     },
   },
   watch: {
@@ -563,7 +569,7 @@ export default {
         const $partitionBox = document.querySelector('.scheme-partition')
         const $wrapperBox = document.querySelector('.dependencies-resolve-box')
 
-        if($partitionBox) {
+        if ($partitionBox) {
           var allPartitionBoxW = $partitionBox.offsetWidth * this.currentOpenedResources.length
           this.allPartitionBoxW = allPartitionBoxW
           switch (this.authType) {

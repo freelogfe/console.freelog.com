@@ -1,19 +1,19 @@
 <template>
   <section>
     <el-form :model="data" label-width="120px" :rules="rules" class="input-form" ref="createForm">
-      <el-form-item label="策略模板描述" prop="name" required>
+      <el-form-item :label="$t('policy.tplName')" prop="name" required>
         <el-input v-model="data.name"></el-input>
       </el-form-item>
-      <el-form-item label="策略模板描述" prop="template" required>
+      <el-form-item :label="$t('policy.tplDesc')" prop="template" required>
         <el-input type="textarea"
                   :rows="15"
-                  placeholder="请输入策略"
+                  :placeholder="$t('policy.inputTip')"
                   v-model="data.template">
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" plain @click="validatePolicy">校验策略</el-button>
-        <el-button type="primary" @click="submitHandler">创建</el-button>
+        <el-button type="primary" plain @click="validatePolicy">{{ $t('policy.checkBtnText')}}</el-button>
+        <el-button type="primary" @click="submitHandler">{{ $t('common.createText') }}</el-button>
       </el-form-item>
     </el-form>
   </section>

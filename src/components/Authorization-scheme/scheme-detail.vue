@@ -1,6 +1,6 @@
 <template>
   <div class="scheme-detail-box">
-    <h3 class="scheme-title">授权方案</h3>
+    <h3 class="scheme-title">{{$t('components.authScheme.schemeTitle')}}</h3>
     <ul class="tab-box">
       <li
               v-for="(authScheme, index) in authSchemeList"
@@ -19,7 +19,7 @@
     </ul>
     <div class="tab-pane">
       <div class="tab-row row-resource" v-if="upcastResourcesArr.length">
-        <h3>待签资源</h3>
+        <h3>{{$t('components.authScheme.unsignedResources')}}</h3>
         <ul>
           <li
                   v-for="(upcastResource, index) in upcastResourcesArr"
@@ -42,7 +42,7 @@
         </ul>
       </div>
       <div class="tab-row row-policy">
-        <h3>授权策略</h3>
+        <h3>{{$t('components.authScheme.policyTitle')}}</h3>
         <div class="policyList">
           <div
                   v-for="(policy, index) in policyList"
@@ -55,8 +55,8 @@
               <i class="el-icon-circle-check" v-if="index === curSchemeSelectedPolicyIndex"></i>
               <span class="p-item-check" v-if="index !== curSchemeSelectedPolicyIndex"></span>
               {{policy.policyName}}
-              <span class="has-sign-history-text" v-if="policy.isHasSignHistory && !policy.isDisbale">(存在历史签约)</span>
-              <span class="disabled-text" v-if="policy.isDisbale">(不可用)</span>
+              <span class="has-sign-history-text" v-if="policy.isHasSignHistory && !policy.isDisbale">({{$t('components.authScheme.hadSigned')}})</span>
+              <span class="disabled-text" v-if="policy.isDisbale">({{$t('components.authScheme.unavailable')}})</span>
               <!--<span class="disabled-text" v-if="policy.status === 0">(已下架)</span>-->
             </div>
             <div class="policy-detail">
@@ -130,11 +130,14 @@
         if ((this.resourceLevelIndex - 1) >= 0) {
           let {selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex, resourceName, authSchemeList} = this.currentOpenedResources[this.resourceLevelIndex - 1]
           if (selectedAuthSchemeTabIndex === -1) {
-            Message.error(`父级资源"${resourceName}"未选中授权方案`)
+            Message.error(this.$i18n.t('components.authScheme.selectPolicyMessages[0]',{resourceName}))
             return
           } else if (selectedAuthSchemeTabIndex !== activeAuthSchemeTabIndex) {
             var parentResourceActiveScheme = authSchemeList[activeAuthSchemeTabIndex]
-            Message.error(`父级资源"${resourceName}"的授权方案"${parentResourceActiveScheme.authSchemeName}"未选中`)
+            Message.error(this.$i18n.t('components.authScheme.selectPolicyMessages[1]',{
+              resourceName,
+              authSchemeName:parentResourceActiveScheme.authSchemeName
+            }))
             return
           }
         }
@@ -164,17 +167,17 @@
         let isEffect = false
 
         if (this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
-          str = '切换授权方案，将会导致之前选择的策略都将失效'
+          str = this.$i18n.t('components.authScheme.switchSchemeTip')
           isEffect = true
         } else if (this.curSchemeSelectedPolicyIndex === index) {
           if (this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
-            str = '取消当前选择，将导致部分授权方案的选择失效'
+            str = this.$i18n.t('components.authScheme.cancelSelectedSchemeTip')
             isEffect = true
           }
         }
 
         return {
-          isEffect, msg: `${str}，确定继续？`
+          isEffect, msg: this.$i18n.t('components.authScheme.confirmMsg',{str})
         }
       },
       exchangePolicyItem(index) {

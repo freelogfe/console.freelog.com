@@ -7,16 +7,15 @@
       <el-form-item label="授权方案状态" class="scheme-input-item">
         <div class="res-scheme-status-switch" :class="[form.isOnline? 'on-active': 'off-active']">
           <div class="scheme-switch-state on-state" @click="toggleStateHandler(1)">
-            <i class="el-icon-circle-check-outline"></i>启用
+            <i class="el-icon-circle-check-outline"></i>{{$t('resourceEditView.enableText')}}
           </div>
           <div class="scheme-switch-state off-state" @click="toggleStateHandler(0)">
-            <i class="el-icon-remove-outline"></i>停用
+            <i class="el-icon-remove-outline"></i>{{$t('resourceEditView.disableText')}}
           </div>
         </div>
       </el-form-item>
       <el-form-item class="ft-wrap">
-        <!--<el-button @click="resetSchemeDetail" class="ft-btn" round>取消</el-button>-->
-        <el-button @click="updateSchemeDetail" class="ft-btn" round type="primary">保存</el-button>
+        <el-button @click="updateSchemeDetail" class="ft-btn" round type="primary">{{$t('common.save')}}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -81,7 +80,7 @@
             if (errcode === 0 && ret === 0) {
               Object.assign(this.scheme, data)
               this.setData(this.scheme)
-              this.$message.success('保存成功')
+              this.$message.success(this.$i18n.t('common.saveSuccess'))
             } else {
               this.$error.showErrorMessage(msg)
             }

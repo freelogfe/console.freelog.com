@@ -1,6 +1,6 @@
 <template>
   <section class="about-section">
-   {{ $t('message.about') }} freelog {{ $t('about') }}
+   {{ $t('aboutView.about') }} freelog
   </section>
 </template>
 

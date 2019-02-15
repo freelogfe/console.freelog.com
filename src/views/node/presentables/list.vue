@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column
               width="150"
-              label="资源类型">
+              :label="$t('resource.resourceType')">
         <template slot-scope="scope">
           <div>
             <span class="resource-type" :class="['is-'+scope.row.resourceInfo.resourceType]">{{scope.row.resourceInfo.resourceType}}</span>
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column
               width="180"
-              label="签约状态">
+              :label="$t('contract.state')">
         <template slot-scope="scope">
           <div class="contract-state-info" :class="[
                       scope.row.hasContract?'active-status-2':'active-status-0',
@@ -45,9 +45,9 @@
             <i class="dot"></i>
             <div class="scheme-state">
               <div>
-                <template v-if="scope.row.hasContract">已签约</template>
+                <template v-if="scope.row.hasContract">{{$t('contract.signedText')}}</template>
                 <template v-else>
-                  未签约
+                  {{$t('contract.unsignedText')}}
                   <el-button type="text" @click="deletePresentableHandler(scope.row)"><i class="el-icon-delete"></i>
                   </el-button>
                 </template>
@@ -64,18 +64,18 @@
         <template slot-scope="{row}">
           <div class="presentable-nav-links active-status-0">
             <router-link :to="row.detailLink + '?tab=scheme'">
-              <el-button type="text" class="nav-link-btn">授权方案<i class="dot" v-if="(row.status&1) !== 1"></i>
+              <el-button type="text" class="nav-link-btn">{{ $t('scheme.tabTitle') }}<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
             </router-link>
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=contract'">
-              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">合约管理<i class="dot"
+              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">{{ $t('contract.tabTitle') }}<i class="dot"
                                                                                               v-if="row.hasContract && row.isContractActived === false"></i>
               </el-button>
             </router-link>
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=policy'">
-              <el-button type="text" class="nav-link-btn">策略管理<i class="dot" v-if="(row.status&2) !== 2"></i>
+              <el-button type="text" class="nav-link-btn">{{ $t('policy.tabTitle') }}<i class="dot" v-if="(row.status&2) !== 2"></i>
               </el-button>
             </router-link>
           </div>
