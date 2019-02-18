@@ -6,21 +6,21 @@ export default {
       if (value) {
         const DOMAIN_REG = /^[a-zA-Z\d-]+$/
         if (value.length < 4 || value.length > 20) {
-          callback(new Error(this.$i18n.t('node.createRules.length')))
+          callback(new Error(this.$t('node.createRules.length')))
         } else if (!DOMAIN_REG.test(value)) {
-          callback(new Error(this.$i18n.t('node.createRules.prefix')))
+          callback(new Error(this.$t('node.createRules.prefix')))
         } else {
           callback()
         }
       } else {
-        callback(new Error(this.$i18n.t('node.createRules.noEmpty')))
+        callback(new Error(this.$t('node.createRules.noEmpty')))
       }
     }
 
     const formRules = {
-      nodeName: [{ required: true, message: this.$i18n.t('node.nodeNameRules.noEmpty'), trigger: 'blur' },
+      nodeName: [{ required: true, message: this.$t('node.nodeNameRules.noEmpty'), trigger: 'blur' },
         {
-          min: 4, max: 20, message: this.$i18n.t('node.nodeNameRules.length'), trigger: 'blur'
+          min: 4, max: 20, message: this.$t('node.nodeNameRules.length'), trigger: 'blur'
         }],
       nodeDomain: [{ validator: validateNodeDomain, trigger: 'blur' }]
     }
@@ -54,7 +54,7 @@ export default {
           if (responseData.errcode !== 0) {
             this.$message.error(responseData.msg)
           } else {
-            self.$message.success(this.$i18n.t('node.createSuccess'))
+            self.$message.success(this.$t('node.createSuccess'))
             this.$store.dispatch('addNode', responseData.data)
             setTimeout(() => {
               self.$router.push({ path: `/node/${responseData.data.nodeId}` })
@@ -64,9 +64,9 @@ export default {
         .catch(this.$error.showErrorMessage)
     },
     comfirm() {
-      return this.$confirm(this.$i18n.t('node.confirmMessages.question'), this.$i18n.t('node.confirmMessages.tip'), {
-        confirmButtonText: this.$i18n.t('node.confirmMessages.confirm'),
-        cancelButtonText: this.$i18n.t('node.confirmMessages.cancel'),
+      return this.$confirm(this.$t('node.confirmMessages.question'), this.$t('node.confirmMessages.tip'), {
+        confirmButtonText: this.$t('node.confirmMessages.confirm'),
+        cancelButtonText: this.$t('node.confirmMessages.cancel'),
         type: 'warning'
       })
     },

@@ -8,7 +8,7 @@ export const nodeItemRoute = {
   hidden: true,
   meta: {
     requiresAuth: true,
-    title: `:nodeId${i18n.t('routes.node')}` // :key 可动态通过route.params上的k-v进行替换
+    title: `:nodeId${i18n.t('routes.nodes')}` // :key 可动态通过route.params上的k-v进行替换
   },
   children: [
     {

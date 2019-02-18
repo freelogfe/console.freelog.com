@@ -44,14 +44,14 @@
           <li>
             <el-select v-model="searchData.isOnline"
                        @change="searchHandler(searchData)"
-                       size="mini" :placeholder="$t('onlineState')">
+                       size="mini" :placeholder="$t('presentable.onlineState')">
               <el-option
                       v-for="item in onlineStateOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
               </el-option>
-              <el-option :label="$t('allState')" :value=2></el-option>
+              <el-option :label="$t('presentable.allState')" :value=2></el-option>
             </el-select>
           </li>
           <li style="max-width: none;">
@@ -83,15 +83,15 @@
           <template slot="append">
             <el-table-column
                     width="140"
-                    :label="$t('onlineState')">
+                    :label="$t('presentable.onlineState')">
               <template slot-scope="{row}">
                 <div class="status-item-wrap">
                   <freelog-switch class="node-res-status-switch"
                                   v-model="row.isOnlineChecked"
                                   @change="changePresentableOnlineHandler(row)"
-                                  :active-text="$t('onlineText')"
+                                  :active-text="$t('presentable.onlineText')"
                                   :disabled="!!row.warningTip"
-                                  :inactive-text="$t('offlineText')"></freelog-switch>
+                                  :inactive-text="$t('presentable.offlineText')"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
                               v-if="row.warningTip"

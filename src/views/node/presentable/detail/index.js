@@ -76,7 +76,7 @@ export default {
     initView() {
       this.params = this.$route.params
       if (!this.params.presentableId) {
-        return this.$error.showErrorMessage(this.$i18n.t('presentable.paramError'))
+        return this.$error.showErrorMessage(this.$t('presentable.paramError'))
       }
 
       this.setActiveTab(this.$route.query.tab)

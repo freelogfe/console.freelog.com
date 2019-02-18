@@ -38,10 +38,10 @@ export default {
 
   methods: {
     resolveType(type) {
-      return type === 1 ? this.$i18n.t('policy.types.resource') : this.$i18n.t('policy.types.user')
+      return type === 1 ? this.$t('policy.types.resource') : this.$t('policy.types.user')
     },
     resolveStatus(status) {
-      return status === 0 ? this.$i18n.t('policy.states[0]') : this.$i18n.t('policy.states[1]')
+      return status === 0 ? this.$t('policy.states[0]') : this.$t('policy.states[1]')
     }
   }
 }

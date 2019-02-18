@@ -11,27 +11,27 @@ export const currentTypes = {
 
 export default {
   1: {
-    name: i18n.t('account.feather'),
+    name: i18n.t('config.account.feather'),
     abbr: 'feth',
     value: 1,
     unit: 1e3,
-    extBindAddrName: i18n.t('account.eth'), // 绑定的外部地址类型
+    extBindAddrName: i18n.t('config.account.eth'), // 绑定的外部地址类型
     enable: true // 是否支持可用
   },
   2: {
-    name: i18n.t('account.rmb'),
+    name: i18n.t('config.account.rmb'),
     abbr: 'fcny',
     unit: 1e2,
     value: 2
   },
   3: {
-    name: i18n.t('account.dollar'),
+    name: i18n.t('config.account.dollar'),
     abbr: 'fusd',
     unit: 1e2,
     value: 3
   },
   4: {
-    name: i18n.t('account.euro'),
+    name: i18n.t('config.account.euro'),
     abbr: 'feur',
     unit: 1e2,
     value: 4

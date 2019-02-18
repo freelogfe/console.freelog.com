@@ -122,7 +122,7 @@
           }
         }).then((res) => {
           if (res.data.errcode === 0) {
-            this.$message.success(this.$i18n.t('components.contractDetail.activateContractSuccess'))
+            this.$message.success(this.$t('components.contractDetail.activateContractSuccess'))
             this.loadContractDetail(contract.contractId).then((contractDetail) => {
               Object.assign(contract, contractDetail)
               this.$emit('update', ContractUtils.format(contract))

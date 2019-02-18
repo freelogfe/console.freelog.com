@@ -23,7 +23,7 @@
           </div>
           <div class="res-scheme-item">
             <p>{{ $t('resource.throwUp')}}：</p>
-            <div><i class="res-scheme-status-icon"></i>{{scheme.isBubbled? $t('common.yes'): $t('common.no')}} {{ $t('resource.throwUp')}}</div>
+            <div><i class="res-scheme-status-icon"></i>{{scheme.isBubbled? $t('common.yes'): $t('common.no')}}</div>
           </div>
         </div>
       </li>

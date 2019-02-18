@@ -57,7 +57,7 @@
         </div>
         <div class="res-detail-ft">
           <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor? $t('resourceDetailView.deleteFavorText'):$t('resourceDetailView.favorText')}}</el-button>
-          <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">$t('resourceDetailView.addPresentableText')</el-button>
+          <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">{{$t('resourceDetailView.addPresentableText')}}</el-button>
         </div>
       </div>
       <a class="up-to-top" href="#" ref="upBtn">

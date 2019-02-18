@@ -34,13 +34,13 @@
           case RESOURCE_STATUS_MAP.unknown:
             Object.assign(opt, {
               disabled: true,
-              text: this.$i18n.t('components.resourceButton.exception'),
+              text: this.$t('components.resourceButton.exception'),
               type: 'warning'
             })
             break
           case RESOURCE_STATUS_MAP.unpublished:
             Object.assign(opt, {
-              text: this.$i18n.t('components.resourceButton.publish'),
+              text: this.$t('components.resourceButton.publish'),
               type: 'primary',
               plain: false,
               isOnline: 1
@@ -48,13 +48,13 @@
             break
           case RESOURCE_STATUS_MAP.published:
             Object.assign(opt, {
-              text: this.$i18n.t('components.resourceButton.offline'),
+              text: this.$t('components.resourceButton.offline'),
               isOnline: 0
             })
             break
           case RESOURCE_STATUS_MAP.freeze:
             Object.assign(opt, {
-              text: this.$i18n.t('components.resourceButton.freeze'),
+              text: this.$t('components.resourceButton.freeze'),
               disabled: true
             })
             break
@@ -69,8 +69,8 @@
     methods: {
       publishHandler(isOnline) {
         if (!Number.isInteger(isOnline)) return
-        var tip = isOnline? this.$i18n.t('components.resourceButton.publish'):this.$i18n.t('components.resourceButton.offline')
-        this.$confirm(this.$i18n.t('components.resourceButton.publishTip', {tip}), {
+        var tip = isOnline? this.$t('components.resourceButton.publish'):this.$t('components.resourceButton.offline')
+        this.$confirm(this.$t('components.resourceButton.publishTip', {tip}), {
           center: true
         }).then(() => {
           this.$services.resource.put(this.resource.resourceId, {
@@ -79,9 +79,9 @@
             const {errcode, ret, msg} = res.data
             if (errcode === 0 && ret === 0) {
               this.resource.status = (isOnline === 0) ? RESOURCE_STATUS_MAP.unpublished : RESOURCE_STATUS_MAP.published
-              this.$message.success(`${tip}${this.$i18n.t('components.resourceButton.success')}`)
+              this.$message.success(`${tip}${this.$t('components.resourceButton.success')}`)
             } else {
-              this.$message.error(msg || `${tip}${this.$i18n.t('components.resourceButton.fail')}`)
+              this.$message.error(msg || `${tip}${this.$t('components.resourceButton.fail')}`)
             }
           })
         }).catch(() => {

@@ -81,8 +81,8 @@
     data() {
       return {
         isNeedResignContracts: true,
-        dialogTitle: this.$i18n.t('components.authScheme.signConfirmTitle'),
-        signBtnText: this.$i18n.t('components.authScheme.signConfirmText')
+        dialogTitle: this.$t('components.authScheme.signConfirmTitle'),
+        signBtnText: this.$t('components.authScheme.signConfirmText')
       }
     },
     methods: {
@@ -160,18 +160,18 @@
             .map(item => {
               const { isHasSignHistory, contractId } = item
               if(isHasSignHistory) {
-                item.signState = this.$i18n.t('contract.signedText')
+                item.signState = this.$t('contract.signedText')
               }else {
                 isAllHasSignHistory = false
-                item.signState = this.$i18n.t('contract.unsignedText')
+                item.signState = this.$t('contract.unsignedText')
               }
 
               return item
             })
           if(isAllHasSignHistory) {
-            this.dialogTitle = this.$i18n.t('components.authScheme.dialogTitles[0]')
+            this.dialogTitle = this.$t('components.authScheme.dialogTitles[0]')
           }else {
-            this.dialogTitle = this.$i18n.t('components.authScheme.dialogTitles[1]')
+            this.dialogTitle = this.$t('components.authScheme.dialogTitles[1]')
           }
           return targetArr
         }else {

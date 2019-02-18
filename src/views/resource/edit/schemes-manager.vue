@@ -124,9 +124,9 @@
         if (!isPublished || enabledCnt > 1) {
           return Promise.resolve()
         } else {
-          return this.$confirm(this.$i18n.t('resourceEditView.disableSchemeTip'), this.$i18n.t('resourceEditView.disableSchemeTitle'), {
-            confirmButtonText: this.$i18n.t('common.confirm'),
-            cancelButtonText: this.$i18n.t('common.cancel'),
+          return this.$confirm(this.$t('resourceEditView.disableSchemeTip'), this.$t('resourceEditView.disableSchemeTitle'), {
+            confirmButtonText: this.$t('common.confirm'),
+            cancelButtonText: this.$t('common.cancel'),
             center: true,
             showClose: false,
             roundButton: true,
@@ -201,7 +201,7 @@
       addTab(scheme) {
         const newTabName = scheme.authSchemeId
         const tabData = {
-          title: scheme.authSchemeName || this.$i18n.t('resourceEditView.defaultSchemeName'),
+          title: scheme.authSchemeName || this.$t('resourceEditView.defaultSchemeName'),
           name: newTabName,
           content: 'resource-auth-scheme',
           data: {

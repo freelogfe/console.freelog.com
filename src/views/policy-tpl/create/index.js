@@ -27,7 +27,7 @@ export default {
         .then((res) => {
           const resData = res.data
           if (resData.errcode === 0) {
-            this.$message.success(this.$i18n.t('common.createSuccessTip'))
+            this.$message.success(this.$t('common.createSuccessTip'))
             this.$router.push({ path: `/${this.type}/policy_tpl/detail`, query: { id: resData.data.id } })
           } else {
             this.$error.showErrorMessage(res)
@@ -44,7 +44,7 @@ export default {
         return false
       }
       this.data.template = beautify(tpl)
-      this.$message.success(this.$i18n.t('policy.checked'))
+      this.$message.success(this.$t('policy.checked'))
       return true
     },
     submitHandler() {

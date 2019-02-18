@@ -65,7 +65,7 @@ export default {
         }
         this.clearErrorMsg()
       } catch (err) {
-        this.errorMsg = `${this.$i18n.t('metaInput.metaJSONError')}！${err}`
+        this.errorMsg = `${this.$t('metaInput.metaJSONError')}！${err}`
       }
 
       this.$emit('validate', this.errorMsg)

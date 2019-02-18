@@ -20,16 +20,16 @@ export default {
       activeTab: 'resIntro',
       tabs: [{
         name: 'resIntro',
-        title: this.$i18n.t('resourceDetailView.tabs[0]')
+        title: this.$t('resourceDetailView.tabs[0]')
       }, {
         name: 'resSchemes',
-        title: this.$i18n.t('resourceDetailView.tabs[1]')
+        title: this.$t('resourceDetailView.tabs[1]')
       }, {
         name: 'resDesc',
-        title: this.$i18n.t('resourceDetailView.tabs[2]')
+        title: this.$t('resourceDetailView.tabs[2]')
       }, {
         name: 'resMeta',
-        title: this.$i18n.t('resourceDetailView.tabs[3]')
+        title: this.$t('resourceDetailView.tabs[3]')
       }],
       resourceDetail: {
         resourceInfo: {
@@ -93,9 +93,11 @@ export default {
       const $body = this.$refs.detailBody
       const marginTop = $header.getBoundingClientRect().height
       const originLeft = $tabs.getBoundingClientRect().left
+      const tabLeft = getComputedStyle($tabs).left
       let prevTop
       let st = +new Date()
       let fixed = false
+
       this.scrollFn = () => {
         // throttle
         const et = +new Date()
@@ -109,7 +111,7 @@ export default {
           $tabs.classList.add('sticky-tabs')
         } else if (rect.top >= marginTop && fixed) {
           fixed = false
-          $tabs.style.left = `-130px`
+          $tabs.style.left = tabLeft || `-130px`
           $tabs.classList.remove('sticky-tabs')
         }
         $upBtn.classList[(rect.top <= prevTop) ? 'add' : 'remove']('show')
@@ -133,7 +135,7 @@ export default {
         resourceId: this.resourceId
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success(this.$i18n.t('resourceDetailView.favorSuccessText'))
+          this.$message.success(this.$t('resourceDetailView.favorSuccessText'))
           this.resourceDetail.isFavor = true
         } else {
           this.$error.showErrorMessage(res)
@@ -143,7 +145,7 @@ export default {
     deleteFavorResource() {
       return this.$services.collections.delete(this.resourceId).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success(this.$i18n.t('resourceDetailView.deleteFavorSuccessText'))
+          this.$message.success(this.$t('resourceDetailView.deleteFavorSuccessText'))
           this.resourceDetail.isFavor = false
         } else {
           this.$error.showErrorMessage(res)
@@ -152,7 +154,7 @@ export default {
     },
     formatMeta(){
       var meta = this.resourceDetail.resourceInfo.meta || {}
-      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : this.$i18n.t('resourceDetailView.noMetaTip')
+      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : this.$t('resourceDetailView.noMetaTip')
     },
     favorHandler() {
       if (this.favoring) {

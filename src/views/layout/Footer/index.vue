@@ -1,7 +1,7 @@
 <template>
   <footer class="app-footer">
     <ul class="freelog-info">
-      <li><a href="/about">{{ $t('aboutView.about') }}freelog</a></li>
+      <li><a href="/about">{{ $t('aboutView.about') }} freelog</a></li>
       <li><a href="/help">{{ $t('helpView.title') }}</a></li>
       <li><a href="http://www.miibeian.gov.cn" target="_blank">粤ICP备17085716号-1</a></li>
       <li><b>Copyright© {{year}} {{ $t('company.name')}} freelog.com{{$t('company.copyright')}}</b></li>

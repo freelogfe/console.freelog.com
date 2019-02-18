@@ -26,16 +26,17 @@ function initEnv() {
   })
 
   win.g_freelog.Env.qiOrigin = win.location.protocol + '//qi.' + mainDomain
+  document.body.classList.add(win.g_freelog.Env.language || navigator.language)
 }
 
 initEnv()
-
 Vue.use(ElementUI)
 Vue.use(plugins)
 Vue.use(VueLazyload, {
   lazyComponent: true,
   observer: true
 })
+
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

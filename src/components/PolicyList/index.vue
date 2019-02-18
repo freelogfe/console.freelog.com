@@ -49,7 +49,7 @@
       },
       addNewPolicyHandler() {
         this.policyList.push({
-          policyName: this.$i18n.t('components.policyList.unnamedPolicy'),
+          policyName: this.$t('components.policyList.unnamedPolicy'),
           policyText: '',
           // disabled: false
         })

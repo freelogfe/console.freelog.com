@@ -51,9 +51,9 @@
         var text
 
         if (!scheme) {
-          text = this.$i18n.t('presentable.unsignedText')
+          text = this.$t('presentable.unsignedText')
         } else {
-          text = `${this.$i18n.t('presentable.signedText')} (${scheme.authSchemeName}/${scheme.selectedPolicy.policyName})`
+          text = `${this.$t('presentable.signedText')} (${scheme.authSchemeName}/${scheme.selectedPolicy.policyName})`
         }
         return text
       },

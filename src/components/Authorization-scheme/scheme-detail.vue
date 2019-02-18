@@ -130,11 +130,11 @@
         if ((this.resourceLevelIndex - 1) >= 0) {
           let {selectedAuthSchemeTabIndex, activeAuthSchemeTabIndex, resourceName, authSchemeList} = this.currentOpenedResources[this.resourceLevelIndex - 1]
           if (selectedAuthSchemeTabIndex === -1) {
-            Message.error(this.$i18n.t('components.authScheme.selectPolicyMessages[0]',{resourceName}))
+            Message.error(this.$t('components.authScheme.selectPolicyMessages[0]',{resourceName}))
             return
           } else if (selectedAuthSchemeTabIndex !== activeAuthSchemeTabIndex) {
             var parentResourceActiveScheme = authSchemeList[activeAuthSchemeTabIndex]
-            Message.error(this.$i18n.t('components.authScheme.selectPolicyMessages[1]',{
+            Message.error(this.$t('components.authScheme.selectPolicyMessages[1]',{
               resourceName,
               authSchemeName:parentResourceActiveScheme.authSchemeName
             }))
@@ -167,17 +167,17 @@
         let isEffect = false
 
         if (this.activeAuthSchemeTabIndex !== this.selectedAuthSchemeTabIndex && this.selectedAuthSchemeTabIndex !== -1) {
-          str = this.$i18n.t('components.authScheme.switchSchemeTip')
+          str = this.$t('components.authScheme.switchSchemeTip')
           isEffect = true
         } else if (this.curSchemeSelectedPolicyIndex === index) {
           if (this.selectedUpcastResourceIndex !== -1 && this.upcastResourcesArr[this.selectedUpcastResourceIndex].selectedAuthSchemeTabIndex !== -1) {
-            str = this.$i18n.t('components.authScheme.cancelSelectedSchemeTip')
+            str = this.$t('components.authScheme.cancelSelectedSchemeTip')
             isEffect = true
           }
         }
 
         return {
-          isEffect, msg: this.$i18n.t('components.authScheme.confirmMsg',{str})
+          isEffect, msg: this.$t('components.authScheme.confirmMsg',{str})
         }
       },
       exchangePolicyItem(index) {

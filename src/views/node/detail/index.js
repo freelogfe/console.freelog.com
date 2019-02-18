@@ -40,7 +40,7 @@ export default {
     if (nodeId) {
       this.init(nodeId)
     } else {
-      this.$message.error(this.$i18n.t('node.detailView.paramError'))
+      this.$message.error(this.$t('node.detailView.paramError'))
     }
   },
   methods: {
@@ -55,7 +55,7 @@ export default {
         })
     },
     copyDoneHandler() {
-      this.$message.success(this.$i18n.t('node.detailView.copySuccess'))
+      this.$message.success(this.$t('node.detailView.copySuccess'))
     },
     resolveDomain(node) {
       return `${window.location.protocol}//${node.nodeDomain}${this.domainSuffix}`

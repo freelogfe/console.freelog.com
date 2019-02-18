@@ -15,26 +15,26 @@
         </el-tooltip>
       </li>
       <li class="ls-item ls-create-resource">
-        <el-tooltip effect="dark" :content="$t('resource.createResource')" placement="right" :disabled="!isMini">
+        <el-tooltip effect="dark" :content="$t('routes.createResource')" placement="right" :disabled="!isMini">
           <router-link to="/resource/create" class="nav-link create-resource ls-nav-link">
             <i class="el-icon-plus"></i>
-            <span>{{$t('resource.createResource')}}</span>
+            <span>{{$t('routes.createResource')}}</span>
           </router-link>
         </el-tooltip>
       </li>
       <li class="ls-item">
-        <el-tooltip effect="dark" :content="$t('resource.market')" placement="right" :disabled="!isMini">
+        <el-tooltip effect="dark" :content="$t('routes.resourceMarket')" placement="right" :disabled="!isMini">
           <router-link to="/" class="nav-link ls-nav-link">
             <i class="el-icon-fa-th"></i>
-            <span>{{$t('resource.market')}}</span>
+            <span>{{$t('routes.resourceMarket')}}</span>
           </router-link>
         </el-tooltip>
       </li>
       <li class="ls-item">
-        <el-tooltip effect="dark" :content="$t('resource.myResources')" placement="right" :disabled="!isMini">
+        <el-tooltip effect="dark" :content="$t('routes.myResources')" placement="right" :disabled="!isMini">
           <router-link to="/resource/list" class="nav-link ls-nav-link">
             <i class="el-icon-fa-list"></i>
-            <span>{{$t('resource.myResources')}}</span>
+            <span>{{$t('routes.myResources')}}</span>
           </router-link>
         </el-tooltip>
       </li>
@@ -42,7 +42,7 @@
         <a href="javascript:;" class="nav-link ls-nav-link">
           <i class="el-icon-document"></i>
           <div class="ls-submenu-text">
-            <span>{{$t('node.title')}}</span>
+            <span>{{$t('routes.nodes')}}</span>
             <el-tooltip effect="dark" :content="$t('node.createNode')" placement="right" :disabled="!isMini">
               <router-link to="/node/create" class="nav-link ls-nav-link create-node-btn">
                 <i class="el-icon-plus"></i>
@@ -59,10 +59,10 @@
         </ul>
       </li>
       <li class="ls-item">
-        <el-tooltip effect="dark" :content="$t('setting')" placement="right" :disabled="!isMini">
+        <el-tooltip effect="dark" :content="$t('routes.accountSetting')" placement="right" :disabled="!isMini">
           <router-link to="/setting" class="nav-link ls-nav-link">
             <i class="el-icon-setting"></i>
-            <span>{{$t('setting')}}</span>
+            <span>{{$t('routes.accountSetting')}}</span>
           </router-link>
         </el-tooltip>
       </li>

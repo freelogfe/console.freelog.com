@@ -173,7 +173,7 @@
         for (let i = 0; i < this.resourceDependencies.length; i++) {
           const denpency = this.resourceDependencies[i]
           if (denpency.authResolveState === -1 || typeof denpency.authResolveState === 'undefined') {
-            Message.error(this.$i18n.t('resourceEditView.requiredDepsTip'))
+            Message.error(this.$t('resourceEditView.requiredDepsTip'))
             isFinish = false
             break
           }
@@ -188,7 +188,7 @@
         this.$emit('update:scheme', scheme)
         this.contracts = [this.contracts, ...dutyStatements]
         this.isPreventExchangeSelection = true
-        Message.success(this.$i18n.t('resourceEditView.createSuccess'))
+        Message.success(this.$t('resourceEditView.createSuccess'))
         this.$emit('update:activeTabName', 'contract-manager')
       },
       signContract() {
@@ -216,7 +216,7 @@
               this.$emit('update:scheme', scheme)
               this.contracts = [this.contracts, ...dutyStatements]
               this.isPreventExchangeSelection = true
-              Message.success(this.$i18n.t('resourceEditView.createSuccess'))
+              Message.success(this.$t('resourceEditView.createSuccess'))
             } else {
               Message.error(res.msg)
             }

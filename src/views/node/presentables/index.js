@@ -22,21 +22,21 @@ export default {
       contractStateOptions: [
         {
           value: '0',
-          label: this.$i18n.t('presentable.unsignedText')
+          label: this.$t('presentable.unsignedText')
         },
         {
           value: '1',
-          label: this.$i18n.t('presentable.signedText')
+          label: this.$t('presentable.signedText')
         }
       ],
       onlineStateOptions: [
         {
           value: '0',
-          label: this.$i18n.t('presentable.offlineText')
+          label: this.$t('presentable.offlineText')
         },
         {
           value: '1',
-          label: this.$i18n.t('presentable.onlineText')
+          label: this.$t('presentable.onlineText')
         }
       ],
       resourceTypeOptions: Object.keys(RESOURCE_TYPES).map(type => {
@@ -73,7 +73,7 @@ export default {
     },
     changePresentableOnlineHandler(presentable) {
       if (presentable.status & 3 !== 3) {
-        return this.$error.showErrorMessage(this.$i18n.t('presentable.contractStateError'))
+        return this.$error.showErrorMessage(this.$t('presentable.contractStateError'))
       }
 
       if (presentable.isLoading) return
@@ -82,8 +82,8 @@ export default {
         this.isHadPageBuild().then(is => {
           if (is) {
             let text = presentable.isOnline ?
-              this.$i18n.t('presentable.confirmOffline',{presentableName:presentable.presentableName}) :
-              this.$i18n.t('presentable.confirmOnline',{presentableName:presentable.presentableName})
+              this.$t('presentable.confirmOffline',{presentableName:presentable.presentableName}) :
+              this.$t('presentable.confirmOnline',{presentableName:presentable.presentableName})
             this.$confirm(text)
               .then(() => {
                 return this.changePageBuild(presentable)
@@ -119,7 +119,7 @@ export default {
           const {errcode, ret, msg, data} = res.data
           if (errcode !== 0 || ret !== 0 || data.isAuth === false) {
             presentable.isLoading = false
-            return Promise.reject(data.isAuth === false ? this.$i18n.t('presentable.unAuthError') : msg)
+            return Promise.reject(data.isAuth === false ? this.$t('presentable.unAuthError') : msg)
           }
 
           if (presentable.isOnlineChecked) {
@@ -132,7 +132,7 @@ export default {
           }).then((res) => {
             presentable.isLoading = false
             if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
-              return Promise.reject(res.data.msg || this.$i18n.t('presentable.updateFailTip'))
+              return Promise.reject(res.data.msg || this.$t('presentable.updateFailTip'))
             }
           })
         })
@@ -152,7 +152,7 @@ export default {
         .then((res) => {
           presentable.isLoading = false
           if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
-            return Promise.reject(res.data.msg || this.$i18n.t('presentable.updateFailTip'))
+            return Promise.reject(res.data.msg || this.$t('presentable.updateFailTip'))
           } else {
             presentable.isOnlineChecked = !!presentable.isOnline
           }
@@ -188,13 +188,13 @@ export default {
       })
     },
     deletePresentableHandler(presentable) {
-      this.$confirm(this.$i18n.t('presentable.deletePresentableText', {presentableName: presentable.presentableName}))
+      this.$confirm(this.$t('presentable.deletePresentableText', {presentableName: presentable.presentableName}))
         .then(() => {
           this.$services.presentables.delete(presentable.presentableId)
             .then(({data}) => {
               var {ret, errcode, msg} = data
               if (ret === 0 && errcode === 0 && data.data) {
-                this.$message.success(this.$i18n.t('presentable.deleteSuccessTip'))
+                this.$message.success(this.$t('presentable.deleteSuccessTip'))
                 this.refresh()
               } else {
                 this.$message.fail(msg)

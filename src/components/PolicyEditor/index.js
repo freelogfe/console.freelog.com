@@ -112,7 +112,7 @@ export default {
     switchPolicyStatusHandler() {
       var policy = this.policy
       if (policy.policySegmentId) {
-        this.$confirm(this.$i18n.t('components.policyEditor.switchTip', {
+        this.$confirm(this.$t('components.policyEditor.switchTip', {
           statusText: policy.disabled ? '上' : '下',
           policyName: policy.policyName
         }))

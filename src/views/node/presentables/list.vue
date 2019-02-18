@@ -64,18 +64,18 @@
         <template slot-scope="{row}">
           <div class="presentable-nav-links active-status-0">
             <router-link :to="row.detailLink + '?tab=scheme'">
-              <el-button type="text" class="nav-link-btn">{{ $t('scheme.tabTitle') }}<i class="dot" v-if="(row.status&1) !== 1"></i>
+              <el-button type="text" class="nav-link-btn">{{ $t('node.tabTitles.scheme') }}<i class="dot" v-if="(row.status&1) !== 1"></i>
               </el-button>
             </router-link>
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=contract'">
-              <el-button type="text" class="nav-link-btn" :disabled="!row.hasContract">{{ $t('contract.tabTitle') }}<i class="dot"
-                                                                                              v-if="row.hasContract && row.isContractActived === false"></i>
+              <el-button type="text" class="nav-link-btn"
+                         :disabled="!row.hasContract">{{ $t('node.tabTitles.contract') }}<i class="dot" v-if="row.hasContract && row.isContractActived === false"></i>
               </el-button>
             </router-link>
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=policy'">
-              <el-button type="text" class="nav-link-btn">{{ $t('policy.tabTitle') }}<i class="dot" v-if="(row.status&2) !== 2"></i>
+              <el-button type="text" class="nav-link-btn">{{ $t('node.tabTitles.policy') }}<i class="dot" v-if="(row.status&2) !== 2"></i>
               </el-button>
             </router-link>
           </div>

@@ -9,7 +9,7 @@
       <template slot="append">
         <el-table-column
                 width="140"
-                :label="$t('onlineState')">
+                :label="$t('presentable.onlineState')">
           <template slot-scope="scope">
             <div>
               <el-button type="text" @click="searchPageBuildHandler">{{ $t('node.switchPageStyle')}}</el-button>

@@ -13,14 +13,14 @@ Vue.use(i18n)
 //
 const loadedLanguages = ['en'] // our default language that is prelaoded
 
-function setI18nLanguage (lang) {
+function setI18nLanguage(lang) {
   i18n.locale = lang
   axios.defaults.headers.common['Accept-Language'] = lang // 设置请求头部
   document.querySelector('html').setAttribute('lang', lang) // 根元素增加lang属性
   return lang
 }
 
-export function loadLanguageAsync (lang) {
+export function loadLanguageAsync(lang) {
   if (i18n.locale !== lang) {
     if (!loadedLanguages.includes(lang)) {
       return import(/* webpackChunkName: "lang-[request]" */ `./locales/${lang}`).then(msgs => {
@@ -42,10 +42,30 @@ export function loadLanguageAsync (lang) {
 // })
 //
 
-export default new i18n({
-  locale: 'zh-CN',
-  messages: {
-    en,
-    'zh-CN':cn
+function initI18n() {
+  var language
+  if (/^zh(\-\w+)?/.test(navigator.language)) {
+    language = 'zh-CN'
+  } else {
+    language = 'en'
   }
-})
+
+  window.g_freelog = window.g_freelog || {}
+  window.g_freelog.Env = window.g_freelog.Env || {}
+
+  window.g_freelog.Env.language = language
+
+  var i18nIns = new i18n({
+    locale: language,//'zh-CN'
+    messages: {
+      en,
+      cn,
+      'zh-CN': cn
+    }
+  })
+  i18nIns.locale = language
+
+  return i18nIns
+}
+
+export default initI18n()

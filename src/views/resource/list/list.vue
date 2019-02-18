@@ -139,7 +139,7 @@
       delFavorResourceHandler(resource) {
         return this.$services.collections.delete(resource.resourceId).then((res) => {
           if (res.data.errcode === 0) {
-            this.$message.success(this.$i18n.t('resourceDetailView.deleteFavorSuccessText'))
+            this.$message.success(this.$t('resourceDetailView.deleteFavorSuccessText'))
             resource.isFavor = false
           } else {
             this.$error.showErrorMessage(res)

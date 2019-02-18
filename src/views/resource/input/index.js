@@ -21,7 +21,7 @@ export default {
       const NAME_REG = /^[a-z]{1}[0-9a-z_]{2,19}[0-9a-z]{1}$/
 
       if (!NAME_REG.test(value)) {
-        callback(new Error(this.$i18n.t('resourceEditView.resourceTypeRule',{rule: NAME_REG.toString()})))
+        callback(new Error(this.$t('resourceEditView.resourceTypeRule',{rule: NAME_REG.toString()})))
       } else {
         callback()
       }
@@ -32,7 +32,7 @@ export default {
       const NAME_REG = /^freelog-[a-z0-9._-]{3,15}-[a-z0-9._-]{2,14}[a-z0-9]$/
 
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !NAME_REG.test(value)) {
-        callback(new Error(this.$i18n.t('resourceEditView.widgetNameRule')))
+        callback(new Error(this.$t('resourceEditView.widgetNameRule')))
       } else {
         callback()
       }
@@ -43,7 +43,7 @@ export default {
       const VERSION_REG = /^\d+\.\d+\.\d+$/
 
       if (this.formData.resourceType === RESOURCE_TYPES.widget && !VERSION_REG.test(value)) {
-        callback(new Error(this.$i18n.t('resourceEditView.versionRule')))
+        callback(new Error(this.$t('resourceEditView.versionRule')))
       } else {
         callback()
       }
@@ -52,7 +52,7 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{required: true, message: this.$i18n.t('resourceEditView.inputNameTip'), trigger: 'blur'}],
+        resourceName: [{required: true, message: this.$t('resourceEditView.inputNameTip'), trigger: 'blur'}],
         widgetName: [
           {validator: validateWidgetName, trigger: 'change'}
         ],
@@ -60,7 +60,7 @@ export default {
           {validator: validateWidgetVersion, trigger: 'change'}
         ],
         resourceType: [
-          {required: true, message: this.$i18n.t('resourceEditView.selectTypeTip'), trigger: 'blur'},
+          {required: true, message: this.$t('resourceEditView.selectTypeTip'), trigger: 'blur'},
           {validator: validateResourceType, trigger: 'blur'}
         ]
       },
@@ -187,10 +187,10 @@ export default {
       } else {
         switch (err.status) {
           case 400:
-            errMsg = this.$i18n.t('resourceEditView.noSupportTip')
+            errMsg = this.$t('resourceEditView.noSupportTip')
             break
           case 401:
-            errMsg = this.$i18n.t('resourceEditView.authFailTip')
+            errMsg = this.$t('resourceEditView.authFailTip')
             break
           default:
             errMsg = err.message
@@ -272,7 +272,7 @@ export default {
     },
     validateImageHandler(file) {
       if (!/\.(jpg|png|gif|jpeg)$/.test(file.name)) {
-        this.$message.error(this.$i18n.t('resourceEditView.noSupportImageTip'))
+        this.$message.error(this.$t('resourceEditView.noSupportImageTip'))
         return false
       }
 
@@ -330,9 +330,9 @@ export default {
             let errMsg
             if (this.editMode === EDIT_MODES.creator) {
               if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
-                errMsg = this.$i18n.t('resourceEditView.uploadingTip')
+                errMsg = this.$t('resourceEditView.uploadingTip')
               } else if (!reourceUploader.sha1) {
-                errMsg = this.$i18n.t('resourceEditView.noFileTip')
+                errMsg = this.$t('resourceEditView.noFileTip')
               }
             }
 
@@ -344,7 +344,7 @@ export default {
                 resolve()
               } catch (error) {
                 console.error(error)
-                reject(new Error(this.$i18n.t('resourceEditView.metaError', {error})))
+                reject(new Error(this.$t('resourceEditView.metaError', {error})))
               }
             }
           } else {
@@ -445,7 +445,7 @@ export default {
             }
           }).catch(reject)
         } else {
-          reject(new Error(this.$i18n.t('resourceEditView.noFileTip')))
+          reject(new Error(this.$t('resourceEditView.noFileTip')))
         }
       })
     },
@@ -475,7 +475,7 @@ export default {
 
       const added = this.deps.some(res=>res.resourceId===resource.resourceId)
       if (added) {
-        this.$message.error(this.$i18n.t('resourceEditView.donotRepeatUpload'))
+        this.$message.error(this.$t('resourceEditView.donotRepeatUpload'))
       } else {
         this.deps.push(resource)
       }

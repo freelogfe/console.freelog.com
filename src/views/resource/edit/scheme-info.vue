@@ -1,10 +1,10 @@
 <template>
   <div class="resource-scheme-info-wrap">
     <el-form label-position="left" label-width="140px">
-      <el-form-item label="授权方案名称" class="scheme-input-item">
-        <el-input v-model="form.authSchemeName" size="medium" style="width: 500px;" placeholder="请输入授权方案名称"></el-input>
+      <el-form-item :label="$t('scheme.schemeName')" class="scheme-input-item">
+        <el-input v-model="form.authSchemeName" size="medium" style="width: 500px;" :placeholder="$t('scheme.schemeNameInputPlaceholder')"></el-input>
       </el-form-item>
-      <el-form-item label="授权方案状态" class="scheme-input-item">
+      <el-form-item :label="$t('scheme.schemeStatus')" class="scheme-input-item">
         <div class="res-scheme-status-switch" :class="[form.isOnline? 'on-active': 'off-active']">
           <div class="scheme-switch-state on-state" @click="toggleStateHandler(1)">
             <i class="el-icon-circle-check-outline"></i>{{$t('resourceEditView.enableText')}}
@@ -80,7 +80,7 @@
             if (errcode === 0 && ret === 0) {
               Object.assign(this.scheme, data)
               this.setData(this.scheme)
-              this.$message.success(this.$i18n.t('common.saveSuccess'))
+              this.$message.success(this.$t('common.saveSuccess'))
             } else {
               this.$error.showErrorMessage(msg)
             }

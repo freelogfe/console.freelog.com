@@ -35,7 +35,7 @@ export default {
       })
     },
     copyDoneHandler() {
-      this.$message.success(this.$i18n.t('node.detailView.copySuccess'))
+      this.$message.success(this.$t('node.detailView.copySuccess'))
     },
     handleEdit(nodeDetail) {
       this.$router.push({ path: `/node/${nodeDetail.nodeId}` })

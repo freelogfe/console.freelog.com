@@ -54,7 +54,7 @@ export default {
       if (!this.selectedLicenseId) {
         return
       }
-      this.$message.success(this.$i18n.t('components.policyEditor.copyDone'))
+      this.$message.success(this.$t('components.policyEditor.copyDone'))
       if (typeof this.callback === 'function') {
         this.callback({
           name: 'selectLicenseId',

@@ -53,9 +53,9 @@ export default {
       this.executeNext(() => {
         const detail = this.resourceDetail
         if (this.$route.params.resourceId) {
-          this.$message.success(this.$i18n.t('resource.updateSuccess'))
+          this.$message.success(this.$t('resource.updateSuccess'))
         } else {
-          this.$message.success(this.$i18n.t('resource.createSuccess'))
+          this.$message.success(this.$t('resource.createSuccess'))
         }
         setTimeout(() => {
           this.$router.push(`/resource/detail/${detail.resourceId}`)
@@ -71,7 +71,7 @@ export default {
       })
     },
     cancelHandler() {
-      this.$confirm(this.$i18n.t('resource.cancelQuestion'))
+      this.$confirm(this.$t('resource.cancelQuestion'))
         .then(() => {
           this.$router.push('/resource/list')
         }).catch(() => {})
