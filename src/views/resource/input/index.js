@@ -329,10 +329,10 @@ export default {
           if (valid) {
             let errMsg
             if (this.editMode === EDIT_MODES.creator) {
-              if (!reourceUploader.sha1) {
-                errMsg = '未上传资源文件'
-              } else if (!reourceUploader.isUploaded) {
+              if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
                 errMsg = '资源文件正在上传中，等上传完再点击创建'
+              } else if (!reourceUploader.sha1) {
+                errMsg = '未上传资源文件'
               }
             }
 
