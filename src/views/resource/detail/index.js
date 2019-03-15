@@ -18,19 +18,6 @@ export default {
     return {
       resourceId: this.$route.params.resourceId,
       activeTab: 'resIntro',
-      tabs: [{
-        name: 'resIntro',
-        title: '资源简介'
-      }, {
-        name: 'resSchemes',
-        title: '授权方案'
-      }, {
-        name: 'resDesc',
-        title: '资源描述'
-      }, {
-        name: 'resMeta',
-        title: 'meta信息'
-      }],
       resourceDetail: {
         resourceInfo: {
           status: 2
@@ -43,7 +30,23 @@ export default {
       activeScheme: ''
     }
   },
+
   computed: Object.assign({
+    tabs(){
+      return [{
+        name: 'resIntro',
+        title: this.$t('resourceDetailView.tabs[0]')
+      }, {
+        name: 'resSchemes',
+        title: this.$t('resourceDetailView.tabs[1]')
+      }, {
+        name: 'resDesc',
+        title: this.$t('resourceDetailView.tabs[2]')
+      }, {
+        name: 'resMeta',
+        title: this.$t('resourceDetailView.tabs[3]')
+      }]
+    },
     isOwnerResource() {
       return this.resourceDetail.resourceInfo.isOwner && process.env.NODE_ENV === 'development'
     },
@@ -92,9 +95,11 @@ export default {
       const $body = this.$refs.detailBody
       const marginTop = $header.getBoundingClientRect().height
       const originLeft = $tabs.getBoundingClientRect().left
+      const tabLeft = getComputedStyle($tabs).left
       let prevTop
       let st = +new Date()
       let fixed = false
+
       this.scrollFn = () => {
         // throttle
         const et = +new Date()
@@ -108,7 +113,7 @@ export default {
           $tabs.classList.add('sticky-tabs')
         } else if (rect.top >= marginTop && fixed) {
           fixed = false
-          $tabs.style.left = `-130px`
+          $tabs.style.left = tabLeft || `-130px`
           $tabs.classList.remove('sticky-tabs')
         }
         $upBtn.classList[(rect.top <= prevTop) ? 'add' : 'remove']('show')
@@ -125,14 +130,14 @@ export default {
       })
     },
     previewHandler() {
-      this.$message.warning('还没开发')
+      this.$message.warning('todo')
     },
     favorResource() {
       return this.$services.collections.post({
         resourceId: this.resourceId
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success('收藏成功')
+          this.$message.success(this.$t('resourceDetailView.favorSuccessText'))
           this.resourceDetail.isFavor = true
         } else {
           this.$error.showErrorMessage(res)
@@ -142,7 +147,7 @@ export default {
     deleteFavorResource() {
       return this.$services.collections.delete(this.resourceId).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message.success('已删除收藏')
+          this.$message.success(this.$t('resourceDetailView.deleteFavorSuccessText'))
           this.resourceDetail.isFavor = false
         } else {
           this.$error.showErrorMessage(res)
@@ -151,7 +156,7 @@ export default {
     },
     formatMeta(){
       var meta = this.resourceDetail.resourceInfo.meta || {}
-      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : '暂无meta信息'
+      return Object.keys(meta).length ? JSON.stringify(meta, null, 4) : this.$t('resourceDetailView.noMetaTip')
     },
     favorHandler() {
       if (this.favoring) {
@@ -233,7 +238,7 @@ export default {
         const promises = selectedNodes.map(nodeId => this.createPresentable(nodeId))
 
         Promise.all(promises).then(() => {
-          this.$message.success('获取成功')
+          this.$message.success(this.$18n.t('resourceDetailView.addPresentableSuccessText'))
         }).catch(this.$error.showErrorMessage)
       }
     },
@@ -249,9 +254,6 @@ export default {
         }
         return res.getData()
       })
-    },
-    editDetailHandler() {
-      this.$router.push(`/resource/edit/${this.resourceId}`)
     },
     nodeOptCheckHandler(node) {
       node.checked = !node.checked

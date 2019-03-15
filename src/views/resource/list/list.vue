@@ -5,7 +5,7 @@
         <el-button v-if="type === 'favor'"
                    @click="delFavorResourceHandler(scope.data)"
                    type="primary" plain round
-                   class="del-favor-resource-btn">取消收藏
+                   class="del-favor-resource-btn">{{$t('resourceDetailView.deleteFavorText')}}
         </el-button>
         <resource-item :resource="scope.data"
                        :type="type"
@@ -13,7 +13,7 @@
                        :navTo="gotoDetailHandler"></resource-item>
       </template>
       <div slot="empty" class="empty-resource-tip">
-        {{isSelf?'没有自制资源' :'未收藏资源'}}
+        {{isSelf? $t('resourceListView.noResources') : $t('resourceListView.noFavorResources')}}
       </div>
     </lazy-list-view>
   </div>
@@ -139,7 +139,7 @@
       delFavorResourceHandler(resource) {
         return this.$services.collections.delete(resource.resourceId).then((res) => {
           if (res.data.errcode === 0) {
-            this.$message.success('已删除收藏')
+            this.$message.success(this.$t('resourceDetailView.deleteFavorSuccessText'))
             resource.isFavor = false
           } else {
             this.$error.showErrorMessage(res)

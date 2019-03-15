@@ -4,7 +4,7 @@
 
     <div>
       <div class="presentables-header-wrap">
-        <span class="title">节点资源列表</span>
+        <span class="title">{{ $t('presentable.listTitle') }}</span>
         <!--<el-tooltip class="item" effect="dark" content="添加节点资源" placement="right">-->
           <!--<span class="add-presentable-btn" @click="showSearchResourceHandler">-->
             <!--<i class="el-icon-plus"></i>-->
@@ -12,14 +12,14 @@
         <!--</el-tooltip>-->
         <span class="add-presentable-btn" @click="showSearchResourceHandler">
           <i class="el-icon-plus"></i>
-          <span>添加节点资源</span>
+          <span>{{ $t('presentable.addPresentable') }}</span>
         </span>
         <ul class="list-actions">
           <li>
             <el-select v-model="searchData.resourceType"
                        @change="searchHandler(searchData)"
-                       size="mini" placeholder="资源类型">
-              <el-option label="资源类型" value=""></el-option>
+                       size="mini" :placeholder="$t('resource.resourceType')">
+              <el-option :label="$t('resource.resourceType')" value=""></el-option>
               <el-option
                       v-for="item in resourceTypeOptions"
                       :key="item.value"
@@ -31,8 +31,8 @@
           <li>
             <el-select v-model="searchData.isSignContract"
                        @change="searchHandler(searchData)"
-                       popper-class="opt-cls" size="mini" placeholder="签约状态">
-              <el-option label="签约状态" value=""></el-option>
+                       popper-class="opt-cls" size="mini" :placeholder="$t('contract.state')">
+              <el-option :label="$t('contract.state')" value=""></el-option>
               <el-option
                       v-for="item in contractStateOptions"
                       :key="item.value"
@@ -44,14 +44,14 @@
           <li>
             <el-select v-model="searchData.isOnline"
                        @change="searchHandler(searchData)"
-                       size="mini" placeholder="上线状态">
+                       size="mini" :placeholder="$t('presentable.onlineState')">
               <el-option
                       v-for="item in onlineStateOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
               </el-option>
-              <el-option label="全部状态" :value=2></el-option>
+              <el-option :label="$t('presentable.allState')" :value=2></el-option>
             </el-select>
           </li>
           <li style="max-width: none;">
@@ -83,15 +83,15 @@
           <template slot="append">
             <el-table-column
                     width="140"
-                    label="上线状态">
+                    :label="$t('presentable.onlineState')">
               <template slot-scope="{row}">
                 <div class="status-item-wrap">
                   <freelog-switch class="node-res-status-switch"
                                   v-model="row.isOnlineChecked"
                                   @change="changePresentableOnlineHandler(row)"
-                                  active-text="上线"
+                                  :active-text="$t('presentable.onlineText')"
                                   :disabled="!!row.warningTip"
-                                  inactive-text="下线"></freelog-switch>
+                                  :inactive-text="$t('presentable.offlineText')"></freelog-switch>
                   <el-tooltip class="warning-tooltip"
                               popper-class="status-item-tip"
                               v-if="row.warningTip"
@@ -106,7 +106,7 @@
             </el-table-column>
           </template>
           <div class="no-present-list-wrap" slot="empty">
-            暂未添加任何节点资源
+            {{ $t('node.noPresentableTip') }}
           </div>
         </PresentableList>
       </div>
@@ -119,7 +119,7 @@
             :before-close="beforeCloseDialogHandler"
             top="10vh"
             center>
-      <p slot="title" class="dialog-title">添加资源</p>
+      <p slot="title" class="dialog-title">{{ $t('presentable.addPresentable') }}</p>
       <search-resource class="add-resource-input" @add="addResourceHandler"></search-resource>
     </el-dialog>
   </section>

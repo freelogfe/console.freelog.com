@@ -17,7 +17,7 @@
         </lazy-component>
       </el-tab-pane>
       <el-tab-pane name="createTab">
-        <span slot="label" class="add-new-scheme-tab-btn"><i class="el-icon-plus"></i>添加新授权方案<i class="dot solid" v-if="!tabs.length"></i></span>
+        <span slot="label" class="add-new-scheme-tab-btn"><i class="el-icon-plus"></i>{{$t('resourceEditView.addNewScheme')}}<i class="dot solid" v-if="!tabs.length"></i></span>
       </el-tab-pane>
     </el-tabs>
 
@@ -26,26 +26,20 @@
             width="450px"
             :show-close="false"
             center>
-      <div slot="title" class="scheme-dialog-title">添加授权方案</div>
+      <div slot="title" class="scheme-dialog-title">{{$t('resourceEditView.addScheme')}}</div>
       <div class="scheme-dialog-bd">
-        <!--<el-alert-->
-                <!--title="方案添加成功后无法删除"-->
-                <!--type="warning"-->
-                <!--show-icon-->
-                <!--:closable="false"-->
-        <!--&gt;-->
-        <!--</el-alert>-->
-        <el-input placeholder="请输入授权方案名称..." v-model="editingScheme.authSchemeName"></el-input>
+        <el-input :placeholder="$t('resourceEditView.inputPlaceholder')"
+                  v-model="editingScheme.authSchemeName"></el-input>
         <span class="scheme-dialog-create-tip">
           <i class="el-icon-warning"></i>
-          方案添加成功后无法删除
+          {{$t('resourceEditView.createSchemeTip')}}
         </span>
       </div>
       <div slot="footer" class="scheme-dialog-footer">
         <el-button type="text" class="sdf-cancel-btn" style="color: #999999;margin-right: 10px;"
-                   @click="hideSettingDialogHandler"> 取消
+                   @click="hideSettingDialogHandler"> {{$t('common.cancel')}}
         </el-button>
-        <el-button type="primary" style="padding: 8px 30px;" size="medium" round @click="saveSchemeHandler"> 确定
+        <el-button type="primary" style="padding: 8px 30px;" size="medium" round @click="saveSchemeHandler"> {{$t('common.confirm')}}
         </el-button>
       </div>
     </el-dialog>
@@ -130,9 +124,9 @@
         if (!isPublished || enabledCnt > 1) {
           return Promise.resolve()
         } else {
-          return this.$confirm('当前资源中已无其他授权方案，停用此方案将会使资源下架, 是否确认操作？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+          return this.$confirm(this.$t('resourceEditView.disableSchemeTip'), this.$t('resourceEditView.disableSchemeTitle'), {
+            confirmButtonText: this.$t('common.confirm'),
+            cancelButtonText: this.$t('common.cancel'),
             center: true,
             showClose: false,
             roundButton: true,
@@ -207,7 +201,7 @@
       addTab(scheme) {
         const newTabName = scheme.authSchemeId
         const tabData = {
-          title: scheme.authSchemeName || '未命名授权方案',
+          title: scheme.authSchemeName || this.$t('resourceEditView.defaultSchemeName'),
           name: newTabName,
           content: 'resource-auth-scheme',
           data: {

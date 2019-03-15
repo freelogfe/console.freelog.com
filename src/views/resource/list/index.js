@@ -36,7 +36,7 @@ export default {
       // } else {
       //   this.favorQueryInput = query
       // }
-      this.$message.warning('未开发')
+      this.$message.warning('todo')
     }
   }
 }

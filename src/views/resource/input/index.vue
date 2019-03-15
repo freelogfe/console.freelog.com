@@ -7,7 +7,7 @@
           <div class="input-lf-side">
             <div class="require-input input-item">
               <el-form-item prop="resourceName">
-                <input type="text" class="input-rect" v-model="formData.resourceName" placeholder="资源标题">
+                <input type="text" class="input-rect" v-model="formData.resourceName" :placeholder="$t('resourceEditView.resourceTitle')">
               </el-form-item>
             </div>
             <div class="require-input input-item">
@@ -18,7 +18,7 @@
                       width="200"
                       trigger="hover"
                       :disabled="enabledEditResourceType">
-                已上传资源文件不能修改资源类型{{showCreatorInputItem? '，如需修改，请重新上传资源': ''}}
+                {{$t('resourceEditView.changeTypeTip')}}{{showCreatorInputItem? $t('resourceEditView.changeTypeTip2'): ''}}
               </el-popover>
               <el-select
                       :disabled="!enabledEditResourceType"
@@ -28,9 +28,9 @@
                       @change="resourceTypeChange"
                       v-popover:typePopTip
                       class="resource-type"
-                      placeholder="请选择资源类型">
+                      :placeholder="$t('resourceEditView.selectType')">
                 <el-option
-                        label="请选择资源类型"
+                        :label="$t('resourceEditView.selectType')"
                         value="">
                 </el-option>
                 <el-option
@@ -49,7 +49,7 @@
                         title=""
                         width="200"
                         trigger="hover"
-                        :disabled="!!formData.resourceType">选择资源类型后方可上传资源</el-popover>
+                        :disabled="!!formData.resourceType">{{$t('resourceEditView.uploadPopTip')}}</el-popover>
                 <el-upload
                         v-if="showCreatorInputItem"
                         class="resource-file-uploader"
@@ -71,8 +71,8 @@
                         :auto-upload="true">
                   <i class="el-icon-plus"></i>
                   <div class="resource-file-tip">
-                    <p>资源文件</p>
-                    <p class="resource-file-sub-tip">拖拽或点击上传，最大不超过50M</p>
+                    <p>{{$t('resourceEditView.resourceFile')}}</p>
+                    <p class="resource-file-sub-tip">{{$t('resourceEditView.uploadResourceRule')}}</p>
                   </div>
                 </el-upload>
               </div>
@@ -88,7 +88,7 @@
                     <el-button type="text"
                                style="color: #C3C3C3;font-size: 12px;padding: 0;"
                                size="mini"
-                               @click="reuploadHandler('resource')">重新上传
+                               @click="reuploadHandler('resource')">{{$t('resourceEditView.reUploadText')}}
                     </el-button>
                   <p class="resource-file-size"> {{humanizeSize(formData.filesize)}}</p>
                 </div>
@@ -101,7 +101,7 @@
                   <input type="text" v-model="formData.widgetName"
                          class="input-rect"
                          :disabled="!showCreatorInputItem"
-                         placeholder="widget名称">
+                         :placeholder="$t('resourceEditView.widgetName')">
                 </el-form-item>
               </div>
               <div class="require-input input-item">
@@ -109,7 +109,7 @@
                   <input type="text" v-model="formData.widgetVersion"
                          class="input-rect"
                          :disabled="!showCreatorInputItem"
-                         placeholder="widget版本号">
+                         :placeholder="$t('resourceEditView.widgetVersion')">
                 </el-form-item>
               </div>
             </template>
@@ -135,7 +135,7 @@
               <template v-else>
                 <div>
                   <i class="el-icon-plus"></i>
-                  <p class="thumbnail-tip">上传封面</p>
+                  <p class="thumbnail-tip">{{$t('resourceEditView.uploadPoster')}}</p>
                 </div>
               </template>
             </el-upload>
@@ -154,7 +154,7 @@
       </div>
 
       <div class="input-item-wrap">
-        <h4>依赖资源</h4>
+        <h4>{{$t('resourceEditView.depResources')}}</h4>
         <div class="input-area" :class="{'edit-disabled': !canEditDependencies}">
           <div>
             <el-popover
@@ -164,13 +164,13 @@
                     width="200"
                     trigger="hover"
                     :disabled="canEditDependencies"
-                    content="已发布的资源不能修改依赖">
+                    :content="$t('resourceEditView.disableModifiedTip')">
             </el-popover>
             <el-button class="add-dep-btn"
                        @click="showSearchDialogHandler"
                        type="text"
                        v-popover:depsPopTip
-                       size="mini"><i class="el-icon-plus"></i>添加依赖资源
+                       size="mini"><i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}
             </el-button>
           </div>
           <ul class="res-deps-wrap" v-if="deps.length">
@@ -188,7 +188,7 @@
       </div>
 
       <div class="input-item-wrap">
-        <h4>资源介绍</h4>
+        <h4>{{$t('resourceEditView.introTitle')}}</h4>
         <div class="input-area">
           <rich-editor class="res-desc-editor"
                        ref="editor"
@@ -196,14 +196,15 @@
                        v-model="formData.description"
                        :config="editorConfig"
                        @load="imgUploadSuccessHandler"
-                       placeholder="请输入资源描述"></rich-editor>
+                       :placeholder="$t('resourceEditView.inputDescTip')"></rich-editor>
         </div>
       </div>
 
       <div class="input-item-wrap">
-        <h4>meta信息</h4>
+        <h4>{{$t('resourceEditView.metaTitle')}}</h4>
         <div class="input-area">
-          <resource-meta-info v-model="meta" @validate="checkMetaValid" placeholder="资源meta信息"></resource-meta-info>
+          <resource-meta-info v-model="meta" @validate="checkMetaValid"
+                              :placeholder="$t('resourceEditView.inputMetaTip')"></resource-meta-info>
         </div>
       </div>
     </el-form>
@@ -217,7 +218,7 @@
             :before-close="beforeCloseDialogHandler"
             top="10vh"
             center>
-      <p slot="title" class="dialog-title" :style="{fontSize: '20px'}">添加资源</p>
+      <p slot="title" class="dialog-title" :style="{fontSize: '20px'}">{{$t('resourceEditView.addResource')}}</p>
       <SearchResource class="add-resource-input" @add="addDepResourceHandler"></SearchResource>
     </el-dialog>
   </div>

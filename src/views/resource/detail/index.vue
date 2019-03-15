@@ -5,18 +5,18 @@
         <div class="res-digest">
           <div class="rt-side">
             <p>
-              <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
+              <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">{{$t('resourceDetailView.addPresentableText')}}</el-button>
             </p>
             <p>
-              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
+              <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor? $t('resourceDetailView.deleteFavorText'): $t('resourceDetailView.favorText')}}</el-button>
             </p>
           </div>
           <div class="lf-side">
-            <div class="res-title">{{resourceDetail.resourceInfo.resourceName}} <span class="off-line-tip">(已下架)</span></div>
+            <div class="res-title">{{resourceDetail.resourceInfo.resourceName}} <span class="off-line-tip">({{$t('resourceDetailView.offlineTip')}})</span></div>
             <div class="res-origin-info">
               <span class="res-type">{{resourceDetail.resourceInfo.resourceType}}</span>
               <span class="res-type">{{resourceDetail.resourceInfo.resourceId}}</span>
-              <span class="res-update-time">最近更新 {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
+              <span class="res-update-time">{{$t('resourceDetailView.lastUpdateText')}} {{resourceDetail.resourceInfo.updateDate|fmtDate}}</span>
             </div>
           </div>
         </div>
@@ -49,16 +49,15 @@
             <div v-if="resourceDetail.resourceInfo.description"
                  class="ql-editor"
                  v-html="resourceDetail.resourceInfo.description"></div>
-            <div v-else class="empty-res-desc-text">暂无资源描述</div>
+            <div v-else class="empty-res-desc-text">{{ $t('resourceDetailView.noDescTip') }}</div>
           </div>
           <div class="res-detail-meta res-detail-info" ref="resMeta">
             <pre class="meta-info">{{formatMeta()}}</pre>
           </div>
         </div>
         <div class="res-detail-ft">
-          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor?'取消收藏':'收藏'}}</el-button>
-          <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">获取授权</el-button>
-          <el-button type="primary" class="res-act-btn" @click="editDetailHandler" v-if="isOwnerResource">编辑</el-button>
+          <el-button class="res-act-btn" @click="favorHandler">{{resourceDetail.isFavor? $t('resourceDetailView.deleteFavorText'):$t('resourceDetailView.favorText')}}</el-button>
+          <el-button class="res-act-btn" type="primary" @click="getResourceAuthHandler">{{$t('resourceDetailView.addPresentableText')}}</el-button>
         </div>
       </div>
       <a class="up-to-top" href="#" ref="upBtn">
@@ -74,7 +73,7 @@
           <div class="selected-resource-auth-scheme-policy"></div>
         </div>
         <div class="select-target-bd">
-          <h4 class="opts-bd-title">获取资源授权至节点：</h4>
+          <h4 class="opts-bd-title">{{ $t('resourceDetailView.addResourceToNode') }}</h4>
           <div class="opts-container">
             <ul class="checkbox-group node-opts" v-if="nodes.length">
               <li class="checkbox-item"
@@ -88,12 +87,12 @@
               </li>
             </ul>
             <div v-else>
-              未创建节点，<router-link to="/node/create">去创建节点</router-link>
+              {{$t('resourceDetailView.noNodesTip')}}<router-link to="/node/create">{{$t('resourceDetailView.createNodeTip')}}</router-link>
             </div>
           </div>
         </div>
         <div class="dialog-footer">
-          <el-button class="deep-color-btn" type="primary" @click="confirmAuthHandler">确 定</el-button>
+          <el-button class="deep-color-btn" type="primary" @click="confirmAuthHandler">{{ $t('common.confirm')}}</el-button>
         </div>
       </div>
     </el-dialog>

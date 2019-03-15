@@ -9,7 +9,7 @@
         <p class="res-type">{{resource.resourceType}} | {{resource.resourceId}}</p>
       </div>
 
-      <div class="pull-panel-btn" @click="pullHandler">更新资源 <i class="el-icon-arrow-down"></i></div>
+      <div class="pull-panel-btn" @click="pullHandler">{{ $t('resourceEditView.updateText')}} <i class="el-icon-arrow-down"></i></div>
 
       <div class="res-actions-wrap">
 
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div @click="pullHandler" class="pull-btn-area" v-show="mode === 1">收起资源 <i class="el-icon-arrow-up"></i></div>
+    <div @click="pullHandler" class="pull-btn-area" v-show="mode === 1">{{ $t('resourceEditView.hideResourceInfo')}} <i class="el-icon-arrow-up"></i></div>
   </div>
 </template>
 

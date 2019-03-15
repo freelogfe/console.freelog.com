@@ -10,7 +10,7 @@
     </div>
     <div class="suspension-list-box" v-if="isShowSuspensionSchemeList">
       <div class="selected-authschemes-box" v-if="selectedAuthSchemes.length">
-        <h3>已选中的授权方案</h3>
+        <h3>{{$t('components.authScheme.selectedSchemesTitle')}}</h3>
         <ul>
           <li
                   v-for="(item, index) in selectedAuthSchemes"
@@ -24,9 +24,9 @@
           </li>
         </ul>
       </div>
-      <p v-if="selectedAuthSchemes.length === 0 && unResolveAuthResources.length === 0">请选择相应授权方案及策略……</p>
+      <p v-if="selectedAuthSchemes.length === 0 && unResolveAuthResources.length === 0">{{$t('components.authScheme.selectTip')}}</p>
       <div class="unresolve-authschemes-box" v-if="unResolveAuthResources.length">
-        <h3>未处理资源列表</h3>
+        <h3>{{$t('components.authScheme.unhandledListTitle')}}</h3>
         <ul>
           <li
                   v-for="(item, index) in unResolveAuthResources"

@@ -16,14 +16,14 @@
         <div class="res-scheme-info-wrap">
           <h4>{{scheme.authSchemeName}}</h4>
           <div class="res-scheme-item">
-            <p>授权对象：</p>
+            <p>{{ $t('policy.authTarget')}}：</p>
             <ul class="res-scheme-item res-scheme-auth-targets">
               <li v-for="(user,index) in scheme.targets" :key="index">{{user}}</li>
             </ul>
           </div>
           <div class="res-scheme-item">
-            <p>上抛：</p>
-            <div><i class="res-scheme-status-icon"></i>{{scheme.isBubbled? '有': '无'}}资源上抛</div>
+            <p>{{ $t('resource.throwUp')}}：</p>
+            <div><i class="res-scheme-status-icon"></i>{{scheme.isBubbled? $t('common.yes'): $t('common.no')}}</div>
           </div>
         </div>
       </li>

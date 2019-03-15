@@ -11,7 +11,8 @@ import Views from '@/views/index'
 import store from '../store'
 import nodeRoute from './node'
 import resourceRoute from './resource'
-import {gotoLogin} from "../lib/utils";
+import {gotoLogin} from "../lib/utils"
+import i18n from '../lib/i18n'
 
 Vue.use(Router)
 
@@ -31,20 +32,21 @@ const scrollBehavior = (to, from, savedPosition) => {
   return position
 }
 
+
 const router = new Router({
   mode: 'history',
   scrollBehavior,
   routes: [
     {
       path: '/',
-      meta: {title: '资源市场'},
+      meta: {title: i18n.t('resource.market')},
       component: Views.layout,
       children: [resourceRoute, nodeRoute, {
         path: 'about',
         hidden: true,
         meta: {
           requiresAuth: false,
-          title: '关于freelog'
+          title: `${i18n.t('aboutView.about')}freelog`
         },
         component: Views.aboutView
       }, {
@@ -52,7 +54,7 @@ const router = new Router({
         hidden: true,
         meta: {
           requiresAuth: true,
-          title: '账号设置'
+          title: i18n.t('routes.accountSetting')
         },
         component: Views.userView
       }, {
@@ -60,7 +62,7 @@ const router = new Router({
         hidden: true,
         meta: {
           requiresAuth: false,
-          title: '帮助中心'
+          title: i18n.t('helpView.title')
         },
         component: Views.helpView
       }, {
@@ -68,7 +70,7 @@ const router = new Router({
         hidden: true,
         meta: {
           requiresAuth: false,
-          title: '资源市场',
+          title: i18n.t('resource.market'),
           theme: 'gray'
         },
         component: Views.mainView

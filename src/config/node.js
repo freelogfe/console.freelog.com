@@ -1,11 +1,13 @@
+import i18n from '@/lib/i18n'
+
 export const NODE_STATUS = [{
-  text: '正常',
+  text: i18n.t('config.node.status[0]'),
   type: 'success'
 }, {
-  text: '未审核',
+  text: i18n.t('config.node.status[1]'),
   type: 'warning'
 }, {
-  text: '冻结',
+  text: i18n.t('config.node.status[2]'),
   type: 'danger'
 }]
 

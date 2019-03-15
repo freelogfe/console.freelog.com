@@ -34,13 +34,13 @@
           case RESOURCE_STATUS_MAP.unknown:
             Object.assign(opt, {
               disabled: true,
-              text: '资源异常',
+              text: this.$t('components.resourceButton.exception'),
               type: 'warning'
             })
             break
           case RESOURCE_STATUS_MAP.unpublished:
             Object.assign(opt, {
-              text: '发布资源',
+              text: this.$t('components.resourceButton.publish'),
               type: 'primary',
               plain: false,
               isOnline: 1
@@ -48,13 +48,13 @@
             break
           case RESOURCE_STATUS_MAP.published:
             Object.assign(opt, {
-              text: '下架资源',
+              text: this.$t('components.resourceButton.offline'),
               isOnline: 0
             })
             break
           case RESOURCE_STATUS_MAP.freeze:
             Object.assign(opt, {
-              text: '资源冻结',
+              text: this.$t('components.resourceButton.freeze'),
               disabled: true
             })
             break
@@ -69,19 +69,19 @@
     methods: {
       publishHandler(isOnline) {
         if (!Number.isInteger(isOnline)) return
-        var tips = ['下架', '发布']
-        this.$confirm(`确定${tips[isOnline]}资源？`, {
+        var tip = isOnline? this.$t('components.resourceButton.publish'):this.$t('components.resourceButton.offline')
+        this.$confirm(this.$t('components.resourceButton.publishTip', {tip}), {
           center: true
         }).then(() => {
           this.$services.resource.put(this.resource.resourceId, {
             isOnline: isOnline
           }).then(res => {
-            const {errcode, ret, msg, data} = res.data
+            const {errcode, ret, msg} = res.data
             if (errcode === 0 && ret === 0) {
               this.resource.status = (isOnline === 0) ? RESOURCE_STATUS_MAP.unpublished : RESOURCE_STATUS_MAP.published
-              this.$message.success(`${tips[isOnline]}成功`)
+              this.$message.success(`${tip}${this.$t('components.resourceButton.success')}`)
             } else {
-              this.$message.error(msg || `${tips[isOnline]}失败`)
+              this.$message.error(msg || `${tip}${this.$t('components.resourceButton.fail')}`)
             }
           })
         }).catch(() => {

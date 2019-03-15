@@ -33,7 +33,7 @@ export default {
   },
 
   computed: {
-    disabledPolicy(){
+    disabledPolicy() {
       return this.policy.status === 0
     }
   },
@@ -112,7 +112,10 @@ export default {
     switchPolicyStatusHandler() {
       var policy = this.policy
       if (policy.policySegmentId) {
-        this.$confirm(`确定${policy.disabled ? '上' : '下'}架策略 <${policy.policyName}>？`)
+        this.$confirm(this.$t('components.policyEditor.switchTip', {
+          statusText: policy.disabled ? '上' : '下',
+          policyName: policy.policyName
+        }))
           .then(() => {
             policy.disabled = !this.disabledPolicy
             this.$emit('save', this.policy)
@@ -120,7 +123,7 @@ export default {
         })
       }
     },
-    changePolicyNameHandler(){
+    changePolicyNameHandler() {
       if (this.policy.policySegmentId) {
         this.$emit('save', this.policy)
       }

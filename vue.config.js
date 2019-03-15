@@ -41,7 +41,7 @@ function getDevServer() {
 }
 
 module.exports = {
-  baseUrl: getBaseUrl(),
+  publicPath: getBaseUrl(),
   crossorigin: 'anonymous',
   devServer: getDevServer(),
 

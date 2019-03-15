@@ -1,3 +1,5 @@
+import i18n from '@/lib/i18n'
+
 export const RESOURCE_TYPES = {
   json: 'json',
   widget: 'widget',
@@ -20,19 +22,19 @@ export const RESOURCE_STATUS_MAP = {
 
 export const RESOURCE_STATUS = [
   {
-    desc: '未知状态',
+    desc: i18n.t('config.resource.states[0]'),
     type: 'danger',
     status: RESOURCE_STATUS_MAP.unknown
   }, {
-    desc: '未发布',
+    desc: i18n.t('config.resource.states[1]'),
     type: 'warning',
     status: RESOURCE_STATUS_MAP.unpublished
   }, {
-    desc: '已发布',
+    desc: i18n.t('config.resource.states[2]'),
     type: 'success',
     status: RESOURCE_STATUS_MAP.published
   }, {
-    desc: '冻结',
+    desc: i18n.t('config.resource.states[3]'),
     type: 'danger',
     status: RESOURCE_STATUS_MAP.freeze
   }

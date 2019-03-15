@@ -2,7 +2,6 @@ import {NODE_STATUS} from '@/config/node'
 import ClipBoard from '@/components/clipboard/index.vue'
 import {mapGetters} from 'vuex'
 import NodePresentables from '../presentables/index.vue'
-// import NodePreview from '../preview/index.vue'
 
 export default {
   name: 'node-detail',
@@ -41,7 +40,7 @@ export default {
     if (nodeId) {
       this.init(nodeId)
     } else {
-      this.$message.error('缺少参数nodeId')
+      this.$message.error(this.$t('node.detailView.paramError'))
     }
   },
   methods: {
@@ -56,7 +55,7 @@ export default {
         })
     },
     copyDoneHandler() {
-      this.$message.success('已复制节点地址')
+      this.$message.success(this.$t('node.detailView.copySuccess'))
     },
     resolveDomain(node) {
       return `${window.location.protocol}//${node.nodeDomain}${this.domainSuffix}`

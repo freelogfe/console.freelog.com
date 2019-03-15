@@ -1,6 +1,6 @@
 <template>
-  <section class="login-section">
-   帮助中心
+  <section class="help-section">
+   {{$t('helpView.title')}}
   </section>
 </template>
 
@@ -11,4 +11,8 @@ export default HelpView
 </script>
 
 <style lang="less" scoped>
+  .help-section {
+    width: 50%;
+    margin: 30px auto;
+  }
 </style>

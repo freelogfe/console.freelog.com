@@ -1,19 +1,14 @@
 <template>
   <section class="my-resources">
-    <h3 class="title">我的资源库</h3>
+    <h3 class="title">{{$t('resource.myResources')}}</h3>
     <div class="body-content">
       <el-tabs tab-position="top" v-model="curTabName">
-        <!--<el-tab-pane label="已获取资源" name="signed">-->
-          <!--<lazy-component>-->
-            <!--<resource-items type="signed"></resource-items>-->
-          <!--</lazy-component>-->
-        <!--</el-tab-pane>-->
-        <el-tab-pane label="自制资源" name="self">
+        <el-tab-pane :label="$t('resourceListView.myListTitle')" name="self">
           <lazy-component>
             <resource-items type="self" :query="selfQueryInput"></resource-items>
           </lazy-component>
         </el-tab-pane>
-        <el-tab-pane label="收藏资源" name="favor">
+        <el-tab-pane :label="$t('resourceListView.favorListTitle')" name="favor">
           <lazy-component>
             <resource-items type="favor" :query="favorQueryInput"></resource-items>
           </lazy-component>

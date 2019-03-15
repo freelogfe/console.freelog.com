@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash'
+import {cloneDeep} from 'lodash'
 
 function createLoader(loader) {
   let loading = false
@@ -121,6 +121,12 @@ function gotoLogin(redirect) {
 
 function isFunction(fn) {
   return typeof fn === 'function'
+}
+
+
+export const checkResponse = (res) => {
+  const {ret, errcode} = res.data
+  return ret === 0 && errcode === 0
 }
 
 export {

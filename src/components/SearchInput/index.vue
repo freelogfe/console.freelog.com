@@ -3,7 +3,7 @@
     <el-input size="small" v-model="input"
               v-if="showInput"
               ref="input"
-              placeholder="按回车进行搜索"
+              placeholder=""
               :style="{width: width}"
               @blur="hideInputHandler"
               class="search-input"
