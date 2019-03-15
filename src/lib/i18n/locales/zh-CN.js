@@ -19,6 +19,10 @@ export default {
     createSuccessTip: '创建成功'
   },
 
+  header: {
+    langSwitchQuestion:'切换为 {lang}？'
+  },
+
   contract: {
     state: '签约状态',
     signedText: '已签约',

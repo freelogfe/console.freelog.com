@@ -18,19 +18,6 @@ export default {
     return {
       resourceId: this.$route.params.resourceId,
       activeTab: 'resIntro',
-      tabs: [{
-        name: 'resIntro',
-        title: this.$t('resourceDetailView.tabs[0]')
-      }, {
-        name: 'resSchemes',
-        title: this.$t('resourceDetailView.tabs[1]')
-      }, {
-        name: 'resDesc',
-        title: this.$t('resourceDetailView.tabs[2]')
-      }, {
-        name: 'resMeta',
-        title: this.$t('resourceDetailView.tabs[3]')
-      }],
       resourceDetail: {
         resourceInfo: {
           status: 2
@@ -45,6 +32,21 @@ export default {
   },
 
   computed: Object.assign({
+    tabs(){
+      return [{
+        name: 'resIntro',
+        title: this.$t('resourceDetailView.tabs[0]')
+      }, {
+        name: 'resSchemes',
+        title: this.$t('resourceDetailView.tabs[1]')
+      }, {
+        name: 'resDesc',
+        title: this.$t('resourceDetailView.tabs[2]')
+      }, {
+        name: 'resMeta',
+        title: this.$t('resourceDetailView.tabs[3]')
+      }]
+    },
     isOwnerResource() {
       return this.resourceDetail.resourceInfo.isOwner && process.env.NODE_ENV === 'development'
     },

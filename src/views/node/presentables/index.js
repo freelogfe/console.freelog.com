@@ -19,26 +19,6 @@ export default {
         isOnline: 2,
         resourceType: ''
       },
-      contractStateOptions: [
-        {
-          value: '0',
-          label: this.$t('presentable.unsignedText')
-        },
-        {
-          value: '1',
-          label: this.$t('presentable.signedText')
-        }
-      ],
-      onlineStateOptions: [
-        {
-          value: '0',
-          label: this.$t('presentable.offlineText')
-        },
-        {
-          value: '1',
-          label: this.$t('presentable.onlineText')
-        }
-      ],
       resourceTypeOptions: Object.keys(RESOURCE_TYPES).map(type => {
         return {
           value: RESOURCE_TYPES[type],
@@ -52,6 +32,33 @@ export default {
     SearchResource,
     PageBuild,
     PresentableList
+  },
+
+  computed: {
+    contractStateOptions() {
+      return [
+        {
+          value: '0',
+          label: this.$t('presentable.unsignedText')
+        },
+        {
+          value: '1',
+          label: this.$t('presentable.signedText')
+        }
+      ]
+    },
+    onlineStateOptions() {
+      return [
+        {
+          value: '0',
+          label: this.$t('presentable.offlineText')
+        },
+        {
+          value: '1',
+          label: this.$t('presentable.onlineText')
+        }
+      ]
+    },
   },
 
   watch: {},
@@ -82,8 +89,8 @@ export default {
         this.isHadPageBuild().then(is => {
           if (is) {
             let text = presentable.isOnline ?
-              this.$t('presentable.confirmOffline',{presentableName:presentable.presentableName}) :
-              this.$t('presentable.confirmOnline',{presentableName:presentable.presentableName})
+              this.$t('presentable.confirmOffline', {presentableName: presentable.presentableName}) :
+              this.$t('presentable.confirmOnline', {presentableName: presentable.presentableName})
             this.$confirm(text)
               .then(() => {
                 return this.changePageBuild(presentable)
