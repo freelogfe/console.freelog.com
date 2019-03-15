@@ -7,6 +7,7 @@
 import axios from 'axios'
 import store from '@/store'
 import { gotoLogin } from './utils'
+import i18n from './i18n'
 
 const instance = axios.create({
   baseURL: window.location.origin.replace('console', 'qi'),
@@ -56,13 +57,13 @@ instance.interceptors.response.use(
     }
     switch (response.status) {
       case 401:
-        errorMsg = '未授权！'
+        errorMsg = i18n.t('axios.unAuthError')
         break
       case 404:
-        errorMsg = 'forbidden-禁止访问'
+        errorMsg = i18n.t('axios.forbidden')
         break
       case 500:
-        errorMsg = '服务器内部异常，请稍后再试！'
+        errorMsg = i18n.t('axios.internalError')
         break
       default:
         errorMsg = data.msg

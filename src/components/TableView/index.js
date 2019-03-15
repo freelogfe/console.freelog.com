@@ -87,7 +87,8 @@ export default {
             this.$message.error(data.msg)
           }
         }).catch(() => {
-          this.$message.warning('加载失败')
+          // this.$message.warning('加载失败')
+          console.warn('加载失败')
           this.loading = false
         })
       }

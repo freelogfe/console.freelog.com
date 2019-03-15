@@ -2,17 +2,17 @@
   <section class="search-resource-wrap">
     <div class="search-resource-bd">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="收藏资源" name="favor">
+        <el-tab-pane :label="$t('search.favorTitle')" name="favor">
           <lazy-list-view :list="favorResources" class="search-resource-list" :height="60" :fetch="fetchData">
             <template slot-scope="scope">
-              <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">添加</el-button>
+              <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">{{$t('search.addBtn')}}</el-button>
               <resource-item :resource="scope.data" type="search" style="margin-right: 80px;"></resource-item>
             </template>
 
-            <div style="font-size: 20px; text-align: center;" slot="empty">暂无收藏资源</div>
+            <div style="font-size: 20px; text-align: center;" slot="empty">{{$t('search.noFavorResources')}}</div>
           </lazy-list-view>
         </el-tab-pane>
-        <el-tab-pane label="搜索资源" name="search">
+        <el-tab-pane :label="$t('search.searchTitle')" name="search">
           <div class="search-input-area">
             <el-input v-model="searchInput"
                       class="search-resource-input"
@@ -20,7 +20,7 @@
                       ref="searchInputRef"
                       @clear="clearSearchInputHandler"
                       @keyup.native.enter="searchHandler"
-                      placeholder="输入资源名称或者资源ID"></el-input>
+                      :placeholder="$t('search.placeholder')"></el-input>
           </div>
 
           <lazy-list-view :list="searchResources"
@@ -28,7 +28,7 @@
                           class="search-resource-list"
                           :height="60" :fetch="searchDataHandler">
             <template slot-scope="scope">
-              <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">添加</el-button>
+              <el-button class="add-resource-btn" @click="addResourceHandler(scope.data)">{{$t('search.addBtn')}}</el-button>
               <resource-item :resource="scope.data" type="search" style="margin-top: 10px;
     padding: 10px 5px;margin-right: 80px;"></resource-item>
             </template>

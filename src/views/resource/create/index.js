@@ -53,9 +53,9 @@ export default {
       this.executeNext(() => {
         const detail = this.resourceDetail
         if (this.$route.params.resourceId) {
-          this.$message.success('资源更新成功')
+          this.$message.success(this.$t('resource.updateSuccess'))
         } else {
-          this.$message.success('资源创建成功')
+          this.$message.success(this.$t('resource.createSuccess'))
         }
         setTimeout(() => {
           this.$router.push(`/resource/detail/${detail.resourceId}`)
@@ -71,7 +71,7 @@ export default {
       })
     },
     cancelHandler() {
-      this.$confirm('确定取消创建资源？')
+      this.$confirm(this.$t('resource.cancelQuestion'))
         .then(() => {
           this.$router.push('/resource/list')
         }).catch(() => {})

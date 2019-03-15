@@ -5,7 +5,7 @@
               border>
       <el-table-column
         prop="name"
-        label="模板名称">
+        :label="$t('components.policyTplSelector.name')">
       </el-table-column>
       <el-table-column
         label=""
@@ -16,7 +16,7 @@
             size="small"
             type="primary"
             plain
-            @click="handleSelect(scope.row)">选择
+            @click="handleSelect(scope.row)">{{$t('components.policyTplSelector.operation')}}
           </el-button>
         </template>
       </el-table-column>

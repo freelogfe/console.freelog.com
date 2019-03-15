@@ -1,7 +1,7 @@
 <template>
   <div class="user-setting-view">
     <el-form label-width="120px" label-position="left" class="small-el-form" :rules="rules">
-      <el-form-item class="flex-grid" label="用户头像">
+      <el-form-item class="flex-grid" :label="$t('settingView.avatar')">
         <el-button @click="showImageCropUploader=true" type="text">
           <img :src="userInfo.headImage" class="user-avatar" alt="">
         </el-button>
@@ -9,22 +9,24 @@
                    :avatarUrl="avatarUrl"
                    :upload-success="uploadSuccessHandler"></CropImage>
       </el-form-item>
-      <el-form-item class="flex-grid" label="用户姓名">
-        <el-input v-model="userInfo.userName" disabled class="input-area" placeholder="未设置用户姓名"></el-input>
+      <el-form-item class="flex-grid" :label="$t('settingView.username')">
+        <el-input v-model="userInfo.userName" disabled class="input-area"
+                  :placeholder="$t('settingView.usernameTip')"></el-input>
       </el-form-item>
-      <el-form-item class="flex-grid" label="用户昵称">
-        <el-input v-model="userInfo.nickname" disabled class="input-area" placeholder="未设置用户昵称"></el-input>
+      <el-form-item class="flex-grid" :label="$t('settingView.nickname')">
+        <el-input v-model="userInfo.nickname" disabled class="input-area"
+                  :placeholder="$t('settingView.nicknameTip')"></el-input>
       </el-form-item>
-      <el-form-item class="flex-grid" label="邮箱">
+      <el-form-item class="flex-grid" :label="$t('settingView.email')">
         <el-input v-model="userInfo.email" disabled class="input-area"
                   placeholder="未设置邮箱"></el-input>
       </el-form-item>
-      <el-form-item class="flex-grid" label="手机号码">
+      <el-form-item class="flex-grid" :label="$t('settingView.mobilePhone')">
         <el-input v-model="userInfo.mobile" disabled class="input-area"
-                  placeholder="未设置手机号码"></el-input>
+                  :placeholder="$t('settingView.mobilePhoneTip')"></el-input>
       </el-form-item>
       <el-form-item class="form-footer">
-        <!--<el-button type="primary" plain @click="saveHandler">保存</el-button>-->
+        <!--<el-button type="primary" plain @click="saveHandler">{{$t('common.save')}}</el-button>-->
       </el-form-item>
     </el-form>
   </div>

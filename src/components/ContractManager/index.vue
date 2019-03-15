@@ -1,11 +1,11 @@
 <template>
   <div class="fl-contracts-manager-wrap clearfix" v-loading="loading">
     <div class="contract-list-wrapper">
-      <h4 class="label-title">资源列表</h4>
+      <h4 class="label-title">{{ $t('components.contractManager.resourceList')}}</h4>
 
       <div class="contract-list-panel">
         <div v-if="masterContract.contractId">
-          <p class="sub-label-title">主资源</p>
+          <p class="sub-label-title">{{ $t('components.contractManager.masterResource')}}</p>
           <div class="contract-item"
                :class="['contract-status-'+masterContract.status,
                {'current':currentContract.contractId===masterContract.contractId}]"
@@ -13,13 +13,13 @@
             <div v-if="masterContract.resourceDetail">
               <i class="dot"></i>
               <span v-if="masterContract.resourceDetail.resourceName">{{masterContract.resourceDetail.resourceName}}</span>
-              <span v-else>子资源合同ID： {{masterContract.contractId}}</span>
+              <span v-else>{{ $t('components.contractManager.subResourceId')}} {{masterContract.contractId}}</span>
             </div>
           </div>
         </div>
         <div v-if="contractList.length">
           <p class="sub-label-title"
-             v-if="masterContract.contractId">上抛资源 <span class="contracts-num">{{contractList.length}}</span></p>
+             v-if="masterContract.contractId">{{ $t('components.contractManager.bubbleResources')}} <span class="contracts-num">{{contractList.length}}</span></p>
           <ul class="contract-list">
             <li class="contract-item"
                 v-for="contract in contractList"
@@ -28,7 +28,7 @@
                 @click="showContractDetailHandler(contract)">
               <div>
                 <span class="res-contract-title" v-if="contract.resourceDetail.resourceName">{{contract.resourceDetail.resourceName}}</span>
-                <span class="res-contract-title" v-else>子资源合同ID： {{contract.contractId}}</span>
+                <span class="res-contract-title" v-else>{{ $t('components.contractManager.subResourceId')}} {{contract.contractId}}</span>
                 <span class="contract-state-tip" :class="['contract-state-'+contract.statusInfo.type]"
                       v-if="contract.statusInfo">{{contract.statusInfo.desc}}</span>
               </div>

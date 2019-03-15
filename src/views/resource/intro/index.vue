@@ -13,7 +13,8 @@
         <span class="res-date">{{resource.updateDate|fmtDate('YYYY-MM-DD')}}</span>
       </div>
       <div>
-        <a target="_blank" class="more-detail-link" :href="'/resource/detail/'+ resource.resourceId">查看更多>></a>
+        <a target="_blank" class="more-detail-link"
+           :href="'/resource/detail/'+ resource.resourceId">{{$t('resourceDetailView.moreTip')}}>></a>
       </div>
     </div>
   </div>

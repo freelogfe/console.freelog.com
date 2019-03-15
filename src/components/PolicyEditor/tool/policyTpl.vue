@@ -1,18 +1,18 @@
 <template>
   <div>
     <div style="margin-bottom: 15px;">
-      <el-input placeholder="请输入内容" v-model="queryPolicyTpl" class="input-with-select">
+      <el-input :placeholder="$t('components.policyEditor.inputPlaceholder')" v-model="queryPolicyTpl" class="input-with-select">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
     </div>
 
     <el-tabs type="border-card" v-model="currentTabName" @tab-click="tabClickHandler">
-      <el-tab-pane label="示例模板" name="official">
+      <el-tab-pane :label="$t('components.policyEditor.demoTpl')" name="official">
         <policy-tpl-list :list="defaultPolicyTpls"
                          :filter="filterHandler"
                          @select="selectPolicyTplHandler"></policy-tpl-list>
       </el-tab-pane>
-      <el-tab-pane label="我的模板" name="mine">
+      <el-tab-pane :label="$t('components.policyEditor.myTpl')" name="mine">
         <policy-tpl-list :list="policyTpls"
                          :filter="filterHandler"
                          @select="selectPolicyTplHandler"></policy-tpl-list>

@@ -11,7 +11,7 @@
     <codemirror :code="data"
                 :options="editorOptions"
                 ref="codeMirror"
-                placeholder="描述资源meta信息的JSON数据"
+                :placeholder="$t('metaInput.metaJSONError')"
                 @input="onCodeChange">
     </codemirror>
   </section>

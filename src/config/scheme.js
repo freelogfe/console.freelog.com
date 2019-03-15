@@ -1,3 +1,6 @@
+import i18n from '@/lib/i18n'
+
+
 export const SCHEME_STATUS = {
   NONE: 0, // 不解决
   SOME: 1, // 解决部分
@@ -15,15 +18,15 @@ export const SCHEME_PUBLISH_STATUS = {
 
 export const SCHEME_STATUS_MAP = {
   [SCHEME_PUBLISH_STATUS.disabled]: {
-    desc: '未启用',
+    desc: i18n.t('config.scheme.states[0]'),
     className: 'off-state'
   },
   [SCHEME_PUBLISH_STATUS.enabled]: {
-    desc: '启用',
+    desc: i18n.t('config.scheme.states[1]'),
     className: 'on-state'
   },
   [SCHEME_PUBLISH_STATUS.deleted]: {
-    desc: '已废弃',
+    desc: i18n.t('config.scheme.states[2]'),
     className: 'deleted-state'
   },
 }

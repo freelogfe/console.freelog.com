@@ -7,7 +7,7 @@
       <el-tabs v-model="activeTabName" @tab-click="handleClick" :stretch="true">
         <el-tab-pane :name="TAB_NAMES.base">
           <span slot="label" class="panel-tab-name">
-            节点资源基础信息
+            {{$t('presentable.tabNames.info')}}
           </span>
           <div class="panel-content">
             <lazy-component>
@@ -19,7 +19,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.scheme">
-          <span slot="label" class="panel-tab-name">授权方案管理<i class="dot solid" v-if="!isDependenciesDone"></i></span>
+          <span slot="label" class="panel-tab-name">{{$t('presentable.tabNames.schemes')}}<i class="dot solid" v-if="!isDependenciesDone"></i></span>
           <div class="panel-content">
             <lazy-component>
               <authorization-scheme-manage
@@ -34,21 +34,21 @@
           </div>
         </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.contract">
-          <span slot="label" class="panel-tab-name">合约管理<i class="dot solid" v-if="!isContractsDone"></i></span>
+          <span slot="label" class="panel-tab-name">{{$t('presentable.tabNames.contracts')}}<i class="dot solid" v-if="!isContractsDone"></i></span>
           <div class="panel-content contract-manager-wrap">
             <ContractManager :contracts="presentableInfo.contracts"
                              @contracts-change="contractsChangeHandler"
                              v-if="presentableInfo.contracts&&presentableInfo.contracts.length"></ContractManager>
             <div class="empty-contract-tip" v-else>
-              未创建合约
+              {{$t('presentable.uncreatedContractTip')}}
               <router-link :to="$route.path + '?tab=scheme'">
-                <el-button type="text">去创建合约</el-button>
+                <el-button type="text">{{$t('presentable.gotoCreateContractTip')}}</el-button>
               </router-link>
             </div>
           </div>
         </el-tab-pane>
         <el-tab-pane :name="TAB_NAMES.policy" :lazy="true">
-          <span slot="label" class="panel-tab-name">策略管理<i class="dot solid" v-if="!isPoliciesDone"></i></span>
+          <span slot="label" class="panel-tab-name">{{$t('presentable.tabNames.policies')}}<i class="dot solid" v-if="!isPoliciesDone"></i></span>
           <div class="panel-content policy-manager-wrap">
             <policy-list :list="presentableInfo.policy" @save="savePoliciesHandler"></policy-list>
           </div>

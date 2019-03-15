@@ -6,6 +6,9 @@ export default {
     }
   },
 
+  mounted(){
+  },
+
   methods: {
   }
 }

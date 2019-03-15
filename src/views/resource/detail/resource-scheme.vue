@@ -3,7 +3,7 @@
     <el-tabs v-model="activeSchemeName">
       <el-tab-pane :label="tab.label" :name="tab.name" v-for="tab in tabs">
         <div class="bubble-res-wrap" v-if="tab.scheme.bubbleResources.length">
-          <h5>上抛资源</h5>
+          <h5>{{$t('resource.throwUpResource')}}</h5>
           <ul>
             <li v-for="res in tab.scheme.bubbleResources" @click="viewResourceSchemesHandler(res)">
               <i></i>

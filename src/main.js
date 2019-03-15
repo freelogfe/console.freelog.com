@@ -9,6 +9,10 @@ import i18n from './lib/i18n/index'
 import router from './router'
 import store from './store'
 import plugins from './plugins'
+
+import enLocale from 'element-ui/lib/locale/lang/en'
+import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
+
 import './styles/element-ui.less'
 
 sync(store, router, {moduleName: 'route'})
@@ -26,16 +30,18 @@ function initEnv() {
   })
 
   win.g_freelog.Env.qiOrigin = win.location.protocol + '//qi.' + mainDomain
+  document.body.classList.add(win.g_freelog.Env.language || navigator.language)
 }
 
 initEnv()
+Vue.use(ElementUI, {locale: i18n.locale === 'en' ? enLocale : zhLocale})
 
-Vue.use(ElementUI)
 Vue.use(plugins)
 Vue.use(VueLazyload, {
   lazyComponent: true,
   observer: true
 })
+
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

@@ -1,3 +1,5 @@
+import i18n from '@/lib/i18n'
+
 const freePolicy = `for public:
   initial:
     active
@@ -15,7 +17,7 @@ const PresentableFreePolicy = `for public:
 export const resource = [
   {
     template: freePolicy,
-    name: '免费策略'
+    name: i18n.t('components.policyEditor.defaultPolicyNames.free')
   },
   {
     template: `for public:
@@ -37,14 +39,14 @@ export const resource = [
     recontractable
     terminate
   `,
-    name: '收费策略'
+    name: i18n.t('components.policyEditor.defaultPolicyNames.charge')
   }
 ]
 
 export const presentable = [
   {
     template: PresentableFreePolicy,
-    name: '免费策略'
+    name: i18n.t('components.policyEditor.defaultPolicyNames.free')
   },
   {
     template: `for public:
@@ -61,7 +63,7 @@ export const presentable = [
     proceed to finish on acct.refunded
   finish:
     terminate`,
-    name: '收费策略'
+    name: i18n.t('components.policyEditor.defaultPolicyNames.charge')
   }
 ]
 

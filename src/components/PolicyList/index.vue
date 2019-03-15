@@ -6,7 +6,7 @@
                    @delete="deletePolicyHandler"></policy-editor>
     <div>
       <el-button type="text" class="add-new-policy-btn" @click="addNewPolicyHandler">
-        <span><i class="el-icon-plus"></i>添加新策略<i class="dot solid" v-if="!policyList.length"></i></span>
+        <span><i class="el-icon-plus"></i>{{$t('components.policyList.addPolicy')}}<i class="dot solid" v-if="!policyList.length"></i></span>
       </el-button>
     </div>
   </div>
@@ -49,7 +49,7 @@
       },
       addNewPolicyHandler() {
         this.policyList.push({
-          policyName: '未命名策略',
+          policyName: this.$t('components.policyList.unnamedPolicy'),
           policyText: '',
           // disabled: false
         })
