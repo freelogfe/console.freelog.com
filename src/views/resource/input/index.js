@@ -399,6 +399,9 @@ export default {
 
       if (this.deps.length) {
         uploadData.dependencies = this.deps.map(res => res.resourceId)
+      } else if (metaData.dependencies) {
+        uploadData.dependencies = metaData.dependencies
+        delete metaData.dependencies
       }
 
       uploadData.meta = metaData
