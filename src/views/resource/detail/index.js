@@ -238,7 +238,7 @@ export default {
         const promises = selectedNodes.map(nodeId => this.createPresentable(nodeId))
 
         Promise.all(promises).then(() => {
-          this.$message.success(this.$18n.t('resourceDetailView.addPresentableSuccessText'))
+          this.$message.success(this.$i18n.t('resourceDetailView.addPresentableSuccessText'))
         }).catch(this.$error.showErrorMessage)
       }
     },
