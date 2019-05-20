@@ -128,8 +128,8 @@ export default {
         this.$emit('save', this.policy)
       }
     },
-    deletePolicyHandler() {
-      this.$emit('delete', this.policy)
+    cancelPolicyHandler() {
+      this.$emit('cancel', this.policy)
     },
     savePolicyHandler() {
       this.$emit('save', this.policy)

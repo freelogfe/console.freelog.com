@@ -62,7 +62,7 @@ export default {
     updateSuccess: 'successfully updated',
     createSuccess: 'successfully created',
     cancelQuestion: 'do you like to cancel resource creation?',
-    createDoneText: 'save & next',
+    createDoneText: 'save',
     resourceId: 'resource ID',
     name: 'resource name',
     type: 'resource type',
@@ -171,14 +171,20 @@ export default {
   listResourceItem: {
     lastUpdateText: 'Last updated: ',
     updateInfo: 'Update basic information',
+    detail: 'detail',
     schemes: 'Management authorization schemes',
     state: 'status: '
+  },
+
+  listReleaseItem: {
+    manageDetail: 'Management Detail',
+    detail: 'detail',
   },
 
   search: {
     noFavorResources: 'no favorite resources',
     addBtn: 'add',
-    placeholder: 'Enter the resource name or resource ID',
+    placeholder: 'Enter the release name',
     searchTitle: 'search resource',
     favorTitle: 'favorite resources'
   },
@@ -186,7 +192,7 @@ export default {
   routes: {
     accountSetting: 'Account Setting',
     nodes: 'Nodes',
-    resourceMarket: 'Resource Market',
+    releaseMarket: 'Release Market',
     presentableDetail: 'Presentable Detail',
     nodesSystem: 'Nodes System',
     createNode: 'Create Node',
@@ -200,9 +206,15 @@ export default {
     createResource: 'Create Resource',
     updateResource: 'Update Resource',
     myResources: 'My Resources',
+    myReleases: 'My Releases',
     resourceDetail: 'Resource Detail',
     createResourcePolicyTpl: 'Create Resource Policy Template',
-    resourcePolicyTplDetail: 'Resource Policy Template Detail'
+    resourcePolicyTplDetail: 'Resource Policy Template Detail',
+    createRelease: '',
+    releaseDetail: '',
+    releaseSystem: '',
+    releaseEditor: '',
+    releaseAdd: ''
   },
 
   axios: {
@@ -274,7 +286,7 @@ export default {
       dialogTitles: ['Contract switching', 'Signing confirmation'],
       selectedSchemesTitle: 'Selected authorization scheme',
       selectTip: 'Please select the appropriate authorization scheme and policy...',
-      unhandledListTitle: 'Unprocessed resources'
+      unhandledListTitle: 'Upcast Releases'
     },
 
     contractDetail: {

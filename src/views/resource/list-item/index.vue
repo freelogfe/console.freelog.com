@@ -10,25 +10,25 @@
         <div class="res-intro-detail">
           <div class="res-intro-bd">
             <p>
-              <span class="res-name" @click="gotoDetail(resource)">{{resource.resourceName}}</span>
+              <span class="res-name" @click="gotoDetail(resource)">{{resource.aliasName}}</span>
               <span class="res-type">#{{resource.resourceType}}</span>
             </p>
             <p class="res-id">{{resource.resourceId}}</p>
           </div>
           <div class="res-intro-ft">
-            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.createDate|fmtDate}}</span>
+            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.updateDate|fmtDate}}</span>
             <!--<span style="margin-left: 6px" v-if="resource._statusInfo">状态：{{resource._statusInfo.desc}}</span>-->
           </div>
         </div>
 
-        <router-link :to="_editInfoLink"
-                     v-if="_editInfoLink" class="res-nav-btn">{{$t('listResourceItem.updateInfo')}}
+        <router-link :to="_detailInfoLink"
+                     v-if="_detailInfoLink" class="res-nav-btn">{{$t('listResourceItem.detail')}}
         </router-link>
-        <router-link :to="_editSchemeLink"
-                     v-if="_editSchemeLink" class="res-nav-btn">{{$t('listResourceItem.schemes')}}
-        </router-link>
+        <!--<router-link :to="_editSchemeLink"-->
+                     <!--v-if="_editSchemeLink" class="res-nav-btn">{{$t('listResourceItem.schemes')}}-->
+        <!--</router-link>-->
 
-        <ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>
+        <!--<ResourceButton class="res-act-btn" :resource="resource"></ResourceButton>-->
       </template>
       <template v-else>
         <div class="simple-res-view" @click="gotoDetail(resource)">
@@ -37,7 +37,7 @@
             <span class="res-type">#{{resource.resourceType}}</span>
           </div>
           <div class="res-intro-ft">
-            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.createDate|fmtDate}}</span>
+            <span class="update-time">{{$t('listResourceItem.lastUpdateText')}}{{resource.updateDate|fmtDate}}</span>
             <span style="margin-left: 6px" v-if="resource._statusInfo">{{$t('listResourceItem.state')}}{{resource._statusInfo.desc}}</span>
           </div>
         </div>
@@ -80,9 +80,9 @@
       previewImage() {
         return (this.resource.previewImages && this.resource.previewImages[0]) || ''
       },
-      _editInfoLink(){
-        var editLink = `/resource/edit/${this.resource.resourceId}`
-        return this.resource.resourceId? `${editLink}?view=edit` : ''
+      _detailInfoLink(){
+        var editLink = `/resource/detail/${this.resource.resourceId}`
+        return this.resource.resourceId? `${editLink}` : ''
       },
       _editSchemeLink(){
         return this.resource.resourceId? `/resource/edit/${this.resource.resourceId}`: ''

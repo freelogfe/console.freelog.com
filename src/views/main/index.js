@@ -1,6 +1,6 @@
 import LazyListView from '@/components/LazyListView/index.vue'
 import { loadAuthSchemes } from '@/data/scheme/loader'
-import ListItem from './resource.vue'
+import ListItem from './release.vue'
 
 export default {
   name: 'index-main-view',
@@ -46,7 +46,7 @@ export default {
         keyWords: encodeURIComponent(this.query)
       })
     },
-    fetchData(page) {
+    fetchReleaseData(page) {
       const query = {
         page
       }
@@ -54,25 +54,25 @@ export default {
         query.keyWords = this.query
       }
       return this.loader(query).then((data) => {
-        const resources = data.dataList
-        data.canLoadMore = !(resources.length < data.pageSize)
+        const releases = data.dataList
+        data.canLoadMore = !(releases.length < data.pageSize)
 
-        if (resources && resources.length) {
-          const resourcesMap = {}
-          const rids = resources.map((r) => {
-            resourcesMap[r.resourceId] = r
+        if (releases && releases.length) {
+          const releasesMap = {}
+          const rids = releases.map((r) => {
+            releasesMap[r.resourceId] = r
             return r.resourceId
           })
 
-          return loadAuthSchemes({ resourceIds: rids, authSchemeStatus: 1 }).then((schemes) => {
-            schemes.forEach((scheme) => {
-              const rid = scheme.resourceId
-              resourcesMap[rid].schemes = resourcesMap[rid].schemes || []
-              resourcesMap[rid].schemes.push(scheme)
-            })
-            data.dataList = Object.values(resourcesMap)
-            return data
-          })
+          // return loadAuthSchemes({ resourceIds: rids, authSchemeStatus: 1 }).then((schemes) => {
+          //   schemes.forEach((scheme) => {
+          //     const rid = scheme.resourceId
+          //     releasesMap[rid].schemes = releasesMap[rid].schemes || []
+          //     releasesMap[rid].schemes.push(scheme)
+          //   })
+          //   data.dataList = Object.values(releasesMap)
+          //   return data
+          // })
         }
 
         return data
@@ -87,7 +87,8 @@ export default {
           params: param
         }
       }
-      return this.$services.allResources.get(param || {}).then(res => res.getData())
+      return this.$services.ReleaseService.get(param || {}).then(res => res.getData())
+      // return this.$services.allResources.get(param || {}).then(res => res.getData())
     }
   }
 }

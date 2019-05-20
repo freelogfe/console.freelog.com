@@ -23,18 +23,26 @@
         </el-tooltip>
       </li>
       <li class="ls-item">
-        <el-tooltip effect="dark" :content="$t('routes.resourceMarket')" placement="right" :disabled="!isMini">
+        <el-tooltip effect="dark" :content="$t('routes.releaseMarket')" placement="right" :disabled="!isMini">
           <router-link to="/" class="nav-link ls-nav-link">
             <i class="el-icon-fa-th"></i>
-            <span>{{$t('routes.resourceMarket')}}</span>
+            <span>{{$t('routes.releaseMarket')}}</span>
           </router-link>
         </el-tooltip>
       </li>
       <li class="ls-item">
         <el-tooltip effect="dark" :content="$t('routes.myResources')" placement="right" :disabled="!isMini">
           <router-link to="/resource/list" class="nav-link ls-nav-link">
-            <i class="el-icon-fa-list"></i>
+            <i class="el-icon-menu"></i>
             <span>{{$t('routes.myResources')}}</span>
+          </router-link>
+        </el-tooltip>
+      </li>
+      <li class="ls-item">
+        <el-tooltip effect="dark" :content="$t('routes.myReleases')" placement="right" :disabled="!isMini">
+          <router-link to="/release/list" class="nav-link ls-nav-link">
+            <i class="el-icon-fa-list"></i>
+            <span>{{$t('routes.myReleases')}}</span>
           </router-link>
         </el-tooltip>
       </li>

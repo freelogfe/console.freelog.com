@@ -11,6 +11,7 @@ import Views from '@/views/index'
 import store from '../store'
 import nodeRoute from './node'
 import resourceRoute from './resource'
+import releaseRoute from './release'
 import {gotoLogin} from "../lib/utils"
 import i18n from '../lib/i18n'
 
@@ -41,7 +42,7 @@ const router = new Router({
       path: '/',
       meta: {title: i18n.t('resource.market')},
       component: Views.layout,
-      children: [resourceRoute, nodeRoute, {
+      children: [resourceRoute, nodeRoute, releaseRoute, {
         path: 'about',
         hidden: true,
         meta: {

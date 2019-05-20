@@ -5,6 +5,7 @@
 import PolicyTplViews from '@/views/policy-tpl'
 import ResourceViews from '@/views/resource'
 import NodeViews from '@/views/node'
+import ReleaseViews from '@/views/release'
 // import GroupViews from '@/views/group'
 
 const container = resolve => require.ensure([], () => resolve(require('@/views/layout/container.vue')), 'common')
@@ -24,7 +25,8 @@ export const views = {
   mainView,
   userView,
   ...ResourceViews,
-  ...NodeViews
+  ...NodeViews,
+  ...ReleaseViews
 }
 
 export default {
@@ -38,5 +40,6 @@ export default {
   ...ResourceViews,
   ...NodeViews,
   // ...GroupViews,
-  ...PolicyTplViews
+  ...PolicyTplViews,
+  ...ReleaseViews
 }

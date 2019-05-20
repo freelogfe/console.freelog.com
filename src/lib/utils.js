@@ -106,11 +106,13 @@ function isSafeUrl(url) {
 
 function gotoLogin(redirect) {
   const loginPath = '/login'
+  console.log(' --- ',  loginPath, window.location.pathname)
   if (window.location.pathname === loginPath) {
     return
   }
 
   let loginUrl = `${window.location.origin.replace('console', 'www')}${loginPath}`
+
   if (isSafeUrl(redirect)) {
     loginUrl += `?redirect=${encodeURIComponent(redirect)}`
   }

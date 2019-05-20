@@ -11,7 +11,7 @@ import './styles/reset.css'
 import './styles/global.less'
 
 export default {
-  name: 'app'
+  name: 'app',
 }
 </script>
 

@@ -7,6 +7,7 @@ import UserService from './user'
 
 import PolicyService from './policy'
 import ResourceService from './resource'
+import ReleaseService from './release'
 import AllResourcesService from './g_resources'
 import PresentablesService from './presentables'
 import ContractService from './contract'
@@ -29,6 +30,7 @@ export {
   UserService,
   PolicyService,
   ResourceService,
+  ReleaseService,
   AllResourcesService,
   PresentablesService,
   NodesService,

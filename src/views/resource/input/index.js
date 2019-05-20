@@ -122,10 +122,10 @@ export default {
       return arr.join('.')
     },
     uploadPreviewImageAction() {
-      return `//${this.apiHostName}/v1/resources/uploadPreviewImage`
+      return `//${this.apiHostName}/v1/resources/temporaryFiles/uploadPreviewImage`
     },
     uploadResourceFileAction() {
-      return `//${this.apiHostName}/v1/resources/uploadResourceFile`
+      return `//${this.apiHostName}/v1/resources/temporaryFiles/uploadResourceFile`
     },
     showCreatorInputItem() {
       return this.editMode === EDIT_MODES.creator
@@ -212,6 +212,7 @@ export default {
         this.$emit('uploadEnd', {error: res.msg})
       } else {
         this.uploaderStates.resource.sha1 = res.data.sha1
+        this.uploaderStates.resource.uploadFileId = res.data.uploadFileId
         this.uploaderStates.resource.isUploaded = true
         this.uploaderStates.resource.percentage = 100
         this.autoSetFormData(file)
@@ -385,6 +386,9 @@ export default {
       if (this.editMode === EDIT_MODES.creator) {
         keys = keys.concat(INPUT_KEYS)
         uploadData.sha1 = reourceUploader.sha1
+        uploadData.aliasName = formData.resourceName
+        uploadData.uploadFileId = reourceUploader.uploadFileId
+
         if (formData.resourceType === RESOURCE_TYPES.widget) {
           uploadData.widgetInfo = {
             widgetName: formData.widgetName,
