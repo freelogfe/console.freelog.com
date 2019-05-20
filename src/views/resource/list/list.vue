@@ -131,7 +131,8 @@
             param = {
               params: Object.assign({
                 pageSize: 10,
-                page: 1
+                page: 1,
+                isSelf: 1
               }, param)
             }
           }

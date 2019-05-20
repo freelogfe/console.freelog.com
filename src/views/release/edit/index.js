@@ -13,10 +13,13 @@ export default {
   data() {
     return {
       release: null,
+      releaseScheme: null,
       targetResourceDetail: null,
       vTabActiveName: 'scheme',
+      selectedVersion: '',
       resourceDialogVisible: false,
       depReleasesList: [],
+      releasesTreeData: [],
       searchInput: '',
       searchResources: [
         // { resourceName: '资源1234', resourceType: 'markdown', updateDate: '2019/09/21' },
@@ -40,8 +43,10 @@ export default {
         .then(res => {
           if(res.errcode === 0) {
             this.release = res.data
+            this.selectedVersion = this.release.latestVersion.version
             this.targetResourceDetail = res.data.resourceInfo
             this.formatReleaseData()
+            this.fetchReleaseScheme()
           }
         })
     },
@@ -82,6 +87,18 @@ export default {
         }
         return data
       })
+    },
+    // 获取 发行方案
+    fetchReleaseScheme() {
+      const { releaseId, latestVersion: { version } } = this.release
+      this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
+        .then(res => res.data)
+        .then(res => {
+          if(res.errcode === 0) {
+            this.releaseScheme = res.data
+          }
+        })
+        .catch(e => this.$error.showErrorMessage('授权方案获取失败！'))
     },
   },
   created() {

@@ -46,7 +46,7 @@
           <div class="r-d-w-p-upcast-releases" v-if="release.baseUpcastReleases.length">
             <h3>上抛发行策略</h3>
             <ul>
-              <li class="r-d-w-p-u-r-item" v-for="(r, index) in baseUpcastReleases">
+              <li class="r-d-w-p-u-r-item" v-for="(r, index) in release.baseUpcastReleases">
                 <div class="r-item-name">{{r.releaseName}}</div>
                 <div class="release-policy-item" v-for="(p, index) in r.policyList">
                   <el-radio :label="p.policyName" size="medium">{{p.policyName}}</el-radio>

@@ -1,5 +1,5 @@
 <template>
-  <div class="scheme-manage-wrapper">
+  <div class="scheme-manage-wrapper" v-loading="isLoading">
     <div class="s-m-w-tags">
       <span v-show="type !== 'edit'"><i class="no-resolve"></i>未解决</span>
       <span><i class="resolved"></i>已解决</span>

@@ -8,7 +8,13 @@ export default {
     SchemeFloatBall
   },
   props:  {
+    type: {
+      type: String,
+      default: 'create'
+    },
     release: Object,
+    releaseScheme: Object,
+    releasesTreeData: Array,
     depReleases: {
       type: Array,
       default: []
@@ -17,23 +23,20 @@ export default {
       type: Array,
       default: []
     },
-    type: {
-      type: String,
-      default: 'create'
-    }
   },
   data() {
     return {
+      isLoading: false,
       activeSelectedIndex: 0,
       isSelectedReleaesUpcast: false,
       depReleasesList: [],
       upcastDepReleasesIds: [],
-      upcastDepReleasesMap: {},
+      upcastDepReleasesMap: null,
       targetReleases: [],
       tmpSelectedPolicies: [],
       selectedAuthSchemes: [],
       selectedRelease: null,
-      releaseScheme: null
+      // releaseScheme: null
     }
   },
   computed: {
@@ -51,43 +54,12 @@ export default {
       return ["releaseId", "resourceType", "releaseName", "latestVersion", "baseUpcastReleases", "policies", "updateDate"].join(',')
     },
   },
-  watch: {},
+  watch: {
+    releaseScheme() {
+      this.getTargetReleases()
+    }
+  },
   methods: {
-    // 获取 发行方案
-    fetchReleaseScheme() {
-      if(this.release) {
-        const { releaseId, latestVersion: { version } } = this.release
-        this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
-          .then(res => res.data)
-          .then(res => {
-            if(res.errcode === 0) {
-              this.releaseScheme = res.data
-              this.resolveReleaseScheme()
-              this.resolveReleases()
-            }
-          })
-      }else {
-        this.resolveReleases()
-      }
-    },
-    resolveReleaseScheme() {
-      const { resolveReleases } = this.releaseScheme
-      for(let i = 0; i < resolveReleases.length; i++) {
-        const { contracts, releaseId } = resolveReleases[i]
-        const release = this.depReleasesMap[releaseId] || this.upcastDepReleasesMap[releaseId]
-        const pIds = contracts.map(c => c.policyId)
-        if(release) {
-          release.resolveStatus = 'resolved'
-          release.policies.forEach(p => {
-            if(pIds.indexOf(p.policyId) > -1) {
-              p.isSelected = true
-              release.selectedPolicies = release.selectedPolicies || []
-              release.selectedPolicies.push(p)
-            }
-          })
-        }
-      }
-    },
     fetchReleases(ids) {
       return this.$services.ReleaseService.get(`list?releaseIds=${ids}&projection=${this.projection}`)
         .then(res => res.data)
@@ -107,41 +79,77 @@ export default {
             if(tmpArr.length > 0) {
               this.fetchUpcastDepReleases()
             }else {
-              this.fetchReleaseScheme()
+              this.upcastDepReleasesMap = {}
+              this.getTargetReleases()
             }
           }
         })
+        .catch(e => this.isLoading = false)
     },
     // 获取 依赖发行的上抛发行
     fetchUpcastDepReleases() {
-      this.fetchReleases(this.upcastDepReleasesIds)
-        .then(res => {
-          if(res.errcode === 0) {
-            const arr = res.data || []
-            for(let i = 0; i < arr.length; i++) {
-              let releaseId = arr[i].releaseId
-              this.upcastDepReleasesMap[releaseId] = arr[i]
+      if(this.upcastDepReleasesIds.length) {
+        this.fetchReleases(this.upcastDepReleasesIds.join(','))
+          .then(res => {
+            if(res.errcode === 0) {
+              const arr = res.data || []
+              this.upcastDepReleasesMap = {}
+              for(let i = 0; i < arr.length; i++) {
+                let releaseId = arr[i].releaseId
+                this.upcastDepReleasesMap[releaseId] = arr[i]
+              }
+              this.getTargetReleases()
             }
-            this.fetchReleaseScheme()
-          }
-        })
-    },
-    resolveReleases() {
-      const fReleases = []
-      for(let i = 0; i < this.depReleasesList.length; i++) {
-        let rItem = this.depReleasesList[i]
-        rItem.isSecondLevel = false
-        fReleases.push(this.formatRelease(rItem))
-        rItem.baseUpcastReleases.forEach(item => {
-          const tmpRelease = this.upcastDepReleasesMap[item.releaseId]
-          if(tmpRelease) {
-            tmpRelease.isSecondLevel = true
-            fReleases.push(this.formatRelease(tmpRelease))
-          }
-        })
+          })
+          .catch(e => this.isLoading = false)
       }
-      this.targetReleases = fReleases
-      this.resetData()
+
+    },
+    getTargetReleases() {
+      if(this.upcastDepReleasesMap) {
+        this.resolveReleaseScheme()
+        const fReleases = []
+        for(let i = 0; i < this.depReleasesList.length; i++) {
+          let rItem = this.depReleasesList[i]
+          rItem.isSecondLevel = false
+          fReleases.push(this.formatRelease(rItem))
+          rItem.baseUpcastReleases.forEach(item => {
+            const tmpRelease = this.upcastDepReleasesMap[item.releaseId]
+            if(tmpRelease) {
+              tmpRelease.isSecondLevel = true
+              fReleases.push(this.formatRelease(tmpRelease))
+            }
+          })
+        }
+        this.targetReleases = fReleases
+        this.releasesTreeData && this.$emit('update:releasesTreeData', this.targetReleases)
+        this.resetData()
+      }
+      this.isLoading = false
+
+    },
+    resolveReleaseScheme() {
+      if(!this.releaseScheme ) return
+
+      const { resolveReleases } = this.releaseScheme
+
+      for(let i = 0; i < resolveReleases.length; i++) {
+        const { contracts, releaseId } = resolveReleases[i]
+        const release = this.depReleasesMap[releaseId] || this.upcastDepReleasesMap[releaseId]
+        const pIds = contracts.map(c => c.policyId)
+
+        if(release) {
+          release.contracts = contracts
+          release.resolveStatus = 'resolved'
+          release.policies.forEach(p => {
+            if(pIds.indexOf(p.policyId) > -1) {
+              p.isSelected = true
+              release.selectedPolicies = release.selectedPolicies || []
+              release.selectedPolicies.push(p)
+            }
+          })
+        }
+      }
     },
     formatRelease(release) {
       if(this.baseUpcastReleasesIDs.indexOf(release.releaseId) !== -1) {
@@ -166,7 +174,7 @@ export default {
         }
         case 'add': {}
         case 'edit': {
-          release.resolveStatus = release.isUpcasted ? 'upcast' : 'no-resolve'
+          release.resolveStatus = release.resolveStatus ? release.resolveStatus : release.isUpcasted ? 'upcast' : 'no-resolve'
           break
         }
         default: {}
@@ -263,7 +271,7 @@ export default {
     },
   },
   created() {
+    this.isLoading = true
     this.fetchDepReleases()
-
   }
 }

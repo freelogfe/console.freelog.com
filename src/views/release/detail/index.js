@@ -22,73 +22,6 @@ export default {
           description: ''
         }
       },
-      releases: [{
-        releaseName: '发行1234',
-        policyList: [{
-          "signAuth": 0,
-          "authorizedObjects": [{
-            "userType": "GROUP",
-            "users": ["PUBLIC"]
-          }],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "免费策略",
-          "status": 1,
-          "policyText": "for public:\n  initial:\n    active\n    recontractable\n    presentable\n    terminate"
-        }, {
-          "signAuth": 0,
-          "authorizedObjects": [{"userType": "GROUP", "users": ["PUBLIC"]}],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "策略123",
-          "status": 1,
-          "policyText": "for public:\n  escrow account acct\n  custom event acceptor.customEvent\n\n  initial:\n    proceed to auth on acct exceed 1 feather\n  auth:\n    presentable\n    active\n    proceed to refund on acct.confiscated\n  refund:\n    proceed to finish on acct.refunded\n  finish:\n    terminate",
-          "policySegmentId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "disabled": false
-        }],
-      }, {
-        releaseName: '发行4321',
-        policyList: [{
-          "signAuth": 0,
-          "authorizedObjects": [{
-            "userType": "GROUP",
-            "users": ["PUBLIC"]
-          }],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "免费策略",
-          "status": 1,
-          "policyText": "for public:\n  initial:\n    active\n    recontractable\n    presentable\n    terminate"
-        }, {
-          "signAuth": 0,
-          "authorizedObjects": [{"userType": "GROUP", "users": ["PUBLIC"]}],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "策略123",
-          "status": 1,
-          "policyText": "for public:\n  escrow account acct\n  custom event acceptor.customEvent\n\n  initial:\n    proceed to auth on acct exceed 1 feather\n  auth:\n    presentable\n    active\n    proceed to refund on acct.confiscated\n  refund:\n    proceed to finish on acct.refunded\n  finish:\n    terminate",
-          "policySegmentId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "disabled": false
-        }],
-      }, {
-        releaseName: '发行4321',
-        policyList: [{
-          "signAuth": 0,
-          "authorizedObjects": [{
-            "userType": "GROUP",
-            "users": ["PUBLIC"]
-          }],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "免费策略",
-          "status": 1,
-          "policyText": "for public:\n  initial:\n    active\n    recontractable\n    presentable\n    terminate"
-        }, {
-          "signAuth": 0,
-          "authorizedObjects": [{"userType": "GROUP", "users": ["PUBLIC"]}],
-          "policyId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "policyName": "策略123",
-          "status": 1,
-          "policyText": "for public:\n  escrow account acct\n  custom event acceptor.customEvent\n\n  initial:\n    proceed to auth on acct exceed 1 feather\n  auth:\n    presentable\n    active\n    proceed to refund on acct.confiscated\n  refund:\n    proceed to finish on acct.refunded\n  finish:\n    terminate",
-          "policySegmentId": "8cefe2f1dcc6dd0bdaadac946cb63dbc",
-          "disabled": false
-        }],
-      }],
       // nodes: [{ nodeName: '节点121' }, { nodeName: '节点321' }],
       compareDialogVisible: false,
       signDialogVisible: false,
@@ -106,6 +39,7 @@ export default {
         .then(res => {
           if(res.errcode === 0) {
             this.release = res.data
+            console.log('----', this.release)
             this.formatReleaseData()
             this.fetchResourceDetail()
           }

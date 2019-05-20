@@ -1,12 +1,12 @@
 <template>
-  <div class="release-editor-contract-wrapper">
+  <div class="release-editor-contract-wrapper" v-loading="isloading" v-if="contracts.length">
     <div class="r-e-c-tags">
       <i class="el-icon-setting success"></i>
       <i class="el-icon-setting error"></i>
       <i class="el-icon-setting warning"></i>
     </div>
-    <div class="r-e-c-tree">
-      <div class="r-e-c-btn">{{contractDetail.contractName}}</div>
+    <div class="r-e-c-tree" v-if="cTreeData">
+      <div class="r-e-c-btn">{{release.releaseName}}</div>
       <div class="r-e-c-tree-cont">
         <contract-tree
                 class="first-level"
@@ -16,194 +16,167 @@
         ></contract-tree>
       </div>
     </div>
-    <div class="release-editor-box" v-show="isShowDetailContract">
-      <div class="r-e-info">
-        <h4>合约详情<i class="el-icon-close" @click="hideDetailContract"></i></h4>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">资源名称</span>
+    <transition name="fade">
+      <div class="release-editor-box" v-if="contractDetail" v-show="isShowDetailContract">
+        <div class="r-e-info">
+          <h4>合约详情<i class="el-icon-close" @click="hideDetailContract"></i></h4>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">合约名称</span>{{contractDetail.contractName}}
+          </div>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">资源类型</span>
+          </div>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">创建日期</span>{{contractDetail.createDate | fmtDate}}
+          </div>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">合同ID</span>{{contractDetail.contractId}}
+          </div>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">甲方</span>{{contractDetail.partyOne}}
+          </div>
+          <div class="r-e-info-row">
+            <span class="r-e-i-label">乙方</span>{{contractDetail.partyTwo}}
+          </div>
         </div>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">资源类型</span>
-        </div>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">创建日期</span>
-        </div>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">合同ID</span>
-        </div>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">甲方</span>
-        </div>
-        <div class="r-e-info-row">
-          <span class="r-e-i-label">乙方</span>
+        <div class="r-e-c-detail">
+          <h4>授权策略</h4>
+          <div class="r-e-c-cont">
+            <contract-detail
+                    class="contract-policy-content"
+                    :contract.sync="contractDetail"
+                    :policyText="contractDetail.contractClause.policyText"
+                    @update-contract="updateContractAfterEvent"
+            ></contract-detail>
+          </div>
         </div>
       </div>
-      <div class="r-e-c-detail">
-        <h4>授权策略</h4>
-        <div class="r-e-c-cont">
-          <contract-detail
-                  class="contract-policy-content"
-                  :contract.sync="contractDetail"
-                  :policyText="contractDetail.contractClause.policyText"
-                  @update-contract="updateContractAfterEvent"
-          ></contract-detail>
-        </div>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
   import { ContractDetail } from '@freelog/freelog-ui-contract'
   import ContractTree from './contract-tree.vue'
+  import { RESOURCE_STATUS } from '@/config/contract'
   export default {
     name: 'release-editor-contract',
     components: {
       ContractDetail, ContractTree
     },
-    props: {},
+    props: {
+      release: Object,
+      releaseScheme: Object,
+      releasesTreeData: {
+        type: Array,
+        default: []
+      }
+    },
     data() {
       return {
         isShowDetailContract: false,
-        cTreeData: [
-          {
-            label: '一级 1',
-            key: 'level',
-            isShowChildren: false,
-            children: [
-              {
-                label: '二级 1-1',
-                key: 'level',
-                isShowChildren: false,
-                children: [{
-                  label: '三级 1-1-1',
-                  key: 'level',
-                  isShowChildren: false,
-                  children: [{
-                    label: '三级 1-1-1',
-                    key: 'level',
-                    isShowChildren: false,
-                    children: [{
-                      label: '三级 1-1-1',
-                      key: 'level',
-                    }]
-                  }]
-                }]
-              }
-            ]
-          },
-          {
-            label: '一级 2',
-            key: 'level',
-            isShowChildren: false,
-            children: [
-              {
-                label: '二级 2-1',
-                key: 'level',
-                isShowChildren: true,
-                children: [{
-                  label: '三级 2-1-1',
-                  key: 'level',
-                },{
-                  label: '三级 2-1-2',
-                  key: 'level',
-                }]
-              }, {
-                label: '二级 2-2',
-                key: 'level',
-                isShowChildren: true,
-                children: [{
-                  label: '三级 2-2-1',
-                  key: 'level'
-                }]
-              }
-            ]
-          },
-        ],
-        contractDetail: {
-          "contractId": "5cd3f06fbe3a7d003373d0d0",
-          "contractClause": {
-            "authorizedObjects": [{"userType": "GROUP", "users": ["PUBLIC"]}],
-            "currentFsmState": "initial",
-            "policyText": "for public:\n  escrow account acct\n  custom event acceptor.customEvent\n\n  initial:\n    proceed to auth on acct exceed 10 feather\n  auth:\n    presentable\n    active\n    proceed to refund on acct.confiscated\n  refund:\n    proceed to finish on acct.refunded\n  finish:\n    terminate",
-            "policySegmentId": "0c6c51d9f4a6b6a73c3ce92edef5b67b",
-            "fsmDeclarations": {
-              "acct": {
-                "type": "escrowaccount",
-                "declareType": "contractAccount",
-                "currencyType": 1,
-                "accountId": "feth816fca55bd1"
-              }, "customEvent": {"type": "acceptor", "declareType": "customEvent"}
-            },
-            "fsmStates": {
-              "initial": {
-                "authorization": [],
-                "transition": {
-                  "auth": {
-                    "code": "S210",
-                    "params": {
-                      "contractAccountName": "acct",
-                      "amount": {"type": "literal", "literal": "10"},
-                      "currencyUnit": "feather"
-                    },
-                    "eventId": "1cab7f78ff7547df8f5d3893d8095cac"
-                  }
-                }
-              },
-              "auth": {
-                "authorization": ["presentable", "active"],
-                "transition": {
-                  "refund": {
-                    "code": "S211",
-                    "params": {"contractAccountName": "acct"},
-                    "eventId": "cb15a183d18f453da6f78ba48f747610"
-                  }
-                }
-              },
-              "refund": {
-                "authorization": [],
-                "transition": {
-                  "finish": {
-                    "code": "S212",
-                    "params": {"contractAccountName": "acct"},
-                    "eventId": "7d34e2153da94b06a69aa556b399cce3"
-                  }
-                }
-              },
-              "finish": {"authorization": [], "transition": {"terminate": null}}
-            }
-          },
-          "contractName": "markdown-parser",
-          "remark": "",
-          "isDefault": 1,
-          "isConsumptive": 0,
-          "status": 2,
-          "targetId": "5c40385d4d144e0029f02aff",
-          "segmentId": "0c6c51d9f4a6b6a73c3ce92edef5b67b",
-          "partyOneUserId": 10025,
-          "partyTwoUserId": 10032,
-          "partyOne": "5c40385d4d144e0029f02aff",
-          "partyTwo": "10028",
-          "resourceId": "dde4ef349881285fb545b038e471e0c519e4c200",
-          "contractType": 2,
-          "createDate": "2019-05-09T09:18:39.336Z",
-          "updateDate": "2019-05-09T09:18:39.345Z"
-        }
+        isloading: false,
+        contractsMap: {},
+        contracts: [],
+        cTreeData: [],
+        contractDetail: null
+      }
+    },
+    computed: {
+    },
+    watch: {
+      releasesTreeData() {
+        this.fetchContractsDetail()
+        this.reResolveTreeData()
+      },
+      contracts() {
+        this.contracts.forEach(c => {
+          this.contractsMap[c.contractId] = c
+          this.contractDetail = c
+        })
       }
     },
     methods: {
+      fetchContractsDetail() {
+        this.isLoading = true
+        const rtData = this.releasesTreeData
+        var ids = []
+        for(let i = 0; i < rtData.length; i++) {
+          if(rtData[i].contracts) {
+            ids = [ ...ids, ...rtData[i].contracts.map(c => c.contractId) ]
+          }
+        }
+        if(ids.length > 0) {
+          this.$services.ContractRecords.get({
+            params: {
+              contractIds: ids.join(',')
+            }
+          })
+            .then(res => res.data)
+            .then(res => {
+              if(res.errcode === 0) {
+                this.contracts = res.data
+              }
+              this.isLoading = false
+            })
+            .catch(e => this.isLoading = false)
+        }
+      },
+      reResolveTreeData() {
+        const tmpTreeData = []
+        const rtData = this.releasesTreeData
+
+        var key = 'tree-node-i-'
+        let firstLevelNodeIndex = -1, secondLevelNodeIndex = 0
+        for(let i = 0; i < rtData.length; i++) {
+          let tmpNode = {
+            key,
+            label: rtData[i].releaseName,
+            isShowChildren: true,
+            children: []
+          }
+          if(rtData[i].isSecondLevel) {
+            tmpNode.key = tmpNode.key + '-' + secondLevelNodeIndex
+            secondLevelNodeIndex++
+            tmpTreeData[firstLevelNodeIndex].children.push(tmpNode)
+          }else {
+            firstLevelNodeIndex++
+            secondLevelNodeIndex = 0
+            tmpTreeData[firstLevelNodeIndex] = tmpNode
+          }
+        }
+        this.cTreeData = tmpTreeData
+        console.log(JSON.parse(JSON.stringify(this.cTreeData)))
+      },
       updateContractAfterEvent() {},
       showDetailContract() {
         this.isShowDetailContract = true
+
       },
       hideDetailContract() {
         this.isShowDetailContract = false
       }
+    },
+    created() {
+
     }
   }
 </script>
 
 <style lang="less" type="text/less" scoped>
+
+
+  .fade-enter-active {
+    transition: all .5s ease;
+  }
+  .fade-leave-active {
+    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .fade-enter, .fade-leave-to {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+
   .release-editor-contract-wrapper {
     position: relative;
     min-height: 570px; padding: 12px;
@@ -230,11 +203,11 @@
 
       .r-e-c-tree-cont {
         position: relative;
-        margin-left: 90px; margin-top: 20px; padding-left: 30px; z-index: 10;
+        margin-left: 90px; margin-top: 40px; padding-left: 30px; z-index: 10;
         &:before {
           content: '';
-          position: absolute; top: -20px; left: 0; z-index: 10;
-          width: 1px; height: 42px; background-color: #BABABA;
+          position: absolute; top: -40px; left: 0; z-index: 10;
+          width: 1px; height: 72px; background-color: #BABABA;
         }
       }
     }

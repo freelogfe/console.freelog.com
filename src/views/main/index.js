@@ -54,6 +54,7 @@ export default {
         query.keyWords = this.query
       }
       return this.loader(query).then((data) => {
+        data.dataList = data.dataList.filter(r => r.policies.length > 0)
         const releases = data.dataList
         data.canLoadMore = !(releases.length < data.pageSize)
 

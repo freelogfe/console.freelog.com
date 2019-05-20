@@ -19,7 +19,7 @@
         </template>
         <div class="r-e-w-v-box" v-else>
           当前版本：
-          <el-select size="small" v-model="release.resourceVersions[0].version">
+          <el-select size="small" v-model="selectedVersion">
             <el-option
                     v-for="item in release.resourceVersions"
                     :key="item.value"
@@ -36,10 +36,16 @@
                         :release="release"
                         :baseUpcastReleases="release.baseUpcastReleases"
                         :depReleases="resourceDependencies"
+                        :releasesTreeData.sync="releasesTreeData"
+                        :releaseScheme="releaseScheme"
                 ></scheme-manage>
               </el-tab-pane>
               <el-tab-pane label="合约" name="contract">
-                <release-editor-contract></release-editor-contract>
+                <release-editor-contract
+                        :release="release"
+                        :releaseScheme="releaseScheme"
+                        :releasesTreeData="releasesTreeData"
+                ></release-editor-contract>
               </el-tab-pane>
             </el-tabs>
           </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="tree-node" :class="[]">
-    <div class="node-content success">
+    <div class="node-content warning">
       <div class="node-key" @click="tapNodeKey">
         <i class="el-icon-tickets">
           <i class="el-icon-setting"></i>
@@ -32,7 +32,7 @@
         data.isShowChildren = !data.isShowChildren
       },
       tapNodeKey() {
-        this.$emit('show-contract')
+        this.$emit('show-contract', )
       }
     },
   }
@@ -58,7 +58,7 @@
 
     &.first-level {
       padding-bottom: 0;
-      &:first-child:after {
+      &:first-child:before {
         width: 30px;
       }
     }
@@ -70,13 +70,9 @@
       border-bottom-left-radius: 6px;
     }
     &:first-child:before {
-      top: 21px;
-    }
-
-    &:first-child:after {
       content: '';
-      position: absolute; top: 21px; right: 100%; z-index: 0;
-      width: 60px; height: 1px;
+      position: absolute; top: 31px; right: 100%; z-index: 0;
+      width: 45px; height: 1px;
       background-color: #BABABA;
     }
 
@@ -86,46 +82,47 @@
       font-size: 20px; z-index: 5;
 
       &.success {
-        .node-key { border-color: #50C190; box-shadow: 0 0 5px rgba(80, 193, 144, .7); }
+        .node-key { border-color: #50C190; box-shadow: 0 0 5px #50C190B3; }
         .el-icon-setting { color: #50C190; }
       }
+      &.error {
+        .node-key { border-color: #E35A5F; box-shadow: 0 0 5px #E35A5FB3; }
+        .el-icon-setting { color: #E35A5F; }
+      }
+      &.warning {
+        .node-key { border-color: #E6A232; box-shadow: 0 0 5px #E6A232B3; }
+        .el-icon-setting { color: #E6A232; }
+      }
+
       .node-key {
         position: relative; float: left; cursor: pointer;
-        width: 42px; height: 42px; border: 1px solid #ccc; border-radius: 50%;
-        line-height: 42px; font-size: 12px; text-align: center; background-color: #fff;
-        .el-icon-tickets { position: relative; margin-top: 9px; font-size: 24px; }
+        width: 60px; height: 60px; border: 1px solid #ccc; border-radius: 50%;
+        line-height: 60px; font-size: 12px; text-align: center; background-color: #fff;
+        .el-icon-tickets { position: relative; margin-top: 12px; font-size: 36px; }
         .el-icon-setting {
           position: absolute; bottom: 0; left: 0; z-index: 1;
           transform: translate(-6%, 12%);
-          font-size: 16px; font-weight: bold; background-color: #fff;
+          font-size: 22px; font-weight: bold; background-color: #fff;
         }
       }
-      .node-key:before {
+      .node-key:after {
         content: '';
-        position: absolute; left: 100%; top: 50%; z-index: 0;
-        width: 42px; height: 1px;
+        position: absolute; left: 100%; top: 29px; z-index: 0;
+        width: 41px; height: 1px;
         background-color: #BABABA;
       }
       .node-label {
-        float: left;
-        width: 120px; margin-left: 40px; border: 1px solid #ccc; border-radius: 6px;
-        font-size: 14px; line-height: 42px; text-align: center; background-color: #fff; cursor: pointer;
+        float: left; box-sizing: border-box;
+        display: flex; justify-content: center; align-items: center;
+        width: 160px; height: 60px; padding: 2px 6px; margin-left: 40px; border: 1px solid #ccc; border-radius: 6px;
+        font-size: 14px; text-align: center; background-color: #fff; cursor: pointer;
       }
     }
 
     .children-box {
-      position: relative; padding-left: 60px;
+      position: relative; padding-left: 45px;
       /*padding-top: 48px; transform: translate(100%, -48px);*/
     }
   }
-
-
-
-  /*.children-box:before {*/
-  /*content: '';*/
-  /*position: absolute; top: 21px; left: 0; z-index: 0;*/
-  /*width: 60px; height: 1px;*/
-  /*background-color: red;*/
-  /*}*/
 
 </style>
