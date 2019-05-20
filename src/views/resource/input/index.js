@@ -1,5 +1,5 @@
-import {storage} from '@/lib'
-import {RESOURCE_TYPES, RESOURCE_STATUS_MAP} from '@/config/resource'
+import { storage } from '@/lib'
+import { RESOURCE_TYPES, RESOURCE_STATUS_MAP } from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
@@ -21,7 +21,7 @@ export default {
       const NAME_REG = /^[a-z]{1}[0-9a-z_]{2,19}[0-9a-z]{1}$/
 
       if (!NAME_REG.test(value)) {
-        callback(new Error(this.$t('resourceEditView.resourceTypeRule',{rule: NAME_REG.toString()})))
+        callback(new Error(this.$t('resourceEditView.resourceTypeRule', { rule: NAME_REG.toString() })))
       } else {
         callback()
       }
@@ -52,25 +52,25 @@ export default {
     return {
       ResourceTypes: RESOURCE_TYPES,
       rules: {
-        resourceName: [{required: true, message: this.$t('resourceEditView.inputNameTip'), trigger: 'blur'}],
+        resourceName: [{ required: true, message: this.$t('resourceEditView.inputNameTip'), trigger: 'blur' }],
         widgetName: [
-          {validator: validateWidgetName, trigger: 'change'}
+          { validator: validateWidgetName, trigger: 'change' }
         ],
         widgetVersion: [
-          {validator: validateWidgetVersion, trigger: 'change'}
+          { validator: validateWidgetVersion, trigger: 'change' }
         ],
         resourceType: [
-          {required: true, message: this.$t('resourceEditView.selectTypeTip'), trigger: 'blur'},
-          {validator: validateResourceType, trigger: 'blur'}
+          { required: true, message: this.$t('resourceEditView.selectTypeTip'), trigger: 'blur' },
+          { validator: validateResourceType, trigger: 'blur' }
         ]
       },
-      options: Object.keys(RESOURCE_TYPES).map(k => ({label: k, value: RESOURCE_TYPES[k]})),
+      options: Object.keys(RESOURCE_TYPES).map(k => ({ label: k, value: RESOURCE_TYPES[k] })),
 
       loading: false,
       deps: [],
       showSearchResourceDialog: false,
       formData: {
-        resourceType: '', //storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
+        resourceType: '', // storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
         resourceName: '',
         widgetName: '',
         description: '',
@@ -139,14 +139,14 @@ export default {
     canEditDependencies() {
       return !this.data.resourceId
     },
-    enabledEditResourceType(){
+    enabledEditResourceType() {
       return this.showCreatorInputItem && !this.uploaderStates.resource.isUploaded
     }
   },
 
   watch: {
     data() {
-      var resource = this.data
+      const resource = this.data
       if (resource.resourceId) {
         this.editMode = EDIT_MODES.editor
         Object.assign(this.formData, resource)
@@ -183,7 +183,7 @@ export default {
       let error
 
       if (err.errcode !== undefined) {
-        error = {error: err.msg}
+        error = { error: err.msg }
       } else {
         switch (err.status) {
           case 400:
@@ -195,7 +195,7 @@ export default {
           default:
             errMsg = err.message
         }
-        error = {error: errMsg}
+        error = { error: errMsg }
       }
 
       this.$emit('uploadEnd', error)
@@ -209,7 +209,7 @@ export default {
         this.uploaderStates.resource.isUploading = false
         this.uploaderStates.resource.percentage = 0
         this.$message.error(res.msg)
-        this.$emit('uploadEnd', {error: res.msg})
+        this.$emit('uploadEnd', { error: res.msg })
       } else {
         this.uploaderStates.resource.sha1 = res.data.sha1
         this.uploaderStates.resource.uploadFileId = res.data.uploadFileId
@@ -237,22 +237,22 @@ export default {
       }
     },
     humanizeSize(number) {
-      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
 
       if (!number) {
         return ''
       }
 
       if (number < 1) {
-        return number + ' B';
+        return `${number} B`
       }
 
       const algorithm = 1024
-      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
-      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
-      const unit = UNITS[exponent];
+      const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1)
+      number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2))
+      const unit = UNITS[exponent]
 
-      return number + ' ' + unit;
+      return `${number} ${unit}`
     },
     fileChangeHandler(file, fileList) {
       this.fileLimitValidator(file, fileList)
@@ -345,7 +345,7 @@ export default {
                 resolve()
               } catch (error) {
                 console.error(error)
-                reject(new Error(this.$t('resourceEditView.metaError', {error})))
+                reject(new Error(this.$t('resourceEditView.metaError', { error })))
               }
             }
           } else {
@@ -427,7 +427,7 @@ export default {
             if (!this.data.resourceId) {
               this.createResource(data).then(resolve).catch(reject)
             } else if (this.isChanged()) {
-              this.updateResource(data).then(detail=>{
+              this.updateResource(data).then((detail) => {
                 if (detail && detail.resourceId)resolve(detail)
                 else resolve(this.formData)
               }).catch(reject)
@@ -477,7 +477,7 @@ export default {
     addDepResourceHandler(resource) {
       this.showSearchResourceDialog = false
 
-      const added = this.deps.some(res=>res.resourceId===resource.resourceId)
+      const added = this.deps.some(res => res.resourceId === resource.resourceId)
       if (added) {
         this.$message.error(this.$t('resourceEditView.donotRepeatUpload'))
       } else {
