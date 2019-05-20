@@ -1,6 +1,15 @@
 <template>
-    <div class="resource-input-wrap" :class="['resource-edit-mode-'+editMode]">
-        <el-form :model="formData" class="input-list" label-width="0" :rules="rules" ref="createForm">
+    <div
+        class="resource-input-wrap"
+        :class="['resource-edit-mode-'+editMode]"
+    >
+        <el-form
+            :model="formData"
+            class="input-list"
+            label-width="0"
+            :rules="rules"
+            ref="createForm"
+        >
             <div class="input-item-wrap">
                 <h4>资源信息</h4>
                 <div class="input-area res-info-input-wrap">
@@ -34,7 +43,8 @@
                                 @change="resourceTypeChange"
                                 v-popover:typePopTip
                                 class="resource-type"
-                                :placeholder="$t('resourceEditView.selectType')">
+                                :placeholder="$t('resourceEditView.selectType')"
+                            >
                                 <el-option
                                     :label="$t('resourceEditView.selectType')"
                                     value="">
@@ -81,7 +91,8 @@
                                     :disabled="!formData.resourceType"
                                     :on-progress="uploadProgressHandler"
                                     v-popover:uploadPopTip
-                                    :auto-upload="true">
+                                    :auto-upload="true"
+                                >
                                     <i class="el-icon-plus"></i>
                                     <div class="resource-file-tip">
                                         <p>{{$t('resourceEditView.resourceFile')}}</p>
