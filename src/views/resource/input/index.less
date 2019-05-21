@@ -1,13 +1,15 @@
 @import '../../../styles/variables.less';
+
 .resource-input-wrap {
   width: @main-content-width-1190;
   margin: auto;
+
   input {
     outline: none;
   }
 
   .res-info-input-wrap {
-    display: flex;
+    //display: flex;
     padding-bottom: 5px !important;
 
     .input-lf-side {
@@ -21,10 +23,12 @@
 
     .input-item-wrap {
       margin-bottom: 20px;
+
       .input-area {
         background-color: white;
         padding: 20px 40px;
         border-radius: 4px;
+
         &.edit-disabled {
           .add-dep-btn {
             cursor: not-allowed;
@@ -42,6 +46,7 @@
       .res-deps-wrap {
         margin-top: 15px;
       }
+
       .del-dep-btn {
         display: none;
         color: #f56c6c;
@@ -51,16 +56,19 @@
         font-size: 16px;
         background: white;
       }
+
       .res-dep-item {
         color: #333333;
         font-size: 14px;
         font-weight: bold;
         line-height: 25px;
         position: relative;
+
         .dot {
           vertical-align: sub;
           margin-right: 8px;
         }
+
         &:hover {
           .del-dep-btn {
             display: inline-block;
@@ -71,6 +79,7 @@
       .add-dep-btn {
         color: #333333;
         font-size: 14px;
+
         i {
           margin-right: 10px;
           font-weight: bold;
@@ -81,8 +90,10 @@
       .input-item {
         margin-bottom: 20px;
       }
+
       .require-input {
         position: relative;
+
         &:before {
           content: ' ';
           display: inline-block;
@@ -95,6 +106,12 @@
           top: 15px;
           left: -18px;
           vertical-align: middle;
+        }
+      }
+
+      .require-input.special {
+        &:before {
+          top: 28px;
         }
       }
 
@@ -135,21 +152,25 @@
     .upload-state-wrap {
       float: left;
       margin-right: 15px;
+
       .el-icon-document {
         font-size: 50px;
         display: flex;
         justify-content: center;
         align-items: center;
+
         span {
           font-size: 14px;
           position: absolute;
           background: white;
           color: black;
         }
+
         i {
           font-size: 20px;
         }
       }
+
       .el-icon-circle-check {
         color: #48D38E;
         position: absolute;
@@ -157,6 +178,7 @@
         border-radius: 50%;
       }
     }
+
     .el-icon-circle-close {
       color: #CCCCCC;
       font-size: 18px;
@@ -169,6 +191,7 @@
       color: #222222;
       font-size: 18px;
     }
+
     .resource-file-size {
       color: #C3C3C3;
       font-size: 14px;
@@ -200,7 +223,7 @@
   }
 
   .resource-thumbnail-input {
-    width: 200px;
+    //width: 200px;
 
     .thumbnail-tip {
       color: #333333;
@@ -208,7 +231,8 @@
       font-weight: bold;
       margin-top: 10px;
     }
-    .el-icon-plus {
+
+    .el-icon-circle-plus {
       font-size: 35px;
       color: #333333;
     }
@@ -221,17 +245,50 @@
       position: relative;
       z-index: 1;
     }
+
+    .el-upload-dragger {
+      background-color: #fff !important;
+    }
   }
 
   .meta-editor-wrap {
     padding: 10px;
     border: 1px solid #E6E6E6;
   }
+
+  .resource-thumbnail-input__button-cover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #fff;
+  }
+
+  .resource-thumbnail-input__button-cover_uploaded {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .el-upload-dragger:hover .resource-thumbnail-input__button-cover_uploaded {
+    display: flex;
+  }
 }
 
 
-
-@media screen and (max-width: 1250px){
+@media screen and (max-width: 1250px) {
   .resource-input-wrap {
     width: @main-content-width-990;
   }

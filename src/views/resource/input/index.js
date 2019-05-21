@@ -94,6 +94,7 @@ export default {
                     percentage: 0,
                     isUploaded: false,
                     isUploading: false,
+                    isExistResource: false,
                     name: ''
                 },
                 thumbnail: {
@@ -202,11 +203,13 @@ export default {
             this.$refs.resourceUploader.clearFiles(); // reset clearFiles
         },
         successHandler(res, file) {
+            // console.log(res, file, 'res, fileres, fileres, file');
             this.loading = false;
             if (res.ret !== 0 || res.errcode !== 0) {
                 // reset
                 this.$refs.resourceUploader.clearFiles();
                 this.uploaderStates.resource.isUploading = false;
+                this.uploaderStates.resource.isExistResource = false;
                 this.uploaderStates.resource.percentage = 0;
                 this.$message.error(res.msg);
                 this.$emit('uploadEnd', {error: res.msg});
@@ -214,6 +217,7 @@ export default {
                 this.uploaderStates.resource.sha1 = res.data.sha1;
                 this.uploaderStates.resource.uploadFileId = res.data.uploadFileId;
                 this.uploaderStates.resource.isUploaded = true;
+                this.uploaderStates.resource.isExistResource = res.data.isExistResource;
                 this.uploaderStates.resource.percentage = 100;
                 this.autoSetFormData(file);
                 this.$emit('uploadEnd', res.data);
@@ -269,6 +273,7 @@ export default {
             }
         },
         previewImageChangeHandler(file, fileList) {
+            // console.log(fileList, '###@#$@#$#$');
             this.fileLimitValidator(file, fileList);
         },
         validateImageHandler(file) {

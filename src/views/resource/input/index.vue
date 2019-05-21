@@ -11,19 +11,11 @@
             ref="createForm"
         >
             <div class="input-item-wrap">
-                <h4>资源信息</h4>
+                <h4>资源上传</h4>
                 <div class="input-area res-info-input-wrap">
                     <div class="input-lf-side">
-                        <div class="require-input input-item">
-                            <el-form-item prop="resourceName">
-                                <input
-                                    type="text"
-                                    class="input-rect"
-                                    v-model="formData.resourceName"
-                                    :placeholder="$t('resourceEditView.resourceTitle')"
-                                >
-                            </el-form-item>
-                        </div>
+
+                        <!-- 上传类型 -->
                         <div class="require-input input-item">
                             <el-popover
                                 ref="typePopTip"
@@ -43,10 +35,10 @@
                                 @change="resourceTypeChange"
                                 v-popover:typePopTip
                                 class="resource-type"
-                                :placeholder="$t('resourceEditView.selectType')"
+                                placeholder="资源类型"
                             >
                                 <el-option
-                                    :label="$t('resourceEditView.selectType')"
+                                    label="资源类型"
                                     value="">
                                 </el-option>
                                 <el-option
@@ -57,22 +49,24 @@
                                 </el-option>
                             </el-select>
                         </div>
+
+                        <!-- 文件上传按钮 -->
                         <div
-                            class="resource-file-input require-input input-item"
+                            class="resource-file-input require-input special input-item"
                             v-if="showCreatorInputItem"
                         >
+                            <!-- 上传按钮 -->
                             <div
                                 class="resource-file-uploader-wrap"
-                                v-show="shouldShowResourceUploader === true"
                             >
-                                <el-popover
-                                    ref="uploadPopTip"
-                                    placement="bottom-start"
-                                    title=""
-                                    width="200"
-                                    trigger="hover"
-                                    :disabled="!!formData.resourceType">{{$t('resourceEditView.uploadPopTip')}}
-                                </el-popover>
+                                <!--                                <el-popover-->
+                                <!--                                    ref="uploadPopTip"-->
+                                <!--                                    placement="bottom-start"-->
+                                <!--                                    title=""-->
+                                <!--                                    width="200"-->
+                                <!--                                    trigger="hover"-->
+                                <!--                                    :disabled="!!formData.resourceType">{{$t('resourceEditView.uploadPopTip')}}-->
+                                <!--                                </el-popover>-->
                                 <el-upload
                                     v-if="showCreatorInputItem"
                                     class="resource-file-uploader"
@@ -93,51 +87,102 @@
                                     v-popover:uploadPopTip
                                     :auto-upload="true"
                                 >
-                                    <i class="el-icon-plus"></i>
-                                    <div class="resource-file-tip">
-                                        <p>{{$t('resourceEditView.resourceFile')}}</p>
-                                        <p class="resource-file-sub-tip">
-                                            {{$t('resourceEditView.uploadResourceRule')}}</p>
+                                    <!--                                    <i class="el-icon-plus"></i>-->
+                                    <!--                                    <div class="resource-file-tip">-->
+                                    <!--                                        <p>{{$t('resourceEditView.resourceFile')}}</p>-->
+                                    <!--                                        <p class="resource-file-sub-tip">-->
+                                    <!--                                            {{$t('resourceEditView.uploadResourceRule')}}</p>-->
+                                    <!--                                    </div>-->
+                                    <div style="display: flex; align-items: flex-end;">
+                                        <el-button>上传资源</el-button>
+                                        <span style="font-size: 13px; color: #afafaf; padding-left: 20px;">* 上传资源之前需要选择资源类型；资源最大不超过50M</span>
                                     </div>
                                 </el-upload>
                             </div>
+                            <div style="height: 10px;"></div>
+
+                            <!-- 上传进度 -->
                             <div
                                 class="resource-upload-state
                                  clearfix"
+                                style="display: block;"
                                 v-show="shouldShowResourceUploader === false"
                             >
-                                <div class="upload-state-wrap">
-                                    <i class="el-icon-document">
+                                <!-- v-show="shouldShowResourceUploader === true" -->
+                                <div style="background-color: #fafbfb;">
+                                    <div
+                                        style="display: flex; justify-content: space-between;  font-size: 16px; color: #333; padding: 0 20px; line-height: 45px; height: 45px">
+                                        <span>{{formData.filename}}</span>
+                                        <span>{{humanizeSize(formData.filesize)}}</span>
+                                    </div>
+                                    <div
+                                        style="padding: 18px 20px; border-top: 1px solid #e8e8e8; display: flex; align-items: center;">
+                                        <el-progress
+                                            :percentage="uploaderStates.resource.percentage"
+                                            :stroke-width="14"
+                                            color="#409eff"
+                                            :show-text="false"
+                                            style="flex-shrink: 1; width: 100%;"
+                                        ></el-progress>
                                         <span
-                                            v-if="!shouldShowResourceUploader && uploaderStates.resource.percentage < 100">{{uploaderStates.resource.percentage}}</span>
-                                        <i
-                                            v-else
-                                            class="el-icon-circle-check"
-                                        ></i>
-                                    </i>
+                                            v-if="!uploaderStates.resource.isExistResource"
+                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: #3f9cfd; font-size: 14px; font-weight: 600;">
+                                            {{uploaderStates.resource.percentage < 100 ? uploaderStates.resource.percentage + '%': '上传成功！'}}
+                                        </span>
+                                        <span
+                                            v-else="uploaderStates.resource.isExistResource"
+                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: red; font-size: 14px; font-weight: 600;">
+                                            重复上传
+                                        </span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="upload-file-name">{{formData.filename}}
-                                        <el-button
-                                            type="text"
-                                            style="color: #C3C3C3;font-size: 12px;padding: 0;"
-                                            size="mini"
-                                            @click="reuploadHandler('resource')"
-                                        >
-                                            {{$t('resourceEditView.reUploadText')}}
-                                        </el-button>
-                                    <p class="resource-file-size"> {{humanizeSize(formData.filesize)}}</p>
-                                </div>
+                                <!--                                <div class="upload-state-wrap">-->
+                                <!--                                    <i class="el-icon-document">-->
+                                <!--                                        <span-->
+                                <!--                                            v-if="!shouldShowResourceUploader && uploaderStates.resource.percentage < 100">{{uploaderStates.resource.percentage}}</span>-->
+                                <!--                                        <i-->
+                                <!--                                            v-else-->
+                                <!--                                            class="el-icon-circle-check"-->
+                                <!--                                        ></i>-->
+                                <!--                                    </i>-->
+                                <!--                                </div>-->
+                                <!--                                <div>-->
+                                <!--                                    <p class="upload-file-name">{{formData.filename}}-->
+                                <!--                                        <el-button-->
+                                <!--                                            type="text"-->
+                                <!--                                            style="color: #C3C3C3;font-size: 12px;padding: 0;"-->
+                                <!--                                            size="mini"-->
+                                <!--                                            @click="reuploadHandler('resource')"-->
+                                <!--                                        >-->
+                                <!--                                            {{$t('resourceEditView.reUploadText')}}-->
+                                <!--                                        </el-button>-->
+                                <!--                                    <p class="resource-file-size"> {{humanizeSize(formData.filesize)}}</p>-->
+                                <!--                                </div>-->
                             </div>
+                        </div>
+
+                        <!-- 资源名称输入框 -->
+                        <div class="require-input input-item">
+                            <el-form-item prop="resourceName">
+                                <input
+                                    type="text"
+                                    class="input-rect"
+                                    v-model="formData.resourceName"
+                                    placeholder="输入资源名称"
+                                >
+                            </el-form-item>
                         </div>
 
                         <template v-if="formData.resourceType === ResourceTypes.widget">
                             <div class="require-input input-item">
                                 <el-form-item prop="widgetName">
-                                    <input type="text" v-model="formData.widgetName"
-                                           class="input-rect"
-                                           :disabled="!showCreatorInputItem"
-                                           :placeholder="$t('resourceEditView.widgetName')">
+                                    <input
+                                        type="text"
+                                        v-model="formData.widgetName"
+                                        class="input-rect"
+                                        :disabled="!showCreatorInputItem"
+                                        :placeholder="$t('resourceEditView.widgetName')"
+                                    >
                                 </el-form-item>
                             </div>
                             <div class="require-input input-item">
@@ -150,10 +195,15 @@
                             </div>
                         </template>
                     </div>
-                    <div class="resource-thumbnail-input input-item">
+
+                    <!-- 封面上传 -->
+                    <div
+                        class="resource-thumbnail-input input-item"
+                        style="display: flex; align-items: flex-end;"
+                    >
                         <el-upload
+                            style="background-color: #fff;"
                             v-show="!uploaderStates.thumbnail.isUploading"
-                            class="resource-thumbnail-uploader"
                             drag
                             ref="thumbnailUploader"
                             :action="uploadPreviewImageAction"
@@ -166,25 +216,50 @@
                             :before-upload="validateImageHandler"
                             :on-progress="uploadProgressHandler"
                             :show-file-list="false"
-                            :auto-upload="true">
-                            <img v-if="formData.previewImage" :src="formData.previewImage" style="height: 100%;" alt="">
-                            <template v-else>
-                                <div>
-                                    <i class="el-icon-plus"></i>
-                                    <p class="thumbnail-tip">{{$t('resourceEditView.uploadPoster')}}</p>
+                            :auto-upload="true"
+                        >
+
+                            <div
+                                v-if="!formData.previewImage"
+                                class="resource-thumbnail-input__button-cover"
+                            >
+                                <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
+                                <p class="thumbnail-tip" style="color: #666666">上传封面</p>
+                            </div>
+
+                            <template v-if="formData.previewImage">
+                                <img
+                                    :src="formData.previewImage"
+                                    style="height: 100%;"
+                                    alt=""
+                                >
+                                <!--                            <template v-else>-->
+                                <div
+                                    class="resource-thumbnail-input__button-cover_uploaded"
+                                >
+                                    <i class="el-icon-circle-plus" style="color: #fff"></i>
+                                    <p class="thumbnail-tip" style="color: #fff">重新上传</p>
                                 </div>
                             </template>
+                            <!--                            </template>-->
                         </el-upload>
-                        <div class="thumbnail-upload-state" v-show="uploaderStates.thumbnail.isUploading">
-                            <div>
-                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>
-                                <el-progress
-                                    style="margin-right: 20px;"
-                                    :stroke-width="10"
-                                    :percentage="uploaderStates.thumbnail.percentage"
-                                    color="#333333"></el-progress>
-                            </div>
+                        <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
+                            <span>*&nbsp;</span>
+                            <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
                         </div>
+                        <!--                        <div-->
+                        <!--                            class="thumbnail-upload-state"-->
+                        <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
+                        <!--                        >-->
+                        <!--                            <div>-->
+                        <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
+                        <!--                                <el-progress-->
+                        <!--                                    style="margin-right: 20px;"-->
+                        <!--                                    :stroke-width="10"-->
+                        <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
+                        <!--                                    color="#333333"></el-progress>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -272,9 +347,9 @@
 
 
 <script>
-    import ResourceInput from './index';
+    import ResourceInput from './index'
 
-    export default ResourceInput;
+    export default ResourceInput
 </script>
 
 <style lang="less" scoped>
