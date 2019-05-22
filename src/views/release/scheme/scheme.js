@@ -1,11 +1,13 @@
 
-import { beautify } from '@freelog/resource-policy-lang'
+import { beautify, } from '@freelog/resource-policy-lang'
+import { ContractDetail } from '@freelog/freelog-ui-contract'
+import ReleaseDependItem from './depend-item.vue'
 import SchemeFloatBall from '@/components/Authorization-scheme/scheme-float-ball.vue'
 
 export default {
   name: 'scheme-manage',
   components: {
-    SchemeFloatBall
+    ReleaseDependItem, SchemeFloatBall, ContractDetail
   },
   props:  {
     type: {
@@ -13,15 +15,18 @@ export default {
       default: 'create'
     },
     release: Object,
-    releaseScheme: Object,
     releasesTreeData: Array,
-    depReleases: {
+    depReleasesList: {
       type: Array,
-      default: []
+      default: function (){ return [] }
     },
     baseUpcastReleases: {
       type: Array,
-      default: []
+      default: function (){ return [] }
+    },
+    contracts: {
+      type: Array,
+      default: function (){ return [] }
     },
   },
   data() {
@@ -29,14 +34,15 @@ export default {
       isLoading: false,
       activeSelectedIndex: 0,
       isSelectedReleaesUpcast: false,
-      depReleasesList: [],
-      upcastDepReleasesIds: [],
+      releasesMap: {},
       upcastDepReleasesMap: null,
+      contractsMap: null,
       targetReleases: [],
       tmpSelectedPolicies: [],
       selectedAuthSchemes: [],
-      selectedRelease: null,
-      // releaseScheme: null
+      contractIds: [],
+      selectedRelease: {},
+      releaseScheme: null
     }
   },
   computed: {
@@ -57,74 +63,110 @@ export default {
   watch: {
     releaseScheme() {
       this.getTargetReleases()
-    }
+    },
   },
   methods: {
+    fetchContractsDetail() {
+      if(this.contractIds.length > 0) {
+        this.$services.ContractRecords.get({
+          params: {
+            contractIds: this.contractIds.filter(id => id.length > 0).join(',')
+          }
+        })
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              this.$emit('update:contracts', res.data)
+              this.contractsMap = {}
+              res.data.forEach(c => {
+                this.contractsMap[c.contractId] = c
+              })
+            }
+          })
+      }
+    },
+    // 获取 发行方案
+    fetchReleaseScheme() {
+      if(!this.release) return
+      const { releaseId, latestVersion: { version } } = this.release
+      this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
+        .then(res => res.data)
+        .then(res => {
+          if(res.errcode === 0) {
+            this.releaseScheme = res.data
+          }
+        })
+        .catch(e => this.$error.showErrorMessage('授权方案获取失败！'))
+    },
     fetchReleases(ids) {
       return this.$services.ReleaseService.get(`list?releaseIds=${ids}&projection=${this.projection}`)
         .then(res => res.data)
     },
     // 获取 依赖发行
     fetchDepReleases() {
-      const depReleaseIDs = this.depReleases.map(dep => dep.releaseId).join(',')
+      const depReleaseIDs = this.depReleasesList.map(dep => dep.releaseId).join(',')
       this.fetchReleases(depReleaseIDs)
         .then(res => {
           if(res.errcode === 0) {
-            this.depReleasesList = res.data || []
+            this.$emit('update:depReleasesList', res.data || [])
+            this.selectedRelease = res.data[0] || {}
             let tmpArr = []
-            this.depReleasesList.forEach(item => {
-              tmpArr = [ ...tmpArr, ...item.baseUpcastReleases.map(i => i.releaseId) ]
+            res.data.forEach(release => {
+              this.releasesMap[release.releaseId] = release
+              if(release.baseUpcastReleases) {
+                tmpArr = [ ...tmpArr, ...release.baseUpcastReleases.map(i => i.releaseId) ]
+              }
             })
-            this.upcastDepReleasesIds = tmpArr
+
             if(tmpArr.length > 0) {
-              this.fetchUpcastDepReleases()
+              this.fetchUpcastDepReleases(tmpArr.join(','))
             }else {
               this.upcastDepReleasesMap = {}
               this.getTargetReleases()
+              this.fetchContractsDetail()
             }
+          }
+        })
+        .catch(e => {
+          console.log('e --', e)
+          this.isLoading = false
+        })
+    },
+    // 获取 依赖发行的上抛发行
+    fetchUpcastDepReleases(upcastDepReleasesIds) {
+      this.fetchReleases(upcastDepReleasesIds)
+        .then(res => {
+          if(res.errcode === 0) {
+            const arr = res.data || []
+            this.upcastDepReleasesMap = {}
+            for(let i = 0; i < arr.length; i++) {
+              let releaseId = arr[i].releaseId
+              this.upcastDepReleasesMap[releaseId] = arr[i]
+              if(!this.releasesMap[releaseId]) {
+                this.releasesMap[releaseId] = arr[i]
+              }
+            }
+            this.getTargetReleases()
+            this.fetchContractsDetail()
           }
         })
         .catch(e => this.isLoading = false)
     },
-    // 获取 依赖发行的上抛发行
-    fetchUpcastDepReleases() {
-      if(this.upcastDepReleasesIds.length) {
-        this.fetchReleases(this.upcastDepReleasesIds.join(','))
-          .then(res => {
-            if(res.errcode === 0) {
-              const arr = res.data || []
-              this.upcastDepReleasesMap = {}
-              for(let i = 0; i < arr.length; i++) {
-                let releaseId = arr[i].releaseId
-                this.upcastDepReleasesMap[releaseId] = arr[i]
-              }
-              this.getTargetReleases()
-            }
-          })
-          .catch(e => this.isLoading = false)
-      }
-
-    },
     getTargetReleases() {
-      if(this.upcastDepReleasesMap) {
-        this.resolveReleaseScheme()
-        const fReleases = []
-        for(let i = 0; i < this.depReleasesList.length; i++) {
-          let rItem = this.depReleasesList[i]
-          rItem.isSecondLevel = false
-          fReleases.push(this.formatRelease(rItem))
-          rItem.baseUpcastReleases.forEach(item => {
-            const tmpRelease = this.upcastDepReleasesMap[item.releaseId]
-            if(tmpRelease) {
-              tmpRelease.isSecondLevel = true
-              fReleases.push(this.formatRelease(tmpRelease))
-            }
-          })
-        }
-        this.targetReleases = fReleases
-        this.releasesTreeData && this.$emit('update:releasesTreeData', this.targetReleases)
-        this.resetData()
+      this.resolveReleaseScheme()
+      const dReleasesList = this.depReleasesList.filter(item => item.policies)
+      for(let i = 0; i < dReleasesList.length; i++) {
+        let rItem = this.depReleasesList[i]
+        rItem = this.formatRelease(rItem)
+        rItem.baseUpcastReleases = rItem.baseUpcastReleases.map(item => {
+          const tmpRelease = this.releasesMap[item.releaseId]
+          if(tmpRelease) {
+            item = this.formatRelease(tmpRelease)
+          }
+          return item
+        }).filter(item => item.policies)
       }
+      this.resetData()
       this.isLoading = false
 
     },
@@ -132,26 +174,37 @@ export default {
       if(!this.releaseScheme ) return
 
       const { resolveReleases } = this.releaseScheme
+      const contractIds = []
 
       for(let i = 0; i < resolveReleases.length; i++) {
         const { contracts, releaseId } = resolveReleases[i]
-        const release = this.depReleasesMap[releaseId] || this.upcastDepReleasesMap[releaseId]
-        const pIds = contracts.map(c => c.policyId)
+        const release = this.releasesMap[releaseId]
+
+        const pIdsMap = {}
+        contracts.forEach(c => {
+          pIdsMap[c.policyId] = c.contractId
+          if(c.contractId) {
+            contractIds.push(c.contractId)
+          }
+        })
 
         if(release) {
           release.contracts = contracts
           release.resolveStatus = 'resolved'
+          release.selectedPolicies = []
           release.policies.forEach(p => {
-            if(pIds.indexOf(p.policyId) > -1) {
+            if(typeof pIdsMap[p.policyId] !== 'undefined') {
               p.isSelected = true
-              release.selectedPolicies = release.selectedPolicies || []
+              p.contractId = pIdsMap[p.policyId]
               release.selectedPolicies.push(p)
             }
           })
         }
       }
+      this.contractIds = contractIds
     },
     formatRelease(release) {
+
       if(this.baseUpcastReleasesIDs.indexOf(release.releaseId) !== -1) {
         release.isUpcasted = true
       }else {
@@ -181,7 +234,6 @@ export default {
       }
     },
     resetData() {
-      this.selectedRelease = this.targetReleases[this.activeSelectedIndex]
       this.tmpSelectedPolicies = this.selectedRelease.policies
       this.isSelectedReleaesUpcast = this.selectedRelease.isUpcasted
       this.selectedRelease.resolveStatus = this.getReleaseResolveStatus()
@@ -192,7 +244,7 @@ export default {
       if(this.selectedRelease.isUpcasted) {
         return 'upcast'
       }else {
-        if(this.selectedRelease.selectedPolicies.length > 0) {
+        if(this.selectedRelease.selectedPolicies && this.selectedRelease.selectedPolicies.length > 0) {
           return 'resolved'
         }else {
           return 'no-resolve'
@@ -201,18 +253,35 @@ export default {
     },
     resolveSelectedAuthSchemes() {
       const arr = []
-      const releases = this.targetReleases
+      const releases = this.depReleasesList
+      const tmp = {}
       for(let i = 0; i < releases.length; i++) {
-        if(releases[i].resolveStatus === 'resolved') {
-          arr.push(releases[i])
+        let item = releases[i]
+        if(item.resolveStatus === 'resolved') {
+          if(tmp[item.releaseId] !== 1) {
+            tmp[item.releaseId] = 1
+            arr.push(item)
+          }
+        }
+        if(item.baseUpcastReleases) {
+          item.baseUpcastReleases.forEach(brItem => {
+            if(brItem.resolveStatus === 'resolved') {
+              if(tmp[brItem.releaseId] !== 1) {
+                tmp[brItem.releaseId] = 1
+                arr.push(brItem)
+              }
+            }
+          })
         }
       }
       this.selectedAuthSchemes = arr
       this.$emit('update-resolved-releases', this.selectedAuthSchemes)
     },
+    updateContractAfterEvent(){},
     fmtPolicyTextList(p) {
       return beautify(p.policyText)
     },
+    // 上抛
     upcastHandler() {
       this.selectedRelease.isUpcasted = !this.selectedRelease.isUpcasted
       this.resetData()
@@ -224,12 +293,19 @@ export default {
       this.$emit('update:baseUpcastReleases', this.baseUpcastReleases)
     },
     // 切换 发行
-    exchangeSelectedRelease(index) {
-      this.activeSelectedIndex = index
-      this.resetData()
+    exchangeSelectedRelease(release) {
+      this.selectedRelease = release
+        this.resetData()
     },
     // 选择策略
     selectPolicy(policy, index) {
+      if(this.type !== 'create') {
+        if(this.contractsMap[policy.contractId]) {
+          this.$message({ type: 'warning', message: '已签约，不可更改！' })
+          return
+        }
+      }
+
       policy.isSelected = !policy.isSelected
       this.tmpSelectedPolicies.splice(index, 1, policy)
       if(policy.isSelected) {
@@ -273,5 +349,6 @@ export default {
   created() {
     this.isLoading = true
     this.fetchDepReleases()
+    this.fetchReleaseScheme()
   }
 }

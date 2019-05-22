@@ -72,25 +72,26 @@
   .r-d-w-p-left {
     overflow: auto;
     position: relative; width: 30%; padding-bottom: 40px;
+    font-size: 14px; font-weight: 500;
     .r-d-w-p-current-releases {
       margin-bottom: 20px;
-      .release-policy-item {
-        padding: 0 20px 0 30px;
-        &.active { background-color: #fff; }
-        .el-radio {
-          display: block; padding: 16px 0; border-bottom: 1px solid #E9E9E9;
-          font-size: 14px; font-weight: 600; color: #333;
-        }
-      }
     }
     .r-d-w-p-upcast-releases {
       .r-item-name {
         position: relative; padding: 10px 10px 2px 42px;
         &:before {
           content: '';
-          position: absolute; top: 14px; left: 28px; z-index: 10;
+          position: absolute; top: 16px; left: 28px; z-index: 10;
           width: 10px; height: 10px; border-radius: 50%; background-color: #E24B4B;
         }
+      }
+    }
+    .release-policy-item {
+      padding: 0 20px 0 30px;
+      &.active { background-color: #fff; }
+      .el-checkbox {
+        display: block; padding: 16px 0; border-bottom: 1px solid #E9E9E9;
+        color: #333;
       }
     }
   }
@@ -148,3 +149,31 @@
     }
   }
 }
+
+.r-d-w-r-sign {
+  margin: 0 20px; padding: 25px 20px; border-top: 1px solid #DDDDDD;
+
+  h4 {
+    margin-bottom: 10px;
+    font-size: 14px; font-weight: 400; color: #333;
+  }
+  .r-d-w-r-node-list { overflow: hidden; margin-left: 60px; margin-bottom: 15px; }
+  .r-d-w-r-node-item {
+    display: block;
+    margin: 15px 0;
+  }
+  .r-d-w-r-s-releases {
+    margin: 0 50px 25px 60px;
+    font-size: 14px; font-weight: 500; color: #333;
+    .rdwr-s-r-item { margin: 15px 0; }
+    .rdwr-s-r-item-policy { float: right; cursor: pointer; }
+  }
+  .rdwr-s-btn-group {
+    text-align: center;
+
+    .rdwr-s-btn { width: 110px; padding: 8px 0; border-width: 0; }
+    .rdwr-s-btn-cancel { color: #999;  }
+    .rdwr-s-btn-sign { border-radius: 4px; background-color: #409EFF; color: #fff; }
+  }
+}
+

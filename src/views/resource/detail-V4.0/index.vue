@@ -70,7 +70,13 @@
               </div>
             </div>
             <div class="body">
-              <ul class="releases-list" v-if="false"></ul>
+              <ul class="releases-list" v-if="releasesList.length">
+                <li v-for="(release, index) in releasesList" :key="'release-'+ (index+1)">
+                  <span class="r-l-name">{{release.releaseName}}</span>
+                  <span class="r-l-version">{{release.resourceVersion.version}}</span>
+                  <span class="r-l-createdate">{{release.resourceVersion.createDate | fmtDate}}</span>
+                </li>
+              </ul>
               <div class="res-detail-bd-row-placeholder" v-else>资源未有发行</div>
             </div>
           </div>
@@ -78,21 +84,21 @@
             <div class="header clearfix">
               <h3>依赖</h3>
               <el-tooltip placement="top" :disabled="releasesList.length === 0" content="资源已存在发行，不可修改依赖">
-              <div class="operation-box" :class="{'disabled': releasesList.length > 0 }" @click="tapAddDependencyBtn" >
-                  <i class="el-icon-plus"></i>添加依赖
-              </div>
-            </el-tooltip>
+                <div class="operation-box" :class="{'disabled': releasesList.length > 0 }" @click="tapAddDependencyBtn" >
+                    <i class="el-icon-plus"></i>添加依赖
+                </div>
+              </el-tooltip>
             </div>
             <div class="body">
               <ul class="res-dependencies-list" v-if="dependencies.length">
                 <li
                         v-for="(dependency, index) in dependencies"
                         :key="'dependency-'+ (index+1)">
-                  {{dependency.releaseName}}
-                  <span>{{dependency.resourceType}}</span>
-                  <span>{{dependency.latestVersion.version}}</span>
-                  <span>{{dependency.updateDate | fmtDate}}</span>
                   <el-button class="delete-dependency-btn" v-if="releasesList.length === 0" @click="deleteDependency(index)">-</el-button>
+                  <span class="r-d-l-name">{{dependency.releaseName}}</span>
+                  <span class="r-d-l-type">{{dependency.resourceType}}</span>
+                  <span class="r-d-l-version">{{dependency.latestVersion.version}}</span>
+                  <span class="r-d-l-updatedate">{{dependency.updateDate | fmtDate}}</span>
                 </li>
               </ul>
               <div class="res-detail-bd-row-placeholder" v-else>
@@ -162,7 +168,7 @@
                top="10vh"
                center
                :visible.sync="isShowReleaseSearchDialog">
-      <release-search :type="releaseSearchType" @add="releaseSearchHandler"></release-search>
+      <release-search @add="releaseSearchHandler"></release-search>
     </el-dialog>
   </section>
 </template>

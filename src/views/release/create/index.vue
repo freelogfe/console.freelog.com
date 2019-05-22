@@ -26,16 +26,16 @@
         <div class="cont">
           <i>*</i>
           <el-input v-model="version"></el-input>
-          <div class="release-name">{{releaseName}}</div>
+          <div class="release-name" v-show="releaseName.length > 0">{{releaseName}}</div>
         </div>
       </div>
-      <div class="r-c-w-row r-c-w-scheme" v-if="dependencies.length">
+      <div class="r-c-w-row r-c-w-scheme" v-if="depReleasesList.length">
         <h3>方案</h3>
         <div class="cont">
           <scheme-manage
                   type="create"
                   :baseUpcastReleases.sync="baseUpcastReleases"
-                  :depReleases="dependencies"
+                  :depReleasesList.sync="depReleasesList"
                   @update-resolved-releases="updateResolvedReleases"
           ></scheme-manage>
         </div>
@@ -67,9 +67,6 @@
       }
     },
     computed: Object.assign({
-      dependencies() {
-        return this.resourceDetail ? this.resourceDetail.systemMeta.dependencies : []
-      },
       projection() {
         return ["releaseId", "resourceType", "releaseName", "latestVersion", "baseUpcastReleases", "policies", "updateDate",].join(',')
       },
@@ -86,7 +83,7 @@
         this.resolvedReleases = releases.map(r => {
           return {
             releaseId: r.releaseId,
-            contracts: r.policies.map(p => { return { policyId: p.policyId}})
+            contracts: r.policies.filter(p => p.isSelected).map(p => { return { policyId: p.policyId}})
           }
         })
       },
@@ -127,6 +124,7 @@
           .then(res => {
             if(res.errcode === 0) {
               this.resourceDetail = res.data
+              this.depReleasesList =  res.data.systemMeta.dependencies || []
               this.releaseName = res.data.aliasName
             }else {
               this.$message({ type: 'error', message: res.msg })

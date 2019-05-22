@@ -3,6 +3,7 @@ import {RESOURCE_TYPES, RESOURCE_STATUS_MAP} from '@/config/resource'
 import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
+import ReleaseSearch from '@/views/release/search/index.vue'
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -14,7 +15,8 @@ export default {
     components: {
         ResourceMetaInfo,
         RichEditor,
-        SearchResource
+        SearchResource,
+        ReleaseSearch
     },
     data() {
         const validateResourceType = (rule, value, callback) => {
@@ -142,7 +144,7 @@ export default {
         },
         enabledEditResourceType() {
             return this.showCreatorInputItem && !this.uploaderStates.resource.isUploaded;
-        }
+        },
     },
 
     watch: {
@@ -407,7 +409,10 @@ export default {
             }
 
             if (this.deps.length) {
-                uploadData.dependencies = this.deps.map(res => res.resourceId);
+                uploadData.dependencies = this.deps.map(r => {
+                    r.resourceId
+                    return { releaseId: r.releaseId, versionRange: r.latestVersion.version }
+                });
             }
 
             uploadData.meta = metaData;
@@ -479,14 +484,15 @@ export default {
                 uploader.percentage = parseInt(file.percentage.toFixed(), 10);
             }
         },
-        addDepResourceHandler(resource) {
+
+        addDepReleaseHandler(release) {
             this.showSearchResourceDialog = false;
 
-            const added = this.deps.some(res => res.resourceId === resource.resourceId);
+            const added = this.deps.some(res => res.releaseId === release.releaseId);
             if (added) {
                 this.$message.error(this.$t('resourceEditView.donotRepeatUpload'));
             } else {
-                this.deps.push(resource);
+                this.deps.push(release);
             }
         },
         beforeCloseDialogHandler() {

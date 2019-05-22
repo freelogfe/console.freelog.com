@@ -387,22 +387,34 @@ body.en {
   }
 }
 
+.releases-list {
+  li {
+    padding: 6px 0; font-size: 14px; color: #333;
+    span {
+      padding: 0 5px; color: #999;
+      &.r-l-name{ padding: 0; border-width: 0; margin-right: 20px; color: #333; }
+      &.r-l-version {
+        border-right: 1px solid #999;
+      }
+    }
+  }
+}
+
 .res-dependencies-list {
   li {
     padding: 10px 0;
 
     font-size: 14px; color: #333;
-    span{
-
-      padding: 0 5px; font-size: 12px; color: #999;
-      &:first-child{ margin-left: 20px; }
-      &:not(:first-child) {
-        border-left: 1px solid #999;
+    span {
+      padding: 0 5px; color: #999;
+      &.r-d-l-name{ padding: 0; border-width: 0; margin-right: 20px; color: #333; }
+      &.r-d-l-type, &.r-d-l-version {
+        border-right: 1px solid #999;
       }
     }
 
     button{
-      width: 14px; height: 14px; margin-left: 30px; padding: 0; border-width: 0; border-radius: 50%;
+      width: 14px; height: 14px; margin-right: 10px; padding: 0; border-width: 0; border-radius: 50%;
       line-height: 12px; font-size: 12px; background-color: #F4584F; color: #fff; text-align: center;
     }
   }

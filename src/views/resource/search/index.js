@@ -58,7 +58,6 @@ export default {
       }
     },
     fetchData(page) {
-      console.log('page --', page)
       const pageSize = 10
       if (!this.loader) {
         return Promise.resolve({

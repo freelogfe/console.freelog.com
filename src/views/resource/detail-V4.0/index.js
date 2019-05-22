@@ -182,7 +182,7 @@ export default {
       const rInfo = this.resourceDetail.resourceInfo
       if(rInfo.systemMeta.dependencies && rInfo.systemMeta.dependencies.length > 0) {
         const releaseIds = rInfo.systemMeta.dependencies.map(dep => dep.releaseId).join(',')
-        this.$services.ReleaseService.get(`/list?releaseIds=${releaseIds}`)
+        this.$services.ReleaseService.get(`list?releaseIds=${releaseIds}`)
           .then(res => res.data)
           .then(res => {
             if(res.errcode === 0 ) {
@@ -190,11 +190,10 @@ export default {
             }
           })
       }
-
     },
     // 获取"所属发行列表"
     fetchReleaseList() {
-      this.$services.ResourceService.get(`/${this.resourceId}/releases`)
+      this.$services.ResourceService.get(`${this.resourceId}/releases`)
         .then(res => res.data)
         .then(res => {
           if(res.errcode === 0) {
@@ -396,8 +395,12 @@ export default {
     releaseSearchHandler(release) {
       switch(this.releaseSearchType) {
         case 'release': {
-          // 跳转 发行编辑页
-          this.$router.push(`/release/add?releaseId=${release.releaseId}&resourceId=${this.resourceId}`)
+          if(release.resourceType === this.resourceDetail.resourceInfo.resourceType) {
+            // 跳转 发行编辑页
+            this.$router.push(`/release/add?releaseId=${release.releaseId}&resourceId=${this.resourceId}`)
+          }else {
+            this.$message({ type: 'warning', message:`所选发行的资源类型必须为${this.resourceDetail.resourceInfo.resourceType}`})
+          }
           break
         }
         case 'dependency': {

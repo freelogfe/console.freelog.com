@@ -1,55 +1,70 @@
 <template>
-  <div class="release-editor-contract-wrapper" v-loading="isloading" v-if="contracts.length">
+  <div class="release-editor-contract-wrapper" v-loading="isloading">
     <div class="r-e-c-tags">
       <i class="el-icon-setting success"></i>
       <i class="el-icon-setting error"></i>
       <i class="el-icon-setting warning"></i>
     </div>
-    <div class="r-e-c-tree" v-if="cTreeData">
+    <div class="r-e-c-tree" v-if="cTreeData && contracts.length">
       <div class="r-e-c-btn">{{release.releaseName}}</div>
       <div class="r-e-c-tree-cont">
         <contract-tree
                 class="first-level"
                 v-for="data in cTreeData"
                 :data="data"
-                @show-contract="showDetailContract"
+                :activeKey.sync="activeKey"
+                @activate="showDetailContract"
+                @inactivate="hideDetailContract"
         ></contract-tree>
       </div>
     </div>
+    <div class="r-e-c-empty-box" v-else>
+      未获取到有效的合同信息
+    </div>
     <transition name="fade">
       <div class="release-editor-box" v-if="contractDetail" v-show="isShowDetailContract">
-        <div class="r-e-info">
-          <h4>合约详情<i class="el-icon-close" @click="hideDetailContract"></i></h4>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">合约名称</span>{{contractDetail.contractName}}
-          </div>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">资源类型</span>
-          </div>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">创建日期</span>{{contractDetail.createDate | fmtDate}}
-          </div>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">合同ID</span>{{contractDetail.contractId}}
-          </div>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">甲方</span>{{contractDetail.partyOne}}
-          </div>
-          <div class="r-e-info-row">
-            <span class="r-e-i-label">乙方</span>{{contractDetail.partyTwo}}
-          </div>
-        </div>
-        <div class="r-e-c-detail">
-          <h4>授权策略</h4>
-          <div class="r-e-c-cont">
-            <contract-detail
-                    class="contract-policy-content"
-                    :contract.sync="contractDetail"
-                    :policyText="contractDetail.contractClause.policyText"
-                    @update-contract="updateContractAfterEvent"
-            ></contract-detail>
-          </div>
-        </div>
+        <i class="el-icon-close" @click="hideDetailContract"></i>
+        <el-tabs class="rec-tab" v-model="activeContractTab" @tab-click="exchangeContractTab" type="border-card">
+          <el-tab-pane
+                  v-for="(p, index) in targetData.policies"
+                  :key="'p' + index"
+                  :label="p.policyName"
+                  :name="p.policyName"
+          >
+            <div class="r-e-info">
+              <h4>合约详情</h4>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">发行名称</span>{{targetData.label}}
+              </div>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">资源类型</span>{{targetData.resourceType}}
+              </div>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">创建日期</span>{{contractDetail.createDate | fmtDate}}
+              </div>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">合同ID</span>{{contractDetail.contractId}}
+              </div>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">甲方</span>{{contractDetail.partyOne}}
+              </div>
+              <div class="r-e-info-row">
+                <span class="r-e-i-label">乙方</span>{{contractDetail.partyTwo}}
+              </div>
+            </div>
+            <div class="r-e-c-detail">
+              <h4>合同信息</h4>
+              <div class="r-e-c-cont">
+                <contract-detail
+                        class="contract-policy-content"
+                        :contract.sync="contractDetail"
+                        :policyText="contractDetail.contractClause.policyText"
+                        @update-contract="updateContractAfterEvent"
+                ></contract-detail>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </transition>
   </div>
@@ -58,7 +73,7 @@
 <script>
   import { ContractDetail } from '@freelog/freelog-ui-contract'
   import ContractTree from './contract-tree.vue'
-  import { RESOURCE_STATUS } from '@/config/contract'
+  import { CONTRACT_STATUS_COLORS } from '@/config/contract'
   export default {
     name: 'release-editor-contract',
     components: {
@@ -66,92 +81,129 @@
     },
     props: {
       release: Object,
-      releaseScheme: Object,
-      releasesTreeData: {
+      contracts: {
         type: Array,
         default: []
-      }
+      },
+      depReleasesList: {
+        type: Array,
+        default: []
+      },
     },
     data() {
       return {
         isShowDetailContract: false,
         isloading: false,
-        contractsMap: {},
-        contracts: [],
         cTreeData: [],
-        contractDetail: null
+        contractDetail: null,
+        targetData: null,
+        activeContractTab: '',
+        activeContractTabIndex: 0,
+        activeKey: '',
+        activeRelease: null
       }
     },
     computed: {
-    },
-    watch: {
-      releasesTreeData() {
-        this.fetchContractsDetail()
-        this.reResolveTreeData()
-      },
-      contracts() {
+      contractsMap() {
+        const map = {}
         this.contracts.forEach(c => {
-          this.contractsMap[c.contractId] = c
-          this.contractDetail = c
+          map[c.contractId] = c
         })
+        return map
       }
     },
-    methods: {
-      fetchContractsDetail() {
-        this.isLoading = true
-        const rtData = this.releasesTreeData
-        var ids = []
-        for(let i = 0; i < rtData.length; i++) {
-          if(rtData[i].contracts) {
-            ids = [ ...ids, ...rtData[i].contracts.map(c => c.contractId) ]
-          }
-        }
-        if(ids.length > 0) {
-          this.$services.ContractRecords.get({
-            params: {
-              contractIds: ids.join(',')
-            }
-          })
-            .then(res => res.data)
-            .then(res => {
-              if(res.errcode === 0) {
-                this.contracts = res.data
-              }
-              this.isLoading = false
-            })
-            .catch(e => this.isLoading = false)
-        }
+    watch: {
+      contracts() {
+        this.reResolveTreeData()
       },
+    },
+    methods: {
       reResolveTreeData() {
         const tmpTreeData = []
-        const rtData = this.releasesTreeData
+        const rtData = this.depReleasesList
 
         var key = 'tree-node-i-'
         let firstLevelNodeIndex = -1, secondLevelNodeIndex = 0
         for(let i = 0; i < rtData.length; i++) {
-          let tmpNode = {
-            key,
-            label: rtData[i].releaseName,
-            isShowChildren: true,
-            children: []
-          }
-          if(rtData[i].isSecondLevel) {
-            tmpNode.key = tmpNode.key + '-' + secondLevelNodeIndex
-            secondLevelNodeIndex++
-            tmpTreeData[firstLevelNodeIndex].children.push(tmpNode)
-          }else {
+          const isParentHasContracts = rtData[i].contracts && rtData[i].contracts.length > 0
+          if(isParentHasContracts) {
             firstLevelNodeIndex++
             secondLevelNodeIndex = 0
-            tmpTreeData[firstLevelNodeIndex] = tmpNode
+            tmpTreeData[firstLevelNodeIndex] = this.getTreeNode(rtData[i], key + i)
           }
+
+          rtData[i].baseUpcastReleases.forEach((item) => {
+            if(item.contracts && item.contracts.length > 0) {
+              let tmpNode = this.getTreeNode(item, key + i)
+              if(isParentHasContracts) {
+                tmpNode.key = tmpNode.key + '-' + secondLevelNodeIndex
+                secondLevelNodeIndex++
+                tmpTreeData[firstLevelNodeIndex].children.push(tmpNode)
+              }else {
+                firstLevelNodeIndex++
+                secondLevelNodeIndex = 0
+                tmpTreeData[firstLevelNodeIndex] = tmpNode
+              }
+            }
+          })
         }
         this.cTreeData = tmpTreeData
-        console.log(JSON.parse(JSON.stringify(this.cTreeData)))
+      },
+      getTreeNode(item, key) {
+        let tmpNode = {
+          key,
+          isShowChildren: true,
+          children: [],
+          label: item.releaseName,
+          resourceType: item.resourceType,
+          contracts: item.contracts,
+          contractType: this.getNodeContractType(item.contracts),
+          policies: item.policies
+        }
+        return tmpNode
+      },
+      getNodeContractType(contracts){
+        var isWarning = false
+        let type = ''
+        if(contracts && contracts.length) {
+          for(let i = 0; i < contracts.length; i++) {
+            const { contractId } =  contracts[i]
+            const contract = this.contractsMap[contractId]
+            type = CONTRACT_STATUS_COLORS[contract.status] ? CONTRACT_STATUS_COLORS[contract.status].type : ''
+            if(type === 'success') {
+              return type
+            }
+            if(type === 'warning') {
+              isWarning = true
+            }
+          }
+        }
+        return isWarning ? 'warning' : type
       },
       updateContractAfterEvent() {},
-      showDetailContract() {
+      exchangeContractTab(data) {
+        this.activeContractTabIndex = +data.index
+        this.handlerContract(this.targetData)
+      },
+      showDetailContract(data) {
+        if(data.contracts.length) {
+          this.activeContractTabIndex = 0
+          if(this.targetData !== data && this.isShowDetailContract) {
+            this.isShowDetailContract = false
+            setTimeout(() => {
+              this.handlerContract(data)
+            }, 300)
+          }else {
+            this.handlerContract(data)
+          }
+        }
+      },
+      handlerContract(data) {
+        const { contractId } = data.contracts[this.activeContractTabIndex]
+        this.activeContractTab = data.policies[this.activeContractTabIndex].policyName
+        this.contractDetail = this.contractsMap[contractId]
         this.isShowDetailContract = true
-
+        this.targetData = data
       },
       hideDetailContract() {
         this.isShowDetailContract = false
@@ -207,27 +259,29 @@
         &:before {
           content: '';
           position: absolute; top: -40px; left: 0; z-index: 10;
-          width: 1px; height: 72px; background-color: #BABABA;
+          width: 6px; height: 75px; border: 1px solid #BABABA; border-top-width: 0; border-right-width: 0;
+          border-bottom-left-radius: 6px;
         }
       }
     }
 
     .release-editor-box {
-      overflow: hidden;
+      overflow: hidden; box-sizing: border-box;
       position: absolute; top: 40px; right: 12px; z-index: 10;
       width: 350px; height: 540px; border-radius: 6px;
       background-color: #fff; box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+
+      .el-icon-close {
+        position: absolute; top: 2px; right: 2px; z-index: 10;
+        padding: 8px; font-size: 14px; color: #666; cursor: pointer;
+        &:hover { color: #333; }
+      }
 
       .r-e-info {
         color: #666;
         margin-top: 12px; padding: 0 24px;
         h4 {
           position: relative; margin-bottom: 15px;
-          .el-icon-close {
-            position: absolute; top: -6px; right: -20px; z-index: 10;
-            padding: 8px; font-size: 14px; color: #666; cursor: pointer;
-            &:hover { color: #333; }
-          }
           &:after {
             content: '';
             position: absolute; top: 50%; left: -8px; z-index: 5;
@@ -253,6 +307,7 @@
         .beauty-poliycy-box .bp-state.active{ min-width: auto; }
       }
     }
+    .r-e-c-empty-box { padding-top: 20px; font-size: 18px; text-align: center; }
   }
 </style>
 
@@ -261,6 +316,22 @@
     .r-e-c-detail {
       .beauty-poliycy-box{
         .bp-state.active{ min-width: auto; }
+      }
+    }
+    .release-editor-box {
+      .el-tabs.rec-tab {
+        margin-top: 0;
+        .el-tabs__header .el-tabs__nav {
+          padding: 0;
+          .el-tabs__nav {
+            margin-left: 0;
+          }
+        }
+        .el-tabs__nav-scroll {
+          padding-right: 30px;
+          .el-tabs__item { padding: 0 15px; }
+        }
+        .el-tabs__content { padding: 0; }
       }
     }
   }

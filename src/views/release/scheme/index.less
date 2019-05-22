@@ -36,71 +36,8 @@
     position: absolute; bottom: 35px; right: 30px; z-index: 20;
   }
 
-  .r-dependencies-item {
-    margin-bottom: 10px; cursor: pointer;
-    &.active {
-      border-top-left-radius: 4px; border-bottom-left-radius: 4px; background-color: #fff;
-    }
-
-    .r-item-cont {
-      padding-left: 10px; padding-top: 10px; overflow: hidden;
-    }
-
-    .r-name, .r-info, .r-policies { padding-left: 20px; }
-    .r-name {
-      position: relative;
-      margin-bottom: 6px;
-      font-size: 16px; color: #333; font-weight: 500;
-
-      i {
-        position: absolute; left: 0; top: 50%; z-index: 1;
-        transform: translateY(-50%);
-      }
-
-      &.no-resolve, &.resolved{
-        i {
-          width: 12px; height: 12px; border-radius: 50%; overflow: hidden;
-          font-size: 12px;
-        }
-      }
-      &.no-resolve{
-        i { background-color: #EA7171; color: #EA7171;  }
-      }
-      &.resolved{
-        i { background-color: #84CCA8; color: #84CCA8; }
-      }
-      &.upcast {
-        i { color: #EA7171; font-weight: bold; }
-      }
-    }
-    .r-info {
-      margin-bottom: 6px;
-      font-size: 12px; color: #999;
-      span{
-        padding-right: 5px;
-        &:not(:first-child) {
-          padding-left: 5px; border-left: 1px solid #999;
-        }
-      }
-    }
-    .r-policies {
-      margin-right: 8px; margin-bottom: 8px;  border-bottom: 1px solid #D4D4D4;
-      .r-p-item {
-        display: inline-block;
-        margin: 0 8px 10px 0; padding: 2px 10px; border: 1px solid #A5D1FF; border-radius: 2px;
-        background-color: #E9F4FF; color: #248fff;
-      }
-    }
-    &.second-level {
-      padding: 0 0 0 40px; cursor: pointer;
-
-      &.active {  border-top-left-radius: 4px; border-bottom-left-radius: 4px; background-color: #fff; }
-      .r-name { font-size: 14px; }
-    }
-  }
-
   .s-m-w-c-p-wrapper {
-    padding: 20px 30px 0;
+    padding: 20px 40px 0 30px;;
 
     &.disabled {
       pointer-events: none;
@@ -148,18 +85,23 @@
       }
 
       .p-detail {
-        border-radius: 4px;
-
         .p-segment-text {
-          max-width: 545px; padding: 10px; border: 1px solid #CCC; border-radius: 4px;
+          padding: 10px; border: 1px solid #CCC; border-radius: 4px;
           background-color: #fff; color: #333; white-space: pre-wrap;
         }
       }
 
-
-      &.has-sign-history {
-        .p-segment-text {
-          background-color: #FFF9E2;
+      .smw-c-p-signed {
+        position: relative;
+        border: 1px solid #D8D8D8; border-radius: 4px; background-color: #fbfbfb;
+        .smw-c-p-s-text { color: #409EFF; }
+        .p-name{ margin-top: 8px; margin-left: 15px; cursor: auto; }
+        .p-detail{
+          padding: 10px 15px; border-top: 1px solid #D8D8D8;
+        }
+        .el-icon-warning {
+          position: absolute; top: 7px; right: 10px; z-index: 5;
+          font-size: 18px; color: #409EFF;
         }
       }
     }

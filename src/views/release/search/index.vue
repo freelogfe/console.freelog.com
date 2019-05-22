@@ -101,6 +101,7 @@
           })
         }
         return this.loader({ page }).then((data) => {
+          data.dataList = data.dataList.filter(r => r.policies.length > 0)
           this.favorReleases = this.favorReleases.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
@@ -124,6 +125,7 @@
         }).then((res) => {
           const data = res.getData() || {}
           if (res.data.errcode === 0) {
+            data.dataList = data.dataList.filter(r => r.policies.length > 0)
             this.searchReleases = this.searchReleases.concat(data.dataList)
             if (data.dataList.length < pageSize) {
               data.canLoadMore = false

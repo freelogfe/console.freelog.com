@@ -13,28 +13,24 @@ export default {
   data() {
     return {
       release: null,
-      releaseScheme: null,
       targetResourceDetail: null,
-      vTabActiveName: 'scheme',
+      vTabActiveName: 'contract',
       selectedVersion: '',
       resourceDialogVisible: false,
+      contracts: [],
       depReleasesList: [],
       releasesTreeData: [],
       searchInput: '',
-      searchResources: [
-        // { resourceName: '资源1234', resourceType: 'markdown', updateDate: '2019/09/21' },
-        // { resourceName: '资源1234', resourceType: 'markdown', updateDate: '2019/09/21' },
-        // { resourceName: '资源1234', resourceType: 'markdown', updateDate: '2019/09/21' },
-      ]
+      searchResources: []
     }
   },
   computed: {
     releaseId() {
       return this.$route.params.releaseId
     },
-    resourceDependencies() {
-      return this.targetResourceDetail ? this.targetResourceDetail.systemMeta.dependencies : []
-    },
+  },
+  watch: {
+
   },
   methods: {
     fetchReleaseDetail() {
@@ -46,11 +42,11 @@ export default {
             this.selectedVersion = this.release.latestVersion.version
             this.targetResourceDetail = res.data.resourceInfo
             this.formatReleaseData()
-            this.fetchReleaseScheme()
           }
         })
     },
     formatReleaseData() {
+      this.depReleasesList = this.targetResourceDetail ? this.targetResourceDetail.systemMeta.dependencies : []
       this.release.resourceVersions = this.release.resourceVersions.map(i => {
         i.createDate = format(i.createDate, 'YYYY-MM-DD')
         return i
@@ -60,7 +56,14 @@ export default {
       this.vTabActiveName = tab.name
     },
     showResourceDialog() {
-      this.resourceDialogVisible = true
+      if(this.release.policies.length > 0) {
+        this.resourceDialogVisible = true
+      }else {
+        this.$message({ type: 'warning', message: '发行没策略，不能新增版本' })
+      }
+    },
+    clearSearchInputHandler() {
+
     },
     searchDataHandler(page) {
       const pageSize = 10
@@ -71,9 +74,10 @@ export default {
 
       return this.$services.allResources.get({
         params: Object.assign({
-          keyWords: encodeURIComponent(this.searchInput),
+          keywords: encodeURIComponent(this.searchInput),
           page,
-          pageSize
+          pageSize,
+          isSelf: 1
         }, this.searchScope)
       }).then((res) => {
         const data = res.getData() || {}
@@ -88,18 +92,11 @@ export default {
         return data
       })
     },
-    // 获取 发行方案
-    fetchReleaseScheme() {
-      const { releaseId, latestVersion: { version } } = this.release
-      this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
-        .then(res => res.data)
-        .then(res => {
-          if(res.errcode === 0) {
-            this.releaseScheme = res.data
-          }
-        })
-        .catch(e => this.$error.showErrorMessage('授权方案获取失败！'))
-    },
+    searchHandler() {
+      this.activeName = 'search'
+      this.searchResources = []
+      this.$refs.searchView.refresh()
+    }
   },
   created() {
     this.fetchReleaseDetail()

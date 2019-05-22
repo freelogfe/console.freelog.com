@@ -8,25 +8,22 @@
     <div class="cont clearfix">
       <div class="s-m-w-c-left">
         <div
-                class="r-dependencies-item"
-                :class="{ 'second-level': rItem.isSecondLevel, 'active': selectedRelease.releaseId === rItem.releaseId }"
-                v-for="(rItem, index) in targetReleases"
+                v-for="(rItem, index) in depReleasesList"
                 :key="'dep-item-'+index"
-                @click="exchangeSelectedRelease(index)"
         >
-          <div class="r-item-cont">
-            <p class="r-name" :class="[rItem.resolveStatus]"><i class="el-icon-top"></i>{{rItem.releaseName}}</p>
-            <div class="r-info">
-              <span>{{rItem.resourceType}}</span>
-              <span>{{rItem.latestVersion.version}}</span>
-              <span>{{rItem.updateDate | fmtDate }}</span>
-            </div>
-            <div class="r-policies">
-              <template v-if="!rItem.isUpcasted">
-                <div class="r-p-item" v-for="(p, index) in rItem.selectedPolicies" :key="'s-policy-'+index">{{p.policyName}}</div>
-              </template>
-            </div>
-          </div>
+          <release-depend-item
+                  :release="rItem"
+                  :resolveStatus="rItem.resolveStatus"
+                  :selectedRelease="selectedRelease"
+                  @exchange-item="exchangeSelectedRelease"></release-depend-item>
+          <release-depend-item
+                  is-scond-level
+                  v-for="(urItem, index) in rItem.baseUpcastReleases"
+                  :key="'dep-item-'+index"
+                  :release="urItem"
+                  :resolveStatus="urItem.resolveStatus"
+                  :selectedRelease="selectedRelease"
+                  @exchange-item="exchangeSelectedRelease"></release-depend-item>
         </div>
       </div>
       <div class="s-m-w-c-right">
@@ -43,12 +40,32 @@
                   v-for="(policy, index) in tmpSelectedPolicies"
                   :key="'policy-' + index"
           >
-            <div class="p-name" @click="selectPolicy(policy, index)">
-              <span class="p-n-check-box" v-if="!policy.isSelected"></span>
-              <i class="el-icon-check" v-else></i>{{policy.policyName}}
+            <div class="smw-c-p-signed" v-if="contractsMap && contractsMap[policy.contractId]">
+              <div class="p-name" @click="selectPolicy(policy, index)">
+                <span class="p-n-check-box" v-if="!policy.isSelected"></span>
+                <i class="el-icon-check" v-else></i>
+                {{policy.policyName}}<span class="smw-c-p-s-text">（已签约）</span>
+              </div>
+              <el-tooltip placement="top" content="此发行存在历史签约，可直接使用当前合同">
+                <i class="el-icon-warning"></i>
+              </el-tooltip>
+              <div class="p-detail">
+                <contract-detail
+                        class="contract-policy-content"
+                        :contract.sync="contractsMap[policy.contractId]"
+                        :policyText="contractsMap[policy.contractId].contractClause.policyText"
+                        @update-contract="updateContractAfterEvent"
+                ></contract-detail>
+              </div>
             </div>
-            <div class="p-detail">
-              <pre class="p-segment-text">{{fmtPolicyTextList(policy)}}</pre>
+            <div v-else>
+              <div class="p-name" @click="selectPolicy(policy, index)">
+                <span class="p-n-check-box" v-if="!policy.isSelected"></span>
+                <i class="el-icon-check" v-else></i>{{policy.policyName}}
+              </div>
+              <div class="p-detail">
+                <pre class="p-segment-text" >{{fmtPolicyTextList(policy)}}</pre>
+              </div>
             </div>
           </div>
         </div>

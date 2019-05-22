@@ -1,7 +1,7 @@
 <template>
   <div class="tree-node" :class="[]">
-    <div class="node-content warning">
-      <div class="node-key" @click="tapNodeKey">
+    <div class="node-content" :class="[data.contractType]">
+      <div class="node-key" :class="{'active': data.key === activeKey}" @click="tapNodeKey(data)">
         <i class="el-icon-tickets">
           <i class="el-icon-setting"></i>
         </i>
@@ -10,7 +10,13 @@
     </div>
     <transition name="fade">
       <div class="children-box" v-if="data.children && data.isShowChildren">
-        <contract-tree v-for="child in data.children" :data="child" @show-contract="tapNodeKey"></contract-tree>
+        <contract-tree
+                v-for="child in data.children"
+                :data="child"
+                :activeKey.sync="childActiveKey"
+                @activate="showContract"
+                @inactivate="hideContract"
+        ></contract-tree>
       </div>
     </transition>
   </div>
@@ -21,19 +27,38 @@
     name: 'contract-tree',
     props: {
       data: Object,
+      activeKey: String,
     },
     data() {
       return {
-
+        childActiveKey: ''
+      }
+    },
+    watch: {
+      activeKey() {
+        this.childActiveKey = this.activeKey
+      },
+      childActiveKey() {
+        this.$emit('update:activeKey', this.childActiveKey)
       }
     },
     methods: {
-      tapNodeContent(data) {
-        data.isShowChildren = !data.isShowChildren
+      tapNodeKey(data) {
+        if(this.activeKey !== data.key) {
+          this.$emit('activate', data)
+          this.$emit('update:activeKey', data.key)
+        }else {
+          this.$emit('inactivate', data)
+          this.$emit('update:activeKey', '')
+        }
       },
-      tapNodeKey() {
-        this.$emit('show-contract', )
-      }
+      showContract(data) {
+        this.$emit('activate', data)
+      },
+      hideContract(data) {
+        this.$emit('inactivate', data)
+      },
+      tapNodeContent() {}
     },
   }
 </script>
@@ -59,55 +84,60 @@
     &.first-level {
       padding-bottom: 0;
       &:first-child:before {
-        width: 30px;
+        width: 24px;
       }
     }
 
-    &:not(:last-child):before {
+    &:not(:last-child):after {
       content: '';
-      position: absolute; left: -30px; top: 17px; bottom: -21px; z-index: 0;
+      position: absolute; left: -30px; top: 30px; bottom: -37px; z-index: 0;
       width: 30px; border: 1px solid #BABABA; border-top-width: 0; border-right-width: 0;
       border-bottom-left-radius: 6px;
     }
     &:first-child:before {
       content: '';
-      position: absolute; top: 31px; right: 100%; z-index: 0;
+      position: absolute; top: 35px; right: 100%; z-index: 0;
       width: 45px; height: 1px;
       background-color: #BABABA;
     }
 
     .node-content {
       overflow: hidden;
-      padding: 2px 0 20px 2px;
+      padding: 5px 0 20px 5px;
       font-size: 20px; z-index: 5;
 
       &.success {
-        .node-key { border-color: #50C190; box-shadow: 0 0 5px #50C190B3; }
+        .node-key { border-color: #50C190; box-shadow: 0 0 8px #50C190B3; }
         .el-icon-setting { color: #50C190; }
       }
       &.error {
-        .node-key { border-color: #E35A5F; box-shadow: 0 0 5px #E35A5FB3; }
+        .node-key { border-color: #E35A5F; box-shadow: 0 0 8px #E35A5FB3; }
         .el-icon-setting { color: #E35A5F; }
       }
       &.warning {
-        .node-key { border-color: #E6A232; box-shadow: 0 0 5px #E6A232B3; }
-        .el-icon-setting { color: #E6A232; }
+        .node-key { border-color: #E6A232; box-shadow: 0 0 8px #E6A232B3; }
+        .el-icon-setting { color: #E6A232; animation: turnAround 3s linear infinite; }
+
       }
 
       .node-key {
+        box-sizing: border-box;
         position: relative; float: left; cursor: pointer;
-        width: 60px; height: 60px; border: 1px solid #ccc; border-radius: 50%;
+        width: 62px; height: 62px; border: 1px solid #ccc; border-radius: 50%;
         line-height: 60px; font-size: 12px; text-align: center; background-color: #fff;
+        &.active { border-width: 2px; }
         .el-icon-tickets { position: relative; margin-top: 12px; font-size: 36px; }
         .el-icon-setting {
           position: absolute; bottom: 0; left: 0; z-index: 1;
           transform: translate(-6%, 12%);
+          border-radius: 50%;
           font-size: 22px; font-weight: bold; background-color: #fff;
         }
+
       }
       .node-key:after {
         content: '';
-        position: absolute; left: 100%; top: 29px; z-index: 0;
+        position: absolute; left: 60px; top: 50%; z-index: 0; transform: translateY(-50%);
         width: 41px; height: 1px;
         background-color: #BABABA;
       }
@@ -125,4 +155,8 @@
     }
   }
 
+  @keyframes turnAround {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+  }
 </style>

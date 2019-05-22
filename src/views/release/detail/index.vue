@@ -39,17 +39,17 @@
                       :class="{'active': p.policyId === activePolicy.policyId}"
                       v-for="p in release.policies"
                       @click="exchangeActivePolicy(p)">
-                <el-radio v-model="selectedPolicyId" :label="p.policyId" size="medium">{{p.policyName}}</el-radio>
+                <el-checkbox v-model="selectedRPolicyIdsList" :label="p.checkedLabel" size="medium">{{p.policyName}}</el-checkbox>
               </li>
             </ul>
           </div>
-          <div class="r-d-w-p-upcast-releases" v-if="release.baseUpcastReleases.length">
+          <div class="r-d-w-p-upcast-releases" v-if="baseUpcastReleasesList.length">
             <h3>上抛发行策略</h3>
             <ul>
-              <li class="r-d-w-p-u-r-item" v-for="(r, index) in release.baseUpcastReleases">
+              <li class="r-d-w-p-u-r-item" v-for="(r, index) in baseUpcastReleasesList">
                 <div class="r-item-name">{{r.releaseName}}</div>
-                <div class="release-policy-item" v-for="(p, index) in r.policyList">
-                  <el-radio :label="p.policyName" size="medium">{{p.policyName}}</el-radio>
+                <div class="release-policy-item" v-for="(p, index) in r.policies">
+                  <el-checkbox v-model="selectedUpcastRPolicyIdsList" :label="p.checkedLabel" size="medium">{{p.policyName}}</el-checkbox>
                 </div>
               </li>
             </ul>
@@ -94,11 +94,25 @@
     >
       <div class="r-d-w-r-sign">
         <h4>节点选择</h4>
-        <div class="r-d-w-r-sign-node" v-for="node in nodes">
-          <el-radio :label="node.nodeName" size="medium">{{node.nodeName}}</el-radio>
-        </div>
+        <el-checkbox-group class="r-d-w-r-node-list" v-model="checkedNodeList">
+          <el-checkbox
+                  class="r-d-w-r-node-item"
+                  v-for="node in nodes"
+                  :label="node.nodeName"
+                  size="medium"
+          ></el-checkbox>
+        </el-checkbox-group>
         <h4>策略确认</h4>
-        <div class="r-d-w-r-sign-release" ></div>
+        <div class="r-d-w-r-s-releases" >
+          <div class="rdwr-s-r-item" v-for="item in selectedPolicies">
+            <span class="rdwr-s-r-item-name">{{item.releaseName}}</span>
+            <span class="rdwr-s-r-item-policy">{{item.policyName}} <i class="el-icon-arrow-down"></i></span>
+          </div>
+        </div>
+        <div class="rdwr-s-btn-group">
+          <el-button class="rdwr-s-btn rdwr-s-btn-cancel" @click="signDialogVisible = false">取消</el-button>
+          <el-button class="rdwr-s-btn rdwr-s-btn-sign" @click="authSign">签约</el-button>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -130,5 +144,8 @@
   .r-d-w-version-option {
     height: 22px; line-height: 22px; padding: 0 10px; text-align: center;
     span { display: inline-block; transform: scale(.7); }
+  }
+  .el-dialog__header {
+    padding: 15px;
   }
 </style>

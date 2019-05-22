@@ -30,8 +30,9 @@
           <h4>方案</h4>
           <scheme-manage
                   type="add"
+                  :release="release"
                   :baseUpcastReleases="release.baseUpcastReleases"
-                  :depReleases="dependencies"
+                  :depReleasesList.sync="depReleasesList"
           ></scheme-manage>
         </div>
         <div class="r-a-w-footer">
@@ -56,13 +57,13 @@
         resourceId: this.$route.query.resourceId,
         release: null,
         resourceDetail: null,
-        depReleasesList: []
+        releaseScheme: null,
+        depReleasesList: [],
+        releasesTreeData: [],
       }
     },
     computed: {
-      dependencies() {
-        return this.resourceDetail ? this.resourceDetail.systemMeta.dependencies : []
-      },
+
     },
     methods: {
       fetchReleaseDetail() {
@@ -72,9 +73,22 @@
             if(res.errcode === 0) {
               this.release = res.data
               this.resourceDetail = res.data.resourceInfo
+              this.depReleasesList =  res.data.resourceInfo.systemMeta.dependencies || []
               this.formatReleaseData()
             }
           })
+      },
+      // 获取 发行方案
+      fetchReleaseScheme() {
+        const { releaseId, latestVersion: { version } } = this.release
+        this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              this.releaseScheme = res.data
+            }
+          })
+          .catch(e => this.$error.showErrorMessage('授权方案获取失败！'))
       },
       formatReleaseData() {
         this.newVersion = this.getNewVersion()
@@ -101,6 +115,8 @@
           .then(res => {
             if(res.errocde === 0) {
               this.$router.replace('/release/edit/${this.releaseId}')
+            }else {
+              this.$error.showErrorMessage(res.msg)
             }
           })
       },
@@ -154,7 +170,7 @@
   }
 
   .r-a-w-footer {
-    padding: 30px 10px;
+    padding: 20px 10px;
     background-color: #FAFBFB; text-align: center;
     .r-a-w-cancel-btn, .r-a-w-save-btn {
       display: inline-block; cursor: pointer;

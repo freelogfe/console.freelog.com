@@ -4,7 +4,9 @@
       <template slot="about-version">
         <template v-if="release.baseUpcastReleases.length === 0">
           <div class="r-e-w-v-list">
-            <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
+            <el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">
+              <div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>
+            </el-tooltip>
             <el-table
                     :show-header="false"
                     :data="release.resourceVersions"
@@ -27,7 +29,9 @@
                     :value="item.version">
             </el-option>
           </el-select>
-          <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
+          <el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">
+            <div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>
+          </el-tooltip>
           <div class="r-e-w-v-scheme">
             <el-tabs v-model="vTabActiveName" type="card" :closable="false" @tab-click="exchangeVTab">
               <el-tab-pane label="方案" name="scheme">
@@ -35,16 +39,16 @@
                         type="edit"
                         :release="release"
                         :baseUpcastReleases="release.baseUpcastReleases"
-                        :depReleases="resourceDependencies"
+                        :depReleasesList.sync="depReleasesList"
                         :releasesTreeData.sync="releasesTreeData"
-                        :releaseScheme="releaseScheme"
+                        :contracts.sync="contracts"
                 ></scheme-manage>
               </el-tab-pane>
               <el-tab-pane label="合约" name="contract">
                 <release-editor-contract
                         :release="release"
-                        :releaseScheme="releaseScheme"
-                        :releasesTreeData="releasesTreeData"
+                        :depReleasesList="depReleasesList"
+                        :contracts="contracts"
                 ></release-editor-contract>
               </el-tab-pane>
             </el-tabs>
@@ -59,7 +63,15 @@
             width="640px"
             :visible.sync="resourceDialogVisible"
     >
-      <el-input class="r-e-w-search-input" v-model="searchInput"></el-input>
+      <el-input
+              class="r-e-w-search-input"
+              v-model="searchInput"
+              clearable
+              ref="searchInputRef"
+              @clear="clearSearchInputHandler"
+              @keyup.native.enter="searchHandler"
+              :placeholder="$t('search.placeholder')"
+      ></el-input>
       <lazy-list-view :list="searchResources"
                       ref="searchView"
                       class="r-e-w-s-resource-list"
@@ -107,6 +119,7 @@
       &:hover {
         background-color: #F5F5F5; color: #1287ff;
       }
+      &.disabled { opacity: .7; cursor: not-allowed; pointer-events: none; }
     }
 
     .r-e-w-search-dialog {
