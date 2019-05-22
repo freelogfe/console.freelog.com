@@ -26,7 +26,7 @@ export default {
                 callback();
             }
         };
-        //      保持与web component中自定义标签名一致
+        // 保持与web component中自定义标签名一致
         const validateWidgetName = (rule, value, callback) => {
             // 格式为freelog-xxx-yyyy，最少4个字符
             const NAME_REG = /^freelog-[a-z0-9._-]{3,15}-[a-z0-9._-]{2,14}[a-z0-9]$/;

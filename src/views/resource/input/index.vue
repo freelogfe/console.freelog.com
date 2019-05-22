@@ -358,4 +358,8 @@
 
 <style lang="less">
     @import "reset-el.less";
+
+    .resource-input-wrap .resource-thumbnail-input .el-upload-dragger {
+        border: 1px dashed #cbcbcb;
+    }
 </style>
