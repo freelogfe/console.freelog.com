@@ -47,7 +47,7 @@
             <h3>上抛发行策略</h3>
             <ul>
               <li class="r-d-w-p-u-r-item" v-for="(r, index) in baseUpcastReleasesList">
-                <div class="r-item-name">{{r.releaseName}}</div>
+                <div class="r-item-name" :class="{'selected': r.isSelectedPolicy}">{{r.releaseName}}</div>
                 <div class="release-policy-item" v-for="(p, index) in r.policies">
                   <el-checkbox v-model="selectedUpcastRPolicyIdsList" :label="p.checkedLabel" size="medium">{{p.policyName}}</el-checkbox>
                 </div>
@@ -98,9 +98,11 @@
           <el-checkbox
                   class="r-d-w-r-node-item"
                   v-for="node in nodes"
-                  :label="node.nodeName"
+                  :label="node.nodeId"
                   size="medium"
-          ></el-checkbox>
+                  :checked="rSubordinateNodesIds.indexOf(node.nodeId) !== -1"
+                  :disabled="rSubordinateNodesIds.indexOf(node.nodeId) !== -1"
+          >{{node.nodeName}}</el-checkbox>
         </el-checkbox-group>
         <h4>策略确认</h4>
         <div class="r-d-w-r-s-releases" >

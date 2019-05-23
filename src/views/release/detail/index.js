@@ -31,6 +31,8 @@ export default {
       ],
       compareDialogVisible: false,
       signDialogVisible: false,
+      rSubordinateNodesIds: []
+
     }
   },
   computed: Object.assign({
@@ -49,6 +51,21 @@ export default {
   }, mapGetters({
     nodes: 'nodes'
   })),
+  watch: {
+    activeReleaseVersion(newV, oldV) {
+      if(oldV !== '') {
+        this.isShowContentLoading = true
+        this.fetchResourceDetail()
+      }
+    },
+    selectedUpcastRPolicyIdsList() {
+      var tmpIds = this.selectedPolicies.map(i => i.releaseId)
+      this.baseUpcastReleasesList = this.baseUpcastReleasesList.map(r => {
+        r.isSelectedPolicy = tmpIds.indexOf(r.releaseId) !== -1
+        return r
+      })
+    },
+  },
   methods: {
     fetchReleaseDetail() {
       this.$services.ReleaseService.get(this.releaseId)
@@ -86,6 +103,15 @@ export default {
         })
         .catch(e => {
           this.isShowContentLoading = false
+        })
+    },
+    fetchReleaseSubordinateNodes() {
+      this.$services.PresentablesService.get(`releaseSubordinateNodes?releaseId=${this.releaseId}`)
+        .then(res => res.data)
+        .then(res => {
+          if(res.errcode === 0) {
+            this.rSubordinateNodesIds = res.data.map(n => n.nodeId)
+          }
         })
     },
     fetchReleases(ids) {
@@ -127,7 +153,7 @@ export default {
     },
     formatReleaseData() {
       this.activeReleaseVersion = this.release.latestVersion.version
-      this.release.policies = this.release.policies.map(p => {
+      this.release.policies = this.release.policies.filter(p => p.status === 1).map(p => {
         p.checkedLabel = `${this.release.releaseId}-${p.policyId}`
         this.checkedLabelMap[p.checkedLabel] = { releaseName: this.release.releaseName, policyName: p.policyName }
         return p
@@ -141,6 +167,7 @@ export default {
     getSelectedPolicies() {
 
     },
+    // 处理 收藏
     collectReleaseHandler() {
       if(!this.isCollectedRelease) {
         this.$services.collections.post({ releaseId: this.releaseId })
@@ -174,21 +201,49 @@ export default {
     showSignBox() {
       this.signDialogVisible = true
     },
+    // 获取授权：即创建presentable
     authSign() {
       this.$message({ type: 'warning', message: '未完成开发！' })
-    }
-  },
-  watch: {
-    activeReleaseVersion(newV, oldV) {
-      if(oldV !== '') {
-        this.isShowContentLoading = true
-        this.fetchResourceDetail()
-      }
-    }
+      return
+
+      const targetNodes = this.checkedNodeList.filter(n => this.rSubordinateNodesIds.indexOf(n.nodeId) > -1)
+      targetNodes.forEach(nodeId => {
+        this.$services.PresentablesService.post({
+          nodeId,
+          releaseId: this.releaseId,
+          presentableName: this.release.releaseName,
+          version: this.activeReleaseVersion,
+          resolveReleases: this.getRosolveReleases(),
+        })
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+
+            }
+          })
+      })
+    },
+    // 获取 发行以及其上抛的解决方式
+    getRosolveReleases() {
+      const tmpMap = {}
+      const targetArr = []
+      this.selectedPolicies.forEach(p => {
+        const { releaseId, policyId } = p
+        if(tmpMap[releaseId]) {
+          tmpMap[releaseId].contracts.push({ policyId })
+        }else {
+          const rItem = { releaseId, contracts:[{ policyId }]}
+          tmpMap[releaseId] = rItem
+          targetArr.push(rItem)
+        }
+      })
+      return targetArr
+    },
   },
   created() {
     this.isShowContentLoading = true
     this.fetchReleaseDetail()
+    this.fetchReleaseSubordinateNodes()
     this.getColleactedStatus()
   }
 }
