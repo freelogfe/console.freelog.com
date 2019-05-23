@@ -5,6 +5,8 @@
 import PolicyTplViews from '@/views/policy-tpl'
 import ResourceViews from '@/views/resource'
 import NodeViews from '@/views/node'
+import ReleaseViews from '@/views/release'
+import MockViews from '@/views/mock';
 // import GroupViews from '@/views/group'
 
 const container = resolve => require.ensure([], () => resolve(require('@/views/layout/container.vue')), 'common')
@@ -16,27 +18,31 @@ const mainView = resolve => require.ensure([], () => resolve(require('@/views/ma
 const userView = resolve => require.ensure([], () => resolve(require('@/views/user/setting/index.vue')), 'user')
 
 export const views = {
-  layout,
-  container,
-  aboutView,
-  helpView,
-  error,
-  mainView,
-  userView,
-  ...ResourceViews,
-  ...NodeViews
+    layout,
+    container,
+    aboutView,
+    helpView,
+    error,
+    mainView,
+    userView,
+    ...ResourceViews,
+    ...NodeViews,
+    ...ReleaseViews,
+    ...MockViews,
 }
 
 export default {
-  layout,
-  container,
-  aboutView,
-  helpView,
-  error,
-  mainView,
-  userView,
-  ...ResourceViews,
-  ...NodeViews,
-  // ...GroupViews,
-  ...PolicyTplViews
+    layout,
+    container,
+    aboutView,
+    helpView,
+    error,
+    mainView,
+    userView,
+    ...ResourceViews,
+    ...MockViews,
+    ...NodeViews,
+    // ...GroupViews,
+    ...PolicyTplViews,
+    ...ReleaseViews
 }

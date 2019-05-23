@@ -11,9 +11,9 @@
                       ref="resourceList"
                       :list="resourceList"
                       :height="275"
-                      :fetch="fetchData">
+                      :fetch="fetchReleaseData">
         <template slot-scope="scope">
-          <list-item :resource="scope.data"></list-item>
+          <list-item :release="scope.data"></list-item>
         </template>
         <!--占位居中-->
         <template slot="append">

@@ -8,11 +8,11 @@
             <resource-items type="self" :query="selfQueryInput"></resource-items>
           </lazy-component>
         </el-tab-pane>
-        <el-tab-pane :label="$t('resourceListView.favorListTitle')" name="favor">
-          <lazy-component>
-            <resource-items type="favor" :query="favorQueryInput"></resource-items>
-          </lazy-component>
-        </el-tab-pane>
+        <!--<el-tab-pane :label="$t('resourceListView.favorListTitle')" name="favor">-->
+          <!--<lazy-component>-->
+            <!--<resource-items type="favor" :query="favorQueryInput"></resource-items>-->
+          <!--</lazy-component>-->
+        <!--</el-tab-pane>-->
       </el-tabs>
       <div class="right-tool-bar-wrap">
         <ul class="tool-bars">

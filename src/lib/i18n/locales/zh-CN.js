@@ -63,7 +63,7 @@ export default {
     updateSuccess: '资源更新成功',
     createSuccess: '资源创建成功',
     cancelQuestion: '确定取消创建资源？',
-    createDoneText: '完成并添加授权',
+    createDoneText: '完成',
     resourceId: '资源ID',
     name: '资源名称',
     type: '资源类型',
@@ -71,6 +71,10 @@ export default {
     status: '资源状态',
     author: '资源作者',
     createDate: '创建时间'
+  },
+
+  release: {
+    myReleases: '我的发行库',
   },
 
   node: {
@@ -172,23 +176,32 @@ export default {
   listResourceItem: {
     lastUpdateText: '最近更新时间：',
     updateInfo: '更新基础信息',
+    detail: '查看详情',
     schemes: '管理授权方案',
     state: '状态：'
   },
 
+  listReleaseItem: {
+    manageDetail: '管理详情',
+    detail: '查看详情',
+  },
+
   search: {
-    noFavorResources: '暂无收藏资源',
-    addBtn: '添加',
-    placeholder: '输入资源名称或者资源ID',
-    searchTitle: '搜索资源',
-    favorTitle: '收藏资源'
+    addBtn: '加入',
+    placeholder: '输入发行名称',
+    resourcePlaceholder: '输入发行名称',
+    myRelease: '我的发行',
+    noMyReleases: '暂无发行',
+    favorTitle: '收藏发行',
+    noFavorReleases: '暂无收藏发行',
+    searchTitle: '全局搜索',
   },
 
   //路由标题
   routes: {
     accountSetting: '账号设置',
     nodes: '节点',
-    resourceMarket: '资源市场',
+    releaseMarket: '发行市场',
     presentableDetail: '节点资源详情',
     nodesSystem: '节点管理系统',
     createNode: '创建节点',
@@ -202,9 +215,15 @@ export default {
     createResource: '创建资源',
     updateResource: '更新资源',
     myResources: '我的资源',
+    myReleases: '我的发行',
     resourceDetail: '资源详情',
     createResourcePolicyTpl: '创建资源策略模板',
-    resourcePolicyTplDetail: '资源策略模板详情'
+    resourcePolicyTplDetail: '资源策略模板详情',
+    createRelease: '',
+    releaseDetail: '',
+    releaseSystem: '',
+    releaseEditor: '',
+    releaseAdd: ''
   },
 
   axios: {
@@ -276,7 +295,7 @@ export default {
       dialogTitles: ['合约切换', '签约确认'],
       selectedSchemesTitle: '已选中的授权方案',
       selectTip:'请选择相应授权方案及策略……',
-      unhandledListTitle:'未处理资源列表'
+      unhandledListTitle:'上抛（选择的上抛将会成为发行的基础上抛）'
     },
 
     contractDetail: {

@@ -80,7 +80,7 @@ export default {
         return Promise.resolve({ canLoadMore: false })
       }
 
-      return this.$services.allResources.get({
+      return this.$services.ResourceService.get({
         params: Object.assign({
           keyWords: encodeURIComponent(this.searchInput),
           page,

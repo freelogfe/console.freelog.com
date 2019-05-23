@@ -5,8 +5,8 @@
 }
 
 .policy-input-item {
-  padding: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 30px; padding: 12px; border-radius: 4px;
+  background-color: #FAFBFB;
 
   &.preview-mode {
     .policy-content-input-padding {
@@ -20,6 +20,7 @@
       height: auto;
       margin-bottom: 10px;
       .policy-name-input {
+        font-size: 14px;
         border: none;
         border-bottom: 1px solid #999999;
         padding-left: 0;
@@ -94,7 +95,7 @@
     .policy-name-input {
       font-size: 16px;
       outline: none;
-      background-color: transparent;
+      background-color: #fff;
       position: absolute;
       top: 0;
       left: 0;
@@ -103,7 +104,7 @@
       border: 1px solid #CCCCCC;
       border-radius: 4px;
       padding: 3px 10px;
-      min-width: 200px;
+      min-width: 450px;
       max-width: 600px;
     }
   }
@@ -136,6 +137,7 @@
     border: 1px solid #CCCCCC;
     border-radius: 4px;
     padding: 10px;
+    background-color: #fff;
     .policy-input-area {
       min-height: 200px;
       position: relative;
@@ -166,6 +168,10 @@
       background-color: transparent;
       border: none;
     }
+  }
+  .policy-content-input-ft {
+    float: right; margin-top: 12px;
+    .el-button { padding: 6px 12px; }
   }
 
   .policy-toolbar {

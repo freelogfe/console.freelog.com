@@ -5,7 +5,7 @@
         <el-button v-if="type === 'favor'"
                    @click="delFavorResourceHandler(scope.data)"
                    type="primary" plain round
-                   class="del-favor-resource-btn">{{$t('resourceDetailView.deleteFavorText')}}
+                   class="del-favor-release-btn">{{$t('resourceDetailView.deleteFavorText')}}
         </el-button>
         <resource-item :resource="scope.data"
                        :type="type"
@@ -96,11 +96,13 @@
         }
         return this.loader({page}).then((data) => {
           this.resources = this.resources.concat(data.dataList)
+
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false
           } else {
             data.canLoadMore = true
           }
+          data.dataList.sort((r1,r2) => +new Date(r2.updateDate) - (+new Date(r1.updateDate)))
           return data
         })
       },
@@ -129,7 +131,8 @@
             param = {
               params: Object.assign({
                 pageSize: 10,
-                page: 1
+                page: 1,
+                isSelf: 1
               }, param)
             }
           }
@@ -168,7 +171,7 @@
       color: #999;
     }
 
-    .del-favor-resource-btn {
+    .del-favor-release-btn {
       float: right;
       margin-top: 8px;
       margin-right: 10px;
