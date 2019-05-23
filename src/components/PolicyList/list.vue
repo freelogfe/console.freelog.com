@@ -9,24 +9,29 @@
               已置顶
             </div>
             <div class="p-l-status p-l-s-disabled" v-show="policy.status == 0">
-              <i class="el-icon-download"></i>
+              <i class="el-icon-error"></i>
               已停用
+            </div>
+            <div class="p-l-status p-l-s-active" v-show="policy.status == 1">
+              <i class="el-icon-success"></i>
+              已启用
             </div>
           </div>
           <div class="p-l-card">
             <h5>{{policy.policyName}}</h5>
             <pre v-if="policy.policyId" class="policy-text" v-html="policy.policyText"></pre>
           </div>
-          <el-dropdown size="small" trigger="click">
+          <el-dropdown size="small" @command="handleCommand">
             <span class="el-dropdown-link">
               <i class="el-icon-more"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>启用</el-dropdown-item>
-              <el-dropdown-item>置顶</el-dropdown-item>
+              <el-dropdown-item v-if="policy.status == 0" :command="index + '-' + 1">启用</el-dropdown-item>
+              <el-dropdown-item v-if="policy.status == 1" :command="index + '-' + 0">停用</el-dropdown-item>
+              <el-dropdown-item :command="index + '-' + 2">置顶</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <i class="p-l-expand-btn el-icon-d-caret" @click="expandPolicyHandler(index)"></i>
+          <i class="p-l-expand-btn el-icon-rank" @click="expandPolicyHandler(index)"></i>
         </div>
       </div>
     </div>
@@ -37,7 +42,7 @@
     ></i>
     <i
             class="p-l-right-btn el-icon-arrow-right"
-            :class="{ 'disabled': navActiveIndex === (formatedPolicyList.length - 1) }"
+            :class="{ 'disabled': navActiveIndex === (formatedPolicyList.length - 1) || formatedPolicyList.length < 4 }"
             @click="tapNextBtn"
     ></i>
     <ul class="p-l-list-nav-bar">
@@ -91,11 +96,12 @@
         })
       },
       policyTranslateX() {
+        // return this.navActiveIndex < 3 ? 0 : (this.navActiveIndex - 2) * 258
         return this.navActiveIndex * 258
       },
       expandedPolicy() {
         return this.formatedPolicyList[this.expandedPolicyIndex]
-      }
+      },
     },
     methods: {
       exchangeNacActiveIndex(index) {
@@ -115,6 +121,21 @@
       expandPolicyHandler(index) {
         this.isExpandPolicy = true
         this.expandedPolicyIndex = index
+      },
+      handleCommand(command) {
+        let [ policyIndex, status ] = command.split('-')
+        status = +status
+        if(status === 0 || status === 1) {
+          this.updatePolicyStatus(this.policyList[policyIndex], status)
+        }
+      },
+      // 更新策略的上下线状态，0：下线，1：上线
+      updatePolicyStatus(policy, status) {
+        this.$emit('update-policies', {
+          "policyName": policy.policyName,
+          "status": status,
+          "policyId": policy.policyId
+        })
       },
     },
     created() {
@@ -163,11 +184,12 @@
   }
 
   .p-l-item-head {
-    height: 24px;
+    height: 26px;
     .p-l-status {
-      display: inline-block; font-size: 12px;
+      display: inline-block; font-size: 14px;
       &.p-l-s-top { color: #F5A623; }
       &.p-l-s-disabled { color: #D8D8D8; }
+      &.p-l-s-active { color: #84CCA8; }
     }
     .el-icon-download {
       transform: rotate(180deg);
@@ -181,17 +203,17 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 
     h5{
-      margin-bottom: 5px;
+      margin-bottom: 5px; font-size: 14px;
     }
     .policy-text {
       overflow: auto; white-space: pre-wrap;
-      height: 143px;
+      height: 143px; font-size: 14px;
     }
   }
   .p-l-left-btn, .p-l-right-btn {
     position: absolute; top: 100px; z-index: 10;
     font-size: 36px; cursor: pointer;
-    &.disabled { color: #c3c3c3; }
+    &.disabled { cursor: not-allowed; color: #c3c3c3; }
   }
   .p-l-left-btn {
     left: 10px;

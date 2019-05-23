@@ -20,6 +20,10 @@ export default {
       type: Array,
       default: function (){ return [] }
     },
+    depReleasesDetailList: {
+      type: Array,
+      default: function (){ return [] }
+    },
     baseUpcastReleases: {
       type: Array,
       default: function (){ return [] }
@@ -46,13 +50,6 @@ export default {
     }
   },
   computed: {
-    depReleasesMap() {
-      var map = {}
-      this.depReleasesList.forEach(release => {
-        map[release.releaseId] = release
-      })
-      return map
-    },
     baseUpcastReleasesIDs() {
       return this.baseUpcastReleases.map(i => i.releaseId)
     },
@@ -64,8 +61,22 @@ export default {
     releaseScheme() {
       this.getTargetReleases()
     },
+    depReleasesDetailList() {
+      this.getTargetReleases()
+    },
+    depReleasesList() {
+      this.initData()
+    },
   },
   methods: {
+    initData() {
+      if(this.depReleasesList.length > 0) {
+        console.log('this.depReleasesList--', this.depReleasesList)
+        this.isLoading = true
+        this.fetchDepReleases()
+        this.fetchReleaseScheme()
+      }
+    },
     fetchContractsDetail() {
       if(this.contractIds.length > 0) {
         this.$services.ContractRecords.get({
@@ -83,12 +94,15 @@ export default {
               })
             }
           })
+      }else {
+        this.$emit('update:contracts', [])
       }
     },
     // 获取 发行方案
     fetchReleaseScheme() {
       if(!this.release) return
-      const { releaseId, latestVersion: { version } } = this.release
+      var { releaseId, latestVersion: { version } } = this.release
+      version = this.release.selectedVersion || version
       this.$services.ReleaseService.get(`${releaseId}/versions/${version}`)
         .then(res => res.data)
         .then(res => {
@@ -108,7 +122,7 @@ export default {
       this.fetchReleases(depReleaseIDs)
         .then(res => {
           if(res.errcode === 0) {
-            this.$emit('update:depReleasesList', res.data || [])
+            this.$emit('update:depReleasesDetailList', res.data || [])
             this.selectedRelease = res.data[0] || {}
             let tmpArr = []
             res.data.forEach(release => {
@@ -122,7 +136,6 @@ export default {
               this.fetchUpcastDepReleases(tmpArr.join(','))
             }else {
               this.upcastDepReleasesMap = {}
-              this.getTargetReleases()
               this.fetchContractsDetail()
             }
           }
@@ -154,9 +167,10 @@ export default {
     },
     getTargetReleases() {
       this.resolveReleaseScheme()
-      const dReleasesList = this.depReleasesList.filter(item => item.policies)
+      const dReleasesList = this.depReleasesDetailList.filter(item => item.policies)
+
       for(let i = 0; i < dReleasesList.length; i++) {
-        let rItem = this.depReleasesList[i]
+        let rItem = this.depReleasesDetailList[i]
         rItem = this.formatRelease(rItem)
         rItem.baseUpcastReleases = rItem.baseUpcastReleases.map(item => {
           const tmpRelease = this.releasesMap[item.releaseId]
@@ -164,7 +178,7 @@ export default {
             item = this.formatRelease(tmpRelease)
           }
           return item
-        }).filter(item => item.policies)
+        })
       }
       this.resetData()
       this.isLoading = false
@@ -253,7 +267,7 @@ export default {
     },
     resolveSelectedAuthSchemes() {
       const arr = []
-      const releases = this.depReleasesList
+      const releases = this.depReleasesDetailList
       const tmp = {}
       for(let i = 0; i < releases.length; i++) {
         let item = releases[i]
@@ -347,8 +361,6 @@ export default {
     },
   },
   created() {
-    this.isLoading = true
-    this.fetchDepReleases()
-    this.fetchReleaseScheme()
+    this.initData()
   }
 }

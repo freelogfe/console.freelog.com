@@ -42,6 +42,7 @@ export default {
         previewImage: '',
         widgetVersion: ''
       },
+      resPreviewImage: '',
       // 上传到服务器的数据
       uploader: {
         headers: {
@@ -81,7 +82,7 @@ export default {
       return arr.join('.')
     },
     uploadPreviewImageAction() {
-      return `//${this.apiHostName}/v1/resources/uploadPreviewImage`
+      return `//${this.apiHostName}/v1/resources/temporaryFiles/uploadPreviewImage`
     },
     tabs(){
       return [{
@@ -105,14 +106,6 @@ export default {
       const userId = this.resourceDetail.resourceInfo.userId
       return userId ? `https://image.freelog.com/headImage/${userId}?x-oss-process=style/head-image` : ''
     },
-    resPreviewImage() {
-      const pImages = this.resourceDetail.resourceInfo.previewImages
-      if(pImages && pImages.length > 0) {
-        return pImages[0]
-      }else {
-        return ''
-      }
-    },
     tempMeta() {
       return this.formatMeta(this.resourceDetail.resourceInfo.meta || {})
     },
@@ -135,6 +128,7 @@ export default {
         }
 
         this.resourceDetail.resourceInfo = res
+        this.getResourcePreviesImage()
         this.meta = JSON.stringify(this.resourceDetail.resourceInfo.meta || {}, null, 4)
         this.fetchDepReleases()
       }).catch((err) => {
@@ -143,6 +137,14 @@ export default {
       })
       this.fetchReleaseList()
       this.initScrollEvent()
+    },
+    getResourcePreviesImage() {
+      var src = ''
+      const pImages = this.resourceDetail.resourceInfo.previewImages
+      if(pImages && pImages.length > 0) {
+        src = pImages[0]
+      }
+      this.resPreviewImage = src
     },
     initScrollEvent() {
       const $header = document.querySelector('.nav-header')
@@ -239,9 +241,16 @@ export default {
     imageUploadSuccessHandler(res) {
       this.uploaderStates.thumbnail.isUploading = false
       if (res.errcode === 0) {
-        this.formData.previewImage = res.data
         this.uploaderStates.thumbnail.isUploaded = true
         this.uploaderStates.thumbnail.percentage = 100
+        const imgSrc = res.data
+        this.updatResourceDetail({ previewImages: [imgSrc] })
+          .then(res => {
+            if(res.errcode === 0){
+              this.$message({ type: 'success', message: '预览图更新成功！' })
+              this.resPreviewImage = imgSrc
+            }
+          })
       } else {
         this.uploaderStates.thumbnail.percentage = 0
         this.$error.showErrorMessage(res.msg)
@@ -253,8 +262,17 @@ export default {
         return false
       }
 
-      this.resetUploaderState(this.uploaderStates.thumbnail)
+      this.resetUploaderState(this.uploaderStates.resource, file)
       return true
+    },
+    resetUploaderState(uploader, file) {
+      Object.assign(uploader, {
+        file,
+        name: (file && file.name) || '',
+        isUploading: true,
+        isUploaded: false,
+        percentage: 0
+      });
     },
     uploadProgressHandler(event, file) {
       const uploaderStates = this.uploaderStates
@@ -420,7 +438,7 @@ export default {
       if(isExisted) {
         this.$message({ type: 'warning', message: `依赖中已存在发行"${release.releaseName}"!` })
       }else {
-        dependencies.push({ releaseId: release.releaseId, versionRange: release.latestVersion.version })
+        dependencies.push({ releaseId: release.releaseId, versionRange: `^${release.latestVersion.version}` })
         this.updatResourceDetail({ dependencies })
           .then(res => {
             if(res.errcode === 0 && res.data) {

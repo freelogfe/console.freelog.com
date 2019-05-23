@@ -399,7 +399,7 @@ export default {
                 if (formData.resourceType === RESOURCE_TYPES.widget) {
                     uploadData.widgetInfo = {
                         widgetName: formData.widgetName,
-                        version: formData.widgetVersion
+                        version: `^${formData.widgetVersion}`
                     };
                 }
             }

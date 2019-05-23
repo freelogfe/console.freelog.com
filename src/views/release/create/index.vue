@@ -3,7 +3,7 @@
     <div class="r-c-w-cont">
       <div class="r-c-w-row r-c-w-name clearfix">
         <div class="preview-box">
-          <img :src="resourceDetail.previewImages[0]" alt="" :class="{'resource-default-preview':!resourceDetail.previewImages[0]}" >
+          <img :src="previewImage" alt="" :class="{'resource-default-preview':!previewImage}" >
         </div>
         <div class="cont">
           {{session.user.username}} /
@@ -35,7 +35,8 @@
           <scheme-manage
                   type="create"
                   :baseUpcastReleases.sync="baseUpcastReleases"
-                  :depReleasesList.sync="depReleasesList"
+                  :depReleasesList="depReleasesList"
+                  :depReleasesDetailList.sync="depReleasesDetailList"
                   @update-resolved-releases="updateResolvedReleases"
           ></scheme-manage>
         </div>
@@ -61,6 +62,7 @@
         version: '0.1.0',
         baseUpcastReleases: [],
         depReleasesList: [],
+        depReleasesDetailList: [],
         upcastDepReleasesIds: [],
         upcastDepReleasesMap: {},
         resolvedReleases: []
@@ -70,6 +72,13 @@
       projection() {
         return ["releaseId", "resourceType", "releaseName", "latestVersion", "baseUpcastReleases", "policies", "updateDate",].join(',')
       },
+      previewImage() {
+        if(!this.resourceDetail) {
+          return ''
+        }else {
+          return this.resourceDetail.previewImages[0] || ''
+        }
+      }
     }, mapGetters({
       session: 'session'
     })),
@@ -97,6 +106,7 @@
           version: this.version,
           baseUpcastReleases: this.baseUpcastReleases.map(r => { return { releaseId: r.releaseId }}),
           resolveReleases: this.resolvedReleases,
+          previewImages: [this.previewImage]
         }
       },
       createRelease() {

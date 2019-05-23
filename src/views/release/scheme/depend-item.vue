@@ -56,7 +56,7 @@
 
       i {
         position: absolute; left: 0; top: 50%; z-index: 1;
-        transform: translateY(-50%);
+        transform: translateY(-50%); color: #fff;
       }
 
       &.no-resolve, &.resolved{

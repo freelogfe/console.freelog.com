@@ -20,26 +20,38 @@
           </div>
         </template>
         <div class="r-e-w-v-box" v-else>
-          当前版本：
-          <el-select size="small" v-model="selectedVersion">
-            <el-option
-                    v-for="item in release.resourceVersions"
-                    :key="item.value"
-                    :label="item.version"
-                    :value="item.version">
-            </el-option>
-          </el-select>
           <el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">
             <div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>
           </el-tooltip>
           <div class="r-e-w-v-scheme">
+            <div class="rew-v-selector">
+              <div class="rew-v-version">
+                {{selectedVersion}}
+                <i class="el-icon-arrow-down" :class="{'visible': isVersionSelectorVisible}"></i>
+              </div>
+              <div class="rew-v-list">
+                <ul>
+                  <li class="rew-v-l-item"
+                      :class="{'selected': item.version === selectedVersion}"
+                      v-for="item in release.resourceVersions"
+                      :key="'rew-v-l-item-'+item.version"
+                      @click.stop="exchangeVersion(item)">
+                    <i class="el-icon-check"></i>
+                    <span class="rew-v-li-version">{{item.version}}</span>
+                    <span class="rew-v-li-name">{{item.aliasName}}</span>
+                    <span class="rew-v-li-date">{{item.createDate | fmtDate}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <el-tabs v-model="vTabActiveName" type="card" :closable="false" @tab-click="exchangeVTab">
               <el-tab-pane label="方案" name="scheme">
                 <scheme-manage
                         type="edit"
                         :release="release"
                         :baseUpcastReleases="release.baseUpcastReleases"
-                        :depReleasesList.sync="depReleasesList"
+                        :depReleasesList="depReleasesList"
+                        :depReleasesDetailList.sync="depReleasesDetailList"
                         :releasesTreeData.sync="releasesTreeData"
                         :contracts.sync="contracts"
                 ></scheme-manage>
@@ -47,7 +59,7 @@
               <el-tab-pane label="合约" name="contract">
                 <release-editor-contract
                         :release="release"
-                        :depReleasesList="depReleasesList"
+                        :depReleasesDetailList="depReleasesDetailList"
                         :contracts="contracts"
                 ></release-editor-contract>
               </el-tab-pane>
@@ -70,7 +82,7 @@
               ref="searchInputRef"
               @clear="clearSearchInputHandler"
               @keyup.native.enter="searchHandler"
-              :placeholder="$t('search.placeholder')"
+              :placeholder="$t('search.resourcePlaceholder')"
       ></el-input>
       <lazy-list-view :list="searchResources"
                       ref="searchView"
@@ -78,10 +90,10 @@
                       :height="60" :fetch="searchDataHandler">
         <template slot-scope="scope">
           <div class="r-e-w-s-r-item">
-            <span class="r-e-w-s-r-name">{{scope.data.resourceName}}</span>
+            <span class="r-e-w-s-r-name">{{scope.data.aliasName}}</span>
             <span class="r-e-w-s-r-type">{{scope.data.resourceType}}</span>
-            <span class="r-e-w-s-r-date">{{scope.data.updateDate}}</span>
-            <span class="r-e-w-s-r-select-btn">选择</span>
+            <span class="r-e-w-s-r-date">{{scope.data.createDate | fmtDate}}</span>
+            <span class="r-e-w-s-r-select-btn" @click="addNewVersion(scope.data)">选择</span>
           </div>
         </template>
       </lazy-list-view>
@@ -104,10 +116,49 @@
 
       .el-select { width: 140px; margin-right: 40px; }
 
-      .r-e-w-v-box {
-        padding: 10px; border-radius: 4px;
-        .r-e-w-v-scheme {
-          margin-top: 12px; padding-top: 5px;
+      .r-e-w-v-scheme {
+        position: relative;
+        padding-top: 5px;
+      }
+
+      .rew-v-selector {
+        position: absolute; left: 0; top: 33px; z-index: 20;
+        &:hover {
+          .rew-v-list{ display: block; }
+        }
+
+        .rew-v-version {
+          width: 78px;
+          line-height: 34px; font-size: 14px; font-weight: 600; color: #333; cursor: pointer;
+          .el-icon-arrow-down {
+            font-size: 14px; font-weight: 600; transition: all .3s;
+            &.visible { transform: rotate(180deg); }
+          }
+        }
+
+        .rew-v-list {
+          display: none;
+          position: absolute; top: 34px; left: 0; z-index: 10;
+          width: 400px; border-radius:4px;
+          background: #fff; box-shadow:0px 4px 7px 0px rgba(0,0,0,0.3);
+        }
+        .rew-v-l-item {
+          margin: 15px 20px; line-height: 20px; cursor: pointer;
+          .el-icon-check { font-size: 14px; font-weight: 600;  color: #fff; transform: translateY(-4px); }
+          span{
+            display: inline-block;
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            padding: 0 5px; font-size: 14px; color: #999;
+            &.rew-v-li-version { width: 70px; }
+            &.rew-v-li-name { width: 160px; border-right: 1px solid #999; }
+          }
+          &.selected {
+            .el-icon-check { color: #409EFF; }
+            span {
+              font-weight: 600; color: #333;
+              &.rew-v-li-name { border-color: #333; }
+            }
+          }
         }
       }
     }
@@ -127,8 +178,8 @@
       .r-e-w-search-input { margin-bottom: 20px; }
 
       .r-e-w-s-r-item { margin: 15px 0; }
-      span { display: inline-block; }
-      .r-e-w-s-r-name { width: 180px; color: #333; }
+      span { display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+      .r-e-w-s-r-name { width: 220px; color: #333; }
       .r-e-w-s-r-type, .r-e-w-s-r-date { width: 90px; font-size: 12px; color: #999; }
       .r-e-w-s-r-select-btn {
         float: right; cursor: pointer;
@@ -151,7 +202,7 @@
             display: none;
           }
         }
-        .el-tabs__nav { margin-left: 80px;  }
+        .el-tabs__nav { margin-left: 168px;  }
         .el-tabs__item {
           padding: 0 40px;
           &.is-active { border-bottom-color: #FAFBFB; background-color: #FAFBFB; }

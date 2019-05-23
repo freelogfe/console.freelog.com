@@ -18,7 +18,7 @@
                       size="small"
               >
                 <el-table-column prop="version" label="版本" width="190"></el-table-column>
-                <el-table-column prop="resourceName" label="资源名称"></el-table-column>
+                <el-table-column prop="aliasName" label="资源名称"></el-table-column>
                 <el-table-column prop="createDate" label="日期" width="180"></el-table-column>
               </el-table>
               <div class="r-a-w-v-l-more">更多...</div>
@@ -32,7 +32,9 @@
                   type="add"
                   :release="release"
                   :baseUpcastReleases="release.baseUpcastReleases"
-                  :depReleasesList.sync="depReleasesList"
+                  :depReleasesList="depReleasesList"
+                  :depReleasesDetailList.sync="depReleasesDetailList"
+                  @update-resolved-releases="updateResolvedReleases"
           ></scheme-manage>
         </div>
         <div class="r-a-w-footer">
@@ -59,22 +61,37 @@
         resourceDetail: null,
         releaseScheme: null,
         depReleasesList: [],
+        depReleasesDetailList: [],
         releasesTreeData: [],
+        resolvedReleases: []
       }
     },
     computed: {
 
     },
     methods: {
+      fetchResourceDetail() {
+        this.$services.resource.get(this.resourceId)
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              this.resourceDetail = res.data
+              this.depReleasesList =  res.data.systemMeta.dependencies || []
+              this.releaseName = res.data.aliasName
+            }else {
+              this.$message({ type: 'error', message: res.msg })
+            }
+          })
+          .catch(e => this.$message({ type: 'error', message: e.toString() }))
+      },
       fetchReleaseDetail() {
         this.$services.ReleaseService.get(this.releaseId)
           .then(res => res.data)
           .then(res => {
             if(res.errcode === 0) {
               this.release = res.data
-              this.resourceDetail = res.data.resourceInfo
-              this.depReleasesList =  res.data.resourceInfo.systemMeta.dependencies || []
               this.formatReleaseData()
+              this.fetchEveryVersionRDetail()
             }
           })
       },
@@ -97,10 +114,42 @@
           return i
         })
       },
+
+      fetchEveryVersionRDetail() {
+        this.$services.resource.get('list', {
+          params: {
+            resourceIds: this.release.resourceVersions.map(r => r.resourceId).join(','),
+            projection: 'aliasName,resourceId,resourceType,createDate,intro',
+          }
+        })
+          .then(res => res.data)
+          .then(res => {
+            if(res.errcode === 0) {
+              const map = {}
+              res.data = res.data.forEach(resource => map[resource.resourceId] = resource)
+              this.release.resourceVersions = this.release.resourceVersions.map(resource => {
+                resource = Object.assign(resource, map[resource.resourceId])
+                resource.createDate = format(resource.createDate, 'YYYY-MM-DD')
+                return resource
+              })
+            }else {
+              this.$message({ type: 'error', message: res.msg })
+            }
+          })
+          .catch(e => this.$message({ type: 'error', message: e.toString() }))
+      },
       getNewVersion() {
         let [ fN, sN, tN ] = this.release.latestVersion.version.split('.')
         tN = +tN + 1
         return `${fN}.${sN}.${tN}`
+      },
+      updateResolvedReleases(releases) {
+        this.resolvedReleases = releases.map(r => {
+          return {
+            releaseId: r.releaseId,
+            contracts: r.policies.filter(p => p.isSelected).map(p => { return { policyId: p.policyId}})
+          }
+        })
       },
       cancelAddRelease() {
         this.$router.replace(`/resource/detail/${this.resourceId}`)
@@ -109,12 +158,12 @@
         this.$axios.post(`/v1/releases/${this.releaseId}/versions`, {
           resourceId: this.resourceId,
           version: this.newVersion,
-          resolveReleases: []
+          resolveReleases: this.resolvedReleases,
         })
           .then(res => res.data)
           .then(res => {
-            if(res.errocde === 0) {
-              this.$router.replace('/release/edit/${this.releaseId}')
+            if(res.errcode === 0) {
+              this.$router.replace(`/release/edit/${this.releaseId}`)
             }else {
               this.$error.showErrorMessage(res.msg)
             }
@@ -123,6 +172,7 @@
     },
     created() {
       this.fetchReleaseDetail()
+      this.fetchResourceDetail()
     }
   }
 </script>

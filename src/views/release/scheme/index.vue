@@ -8,7 +8,7 @@
     <div class="cont clearfix">
       <div class="s-m-w-c-left">
         <div
-                v-for="(rItem, index) in depReleasesList"
+                v-for="(rItem, index) in depReleasesDetailList"
                 :key="'dep-item-'+index"
         >
           <release-depend-item

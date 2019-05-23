@@ -62,6 +62,7 @@
                   <policy-list
                           :policyList="release.policies"
                           @add-policy="addPolicyHandler"
+                          @update-policies="updatePolicies"
                   ></policy-list>
                 </div>
               </template>
@@ -89,6 +90,7 @@
 <script>
   import PolicyEditor from '@/components/PolicyEditor/index.vue'
   import PolicyList from '@/components/PolicyList/list.vue'
+  import policy from "../../../services/policy";
   export default {
     name: 'release-editor-layout',
     components: {
@@ -115,7 +117,7 @@
             const {errcode, ret, msg, data} = res.data
             if (errcode === 0 && ret === 0) {
               this.$emit('update:release', data)
-              this.$message({ type: 'success', message })
+              message && this.$message({ type: 'success', message })
             } else {
               this.$error.showErrorMessage(msg)
             }
@@ -140,6 +142,20 @@
       },
       addPolicyHandler(policy) {
         this.isShowEditPolicy = true
+      },
+      updatePolicies(policy) {
+        this.updateRelease({
+          policyInfo: {
+            updatePolicies: [ policy ]
+          }
+        })
+          .then(() => {
+            if(policy.status === 1) {
+              this.$message({type: 'success', message: `策略"${policy.policyName}"已启用！`})
+            }else if(policy.status === 0){
+              this.$message({type: 'warning', message: `策略"${policy.policyName}"已停用！`})
+            }
+          })
       },
       editIntroHandler() {
         this.isEditingIntro = true

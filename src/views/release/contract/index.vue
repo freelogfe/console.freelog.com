@@ -85,7 +85,7 @@
         type: Array,
         default: []
       },
-      depReleasesList: {
+      depReleasesDetailList: {
         type: Array,
         default: []
       },
@@ -116,11 +116,14 @@
       contracts() {
         this.reResolveTreeData()
       },
+      depReleasesDetailList() {
+        this.reResolveTreeData()
+      },
     },
     methods: {
       reResolveTreeData() {
         const tmpTreeData = []
-        const rtData = this.depReleasesList
+        const rtData = this.depReleasesDetailList
 
         var key = 'tree-node-i-'
         let firstLevelNodeIndex = -1, secondLevelNodeIndex = 0
@@ -150,16 +153,21 @@
         this.cTreeData = tmpTreeData
       },
       getTreeNode(item, key) {
-        let tmpNode = {
-          key,
-          isShowChildren: true,
-          children: [],
-          label: item.releaseName,
-          resourceType: item.resourceType,
-          contracts: item.contracts,
-          contractType: this.getNodeContractType(item.contracts),
-          policies: item.policies
+        try {
+          var tmpNode = {
+            key,
+            isShowChildren: true,
+            children: [],
+            label: item.releaseName,
+            resourceType: item.resourceType,
+            contracts: item.contracts,
+            contractType: this.getNodeContractType(item.contracts),
+            policies: item.policies
+          }
+        }catch (e) {
+          console.log('e --', e)
         }
+
         return tmpNode
       },
       getNodeContractType(contracts){
@@ -169,12 +177,14 @@
           for(let i = 0; i < contracts.length; i++) {
             const { contractId } =  contracts[i]
             const contract = this.contractsMap[contractId]
-            type = CONTRACT_STATUS_COLORS[contract.status] ? CONTRACT_STATUS_COLORS[contract.status].type : ''
-            if(type === 'success') {
-              return type
-            }
-            if(type === 'warning') {
-              isWarning = true
+            if(contract) {
+              type = CONTRACT_STATUS_COLORS[contract.status] ? CONTRACT_STATUS_COLORS[contract.status].type : ''
+              if(type === 'success') {
+                return type
+              }
+              if(type === 'warning') {
+                isWarning = true
+              }
             }
           }
         }
@@ -206,6 +216,7 @@
         this.targetData = data
       },
       hideDetailContract() {
+        this.activeKey = ''
         this.isShowDetailContract = false
       }
     },
@@ -322,7 +333,7 @@
       .el-tabs.rec-tab {
         margin-top: 0;
         .el-tabs__header .el-tabs__nav {
-          padding: 0;
+          margin-left: 0; padding: 0;
           .el-tabs__nav {
             margin-left: 0;
           }

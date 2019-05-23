@@ -332,17 +332,6 @@
 
         <slot></slot>
 
-        <!--<el-dialog-->
-            <!--:visible.sync="showSearchResourceDialog"-->
-            <!--width="640px"-->
-            <!--:close-on-click-modal="true"-->
-            <!--:before-close="beforeCloseDialogHandler"-->
-            <!--top="10vh"-->
-            <!--center>-->
-            <!--<p slot="title" class="dialog-title" :style="{fontSize: '20px'}">{{$t('resourceEditView.addResource')}}</p>-->
-            <!--<SearchResource class="add-resource-input" @add="addDepResourceHandler"></SearchResource>-->
-        <!--</el-dialog>-->
-
         <el-dialog width="750px"
                    top="10vh"
                    center

@@ -182,11 +182,14 @@ export default {
   },
 
   search: {
-    noFavorResources: 'no favorite resources',
+    resourcePlaceholder: 'Enter the resource name',
+    myRelease: 'My releases',
+    noMyReleases: 'no releases',
+    noFavorReleases: 'no favorite releases',
     addBtn: 'add',
     placeholder: 'Enter the release name',
-    searchTitle: 'search resource',
-    favorTitle: 'favorite resources'
+    searchTitle: 'search release',
+    favorTitle: 'favorite releases'
   },
 
   routes: {

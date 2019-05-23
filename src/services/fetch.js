@@ -36,3 +36,5 @@ Fetch.prototype = {
 }
 
 export default Fetch
+
+
