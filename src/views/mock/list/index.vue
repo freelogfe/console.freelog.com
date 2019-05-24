@@ -56,7 +56,15 @@
             <!-- 有 bucket 时显示 -->
             <div class="mock-list__mocks_non-empty">
                 <div class="mock-list__mocks_non-empty__header">
-
+                    <div>mock资源数量<span>3</span></div>
+                    <div>创建时间<span>2019-04-14</span></div>
+                    <div>已使用<span>1GB/2GB</span>
+                        <el-progress
+                            :percentage="70"
+                            :show-text="false"
+                            style="width: 120px;"
+                        ></el-progress>
+                    </div>
                 </div>
 
                 <div class="mock-list__mocks_non-empty__create">
@@ -303,6 +311,22 @@
                     display: flex;
                     flex-shrink: 0;
                     flex-grow: 0;
+                    align-items: center;
+                    /*justify-content: space-between;*/
+                    font-size: 14px;
+                    color: #999;
+
+                    & > div {
+                        display: flex;
+                        align-items: center;
+                        padding-left: 20px;
+                        padding-right: 20px;
+
+                        & > span {
+                            color: #000;
+                            padding: 0 10px;
+                        }
+                    }
                 }
 
                 .mock-list__mocks_non-empty__create {

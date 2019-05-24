@@ -64,7 +64,7 @@ export default {
             this.selectedVersion = this.release.selectedVersion = version
             this.targetResourceId = resourceId
             this.targetResourceDetail = res.data.resourceInfo
-            this.depReleasesList = this.targetResourceDetail ? this.targetResourceDetail.systemMeta.dependencies : []
+            // this.depReleasesList = this.targetResourceDetail ? this.targetResourceDetail.systemMeta.dependencies : []
             this.formatReleaseData()
             this.fetchEveryVersionRDetail()
           }
@@ -90,6 +90,7 @@ export default {
             res.data = res.data.forEach(resource => map[resource.resourceId] = resource)
             this.release.resourceVersions = this.release.resourceVersions.map(resource => {
               resource = Object.assign(resource, map[resource.resourceId])
+              resource.createDate = format(resource.createDate, 'YYYY-MM-DD')
               return resource
             })
           }else {
@@ -117,6 +118,7 @@ export default {
     clearSearchInputHandler() {
 
     },
+    // 资源搜索
     searchDataHandler(page) {
       const pageSize = 10
 

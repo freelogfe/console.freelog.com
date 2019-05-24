@@ -1,6 +1,6 @@
 <template>
   <div class="release-editor-wrapper" v-if="release !== null">
-    <release-editor-layout :release.sync="release" type="edit">
+    <release-editor-layout :release.sync="release" :selectedVersion="selectedVersion" type="edit">
       <template slot="about-version">
         <template v-if="release.baseUpcastReleases.length === 0">
           <div class="r-e-w-v-list">
@@ -14,7 +14,7 @@
                     style="width: 460px; margin-top: 20px;"
             >
               <el-table-column prop="version" label="版本" width="120"></el-table-column>
-              <el-table-column prop="resourceName" label="资源名称"></el-table-column>
+              <el-table-column prop="aliasName" label="资源名称"></el-table-column>
               <el-table-column prop="createDate" label="日期" width="180"></el-table-column>
             </el-table>
           </div>

@@ -7,8 +7,8 @@
         </div>
         <div class="cont">
           <div class="r-e-l-name">
-            {{release.username}} / {{release.releaseName}}
-            <span class="r-e-l-version">{{release.latestVersion.version}}</span>
+            {{release.username}}/{{release.releaseName}}
+            <span class="r-e-l-version">{{selectedVersion || release.latestVersion.version}}</span>
           </div>
           <div class="r-e-l-info">
             <span class="r-i-type">{{release.resourceType}}</span>
@@ -99,7 +99,9 @@
     props: {
       release: Object,
       type: String,
+      selectedVersion: String
     },
+
     data() {
       return {
         editTmpPolicy: { policyName: '未命名策略', policyText: '' },

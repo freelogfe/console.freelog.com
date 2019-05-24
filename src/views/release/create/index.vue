@@ -6,8 +6,7 @@
           <img :src="previewImage" alt="" :class="{'resource-default-preview':!previewImage}" >
         </div>
         <div class="cont">
-          {{session.user.username}} /
-          <el-input type="text" v-model="releaseName" />
+          {{session.user.username}} / <el-input type="text" v-model="releaseName" />
         </div>
       </div>
       <div class="r-c-w-row r-c-w-upcast" v-if="depReleasesList.length">
@@ -26,7 +25,7 @@
         <div class="cont">
           <i>*</i>
           <el-input v-model="version"></el-input>
-          <div class="release-name" v-show="releaseName.length > 0">{{releaseName}}</div>
+          <div class="release-name" v-show="resourceDetail.aliasName.length > 0">{{resourceDetail.aliasName}}</div>
         </div>
       </div>
       <div class="r-c-w-row r-c-w-scheme" v-if="depReleasesList.length">
@@ -100,14 +99,17 @@
         this.$router.push(`/resource/detail/${this.resourceDetail.resourceId}`)
       },
       getFormData() {
-        return {
+        const data = {
           resourceId: this.resourceDetail.resourceId,
           releaseName: this.releaseName,
           version: this.version,
           baseUpcastReleases: this.baseUpcastReleases.map(r => { return { releaseId: r.releaseId }}),
-          resolveReleases: this.resolvedReleases,
-          previewImages: [this.previewImage]
+          resolveReleases: this.resolvedReleases
         }
+        if(this.previewImage) {
+          data.previewImages = [ this.previewImage ]
+        }
+        return data
       },
       createRelease() {
         const formData = this.getFormData()

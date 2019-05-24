@@ -108,7 +108,7 @@
         return scheme
       },
       gotoDetail() {
-        this.$router.push(`/release/detail/${this.release.releaseId}`)
+        this.$router.push(`/release/detail/${this.release.releaseId}?version=${this.release.latestVersion.version}`)
       }
     }
   }

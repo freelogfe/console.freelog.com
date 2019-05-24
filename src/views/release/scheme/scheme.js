@@ -64,7 +64,8 @@ export default {
     depReleasesDetailList() {
       this.getTargetReleases()
     },
-    depReleasesList() {
+    depReleasesList(newV, oldV) {
+      console.log(JSON.parse(JSON.stringify(newV)), JSON.parse(JSON.stringify(oldV)))
       this.initData()
     },
   },
