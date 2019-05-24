@@ -82,7 +82,7 @@
         return (this.release.previewImages && this.release.previewImages[0]) || ''
       },
       _goToDetailLink(){
-        var editLink = `/release/detail/${this.release.releaseId}`
+        var editLink = `/release/detail/${this.release.releaseId}?version=${this.release.latestVersion.version}`
         return this.release.releaseId? editLink : ''
       },
       _goToMangeDetailLink() {

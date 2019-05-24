@@ -7,7 +7,7 @@
         </div>
         <div class="cont">
           <div class="r-d-w-name">
-            {{release.username}} / {{release.releaseName}}
+            {{release.username}}/{{release.releaseName}}
             <el-select class="r-d-w-version" v-model="activeReleaseVersion" default-first-option>
               <el-option
                       class="r-d-w-version-option"
@@ -48,8 +48,8 @@
             <ul>
               <li class="r-d-w-p-u-r-item" v-for="(r, index) in baseUpcastReleasesList">
                 <div class="r-item-name" :class="{'selected': r.isSelectedPolicy}">{{r.releaseName}}</div>
-                <div class="release-policy-item" v-for="(p, index) in r.policies">
-                  <el-checkbox v-model="selectedUpcastRPolicyIdsList" :label="p.checkedLabel" size="medium">{{p.policyName}}</el-checkbox>
+                <div class="release-policy-item" v-for="(p, index) in r.policies" @click="exchangeActivePolicy(p)">
+                  <el-checkbox v-model="selectedUpcastRPolicyIdsList" :label="p.checkedLabel" size="medium" >{{p.policyName}}</el-checkbox>
                 </div>
               </li>
             </ul>

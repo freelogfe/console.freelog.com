@@ -7,9 +7,9 @@ export default {
   data() {
     return {
       releaseId: this.$route.params.releaseId,
+      activeReleaseVersion: this.$route.query.version,
       isShowContentLoading: false,
       isCollectedRelease: false,
-      activeReleaseVersion: '',
       release: null,
       activePolicy: null,
       selectedRPolicyIdsList: [],
@@ -54,6 +54,7 @@ export default {
   watch: {
     activeReleaseVersion(newV, oldV) {
       if(oldV !== '') {
+        this.$router.replace(`/release/detail/${this.release.releaseId}?version=${newV}`)
         this.isShowContentLoading = true
         this.fetchResourceDetail()
       }
@@ -144,15 +145,18 @@ export default {
       }
 
     },
-    getColleactedStatus(){
-      this.$services.collections.get(this.releaseId)
+    getColleactedStatus() {
+      this.$services.collections.get(`isCollection?releaseIds=${this.releaseId}`)
         .then(res => res.data)
         .then(res => {
-          this.isCollectedRelease = true
+          if(res.errcode === 0 && res.data && res.data.length > 0) {
+            this.isCollectedRelease = res.data[0].isCollection
+          }else {
+            this.isCollectedRelease = false
+          }
         })
     },
     formatReleaseData() {
-      this.activeReleaseVersion = this.release.latestVersion.version
       this.release.policies = this.release.policies.filter(p => p.status === 1).map(p => {
         p.checkedLabel = `${this.release.releaseId}-${p.policyId}`
         this.checkedLabelMap[p.checkedLabel] = { releaseName: this.release.releaseName, policyName: p.policyName }
@@ -199,7 +203,41 @@ export default {
       this.compareDialogVisible = true
     },
     showSignBox() {
-      this.signDialogVisible = true
+      var isSelectAllUpcastReleasePolicies = true,
+        isSelectReleasePolicies = this.checkIsSelectReleasePolicy(this.selectedRPolicyIdsList, this.release)
+      for(let i = 0; i <this.baseUpcastReleasesList.length; i++) {
+        if(!this.checkIsSelectReleasePolicy(this.selectedUpcastRPolicyIdsList, this.baseUpcastReleasesList[i])) {
+          isSelectAllUpcastReleasePolicies = false
+          break
+        }
+      }
+      console.log(isSelectAllUpcastReleasePolicies , isSelectReleasePolicies)
+      if(isSelectAllUpcastReleasePolicies && isSelectReleasePolicies) {
+        this.signDialogVisible = true
+      }else {
+        let message = ''
+        if(!isSelectReleasePolicies && !isSelectAllUpcastReleasePolicies) {
+          message = '发行未选择策略'
+        }else  if(!isSelectReleasePolicies) {
+          message = '当前发行未选择策略'
+        }else if(!isSelectAllUpcastReleasePolicies) {
+          message = '仍有上抛发行未选择策略'
+        }
+        this.$message({ type: 'warning', message })
+      }
+
+    },
+    checkIsSelectReleasePolicy(sList, release) {
+      var tmp = false
+      const releaseId = release.releaseId
+      for(let i = 0; i < release.policies.length; i++) {
+        console.log('this.selectedRPolicyIdsList --', sList, `${releaseId}-${release.policies[i].policyId}`, sList.indexOf(`${releaseId}-${release.policies[i].policyId}`) > -1)
+        if(sList.indexOf(`${releaseId}-${release.policies[i].policyId}`) > -1) {
+          tmp = true
+          break
+        }
+      }
+      return tmp
     },
     // 获取授权：即创建presentable
     authSign() {
