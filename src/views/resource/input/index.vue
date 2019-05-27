@@ -52,7 +52,12 @@
                                         :value="item.value">
                                 </el-option>
                             </el-select>
-                            <div style="font-size: 13px; color: #afafaf; padding-left: 20px;">
+                            <div
+                                    style="font-size: 13px; padding-left: 20px;"
+                                    :style="{color: doHighlightSelectTip? 'red': '#afafaf'}"
+                                    class="animated"
+                                    :class="doHighlightSelectTip ? 'shake': ''"
+                            >
                                 <small>•</small>
                                 上传资源之前需要选择资源类型
                             </div>
@@ -67,14 +72,6 @@
                             <div
                                     class="resource-file-uploader-wrap"
                             >
-                                <!--                                <el-popover-->
-                                <!--                                    ref="uploadPopTip"-->
-                                <!--                                    placement="bottom-start"-->
-                                <!--                                    title=""-->
-                                <!--                                    width="200"-->
-                                <!--                                    trigger="hover"-->
-                                <!--                                    :disabled="!!formData.resourceType">{{$t('resourceEditView.uploadPopTip')}}-->
-                                <!--                                </el-popover>-->
                                 <el-upload
                                         v-if="showCreatorInputItem"
                                         class="resource-file-uploader"
@@ -95,14 +92,10 @@
                                         v-popover:uploadPopTip
                                         :auto-upload="true"
                                 >
-                                    <!--                                    <i class="el-icon-plus"></i>-->
-                                    <!--                                    <div class="resource-file-tip">-->
-                                    <!--                                        <p>{{$t('resourceEditView.resourceFile')}}</p>-->
-                                    <!--                                        <p class="resource-file-sub-tip">-->
-                                    <!--                                            {{$t('resourceEditView.uploadResourceRule')}}</p>-->
-                                    <!--                                    </div>-->
                                     <div style="display: flex; align-items: flex-end;">
-                                        <el-button>上传资源</el-button>
+                                        <el-button
+                                                @click="onClickUploadResource"
+                                        >上传资源</el-button>
                                         <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small>     资源最大不超过50M</span>
                                     </div>
                                 </el-upload>
@@ -356,6 +349,10 @@
                    :visible.sync="showSearchResourceDialog">
             <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
+
+        <div>
+
+        </div>
     </div>
 </template>
 

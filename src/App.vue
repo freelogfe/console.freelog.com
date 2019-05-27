@@ -8,6 +8,7 @@
 
 <script>
 import './styles/reset.css'
+import './styles/animate.css'
 import './styles/global.less'
 
 export default {
