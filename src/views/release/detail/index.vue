@@ -108,12 +108,26 @@
         <div class="r-d-w-r-s-releases" >
           <div class="rdwr-s-r-item" v-for="item in selectedPolicies">
             <span class="rdwr-s-r-item-name">{{item.releaseName}}</span>
-            <span class="rdwr-s-r-item-policy">{{item.policyName}} <i class="el-icon-arrow-down"></i></span>
+            <span class="rdwr-s-r-item-policy">
+              {{item.policyName}}
+              <el-dropdown v-if="releaseMap[item.releaseId] && releaseMap[item.releaseId].policies.length > 1" @command="handlePolicyCommad">
+                <i class="el-icon-arrow-down"></i>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                          :command="item.releaseId + '-' + p.policyId"
+                          class="rdwr-s-r-dropdown-item"
+                          :class="{'checked': item.policyId === p.policyId}"
+                          v-for="p in releaseMap[item.releaseId].policies">
+                    <i class="el-icon-check"></i>{{p.policyName}}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </span>
           </div>
         </div>
         <div class="rdwr-s-btn-group">
           <el-button class="rdwr-s-btn rdwr-s-btn-cancel" @click="signDialogVisible = false">取消</el-button>
-          <el-button class="rdwr-s-btn rdwr-s-btn-sign" @click="authSign">签约</el-button>
+          <el-button type="primary" class="rdwr-s-btn rdwr-s-btn-sign" :disabled="checkedNodeList.length === 0" @click="authSign">签约</el-button>
         </div>
       </div>
     </el-dialog>
@@ -149,5 +163,15 @@
   }
   .el-dialog__header {
     padding: 15px;
+  }
+
+  .rdwr-s-r-dropdown-item {
+    line-height: 26px;
+
+    .el-icon-check { color: #fff; }
+    &.checked {
+      color: #409EFF;
+      .el-icon-check { color: #409EFF; }
+    }
   }
 </style>
