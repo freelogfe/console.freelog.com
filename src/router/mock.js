@@ -12,17 +12,17 @@ export default {
         title: i18n.t('routes.resourceSystem')
     },
     component: Views.container,
-    redirect: '/mock/list',
+    redirect: '/mock/display',
     children: [
         {
-            path: 'list',
+            path: 'display',
             meta: {
                 requiresAuth: true,
                 // title: i18n.t('routes.resourcePolicyTplList'),
                 title: i18n.t('routes.resourcePolicyTplList'),
                 type: 'resource'
             },
-            component: Views.mockList
+            component: Views.mockDisplay
         },
         {
             path: 'create',
@@ -33,7 +33,7 @@ export default {
                 type: 'resource',
                 theme: 'gray'
             },
-            component: Views.resourceCreator,
+            component: Views.mockCreator,
         },
         {
             path: 'edit/:resourceId',
@@ -45,7 +45,7 @@ export default {
                 theme: 'gray',
                 // hideSidebar: true
             },
-            component: Views.resourceEditor,
+            component: Views.mockEditor,
         },
         {
             path: 'list',
@@ -54,7 +54,7 @@ export default {
                 title: i18n.t('routes.myResources'),
                 type: 'resource'
             },
-            component: Views.resourceList
+            component: Views.mockList
         },
         {
             path: 'detail',
@@ -70,7 +70,7 @@ export default {
                 type: 'resource',
                 theme: 'gray'
             },
-            component: Views.resourceDetail
+            component: Views.mockDetail
         },
         {
             path: 'policy_tpl',
