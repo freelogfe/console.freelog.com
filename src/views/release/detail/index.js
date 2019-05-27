@@ -48,6 +48,14 @@ export default {
       })
       return targArr
     },
+    releaseMap() {
+      const map = {}
+      map[this.release.releaseId] = this.release
+      this.baseUpcastReleasesList.forEach(r => {
+        map[r.releaseId] = r
+      })
+      return map
+    },
   }, mapGetters({
     nodes: 'nodes'
   })),
@@ -168,9 +176,6 @@ export default {
         return i
       })
     },
-    getSelectedPolicies() {
-
-    },
     // 处理 收藏
     collectReleaseHandler() {
       if(!this.isCollectedRelease) {
@@ -211,7 +216,7 @@ export default {
           break
         }
       }
-      console.log(isSelectAllUpcastReleasePolicies , isSelectReleasePolicies)
+
       if(isSelectAllUpcastReleasePolicies && isSelectReleasePolicies) {
         this.signDialogVisible = true
       }else {
@@ -231,7 +236,6 @@ export default {
       var tmp = false
       const releaseId = release.releaseId
       for(let i = 0; i < release.policies.length; i++) {
-        console.log('this.selectedRPolicyIdsList --', sList, `${releaseId}-${release.policies[i].policyId}`, sList.indexOf(`${releaseId}-${release.policies[i].policyId}`) > -1)
         if(sList.indexOf(`${releaseId}-${release.policies[i].policyId}`) > -1) {
           tmp = true
           break
@@ -239,6 +243,23 @@ export default {
       }
       return tmp
     },
+    handlePolicyCommad(command) {
+      const [ releaseId ] = command.split('-')
+      var index = -1
+      if(this.releaseId === releaseId) {
+        index = this.selectedRPolicyIdsList.indexOf(command)
+        if(index === -1) {
+          this.selectedRPolicyIdsList.push(command)
+        }else {
+
+        }
+      }else {
+        if(this.selectedUpcastRPolicyIdsList.indexOf(command) === -1) {
+          this.selectedUpcastRPolicyIdsList.push(command)
+        }
+      }
+    }
+    ,
     // 获取授权：即创建presentable
     authSign() {
       this.$message({ type: 'warning', message: '未完成开发！' })
