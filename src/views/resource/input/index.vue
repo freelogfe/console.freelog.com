@@ -329,7 +329,7 @@
                 </div>
             </div>
 
-            <div class="input-item-wrap">
+            <div class="input-item-wrap" v-if="doShowMeta">
                 <h4>{{$t('resourceEditView.metaTitle')}}</h4>
                 <div
                         class="input-area"
@@ -338,6 +338,19 @@
                     <resource-meta-info v-model="meta" @validate="checkMetaValid"
                                         :placeholder="$t('resourceEditView.inputMetaTip')"></resource-meta-info>
                 </div>
+            </div>
+
+            <div
+                    style="padding: 15px 0;"
+                    v-if="!doShowMeta"
+            >
+                <el-button
+                        round
+                        style="background-color: #ececec; color: #666666"
+                        size="medium"
+                        icon="el-icon-plus"
+                        @click="onClickButtonAddMetaInfo"
+                >添加meta信息</el-button>
             </div>
         </el-form>
 

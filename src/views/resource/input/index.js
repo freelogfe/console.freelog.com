@@ -109,6 +109,7 @@ export default {
 
             // 是否高亮提示选择上传资源类型
             doHighlightSelectTip: false,
+            doShowMeta: false,
         }
     },
     props: {
@@ -519,6 +520,11 @@ export default {
             if (!this.formData.resourceType) {
                 setTimeout(() => this.doHighlightSelectTip = true, 30);
             }
+        },
+
+        // 点击显示 『添加 meta 信息』的按钮
+        onClickButtonAddMetaInfo() {
+            this.doShowMeta = true;
         }
     }
 }
