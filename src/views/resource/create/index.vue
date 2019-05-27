@@ -16,9 +16,8 @@
 </template>
 
 <script>
-import Creator from './index'
-
-export default Creator
+import Creator from './index';
+export default Creator;
 </script>
 
 <style lang="less" scoped>
