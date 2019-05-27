@@ -19,3 +19,8 @@ npm run build
 ```
 npm run lint
 ```
+
+### 
+```bash
+sudo xproxy server
+```
