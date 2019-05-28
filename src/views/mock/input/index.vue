@@ -53,6 +53,7 @@
                                 </el-option>
                             </el-select>
                             <div
+                                    v-if="doHighlightSelectTip"
                                     style="font-size: 13px; padding-left: 20px;"
                                     :style="{color: doHighlightSelectTip? 'red': '#afafaf'}"
                                     class="animated"
