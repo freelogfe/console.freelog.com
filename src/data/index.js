@@ -8,6 +8,7 @@ import contractUtil from './contract/utils'
 import nodeUtil from './node/utils'
 import resourceUtil from './resource/utils'
 import userUtil from './user/utils'
+import {MockService} from "../services";
 
 
 export const dataUtil = {
@@ -21,6 +22,7 @@ export default {
   contract: ContractLoader,
   node: NodeLoader,
   resource: ResourceLoader,
+  mock: MockLoader,
   user: UserLoader,
   presentable: PresentableLoader
 }

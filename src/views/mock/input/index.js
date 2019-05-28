@@ -451,17 +451,25 @@ export default {
                     }).catch(reject);
             })
         },
+        /**
+         * 调用API，发布资源
+         * @param data
+         * @returns {Promise<any>}
+         */
         createResource(data) {
             return new Promise((resolve, reject) => {
                 const $uploader = this.$refs.resourceUploader;
                 if ($uploader.uploadFiles.length > 0) {
-                    this.$services.resource.post(data).then((res) => {
-                        if (res.data.ret !== 0 || res.data.errcode !== 0) {
-                            reject(new Error(res.data.msg));
-                        } else {
-                            resolve(res.data.data);
-                        }
-                    }).catch(reject);
+                    this.$services.MockService
+                        .post(data)
+                        .then((res) => {
+                            if (res.data.ret !== 0 || res.data.errcode !== 0) {
+                                reject(new Error(res.data.msg));
+                            } else {
+                                resolve(res.data.data);
+                            }
+                        })
+                        .catch(reject);
                 } else {
                     reject(new Error(this.$t('resourceEditView.noFileTip')));
                 }
