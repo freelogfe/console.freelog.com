@@ -95,7 +95,8 @@
                                     <div style="display: flex; align-items: flex-end;">
                                         <el-button
                                                 @click="onClickUploadResource"
-                                        >上传资源</el-button>
+                                        >上传资源
+                                        </el-button>
                                         <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small>     资源最大不超过50M</span>
                                     </div>
                                 </el-upload>
@@ -265,6 +266,7 @@
                 </div>
             </div>
 
+            <!-- 依赖 -->
             <div class="input-item-wrap">
                 <h4>{{$t('resourceEditView.depResources')}}</h4>
                 <div
@@ -313,6 +315,7 @@
                 </div>
             </div>
 
+            <!-- 资源描述 -->
             <div class="input-item-wrap">
                 <h4>{{$t('resourceEditView.introTitle')}}</h4>
                 <div
@@ -329,6 +332,7 @@
                 </div>
             </div>
 
+            <!-- 添加 meta 信息 -->
             <div class="input-item-wrap" v-if="doShowMeta">
                 <h4>{{$t('resourceEditView.metaTitle')}}</h4>
                 <div
@@ -340,6 +344,7 @@
                 </div>
             </div>
 
+            <!-- 添加 meta 信息 的展开按钮 -->
             <div
                     style="padding: 15px 0;"
                     v-if="!doShowMeta"
@@ -350,7 +355,8 @@
                         size="medium"
                         icon="el-icon-plus"
                         @click="onClickButtonAddMetaInfo"
-                >添加meta信息</el-button>
+                >添加meta信息
+                </el-button>
             </div>
         </el-form>
 
