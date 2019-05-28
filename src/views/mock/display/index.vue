@@ -1,7 +1,7 @@
 <template>
     <div
-        class="mock-list"
-        :style="styleObject"
+            class="mock-list"
+            :style="styleObject"
     >
 
         <!-- 左侧 bucket 列表 -->
@@ -19,9 +19,9 @@
                     <!--                        <i class="el-icon-plus"></i>-->
                     <!--                    </a>-->
                     <el-button
-                        icon="el-icon-plus"
-                        circle
-                        size="small"
+                            icon="el-icon-plus"
+                            circle
+                            size="small"
                     ></el-button>
                 </div>
                 <div style="height: 10px;"></div>
@@ -49,7 +49,12 @@
                     <div style="height: 60px;"></div>
                     <p>在Freelog模拟资源池，您可以创建存储空间，上传模拟资源并进行测试。</p>
                     <div style="height: 60px;"></div>
-                    <el-button type="primary">创建Bucket</el-button>
+                    <router-link
+                            to="/mock/create"
+                            class="nav-link ls-nav-link"
+                    >
+                        <el-button type="primary">创建Bucket</el-button>
+                    </router-link>
                 </div>
             </div>
 
@@ -60,15 +65,20 @@
                     <div>创建时间<span>2019-04-14</span></div>
                     <div>已使用<span>1GB/2GB</span>
                         <el-progress
-                            :percentage="70"
-                            :show-text="false"
-                            style="width: 120px;"
+                                :percentage="70"
+                                :show-text="false"
+                                style="width: 120px;"
                         ></el-progress>
                     </div>
                 </div>
 
                 <div class="mock-list__mocks_non-empty__create">
-                    <el-button type="primary">创建mock资源</el-button>
+                    <router-link
+                            to="/mock/create"
+                            class="nav-link ls-nav-link"
+                    >
+                        <el-button type="primary">创建mock资源</el-button>
+                    </router-link>
                 </div>
 
                 <div class="mock-list__mocks_non-empty__body">
@@ -78,29 +88,29 @@
 
                     <div class="mock-list__mocks_non-empty__body_table">
                         <el-table
-                            :data="tableData"
-                            style="width: 100%">
+                                :data="tableData"
+                                style="width: 100%">
                             <el-table-column
-                                prop="name"
-                                label="名称"
-                                width="180">
+                                    prop="name"
+                                    label="名称"
+                                    width="180">
                             </el-table-column>
                             <el-table-column
-                                prop="type"
-                                label="类型"
-                                width="180">
+                                    prop="type"
+                                    label="类型"
+                                    width="180">
                             </el-table-column>
                             <el-table-column
-                                prop="size"
-                                label="大小">
+                                    prop="size"
+                                    label="大小">
                             </el-table-column>
                             <el-table-column
-                                prop="date"
-                                label="创建时间">
+                                    prop="date"
+                                    label="创建时间">
                             </el-table-column>
                             <el-table-column
-                                prop="action"
-                                label="操作"
+                                    prop="action"
+                                    label="操作"
                             >
 
 
@@ -108,10 +118,10 @@
                                     <el-dropdown>
 
                                         <el-button
-                                            icon="el-icon-more"
-                                            type="small"
-                                            circle
-                                            style="background-color: #fafbfb;"
+                                                icon="el-icon-more"
+                                                type="small"
+                                                circle
+                                                style="background-color: #fafbfb;"
                                         ></el-button>
 
                                         <el-dropdown-menu slot="dropdown">
@@ -128,13 +138,13 @@
                         </el-table>
                         <div style="padding: 10px 0; display: flex; justify-content: flex-end;">
                             <el-pagination
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[10, 20, 30, 40, 50]"
-                                :page-size="100"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="currentPage4"
+                                    :page-sizes="[10, 20, 30, 40, 50]"
+                                    :page-size="100"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="400">
                             </el-pagination>
                         </div>
                     </div>
@@ -145,9 +155,9 @@
 
         <!-- 添加 bucket 弹窗 -->
         <el-dialog
-            title="新建Bucket"
-            :visible.sync="dialogVisible"
-            width="660px"
+                title="新建Bucket"
+                :visible.sync="dialogVisible"
+                width="660px"
         >
             <div style="height: 17px"></div>
             <div class="dialog-body">
@@ -156,26 +166,26 @@
                     <p>• Freelog为每个用户提供2GB的免费存储空间</p>
                     <div style="height: 21px;"></div>
                     <el-input
-                        v-model="input"
-                        placeholder="Bucket名称"
+                            v-model="input"
+                            placeholder="Bucket名称"
                     ></el-input>
                 </div>
             </div>
             <div style="height: 99px;"></div>
             <span
-                slot="footer"
-                class="dialog-footer"
+                    slot="footer"
+                    class="dialog-footer"
             >
                 <el-button
-                    style="color: #999999"
-                    type="text"
-                    @click="dialogVisible = false"
+                        style="color: #999999"
+                        type="text"
+                        @click="dialogVisible = false"
                 >取消</el-button>
                 <el-button
-                    type="primary"
-                    style="margin-left: 20px; width: 90px;"
-                    round
-                    @click="dialogVisible = false"
+                        type="primary"
+                        style="margin-left: 20px; width: 90px;"
+                        round
+                        @click="dialogVisible = false"
                 >确定</el-button>
             </span>
         </el-dialog>
