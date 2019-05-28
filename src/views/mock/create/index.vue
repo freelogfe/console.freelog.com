@@ -1,6 +1,19 @@
 <template>
     <section class="create-resource-wrapper">
+
+        <el-alert
+                style="width: 1190px; margin: 0 auto; height: 60px;"
+                title="mock资源只可在模拟资源池内使用，若要将mock资源发行，需在创建成功后，先将mock资源转为正式资源"
+                type="info"
+                center
+                :closable="false"
+                show-icon>
+        </el-alert>
+
+        <div style="height: 35px;"></div>
+
         <div class="bd">
+
             <resource-input
                     :data="resourceDetail"
                     ref="inputArea"
@@ -27,7 +40,7 @@
                                 round
                                 @click="create2AddHandler"
                         >
-<!--                            {{$t('resource.createDoneText')}}-->
+                            <!--                            {{$t('resource.createDoneText')}}-->
                             完成创建
                         </el-button>
                     </div>

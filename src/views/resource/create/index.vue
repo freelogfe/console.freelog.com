@@ -23,12 +23,21 @@
                         </el-button>
                         <el-button
                                 class="ft-btn"
-                                type="primary"
                                 round
                                 @click="create2AddHandler"
                         >
 <!--                            {{$t('resource.createDoneText')}}-->
                             完成创建
+                        </el-button>
+                        <el-button
+                                class="ft-btn"
+                                style="margin-left: 30px;"
+                                type="primary"
+                                round
+                                @click="create2AddHandler"
+                        >
+                            <!--                            {{$t('resource.createDoneText')}}-->
+                            创建并发行
                         </el-button>
                     </div>
                 </div>
