@@ -105,7 +105,11 @@ export default {
                     isUploading: false,
                     name: ''
                 }
-            }
+            },
+
+            // 是否高亮提示选择上传资源类型
+            doHighlightSelectTip: false,
+            doShowMeta: false,
         }
     },
     props: {
@@ -411,7 +415,7 @@ export default {
             if (this.deps.length) {
                 uploadData.dependencies = this.deps.map(r => {
                     r.resourceId
-                    return { releaseId: r.releaseId, versionRange: r.latestVersion.version }
+                    return {releaseId: r.releaseId, versionRange: r.latestVersion.version}
                 });
             }
 
@@ -432,19 +436,19 @@ export default {
         nextHandler() {
             return new Promise((resolve, reject) => {
                 this.validate()
-                .then(() => {
-                    const data = this.packUploadData();
-                    if (!this.data.resourceId) {
-                        this.createResource(data).then(resolve).catch(reject);
-                    } else if (this.isChanged()) {
-                        this.updateResource(data).then((detail) => {
-                            if (detail && detail.resourceId) resolve(detail);
-                            else resolve(this.formData);
-                        }).catch(reject)
-                    } else {
-                        resolve();
-                    }
-                }).catch(reject);
+                    .then(() => {
+                        const data = this.packUploadData();
+                        if (!this.data.resourceId) {
+                            this.createResource(data).then(resolve).catch(reject);
+                        } else if (this.isChanged()) {
+                            this.updateResource(data).then((detail) => {
+                                if (detail && detail.resourceId) resolve(detail);
+                                else resolve(this.formData);
+                            }).catch(reject)
+                        } else {
+                            resolve();
+                        }
+                    }).catch(reject);
             })
         },
         createResource(data) {
@@ -505,6 +509,22 @@ export default {
         },
         removeDepResourceHandler(resource, index) {
             this.deps.splice(index, 1);
+        },
+
+
+        // 点击上传资源按钮时，进行合法性检查
+        onClickUploadResource(e) {
+            // console.log(e, 'eefrdsaasdf');
+            this.doHighlightSelectTip = false;
+
+            if (!this.formData.resourceType) {
+                setTimeout(() => this.doHighlightSelectTip = true, 30);
+            }
+        },
+
+        // 点击显示 『添加 meta 信息』的按钮
+        onClickButtonAddMetaInfo() {
+            this.doShowMeta = true;
         }
     }
 }

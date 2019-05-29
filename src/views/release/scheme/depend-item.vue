@@ -66,7 +66,7 @@
         }
       }
       &.no-resolve{
-        i { background-color: #EA7171; color: #EA7171;  }
+        i { background-color: #FFBD28; color: #FFBD28;  }
       }
       &.resolved{
         i { background-color: #84CCA8; color: #84CCA8; }

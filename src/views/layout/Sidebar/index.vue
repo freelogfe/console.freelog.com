@@ -74,6 +74,22 @@
           </router-link>
         </el-tooltip>
       </li>
+      <li class="ls-item">
+        <el-tooltip
+                effect="dark"
+                content="mock资源"
+                placement="right"
+                :disabled="!isMini">
+          <router-link
+                  to="/mock"
+                  class="nav-link ls-nav-link"
+          >
+            <i class="el-icon-edit"></i>
+<!--            <span>{{$t('routes.accountSetting')}}</span>-->
+            <span>mock资源</span>
+          </router-link>
+        </el-tooltip>
+      </li>
     </ul>
   </nav>
 </template>

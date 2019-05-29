@@ -6,22 +6,28 @@
           <h4>版本号</h4>
           <div class="r-a-w-v-current">
             <label>当前版本</label>
-            <el-input type="" v-model="newVersion"></el-input>
-            <span class="r-a-w-v-c-resourceName" v-if="resourceDetail">{{resourceDetail.resourceName}}</span>
+            <el-input v-model="newVersion"></el-input>
+            <div class="raw-v--li-name" v-if="resourceDetail">
+              <img :src="resourceDetail.previewImages ? resourceDetail.previewImages[0] : ''" alt="" :class="{'resource-default-preview':!(resourceDetail.previewImages && resourceDetail.previewImages[0])}" >
+              {{resourceDetail.aliasName}}
+            </div>
           </div>
           <div class="r-a-w-v-list clearfix">
             <label>历史版本</label>
             <div style="margin-left: 72px;">
-              <el-table
-                      :show-header="false"
-                      :data="release.resourceVersions"
-                      size="small"
-              >
-                <el-table-column prop="version" label="版本" width="190"></el-table-column>
-                <el-table-column prop="aliasName" label="资源名称"></el-table-column>
-                <el-table-column prop="createDate" label="日期" width="180"></el-table-column>
-              </el-table>
-              <div class="r-a-w-v-l-more">更多...</div>
+              <ul class="raw-v--ul">
+                <li v-for="item in release.resourceVersions">
+                  <div class="raw-v--li-box">
+                    <span class="raw-v--li-version">{{item.version}}</span>
+                    <span class="raw-v--li-date">({{item.createDate}})</span>
+                  </div>
+                  <div class="raw-v--li-name">
+                    <img :src="item.previewImages ? item.previewImages[0] : ''" alt="" :class="{'resource-default-preview':!(item.previewImages && item.previewImages[0])}" >
+                    {{item.aliasName}}
+                  </div>
+                </li>
+              </ul>
+              <!--<div class="r-a-w-v-l-more">更多...</div>-->
             </div>
           </div>
         </div>
@@ -37,7 +43,7 @@
                   @update-resolved-releases="updateResolvedReleases"
           ></scheme-manage>
         </div>
-        <div class="r-a-w-footer">
+        <div class="r-a-w-footer" :class="{'no-scheme': depReleasesList.length === 0}">
           <div class="r-a-w-cancel-btn" @click="cancelAddRelease">取消</div>
           <div class="r-a-w-save-btn" @click="saveReleaseVersion">保存版本</div>
         </div>
@@ -63,7 +69,8 @@
         depReleasesList: [],
         depReleasesDetailList: [],
         releasesTreeData: [],
-        resolvedReleases: []
+        resolvedReleases: [],
+        newVersion: ''
       }
     },
     computed: {
@@ -119,7 +126,7 @@
         this.$services.resource.get('list', {
           params: {
             resourceIds: this.release.resourceVersions.map(r => r.resourceId).join(','),
-            projection: 'aliasName,resourceId,resourceType,createDate,intro',
+            projection: 'aliasName,resourceId,resourceType,createDate,intro,previewImages',
           }
         })
           .then(res => res.data)
@@ -202,26 +209,48 @@
         display: inline-block; width: 72px;
       }
     }
-    .r-a-w-v-c-resourceName { font-weight: bold; }
-    .el-input { width: 170px; margin-right: 30px; }
+    .r-a-w-v-current {
+      display: flex; align-items: center;
+
+      .el-input { width: 170px; margin-right: 30px; }
+    }
+
+    .r-a-w-v-list {
+      label{ float: left; padding: 10px 0; }
+      .raw-v--ul {
+        .raw-v--li-box, .raw-v--li-name {
+          overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+          display: inline-block; margin-bottom: 10px;
+          span { display: inline-block; padding: 0 5px; }
+        }
+        .raw-v--li-box {
+          width: 200px; line-height: 40px;
+          .raw-v--li-version { width: 58px; color: #333; }
+          .raw-v--li-date { width: 80px; color: #999; }
+        }
+      }
+
+      .r-a-w-v-l-more {
+        display: inline-block; margin-bottom: 5px; padding: 8px 10px; cursor: pointer;
+        color: #888;
+        &:hover { background-color: #f5f7fa; color: #333; }
+      }
+    }
+
+    .raw-v--li-name {
+      width: 300px; padding: 5px; line-height: 30px;
+      background-color: #fff;
+      img { float: left; width: 40px; height: 30px; margin-right: 5px; }
+      span { display: inline-block; }
+    }
   }
 
-  .r-a-w-v-list {
-    label{ float: left; padding: 10px 0; }
-    .el-table {
-      width: 580px; background-color: #fff;
-      &:before { height: 0; }
-    }
-    .r-a-w-v-l-more {
-      display: inline-block; margin-bottom: 5px; padding: 8px 10px; cursor: pointer;
-      color: #888;
-      &:hover { background-color: #f5f7fa; color: #333; }
-    }
-  }
 
   .r-a-w-footer {
     padding: 20px 10px;
     background-color: #FAFBFB; text-align: center;
+
+    &.no-scheme { padding-left: 60px; text-align: left; }
     .r-a-w-cancel-btn, .r-a-w-save-btn {
       display: inline-block; cursor: pointer;
       padding: 9px 32px; border-radius: 20px;

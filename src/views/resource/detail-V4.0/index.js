@@ -34,14 +34,6 @@ export default {
       },
       dependencies: [],                   // 依赖集合
       releasesList: [],                   // 所有发行集合
-      formData: {
-        resourceType: '', //storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
-        resourceName: '',
-        widgetName: '',
-        description: '',
-        previewImage: '',
-        widgetVersion: ''
-      },
       resPreviewImage: '',
       // 上传到服务器的数据
       uploader: {
@@ -64,9 +56,7 @@ export default {
         }
       },
       editorConfig: {},
-      isDescEditing: false,
       isMetaEditing: false,
-      isAliasnameEditing: false,
       metaValid: false,
       isShowReleaseSearchDialog: false,
       releaseSearchType: 'release',
@@ -136,7 +126,7 @@ export default {
         console.error(err)
       })
       this.fetchReleaseList()
-      this.initScrollEvent()
+      // this.initScrollEvent()
     },
     getResourcePreviesImage() {
       var src = ''
@@ -146,6 +136,7 @@ export default {
       }
       this.resPreviewImage = src
     },
+    // deprecated
     initScrollEvent() {
       const $header = document.querySelector('.nav-header')
       const $tabs = this.$refs.tabs
@@ -221,11 +212,6 @@ export default {
         window.scrollTo(0, $el.offsetTop - 60)
       }
     },
-    updatResourceDetail(params) {
-      return this.$services.ResourceService.put(this.resourceId, params)
-        .then(res => res.data)
-        .catch(e => this.$message({ type: 'error', message: e.toString() }))
-    },
     previewImageChangeHandler(file, fileList) {
       this.fileLimitValidator(file, fileList)
     },
@@ -243,14 +229,7 @@ export default {
       if (res.errcode === 0) {
         this.uploaderStates.thumbnail.isUploaded = true
         this.uploaderStates.thumbnail.percentage = 100
-        const imgSrc = res.data
-        this.updatResourceDetail({ previewImages: [imgSrc] })
-          .then(res => {
-            if(res.errcode === 0){
-              this.$message({ type: 'success', message: '预览图更新成功！' })
-              this.resPreviewImage = imgSrc
-            }
-          })
+        this.resPreviewImage = res.data
       } else {
         this.uploaderStates.thumbnail.percentage = 0
         this.$error.showErrorMessage(res.msg)
@@ -340,33 +319,7 @@ export default {
         this.$message.error(data.msg)
       }
     },
-    saveResourceAliasName() {
-      this.updatResourceDetail({ aliasName: this.resourceDetail.resourceInfo.aliasName })
-        .then(res => {
-          if(res.errcode === 0) {
-            this.$message({ type: 'success', message: '资源别名保存成功！' })
-            this.isAliasnameEditing = false
-          }else {
-            this.$message({ type: 'error', message: '资源别名保存失败！' })
-          }
-        })
-    },
-    editDesc() {
-      this.isDescEditing = true
-    },
-    saveDesc() {
-      this.updatResourceDetail({ description: this.resourceDetail.resourceInfo.description })
-        .then(res => {
-          if(res.errcode === 0) {
-            this.$message({ type: 'success', message: '资源描述保存成功！' })
-            this.isDescEditing = false
-          }else {
-            this.$message({ type: 'error', message: '资源描述保存失败！' })
-          }
-        })
-    },
     checkMetaValid(valid) {
-      console.log('arguments ---', valid)
       this.metaValid = valid
     },
     editMeta() {
@@ -375,33 +328,6 @@ export default {
     },
     formatMeta(meta){
       return meta !== "{}" ? JSON.stringify(meta, null, 4) : this.$t('resourceDetailView.noMetaTip')
-    },
-    saveMeta() {
-      var meta = this.meta
-      try {
-        meta = JSON.parse(meta)
-        this.updatResourceDetail({ meta })
-          .then(res => {
-            if(res.errcode === 0) {
-              this.$message({ type: 'success', message: 'meta信息保存成功！' })
-              this.isMetaEditing = false
-              this.resourceDetail.resourceInfo.meta = meta
-            }else {
-              this.$message({ type: 'error', message: 'meta信息保存失败！' })
-            }
-          })
-      }catch (e) {
-        this.$message({ type: 'error', message: `JSON格式有误${e}` })
-      }
-    },
-    tapAddToReleaseBtn() {
-      this.isShowReleaseSearchDialog = true
-      this.releaseSearchType = 'release'
-    },
-    // 创建一个全新的发行
-    createNewRelease() {
-      // 跳转 发行中间页
-      this.$router.push(`/release/create?resourceId=${this.resourceId}`)
     },
     // 添加依赖
     tapAddDependencyBtn() {
@@ -429,42 +355,74 @@ export default {
     },
     addDependency(release) {
       let isExisted = false
-      const dependencies = this.dependencies.map(dep => {
-        if(dep.releaseId === release.releaseId) {
+      const leng = this.dependencies.length
+      for(let i = 0; i < leng; i++) {
+        if(this.dependencies[i].releaseId === release.releaseId) {
           isExisted = true
+          break
         }
-        return { releaseId: dep.releaseId, versionRange: dep.latestVersion.version }
-      })
+      }
       if(isExisted) {
         this.$message({ type: 'warning', message: `依赖中已存在发行"${release.releaseName}"!` })
       }else {
-        dependencies.push({ releaseId: release.releaseId, versionRange: `^${release.latestVersion.version}` })
-        this.updatResourceDetail({ dependencies })
-          .then(res => {
-            if(res.errcode === 0 && res.data) {
-              this.$message({ type: 'success', message: '依赖添加成功！' })
-              this.dependencies.push(release)
-              this.isShowReleaseSearchDialog = false
-            }else {
-              this.$message({ type: 'error', message: '依赖添加失败：' + res.msg })
-            }
-          })
+        this.dependencies.push(release)
       }
 
     },
     deleteDependency(index) {
-      const dependencies = this.dependencies.filter((i, _index) => _index !== index).map(dep => {
-        return { releaseId: dep.releaseId, versionRange: dep.latestVersion.version }
-      })
-      this.updatResourceDetail({ dependencies })
+      this.dependencies.splice(index, 1)
+    },
+    updateResourceDetail() {
+      const params = {
+        aliasName: this.resourceDetail.resourceInfo.aliasName,
+        description: this.resourceDetail.resourceInfo.description,
+      }
+      if(this.releasesList.length === 0) {
+        params.dependencies = this.dependencies.map(dep => {
+          return { releaseId: dep.releaseId, versionRange: dep.latestVersion.version }
+        })
+      }
+      if(this.resPreviewImage !== '') {
+        params.previewImages = [this.resPreviewImage]
+      }
+      var promise = null
+      try {
+        params.meta = JSON.parse(this.meta)
+        promise = this.$services.ResourceService.put(this.resourceId, params).then(res => res.data)
+      }catch (e) {
+        promise = Promise.reject(`JSON格式有误:${e}`)
+      }
+      return promise.catch(this.$error.showErrorMessage)
+    },
+    handleCancel() {
+      this.$router.back()
+    },
+    handleSave() {
+      return this.updateResourceDetail()
         .then(res => {
           if(res.errcode === 0) {
-            this.$message({ type: 'success', message: '依赖删除成功！' })
-            this.dependencies.splice(index, 1)
+            this.$message({ type: 'success', message: '保存成功！' })
+            return Promise.resolve(res.data)
           }else {
-            this.$message({ type: 'error', message: '依赖删除失败：' + res.msg })
+            this.$error.showErrorMessage(`保存失败：${res.msg}`)
+            return Promise.reject()
           }
         })
-    }
+    },
+    handleRelease() {
+      this.handleSave()
+        .then(data => {
+          this.addToRelease()
+        })
+    },
+    addToRelease() {
+      this.isShowReleaseSearchDialog = true
+      this.releaseSearchType = 'release'
+    },
+    // 创建一个全新的发行
+    createNewRelease() {
+      // 跳转 发行中间页
+      this.$router.push(`/release/create?resourceId=${this.resourceId}`)
+    },
   }
 }

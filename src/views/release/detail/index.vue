@@ -94,7 +94,7 @@
     >
       <div class="r-d-w-r-sign">
         <h4>节点选择</h4>
-        <el-checkbox-group class="r-d-w-r-node-list" v-model="checkedNodeList">
+        <el-checkbox-group class="r-d-w-r-node-list" v-model="checkedNodeList" v-if="nodes.length">
           <el-checkbox
                   class="r-d-w-r-node-item"
                   v-for="node in nodes"
@@ -104,16 +104,25 @@
                   :disabled="rSubordinateNodesIds.indexOf(node.nodeId) !== -1"
           >{{node.nodeName}}</el-checkbox>
         </el-checkbox-group>
+        <div class="rdwr-no-nodes">
+          <el-alert type="warning" show-icon :closable="false">
+            <div class="" slot="title">
+              你还没有创建节点；<a href="/node/create" target="_blank">前去创建？</a>
+            </div>
+          </el-alert>
+        </div>
         <h4>策略确认</h4>
         <div class="r-d-w-r-s-releases" >
           <div class="rdwr-s-r-item" v-for="item in selectedPolicies">
             <span class="rdwr-s-r-item-name">{{item.releaseName}}</span>
-            <span class="rdwr-s-r-item-policy">{{item.policyName}} <i class="el-icon-arrow-down"></i></span>
+            <span class="rdwr-s-r-item-policy">
+              {{item.policyName}}
+            </span>
           </div>
         </div>
         <div class="rdwr-s-btn-group">
           <el-button class="rdwr-s-btn rdwr-s-btn-cancel" @click="signDialogVisible = false">取消</el-button>
-          <el-button class="rdwr-s-btn rdwr-s-btn-sign" @click="authSign">签约</el-button>
+          <el-button type="primary" class="rdwr-s-btn rdwr-s-btn-sign" :disabled="checkedNodeList.length === 0" @click="authSign">签约</el-button>
         </div>
       </div>
     </el-dialog>
@@ -149,5 +158,15 @@
   }
   .el-dialog__header {
     padding: 15px;
+  }
+
+  .rdwr-s-r-dropdown-item {
+    line-height: 26px;
+
+    .el-icon-check { color: #fff; }
+    &.checked {
+      color: #409EFF;
+      .el-icon-check { color: #409EFF; }
+    }
   }
 </style>

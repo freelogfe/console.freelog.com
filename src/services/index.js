@@ -7,6 +7,7 @@ import UserService from './user'
 
 import PolicyService from './policy'
 import ResourceService from './resource'
+import MockService from './mock'
 import ReleaseService from './release'
 import AllResourcesService from './g_resources'
 import PresentablesService from './presentables'
@@ -30,6 +31,7 @@ export {
   UserService,
   PolicyService,
   ResourceService,
+  MockService,
   ReleaseService,
   AllResourcesService,
   PresentablesService,
