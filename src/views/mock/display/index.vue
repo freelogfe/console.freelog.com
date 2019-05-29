@@ -31,10 +31,12 @@
             <!-- buckets 列表 -->
             <div class="mock-list__buckets__list">
                 <a
+                    href="javascript:"
                     v-for="(bucket, index) in bucketsList"
                     :key="bucket.bucketId"
                     class="mock-list__buckets__list__item"
                     :class="{'mock-list__buckets__list__item_active': index === activeBucketIndex}"
+                    @click="onChangeBucketActiveIndex(index)"
                 >
                     {{bucket.bucketName}}
                 </a>
@@ -54,16 +56,11 @@
                     <div style="height: 60px;"></div>
                     <p>在Freelog模拟资源池，您可以创建存储空间，上传模拟资源并进行测试。</p>
                     <div style="height: 60px;"></div>
-                    <!--                    <router-link-->
-                    <!--                        to="/mock/create"-->
-                    <!--                        class="nav-link ls-nav-link"-->
-                    <!--                    >-->
                     <el-button
                         @click="showNewBucketDialog"
                         type="primary"
                     >创建Bucket
                     </el-button>
-                    <!--                    </router-link>-->
                 </div>
             </div>
 
@@ -73,15 +70,25 @@
                 v-if="bucketsList.length > 0"
             >
                 <div class="mock-list__mocks_non-empty__header">
-                    <div>mock资源数量<span>3</span></div>
-                    <div>创建时间<span>2019-04-14</span></div>
-                    <div>已使用<span>1GB/2GB</span>
-                        <el-progress
-                            :percentage="70"
-                            :show-text="false"
-                            style="width: 120px;"
-                        ></el-progress>
+                    <div class="mock-list__mocks_non-empty__header__info">
+                        <div>mock资源数量<span>{{activatedBucket.resourceCount}}</span></div>
+                        <div>创建时间<span>{{transformToDateString(activatedBucket.createDate)}}</span></div>
+                        <div>已使用<span>{{Math.floor(activatedBucket.totalFileSize / 3072 * 100) / 100}}GB/2GB</span>
+                            <el-progress
+                                :percentage="70"
+                                :show-text="false"
+                                style="width: 120px;"
+                            ></el-progress>
+                        </div>
                     </div>
+                    <el-button
+                        type="danger"
+                        plain
+                        size="small"
+                        icon="el-icon-delete"
+                        @click="removeABucketByAPI"
+                    >删除Bucket
+                    </el-button>
                 </div>
 
                 <div class="mock-list__mocks_non-empty__create">
