@@ -11,23 +11,10 @@ export default {
             },
 
             // 『mock 表格』数据
-            tableData: [
-                {
-                    name: '王小虎',
-                    type: 'image',
-                    size: '5M',
-                    date: '2016-05-02',
-                },
-                {
-                    name: '王小虎',
-                    type: 'image',
-                    size: '5M',
-                    date: '2016-05-04',
-                },
-            ],
+            mockTableData: [],
 
             // 『bucket 列表』
-            bucketsList: [],
+            bucketsList: null,
             // bucket 列表』中被激活的 bucket，在 bucket 列表中的索引
             activeBucketIndex: 0,
 
@@ -42,7 +29,7 @@ export default {
     computed: {
         // 当前已激活的 bucket
         activatedBucket: function () {
-            return this.bucketsList[this.activeBucketIndex];
+            return this.bucketsList && this.bucketsList[this.activeBucketIndex];
         }
     },
     mounted() {
@@ -136,6 +123,8 @@ export default {
             const str = querystring.stringify(params);
             const {data} = await axios.get(`/v1/resources/mocks?${str}`);
             // const {data} = await axios.get(`/v1/resources/mocks`, params);
+            // console.log(data, 'data1234123423');
+            this.mockTableData = data.data.dataList;
         },
 
         /**

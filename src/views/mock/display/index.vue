@@ -32,7 +32,7 @@
             <div class="mock-list__buckets__list">
                 <a
                     href="javascript:"
-                    v-for="(bucket, index) in bucketsList"
+                    v-for="(bucket, index) in (bucketsList || [])"
                     :key="bucket.bucketId"
                     class="mock-list__buckets__list__item"
                     :class="{'mock-list__buckets__list__item_active': index === activeBucketIndex}"
@@ -49,7 +49,7 @@
             <!-- 没有 bucket 时显示-->
             <div
                 class="mock-list__mocks_empty"
-                v-if="bucketsList.length === 0"
+                v-if="bucketsList && bucketsList.length === 0"
             >
                 <div class="mock-list__mocks_empty__content">
                     <h3>自由创作从Freelog开始</h3>
@@ -67,7 +67,7 @@
             <!-- 有 bucket 时显示 -->
             <div
                 class="mock-list__mocks_non-empty"
-                v-if="bucketsList.length > 0"
+                v-if="bucketsList && bucketsList.length > 0"
             >
                 <div class="mock-list__mocks_non-empty__header">
                     <div class="mock-list__mocks_non-empty__header__info">
@@ -75,7 +75,7 @@
                         <div>创建时间<span>{{transformToDateString(activatedBucket.createDate)}}</span></div>
                         <div>已使用<span>{{Math.floor(activatedBucket.totalFileSize / 3072 * 100) / 100}}GB/2GB</span>
                             <el-progress
-                                :percentage="70"
+                                :percentage="Math.floor(activatedBucket.totalFileSize / 6144 * 100) / 100"
                                 :show-text="false"
                                 style="width: 120px;"
                             ></el-progress>
@@ -102,16 +102,18 @@
 
                 <div class="mock-list__mocks_non-empty__body">
                     <div
+                        v-if="mockTableData && mockTableData.length === 0"
                         class="mock-list__mocks_non-empty__body_null"
-                        style="display: none;">
+                    >
                         <p>您还没有创建任何mock资源</p>
                     </div>
 
                     <div
+                        v-if="mockTableData && mockTableData.length > 0"
                         class="mock-list__mocks_non-empty__body_table"
                     >
                         <el-table
-                            :data="tableData"
+                            :data="mockTableData"
                             style="width: 100%">
                             <el-table-column
                                 prop="name"
