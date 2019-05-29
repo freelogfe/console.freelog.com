@@ -94,7 +94,7 @@
     >
       <div class="r-d-w-r-sign">
         <h4>节点选择</h4>
-        <el-checkbox-group class="r-d-w-r-node-list" v-model="checkedNodeList">
+        <el-checkbox-group class="r-d-w-r-node-list" v-model="checkedNodeList" v-if="nodes.length">
           <el-checkbox
                   class="r-d-w-r-node-item"
                   v-for="node in nodes"
@@ -104,24 +104,19 @@
                   :disabled="rSubordinateNodesIds.indexOf(node.nodeId) !== -1"
           >{{node.nodeName}}</el-checkbox>
         </el-checkbox-group>
+        <div class="rdwr-no-nodes">
+          <el-alert type="warning" show-icon :closable="false">
+            <div class="" slot="title">
+              你还没有创建节点；<a href="/node/create" target="_blank">前去创建？</a>
+            </div>
+          </el-alert>
+        </div>
         <h4>策略确认</h4>
         <div class="r-d-w-r-s-releases" >
           <div class="rdwr-s-r-item" v-for="item in selectedPolicies">
             <span class="rdwr-s-r-item-name">{{item.releaseName}}</span>
             <span class="rdwr-s-r-item-policy">
               {{item.policyName}}
-              <el-dropdown v-if="releaseMap[item.releaseId] && releaseMap[item.releaseId].policies.length > 1" @command="handlePolicyCommad">
-                <i class="el-icon-arrow-down"></i>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                          :command="item.releaseId + '-' + p.policyId"
-                          class="rdwr-s-r-dropdown-item"
-                          :class="{'checked': item.policyId === p.policyId}"
-                          v-for="p in releaseMap[item.releaseId].policies">
-                    <i class="el-icon-check"></i>{{p.policyName}}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
             </span>
           </div>
         </div>

@@ -166,11 +166,22 @@
     display: block;
     margin: 15px 0;
   }
+  .rdwr-no-nodes {
+    margin: 15px 60px;
+    a {
+      color: #248fff;
+      &:hover { text-decoration: underline; }
+    }
+  }
   .r-d-w-r-s-releases {
     margin: 0 50px 25px 60px;
     font-size: 14px; font-weight: 500; color: #333;
-    .rdwr-s-r-item { margin: 15px 0; }
-    .rdwr-s-r-item-policy { float: right; cursor: pointer; }
+    .rdwr-s-r-item { overflow: hidden; margin: 10px 0; }
+    .rdwr-s-r-item-policy {
+      float: right;
+      margin: 0 0 0 8px; padding: 2px 10px; border: 1px solid #A5D1FF; border-radius: 2px;
+      background-color: #E9F4FF; color: #248fff;
+    }
   }
   .rdwr-s-btn-group {
     text-align: center;
