@@ -12,7 +12,6 @@ export default {
         }
     },
     mounted() {
-        this.$axios.get('')
         const params = this.$route.params
         if (params.resourceId) {
             onloadResourceDetail(params.resourceId)
@@ -27,13 +26,14 @@ export default {
 
             this.isRequesting = true
             if (this.$refs.inputArea.nextHandler) {
-                this.$refs.inputArea.nextHandler(this.data).then((detail) => {
-                    if (detail && detail.resourceId) {
-                        Object.assign(this.resourceDetail, detail)
-                    }
-                    this.isRequesting = false
-                    callback()
-                }).catch((err) => {
+                this.$refs.inputArea.nextHandler(this.data)
+                    .then((detail) => {
+                        if (detail && detail.resourceId) {
+                            Object.assign(this.resourceDetail, detail)
+                        }
+                        this.isRequesting = false
+                        callback()
+                    }).catch((err) => {
                     this.isRequesting = false
                     this.$nextTick(() => {
                         const $error = this.$el.querySelector('.el-form-item__error')
