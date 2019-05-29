@@ -1,10 +1,24 @@
 <template>
   <div class="release-create-wrapper" v-loading="resourceDetail === null" v-if="resourceDetail !== null">
     <div class="r-c-w-cont">
-      <div class="r-c-w-row r-c-w-name clearfix">
+      <div class="r-c-w-row r-c-w-resource clearfix">
         <div class="preview-box">
           <img :src="previewImage" alt="" :class="{'resource-default-preview':!previewImage}" >
         </div>
+        <div class="cont">
+          <h2>
+            {{resourceDetail.aliasName}}
+            <div class="rcw-info">
+              {{resourceDetail.resourceType}} | {{resourceDetail.updateDate | fmtDate}}
+            </div>
+          </h2>
+          <p class="rcw-intro">
+            {{resourceDetail.intro}}
+          </p>
+        </div>
+      </div>
+      <div class="r-c-w-row r-c-w-name">
+        <h3>发行名称</h3>
         <div class="cont">
           {{session.user.username}} / <el-input type="text" v-model="releaseName" />
         </div>
@@ -25,7 +39,10 @@
         <div class="cont">
           <i>*</i>
           <el-input v-model="version"></el-input>
-          <div class="release-name" v-show="resourceDetail.aliasName.length > 0">{{resourceDetail.aliasName}}</div>
+          <!--<div class="release-name">-->
+            <!--<img :src="resourceDetail.previewImages ? resourceDetail.previewImages[0] : ''" alt="" :class="{'resource-default-preview':!(resourceDetail.previewImages && resourceDetail.previewImages[0])}" >-->
+            <!--{{resourceDetail.aliasName}}-->
+          <!--</div>-->
         </div>
       </div>
       <div class="r-c-w-row r-c-w-scheme" v-if="depReleasesList.length">
@@ -42,8 +59,10 @@
       </div>
     </div>
     <div class="r-c-w-footer">
-      <div class="cancel" @click="cancelCreateRelease">取消创建</div>
-      <el-button class="create" type="primary" size="small" round @click="createRelease">创建发行</el-button>
+      <div class="body">
+        <div class="cancel" @click="cancelCreateRelease">取消创建</div>
+        <el-button class="create" type="primary" size="small" round @click="createRelease">创建发行</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -173,22 +192,29 @@
       }
     }
 
-    .r-c-w-name {
+    .r-c-w-resource {
+      padding: 10px; border-radius:10px;
+      box-shadow:0px 2px 8px 0px rgba(0,0,0,0.1);
+
       .preview-box {
         float: left; overflow: hidden;
-        width: 80px; height: 60px; border-radius: 2px;
+        width: 100px; height: 75px; border-radius: 2px;
         box-shadow: 0 0 1px #999;
 
         img{ display: block; width: 100%; height: 100%; }
       }
       .cont {
-        padding-top: 10px; padding-left: 100px;
-        font-size: 18px; color: #333;
+        padding-left: 120px;
+        h2 { font-size: 16px; }
       }
+      .rcw-info{ float: right; font-size: 13px; font-weight: 400; color: #999; }
+      .rcw-intro { margin-top: 15px; font-size: 13px; }
+    }
 
-      .el-input {
-        width: 260px;
-      }
+    .r-c-w-name {
+      .cont { font-size: 18px; color: #333; }
+
+      .el-input { width: 260px; }
     }
 
     .r-c-w-upcast {
@@ -207,12 +233,16 @@
     }
 
     .r-c-w-version {
+      .cont { display: flex; align-items: center; }
+
       i{ margin-right: 5px; color: #FA686D; }
       .el-input { width: 210px; }
       .release-name {
-        display: inline-block;
-        height: 32px; line-height: 32px; margin-left: 10px; padding: 0 20px; border-radius: 16px;
-        background-color: #F0F0F0; color: #333;
+        overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+        width: 300px; padding: 5px; margin-left: 30px; line-height: 30px;
+        background-color: #FAFBFB;
+        img { float: left; width: 40px; height: 30px; margin-right: 5px; }
+        span { display: inline-block; }
       }
     }
 
@@ -222,9 +252,10 @@
 
     .r-c-w-footer {
       position: fixed; right: 0; bottom: 0; left: 0; z-index: 99;
-      padding: 10px 50px; text-align: right;
-      box-shadow: 0 0px 1px #0006; background-color: #fff;
+      padding-left: 50px;
+      box-shadow: 0 0px 1px #0006; background-color: #fff; text-align: right;
 
+      .body{ width: @main-content-width-990; margin: auto; padding: 10px 0; }
       .cancel {
         display: inline-block; margin-right: 10px; padding: 6px 12px; cursor: pointer;
         &:hover {
