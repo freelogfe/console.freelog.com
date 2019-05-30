@@ -12,7 +12,6 @@ function isCross(r1, r2) {
   return r.bottom >= r.top && r.right >= r.left;
 }
 
-
 function isElementInViewport(el, diff) {
   var rect = el.getBoundingClientRect();
   var containerRect = {

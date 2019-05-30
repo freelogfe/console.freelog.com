@@ -31,32 +31,36 @@
         <h3>发行相关 <i class="el-icon-arrow-up" @click="isTuckUpRelease = !isTuckUpRelease"></i></h3>
         <div class="cont">
           <div class="r-e-w-release-intro">
-            <h4>发行简介</h4>
+            <h4>
+              发行简介
+              <div class="r-e-w-btn-group">
+                <el-button type="primary" class="edit" size="small" round v-if="!isEditingIntro" @click="editIntroHandler">编辑</el-button>
+                <template v-else>
+                  <el-button class="cnacel" size="small" round @click="cancelEditHandler">取消</el-button>
+                  <el-button type="primary" class="save" size="small" round @click="saveIntroHandler">保存</el-button>
+                </template>
+              </div>
+            </h4>
             <div class="r-e-w-edit-box" v-if="isEditingIntro">
               <el-input type="textarea" :rows="4" v-model="tempEditingIntro"></el-input>
-              <div class="r-e-w-btn-group">
-                <el-button class="cnacel" size="small" round @click="cancelEditHandler">取消</el-button>
-                <el-button type="primary" class="save" size="small" round @click="saveIntroHandler">保存</el-button>
-              </div>
             </div>
-            <template v-else>
-              <div class="r-e-w-add-btn" v-if="release.intro === ''" @click="editIntroHandler"><i class="el-icon-plus"></i>添加简介</div>
-              <template v-else>
-                <p>{{release.intro}}</p>
-                <div class="r-e-w-btn-group">
-                  <el-button type="primary" class="edit" size="small" round v-if="!isEditingIntro" @click="editIntroHandler">编辑</el-button>
-                  <el-button type="primary" class="save" size="small" round v-else  @click="saveIntroHandler">保存</el-button>
-                </div>
-              </template>
-            </template>
+            <p v-else>{{release.intro === '' ? '暂无简介' : release.intro}}</p>
           </div>
           <div class="r-e-w-release-policy">
-            <h4>策略</h4>
+            <h4>
+              策略
+              <div class="r-e-w-btn-group">
+                <el-button type="primary" class="add" size="small" round v-if="!isShowEditPolicy"  @click="addPolicyHandler"><i class="el-icon-plus"></i> 添加策略</el-button>
+                <template v-else>
+                  <el-button class="cnacel" size="small" round @click="cancelPolicyHandler">取消</el-button>
+                  <el-button type="primary" class="save" size="small" round @click="savePolicyHandler">保存</el-button>
+                </template>
+              </div>
+            </h4>
             <div style="position: relative;">
               <template v-if="!isShowEditPolicy">
                 <div class="r-e-w-r-no-policy" v-if="release.policies.length === 0">
                   无策略的发行不会在市场中出现
-                  <span @click="addPolicyHandler"><i class="el-icon-circle-plus"></i>添加策略</span>
                 </div>
                 <div class="r-e-w-r-p-list" v-else>
                   <policy-list
@@ -67,11 +71,10 @@
                 </div>
               </template>
               <policy-editor
+                      :showFooterBtns="false"
                       :policy="editTmpPolicy"
                       class="r-e-w-r-p-editor"
                       v-if="isShowEditPolicy"
-                      @save="savePolicyHandler"
-                      @cancel="cancelPolicyHandler"
               ></policy-editor>
             </div>
           </div>
@@ -126,7 +129,9 @@
             return data
           }).catch(this.$error.showErrorMessage)
       },
-      savePolicyHandler({ policyName, policyText }) {
+      savePolicyHandler() {
+        const { policyName, policyText } = this.editTmpPolicy
+
         this.updateRelease({
           policyInfo: {
             addPolicies: [{

@@ -315,7 +315,7 @@ export default {
     // 选择策略
     selectPolicy(policy, index) {
       if(this.type !== 'create') {
-        if(this.contractsMap[policy.contractId]) {
+        if(policy.contractId && this.contractsMap[policy.contractId]) {
           this.$message({ type: 'warning', message: '已签约，不可更改！' })
           return
         }

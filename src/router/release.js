@@ -39,7 +39,7 @@ export default {
       hidden: true,
       meta: {
         requiresAuth: true,
-        title: i18n.t('routes.releaseEditor'),
+        title: i18n.t('routes.releaseManager'),
         type: 'release',
         theme: 'white'
       },

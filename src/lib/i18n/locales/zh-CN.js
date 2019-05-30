@@ -196,7 +196,7 @@ export default {
     search: {
         addBtn: '加入',
         placeholder: '输入发行名称',
-        resourcePlaceholder: '输入发行名称',
+        resourcePlaceholder: '输入资源名称',
         myRelease: '我的发行',
         noMyReleases: '暂无发行',
         favorTitle: '收藏发行',
@@ -229,7 +229,7 @@ export default {
         createRelease: '',
         releaseDetail: '',
         releaseSystem: '',
-        releaseEditor: '',
+        releaseManager: '发行管理',
         releaseAdd: ''
     },
 

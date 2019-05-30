@@ -1,6 +1,6 @@
 <template>
   <div class="policy-list-wrapper">
-    <div class="p-l-main-content clearfix">
+    <div class="p-l-main-content clearfix" :class="{'no-overflow': formatedPolicyList.length < 4}">
       <div style="transition: all .3s; white-space: nowrap;" :style="{ transform: `translateX(-${policyTranslateX}px)` }">
         <div class="p-l-item" v-for="(policy, index) in formatedPolicyList">
           <div class="p-l-item-head">
@@ -28,33 +28,36 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-if="policy.status == 0" :command="index + '-' + 1">启用</el-dropdown-item>
               <el-dropdown-item v-if="policy.status == 1" :command="index + '-' + 0">停用</el-dropdown-item>
-              <el-dropdown-item :command="index + '-' + 2">置顶</el-dropdown-item>
+              <!--<el-dropdown-item :command="index + '-' + 2">置顶</el-dropdown-item>-->
             </el-dropdown-menu>
           </el-dropdown>
           <i class="p-l-expand-btn el-icon-rank" @click="expandPolicyHandler(index)"></i>
         </div>
       </div>
     </div>
-    <i
-            class="p-l-left-btn el-icon-arrow-left"
-            :class="{ 'disabled': navActiveIndex === 0 }"
-            @click="tapPrevBtn"
-    ></i>
-    <i
-            class="p-l-right-btn el-icon-arrow-right"
-            :class="{ 'disabled': navActiveIndex === (formatedPolicyList.length - 1) || formatedPolicyList.length < 4 }"
-            @click="tapNextBtn"
-    ></i>
-    <ul class="p-l-list-nav-bar">
+    <template v-if="formatedPolicyList.length > 3">
+      <i
+              class="p-l-left-btn el-icon-arrow-left"
+              :class="{ 'disabled': navActiveIndex === 0 }"
+              @click="tapPrevBtn"
+      ></i>
+      <i
+              class="p-l-right-btn el-icon-arrow-right"
+              :class="{ 'disabled': navActiveIndex === (navItems.length - 1) }"
+              @click="tapNextBtn"
+      ></i>
+    </template>
+
+    <ul class="p-l-list-nav-bar" v-if="navItems.length > 2">
       <li
-              v-for="(item, index) in formatedPolicyList"
+              v-for="(item, index) in navItems"
               :class="{'active': navActiveIndex === index}"
               @click="exchangeNacActiveIndex(index)"
       ></li>
     </ul>
-    <div class="p-l-add-box" @click="addPolicy">
-      <span><i class="el-icon-circle-plus"></i>添加策略</span>
-    </div>
+    <!--<div class="p-l-add-box" @click="addPolicy">-->
+      <!--<span><i class="el-icon-circle-plus"></i>添加策略</span>-->
+    <!--</div>-->
     <el-dialog
             :title="expandedPolicy.policyName"
             :visible.sync="isExpandPolicy"
@@ -83,21 +86,29 @@
     },
     data() {
       return {
+        visibleCardCount: 3,
+        cardActiveIndex: 0,
         navActiveIndex: 0,
         expandedPolicyIndex: 0,
         isExpandPolicy: false,
       }
     },
     computed: {
+      navItems() {
+        var count = Math.ceil(this.formatedPolicyList.length / this.visibleCardCount)
+        console.log(new Array(count).fill(1))
+        return new Array(count).fill(1)
+      },
       formatedPolicyList() {
-        return this.policyList.filter(p => p.policyId).map(p => {
+        const policyList = this.policyList.filter(p => p.policyId).map(p => {
           p.policyText = beautify(p.policyText)
           return p
         })
+        return policyList
       },
       policyTranslateX() {
-        // return this.navActiveIndex < 3 ? 0 : (this.navActiveIndex - 2) * 258
-        return this.navActiveIndex * 258
+        // return this.cardActiveIndex < 3 ? 0 : (this.cardActiveIndex - 2) * 258
+        return this.cardActiveIndex * 258
       },
       expandedPolicy() {
         return this.formatedPolicyList[this.expandedPolicyIndex]
@@ -106,14 +117,17 @@
     methods: {
       exchangeNacActiveIndex(index) {
         this.navActiveIndex = index
+        this.cardActiveIndex = index * this.visibleCardCount
       },
       tapPrevBtn() {
         this.navActiveIndex = this.navActiveIndex - 1
         this.navActiveIndex = this.navActiveIndex < 0 ? 0 : this.navActiveIndex
+        this.cardActiveIndex = this.navActiveIndex * this.visibleCardCount
       },
       tapNextBtn() {
         this.navActiveIndex = this.navActiveIndex + 1
-        this.navActiveIndex = this.navActiveIndex === this.formatedPolicyList.length ? 0 : this.navActiveIndex
+        this.navActiveIndex = this.navActiveIndex === this.navItems.length ? this.navItems.length - 1 : this.navActiveIndex
+        this.cardActiveIndex = this.navActiveIndex * this.visibleCardCount
       },
       addPolicy() {
         this.$emit('add-policy')
@@ -147,7 +161,10 @@
 <style lang="less" type="text/less" scoped>
   .policy-list-wrapper { position: relative; }
   .p-l-main-content {
-    overflow: hidden; margin: 0 80px;
+    overflow: hidden; margin: 20px 80px;
+    &.no-overflow {
+      margin: 10px 0 20px 0;
+    }
   }
 
   .p-l-add-box {
@@ -226,7 +243,7 @@
     margin-top: 10px; text-align: center; cursor: pointer;
     li {
       display: inline-block; padding: 0; margin: 0 5px;
-      width: 25px; height: 3px;
+      width: 10px; height: 10px; border-radius: 50%;
       background-color: #DBDBDB;
       &.active { background-color: #409EFF; }
     }

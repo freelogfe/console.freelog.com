@@ -4,4 +4,4 @@
 
 import Fetch from './fetch'
 
-export default new Fetch('v1/contracts/contractRecords')
+export default new Fetch('v1/contracts/list')

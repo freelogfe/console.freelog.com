@@ -22,31 +22,34 @@ export default {
     },
     methods: {
         executeNext(callback) {
-            if (this.isRequesting) return
-
-            this.isRequesting = true
+            if (this.isRequesting) return;
+            // console.log(this.data, 'this.datathis.data');
+            // return;
+            this.isRequesting = true;
             if (this.$refs.inputArea.nextHandler) {
-                this.$refs.inputArea.nextHandler(this.data)
+                this.$refs.inputArea
+                    .nextHandler(this.data)
                     .then((detail) => {
                         if (detail && detail.resourceId) {
                             Object.assign(this.resourceDetail, detail)
                         }
-                        this.isRequesting = false
+                        this.isRequesting = false;
                         callback()
-                    }).catch((err) => {
-                    this.isRequesting = false
-                    this.$nextTick(() => {
-                        const $error = this.$el.querySelector('.el-form-item__error')
-                        if ($error) {
-                            $error.parentElement.scrollIntoView()
-                            window.scrollBy(0, -80) // 填补fixed占位的高度
-                        } else {
-                            this.$error.showErrorMessage(err)
-                        }
                     })
-                })
+                    .catch((err) => {
+                        this.isRequesting = false;
+                        this.$nextTick(() => {
+                            const $error = this.$el.querySelector('.el-form-item__error')
+                            if ($error) {
+                                $error.parentElement.scrollIntoView();
+                                window.scrollBy(0, -80) // 填补fixed占位的高度
+                            } else {
+                                this.$error.showErrorMessage(err)
+                            }
+                        })
+                    });
             } else {
-                this.isRequesting = false
+                this.isRequesting = false;
                 callback()
             }
         },
@@ -63,20 +66,32 @@ export default {
                 }, 5e2)
             })
         },
+        /**
+         * 点击『创建完成』按钮
+         */
         create2AddHandler() {
-            const detail = this.resourceDetail
+            const detail = this.resourceDetail;
+            // 向服务端提交数据
             this.executeNext(() => {
-                if (detail.resourceId) {
-                    this.$router.push(`/resource/detail/${detail.resourceId}`)
-                }
+                // if (detail.resourceId) {
+                //     this.$router.push(`/resource/detail/${detail.resourceId}`)
+                // }
+                // 数据提交成功后返回列表展示页
+                this.$router.back();
             })
         },
+        /**
+         * 点击『取消创建』mock 时
+         */
         cancelHandler() {
-            this.$confirm(this.$t('resource.cancelQuestion'))
+            // 弹窗提示，是否取消发布
+            // this.$confirm(this.$t('resource.cancelQuestion'))
+            this.$confirm('确定取消创建 mock ？')
                 .then(() => {
-                    this.$router.push('/resource/list')
-                }).catch(() => {
-            })
+                    this.$router.push('/mock/display')
+                })
+                .catch(() => {
+                });
         }
     }
 }

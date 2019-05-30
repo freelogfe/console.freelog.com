@@ -2,11 +2,12 @@
   <div class="release-editor-wrapper" v-if="release !== null">
     <release-editor-layout :release.sync="release" :selectedVersion="selectedVersion" type="edit">
       <template slot="about-version">
-        <template v-if="release.baseUpcastReleases.length === 0">
+        <template v-if="depReleasesList.length === 0">
           <div class="r-e-w-v-list">
-            <el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">
-              <div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>
-            </el-tooltip>
+            <!--<el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">-->
+              <!--<div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>-->
+            <!--</el-tooltip>-->
+            <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
             <el-table
                     :show-header="false"
                     :data="release.resourceVersions"
@@ -20,9 +21,10 @@
           </div>
         </template>
         <div class="r-e-w-v-box" v-else>
-          <el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">
-            <div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>
-          </el-tooltip>
+          <!--<el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">-->
+            <!--<div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>-->
+          <!--</el-tooltip>-->
+          <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
           <div class="r-e-w-v-scheme">
             <div class="rew-v-selector">
               <div class="rew-v-version">

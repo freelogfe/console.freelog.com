@@ -223,7 +223,7 @@ export default {
     createRelease: '',
     releaseDetail: '',
     releaseSystem: '',
-    releaseEditor: '',
+    releaseManager: '',
     releaseAdd: ''
   },
 
