@@ -7,7 +7,7 @@
         </div>
         <div class="cont">
           <div class="r-d-w-name">
-            {{release.username}}/{{release.releaseName}}
+            <span>{{release.username}}/{{release.releaseName}}</span>
             <el-select class="r-d-w-version" :disabled="release.resourceVersions.length === 1" v-model="activeReleaseVersion" default-first-option>
               <el-option
                       class="r-d-w-version-option"

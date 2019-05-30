@@ -3,7 +3,7 @@
     <div class="r-i-name">{{release.releaseName}}</div>
     <div class="r-i-row">
       <span class="r-i-type">{{release.resourceType}}</span>
-      <span class="r-i-version">{{release.latestVersion.version}}</span>
+      <span class="r-i-version">{{release.latestVersion && release.latestVersion.version}}</span>
       <span class="r-i-date">{{release.updateDate | fmtDate}}</span>
     </div>
     <el-button class="add-release-btn" @click="addToRelease">{{$t('search.addBtn')}}</el-button>
@@ -37,7 +37,8 @@
     padding: 8px 0; border-bottom: 1px solid #E1E1E1;
 
     .r-i-name {
-      font-size: 18px; color: #333;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      padding-right: 70px; font-size: 18px; color: #333;
     }
 
     .r-i-row {
