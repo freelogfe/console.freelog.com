@@ -93,7 +93,7 @@
 
                 <div class="mock-list__mocks_non-empty__create">
                     <router-link
-                        to="/mock/create"
+                        :to="'/mock/create?bucketName=' + activatedBucket.bucketName"
                         class="nav-link ls-nav-link"
                     >
                         <el-button type="primary">创建mock资源</el-button>
@@ -113,7 +113,7 @@
                         class="mock-list__mocks_non-empty__body_table"
                     >
                         <el-table
-                            :data="mockTableData"
+                            :data="mockTableData || []"
                             style="width: 100%">
                             <el-table-column
                                 prop="name"

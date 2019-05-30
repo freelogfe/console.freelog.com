@@ -11,7 +11,7 @@ export default {
             },
 
             // 『mock 表格』数据
-            mockTableData: [],
+            mockTableData: null,
 
             // 『bucket 列表』
             bucketsList: null,
