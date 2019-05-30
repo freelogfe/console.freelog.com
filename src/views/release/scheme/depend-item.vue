@@ -95,9 +95,9 @@
     }
     &.second-level {
       padding: 0 0 0 40px; cursor: pointer;
-
       &.active {  border-top-left-radius: 4px; border-bottom-left-radius: 4px; background-color: #fff; }
       .r-name { font-size: 14px; }
+      .r-policies { border-width: 0; }
     }
   }
 </style>

@@ -58,7 +58,7 @@
             </div>
           </template>
         </div>
-        <div class="policy-content-input-ft">
+        <div class="policy-content-input-ft" v-if="showFooterBtns">
           <el-button round size="mini" @click="cancelPolicyHandler">{{$t('common.cancel')}}</el-button>
           <el-button round size="mini" type="primary" @click="savePolicyHandler" v-if="autoSave === false">{{$t('common.save')}}</el-button>
         </div>

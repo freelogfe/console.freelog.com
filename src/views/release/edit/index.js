@@ -109,11 +109,13 @@ export default {
       this.vTabActiveName = tab.name
     },
     showResourceDialog() {
-      if(this.release.policies.length > 0) {
-        this.resourceDialogVisible = true
-      }else {
-        this.$message({ type: 'warning', message: '发行没策略，不能新增版本' })
-      }
+      this.resourceDialogVisible = true
+
+      // if(this.release.policies.length > 0) {
+      //   this.resourceDialogVisible = true
+      // }else {
+      //   this.$message({ type: 'warning', message: '发行没策略，不能新增版本' })
+      // }
     },
     clearSearchInputHandler() {
 
@@ -122,10 +124,10 @@ export default {
     searchDataHandler(page) {
       const pageSize = 10
 
-      if (!this.searchInput) {
-        return Promise.resolve({ canLoadMore: false })
-      }
-
+      // if (!this.searchInput) {
+      //   return Promise.resolve({ canLoadMore: false })
+      // }
+      // 空输入时，即查询所有属于我的资源
       return this.$services.ResourceService.get({
         params: Object.assign({
           keywords: encodeURIComponent(this.searchInput),

@@ -159,7 +159,7 @@
         })
       },
       cancelAddRelease() {
-        this.$router.replace(`/resource/detail/${this.resourceId}`)
+        this.$router.replace(`/release/edit/${this.releaseId}`)
       },
       saveReleaseVersion() {
         this.$axios.post(`/v1/releases/${this.releaseId}/versions`, {

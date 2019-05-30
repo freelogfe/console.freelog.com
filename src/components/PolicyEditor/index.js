@@ -29,6 +29,10 @@ export default {
     autoSave: {
       type: Boolean,
       default: false
+    },
+    showFooterBtns: {
+      type: Boolean,
+      default: true
     }
   },
 
