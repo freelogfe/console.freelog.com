@@ -159,7 +159,10 @@
     .resource-thumbnail-input .el-upload-dragger{ width: 200px; height: 150px; }
     .el-dialog__header {padding: 0; }
 
-    .el-dialog__body { padding: 10px 20px 30px; }
+    .el-dialog__body {
+      padding: 10px 20px;
+      .el-tabs__content { overflow: auto; max-height: 370px; }
+    }
     .el-dialog__headerbtn{ z-index: 100; }
   }
 </style>

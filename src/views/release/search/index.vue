@@ -2,15 +2,15 @@
   <div class="releases-search-wrapper">
     <el-tabs v-model="activeName">
       <el-tab-pane :label="$t('search.myRelease')" name="my-release">
-        <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchData">
+        <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchMyData">
           <template slot-scope="scope">
-            <release-item :releases="scope.data" type="search" @add="addToReleaseHandler"></release-item>
+            <release-item :release="scope.data" type="search" @add="addToReleaseHandler"></release-item>
           </template>
           <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
         </lazy-list-view>
       </el-tab-pane>
       <el-tab-pane :label="$t('search.favorTitle')" name="favor">
-        <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchData">
+        <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchFavorData">
           <template slot-scope="scope">
             <release-item :release="scope.data" type="search" @add="addToReleaseHandler"></release-item>
           </template>
@@ -63,7 +63,8 @@
     },
     mounted() {
       this.$refs.searchInputRef.focus()
-      this.loader = this.getFavorReleasesLoader()
+      this.myLoader = this.getMyReleasesLoader()
+      this.favorLoader = this.getFavorReleasesLoader()
     },
     methods: {
       addToReleaseHandler(release) {
@@ -71,6 +72,9 @@
       },
       clearSearchInputHandler() {
         // this.searchReleases = []
+      },
+      getMyReleasesLoader() {
+        return this.createReleaseLoader(param => this.$services.ReleaseService.get(param || {}).then(res => res.getData()))
       },
       getFavorReleasesLoader() {
         return this.createReleaseLoader(param => this.$services.collections.get(param || {}).then(res => res.getData()))
@@ -85,23 +89,38 @@
             param = {
               params: Object.assign({
                 pageSize: 10,
-                page: 1
+                page: 1,
               }, param)
             }
           }
           return loader(param)
         }
       },
-      fetchData(page) {
+      fetchMyData(page) {
         const pageSize = 10
-        if (!this.loader) {
+        if (!this.myLoader) {
           return Promise.resolve({
             canLoadMore: false,
             dataList: []
           })
         }
-        return this.loader({ page }).then((data) => {
-          data.dataList = data.dataList.filter(r => r.policies.length > 0)
+        return this.myLoader({ page, isSelf: 1 }).then((data) => {
+          this.myReleases = this.myReleases.concat(data.dataList)
+          if (data.dataList.length < pageSize) {
+            data.canLoadMore = false
+          }
+          return data
+        })
+      },
+      fetchFavorData(page) {
+        const pageSize = 10
+        if (!this.favorLoader) {
+          return Promise.resolve({
+            canLoadMore: false,
+            dataList: []
+          })
+        }
+        return this.favorLoader({ page }).then((data) => {
           this.favorReleases = this.favorReleases.concat(data.dataList)
           if (data.dataList.length < pageSize) {
             data.canLoadMore = false

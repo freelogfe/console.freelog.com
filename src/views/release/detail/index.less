@@ -18,7 +18,13 @@
     padding-left: 180px;
   }
   .r-d-w-name {
+    display: flex; align-items: center;
     font-size: 30px; color: #333;
+    span {
+      display: inline-block;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      max-width: 620px; margin-right: 5px;
+    }
 
     .el-icon-star-off, .el-icon-star-on {
       display: inline-block; cursor: pointer;
