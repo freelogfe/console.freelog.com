@@ -378,6 +378,10 @@ export default {
 
             return true;
         },
+        /**
+         * 组织创建新 mock 的数据
+         * @return {object}
+         */
         packUploadData() {
             const reourceUploader = this.uploaderStates.resource;
             const uploadData = {};
@@ -397,7 +401,12 @@ export default {
             if (this.editMode === EDIT_MODES.creator) {
                 keys = keys.concat(INPUT_KEYS);
                 uploadData.sha1 = reourceUploader.sha1;
-                uploadData.aliasName = formData.resourceName;
+
+                // 资源名称,需要同一个bucket下唯一
+                // uploadData.aliasName = formData.resourceName;
+                uploadData.name = formData.resourceName;
+
+                // 上传的资源返回来的uploadFileId值
                 uploadData.uploadFileId = reourceUploader.uploadFileId;
 
                 if (formData.resourceType === RESOURCE_TYPES.widget) {
@@ -414,7 +423,7 @@ export default {
 
             if (this.deps.length) {
                 uploadData.dependencies = this.deps.map(r => {
-                    r.resourceId
+                    // r.resourceId
                     return {releaseId: r.releaseId, versionRange: r.latestVersion.version}
                 });
             }
@@ -427,28 +436,39 @@ export default {
                     uploadData[key] = formData[key];
                 }
             });
+            uploadData.bucketName = this.$route.query.bucketName;
+            // console.log(uploadData, 'uploadDatauploadDatauploadData');
             return uploadData;
         },
         isChanged() {
             // todo 待优化
             return true;
         },
+        /**
+         *
+         * @return {Promise<any>}
+         */
         nextHandler() {
             return new Promise((resolve, reject) => {
                 this.validate()
                     .then(() => {
                         const data = this.packUploadData();
                         if (!this.data.resourceId) {
-                            this.createResource(data).then(resolve).catch(reject);
+                            this.createResource(data)
+                                .then(resolve)
+                                .catch(reject);
                         } else if (this.isChanged()) {
-                            this.updateResource(data).then((detail) => {
-                                if (detail && detail.resourceId) resolve(detail);
-                                else resolve(this.formData);
-                            }).catch(reject)
+                            this.updateResource(data)
+                                .then((detail) => {
+                                    if (detail && detail.resourceId) resolve(detail);
+                                    else resolve(this.formData);
+                                })
+                                .catch(reject)
                         } else {
                             resolve();
                         }
-                    }).catch(reject);
+                    })
+                    .catch(reject);
             })
         },
         /**
@@ -459,9 +479,14 @@ export default {
         createResource(data) {
             return new Promise((resolve, reject) => {
                 const $uploader = this.$refs.resourceUploader;
+                // console.log(data, 'datadata');
+                // console.log(this.$router, '$router$router$router');
+                // console.log(this.$route.query, '$route$route$route');
                 if ($uploader.uploadFiles.length > 0) {
                     this.$services.MockService
-                        .post(data)
+                        .post({
+                            ...data,
+                        })
                         .then((res) => {
                             if (res.data.ret !== 0 || res.data.errcode !== 0) {
                                 reject(new Error(res.data.msg));

@@ -10,9 +10,6 @@ export default {
                 minHeight: (window.innerHeight - 60) + 'px',
             },
 
-            // 『mock 表格』数据
-            mockTableData: null,
-
             // 『bucket 列表』
             bucketsList: null,
             // bucket 列表』中被激活的 bucket，在 bucket 列表中的索引
@@ -24,6 +21,15 @@ export default {
             bucketNameInputValue: '',
             // 『新建 bucket 弹窗』中的错误提示信息
             bucketNameInputValueError: '',
+
+            // 『mock 表格』数据
+            mockTableData: null,
+            // 『mock 表格』当前页码
+            mockCurrentPage: 1,
+            // 『mock 表格』当前分页
+            mockPageSize: 10,
+            // 『mock 表格』总条数
+            mockTotalItem: 0,
         };
     },
     computed: {
@@ -113,8 +119,8 @@ export default {
                 return;
             }
             const params = {
-                page: 1,
-                pageSize: 10,
+                page: this.mockCurrentPage,
+                pageSize: this.mockPageSize,
                 bucketName: this.activatedBucket.bucketName,
                 // keywords: '',
                 // resourceType: '',
@@ -125,6 +131,47 @@ export default {
             // const {data} = await axios.get(`/v1/resources/mocks`, params);
             // console.log(data, 'data1234123423');
             this.mockTableData = data.data.dataList;
+            this.mockTotalItem = data.data.totalItem;
+        },
+        /**
+         * 下载一个 mock 资源
+         * @param mockResourceId
+         */
+        downloadAMockByAPI(mockResourceId) {
+            // axios.get(`https://api.freelog.com/v1/resources/mocks/${mockResourceId}/download`);
+            // window.open(`https://api.freelog.com/v1/resources/mocks/${mockResourceId}/download`);
+            window.location.href = `${window.location.origin.replace('console', 'qi')}/v1/resources/mocks/${mockResourceId}/download`;
+        },
+        /**
+         * 向 API 发起请求，根据 mockID 删除一个 mock
+         * @param mockResourceId
+         */
+        async removeAMockByAPI(mockResourceId) {
+            // console.log(mockResourceId, 'mockResourceId');
+            const {data} = await axios.delete(`/v1/resources/mocks/${mockResourceId}`);
+            // console.log(data, 'aadsfaewazxdf');
+            // this.mockTotalItem = this.mockTotalItem - 1;
+            this.mockCurrentPage = Math.min(this.mockCurrentPage, Math.ceil((this.mockTotalItem - 1) / this.mockPageSize));
+            // console.log(this.mockCurrentPage, 'this.mockCurrentPagethis.mockCurrentPage');
+            this.handleMockData();
+        },
+
+        /**
+         * 当前页面发生变化时
+         * @param currentPage
+         */
+        onCurrentPageChange(currentPage) {
+            // console.log(currentPage, 'currentPagecurrentPage');
+            this.mockCurrentPage = currentPage;
+        },
+        /**
+         * 页面数量发生改变时
+         * @param pageSize
+         */
+        onPageSizeChange(pageSize) {
+            // console.log(pageSize, 'pageSizepageSizepageSize');
+            this.mockPageSize = pageSize;
+            this.mockCurrentPage = 1;
         },
 
         /**
@@ -172,6 +219,12 @@ export default {
     },
     watch: {
         activatedBucket() {
+            this.handleMockData();
+        },
+        mockCurrentPage() {
+            this.handleMockData();
+        },
+        mockPageSize() {
             this.handleMockData();
         }
     }

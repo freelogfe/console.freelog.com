@@ -73,9 +73,10 @@
                     <div class="mock-list__mocks_non-empty__header__info">
                         <div>mock资源数量<span>{{activatedBucket.resourceCount}}</span></div>
                         <div>创建时间<span>{{transformToDateString(activatedBucket.createDate)}}</span></div>
-                        <div>已使用<span>{{Math.floor(activatedBucket.totalFileSize / 3072 * 100) / 100}}GB/2GB</span>
+                        <div>
+                            已使用<span>{{Math.floor(activatedBucket.totalFileSize / 1073741824 * 100) / 100}}GB/2GB</span>
                             <el-progress
-                                :percentage="Math.floor(activatedBucket.totalFileSize / 6144 * 100) / 100"
+                                :percentage="Math.floor(activatedBucket.totalFileSize / 2147483648 * 100) / 100"
                                 :show-text="false"
                                 style="width: 120px;"
                             ></el-progress>
@@ -148,10 +149,31 @@
                                         ></el-button>
 
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item>下载资源文件</el-dropdown-item>
-                                            <el-dropdown-item>生成正式资源</el-dropdown-item>
                                             <el-dropdown-item>
-                                                <div style="color: #EE4040;">删除</div>
+                                                <!--                                                <a-->
+                                                <!--                                                    :href="`http://api.testfreelog.com/v1/resources/mocks/${scope.row.mockResourceId}/download`"-->
+                                                <!--                                                    style="display: block; width: 100%; height: 100%;"-->
+                                                <!--                                                >-->
+                                                <a
+                                                    @click="downloadAMockByAPI(scope.row.mockResourceId)"
+                                                    style="display: block; width: 100%; height: 100%;"
+                                                >
+                                                    下载资源文件
+                                                </a>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item>
+                                                <a
+                                                    @click="downloadAMockByAPI(scope.row.mockResourceId)"
+                                                    style="display: block; width: 100%; height: 100%;"
+                                                >生成正式资源</a>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+
+                                            >
+                                                <a
+                                                    @click="removeAMockByAPI(scope.row.mockResourceId)"
+                                                    style="color: #EE4040; display: block; width: 100%; height: 100%;"
+                                                >删除</a>
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
@@ -163,11 +185,14 @@
                             <!--              @size-change="handleSizeChange"-->
                             <!--              @current-change="handleCurrentChange"-->
                             <el-pagination
-                                :current-page="1"
+                                :current-page="mockCurrentPage"
                                 :page-sizes="[10, 20, 30, 40, 50]"
-                                :page-size="100"
+                                :page-size="mockPageSize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="mockTotalItem"
+                                @current-change="onCurrentPageChange"
+                                @size-change="onPageSizeChange"
+                            >
                             </el-pagination>
                         </div>
                     </div>
