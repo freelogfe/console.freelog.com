@@ -7,6 +7,7 @@ export default {
         return {
             // 根 div 样式对象
             styleObject: {
+                // height: '100%',
                 minHeight: (window.innerHeight - 60) + 'px',
             },
 
