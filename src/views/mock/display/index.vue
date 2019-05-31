@@ -82,14 +82,61 @@
                             ></el-progress>
                         </div>
                     </div>
-                    <el-button
-                        type="danger"
-                        plain
-                        size="small"
-                        icon="el-icon-delete"
-                        @click="removeABucketByAPI"
-                    >删除Bucket
-                    </el-button>
+
+                    <el-popover
+                        placement="top"
+                        width="(mockTableData && mockTableData.length === 0) ? 360 : 274"
+                        v-model="deleteBucketPopoverShow"
+                    >
+                        <template v-if="mockTableData && mockTableData.length === 0">
+                            <div style="height: 30px;"></div>
+                            <p style="text-align: center; font-size: 14px; font-weight: 600; color: #333;">
+                                存储空间一旦删除则无法恢复，确认删除吗？</p>
+                            <div style="height: 25px;"></div>
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <el-button
+                                    size="small"
+                                    type="text"
+                                    style="padding-left: 20px; padding-right: 20px; color: #999;"
+                                    @click="controlDeleteBucketPopoverShow(false)"
+                                >取消
+                                </el-button>
+                                <el-button
+                                    type="danger"
+                                    size="small"
+                                    @click="removeABucketByAPI"
+                                >确定
+                                </el-button>
+                            </div>
+                            <div style="height: 8px;"></div>
+                        </template>
+                        <template v-if="mockTableData && mockTableData.length > 0">
+                            <div style="height: 30px;"></div>
+                            <p style="text-align: center; font-size: 14px; font-weight: 600; color: #333;">
+                                该存储空间内还有未删除模拟资源</p>
+                            <div style="height: 25px;"></div>
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <el-button
+                                    size="small"
+                                    type="primary"
+                                    plain
+                                    @click="controlDeleteBucketPopoverShow(false)"
+                                >确定
+                                </el-button>
+                            </div>
+                            <div style="height: 8px;"></div>
+                        </template>
+
+                        <el-button
+                            type="danger"
+                            plain
+                            slot="reference"
+                            size="small"
+                            icon="el-icon-delete"
+                        >删除Bucket
+                        </el-button>
+                    </el-popover>
+
                 </div>
 
                 <div class="mock-list__mocks_non-empty__create">
@@ -167,9 +214,7 @@
                                                     style="display: block; width: 100%; height: 100%;"
                                                 >生成正式资源</a>
                                             </el-dropdown-item>
-                                            <el-dropdown-item
-
-                                            >
+                                            <el-dropdown-item>
                                                 <a
                                                     @click="removeAMockByAPI(scope.row.mockResourceId)"
                                                     style="color: #EE4040; display: block; width: 100%; height: 100%;"
@@ -182,8 +227,6 @@
                             </el-table-column>
                         </el-table>
                         <div style="padding: 10px 0; display: flex; justify-content: flex-end;">
-                            <!--              @size-change="handleSizeChange"-->
-                            <!--              @current-change="handleCurrentChange"-->
                             <el-pagination
                                 :current-page="mockCurrentPage"
                                 :page-sizes="[10, 20, 30, 40, 50]"
