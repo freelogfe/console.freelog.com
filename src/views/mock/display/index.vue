@@ -164,6 +164,24 @@
                             :data="mockTableData || []"
                             style="width: 100%">
                             <el-table-column
+                                prop="preview"
+                                label=""
+                                width="70">
+                                <template slot-scope="scope">
+                                    <div
+                                        style="width: 40px; height: 36px;"
+                                        class="resource-default-preview"
+                                    >
+                                        <img
+                                            style="width: 100%; height: 100%;"
+                                            v-if="scope.row.previewImages && scope.row.previewImages.length > 0"
+                                            :src="scope.row.previewImages[0]"
+                                        />
+                                        <!--                                        <span v-if="scope.previewImages"></span>-->
+                                    </div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
                                 prop="name"
                                 label="名称"
                                 width="180">
@@ -210,9 +228,13 @@
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a
-                                                    @click="downloadAMockByAPI(scope.row.mockResourceId)"
                                                     style="display: block; width: 100%; height: 100%;"
                                                 >生成正式资源</a>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item>
+                                                <a
+                                                    style="display: block; width: 100%; height: 100%;"
+                                                >编辑</a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a

@@ -140,6 +140,7 @@ export default {
             const str = querystring.stringify(params);
             const {data} = await axios.get(`/v1/resources/mocks?${str}`);
             this.mockTableData = data.data.dataList;
+            // console.log(this.mockTableData, 'this.mockTableDatathis.mockTableData');
             this.mockTotalItem = data.data.totalItem;
         },
         /**
