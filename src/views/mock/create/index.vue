@@ -40,7 +40,6 @@
                             round
                             @click="create2AddHandler"
                         >
-                            <!--                            {{$t('resource.createDoneText')}}-->
                             完成创建
                         </el-button>
                     </div>

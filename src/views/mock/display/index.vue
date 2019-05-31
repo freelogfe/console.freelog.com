@@ -215,10 +215,6 @@
 
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item>
-                                                <!--                                                <a-->
-                                                <!--                                                    :href="`http://api.testfreelog.com/v1/resources/mocks/${scope.row.mockResourceId}/download`"-->
-                                                <!--                                                    style="display: block; width: 100%; height: 100%;"-->
-                                                <!--                                                >-->
                                                 <a
                                                     @click="downloadAMockByAPI(scope.row.mockResourceId)"
                                                     style="display: block; width: 100%; height: 100%;"
