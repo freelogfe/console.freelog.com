@@ -349,11 +349,10 @@
             >
                 <el-button
                     round
-                    style="background-color: #ececec; color: #666666"
+                    style="background-color: #ececec; color: #666666; border: none;"
                     size="medium"
-                    icon="el-icon-plus"
                     @click="onClickButtonAddMetaInfo"
-                >添加meta信息
+                ><i class="el-icon-plus" style="font-weight: 600;"></i> 添加meta信息
                 </el-button>
             </div>
         </el-form>
