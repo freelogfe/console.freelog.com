@@ -1,6 +1,8 @@
 import { format } from 'date-fns'
 import { mapGetters } from 'vuex'
 import RichEditor from '@/components/RichEditor/index.vue'
+import { versionDescendingOrder } from '@/lib/utils.js'
+
 export default {
   name: "release-detail",
   components: { RichEditor },
@@ -171,7 +173,7 @@ export default {
         return p
       })
       this.activePolicy = this.release.policies[0]
-      this.release.resourceVersions = this.release.resourceVersions.map(i => {
+      this.release.resourceVersions = this.release.resourceVersions.sort(versionDescendingOrder).map(i => {
         i.createDate = format(i.createDate, 'YYYY-MM-DD')
         return i
       })

@@ -48,7 +48,7 @@
       ></i>
     </template>
 
-    <ul class="p-l-list-nav-bar" v-if="navItems.length > 2">
+    <ul class="p-l-list-nav-bar" v-if="navItems.length > 1">
       <li
               v-for="(item, index) in navItems"
               :class="{'active': navActiveIndex === index}"

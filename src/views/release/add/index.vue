@@ -56,6 +56,7 @@
   import ReleaseEditorLayout from '../edit/layout.vue'
   import SchemeManage from '../scheme/index.vue'
   import { format } from 'date-fns'
+  import { versionDescendingOrder } from '@/lib/utils.js'
   export default {
     name: 'release-add-box',
     components: { SchemeManage, ReleaseEditorLayout },
@@ -134,7 +135,7 @@
             if(res.errcode === 0) {
               const map = {}
               res.data = res.data.forEach(resource => map[resource.resourceId] = resource)
-              this.release.resourceVersions = this.release.resourceVersions.map(resource => {
+              this.release.resourceVersions = this.release.resourceVersions.sort(versionDescendingOrder).map(resource => {
                 resource = Object.assign(resource, map[resource.resourceId])
                 resource.createDate = format(resource.createDate, 'YYYY-MM-DD')
                 return resource
