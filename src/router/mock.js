@@ -26,6 +26,18 @@ export default {
             },
             component: Views.mockDisplay
         },
+        // {
+        //     path: 're-edit',
+        //     meta: {
+        //         requiresAuth: true,
+        //         // title: i18n.t('routes.resourcePolicyTplList'),
+        //         title: i18n.t('routes.resourcePolicyTplList'),
+        //         type: 'resource',
+        //         hideFooter: true,
+        //         theme: 'gray'
+        //     },
+        //     component: Views.mockReEdit
+        // },
         {
             path: 'create',
             hidden: true,
@@ -33,7 +45,8 @@ export default {
                 requiresAuth: true,
                 title: i18n.t('routes.createResource'),
                 type: 'resource',
-                theme: 'gray'
+                theme: 'gray',
+                hideFooter: true,
             },
             component: Views.mockCreator,
         },

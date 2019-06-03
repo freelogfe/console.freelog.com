@@ -8,7 +8,8 @@ export default {
     },
     data() {
         return {
-            resourceDetail: {}
+            resourceDetail: {},
+            isEditState: !!this.$route.query.mockResourceId,
         }
     },
     mounted() {

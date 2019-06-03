@@ -4,6 +4,7 @@ import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
+import {axios} from '@/lib';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -70,12 +71,16 @@ export default {
 
             loading: false,
             deps: [],
+
+            // 是否显示搜索依赖资源的弹窗
             showSearchResourceDialog: false,
+
+            // 这个表单数据
             formData: {
                 resourceType: '', // storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
                 resourceName: '',
                 widgetName: '',
-                description: '',
+                description: 'jkhnnk',
                 previewImage: '',
                 widgetVersion: ''
             },
@@ -176,8 +181,31 @@ export default {
 
     mounted() {
         this.resourceTypeChange(this.formData.resourceType);
+        this.fillDataIfEdit();
     },
     methods: {
+
+        /**
+         * 当为编辑状态时，填充详情数据
+         * @return {Promise<void>}
+         */
+        async fillDataIfEdit() {
+            // console.log(this.$route.query.mockResourceId, 'this.$route.query.mockResourceId;');
+            const mockResourceId = this.$route.query.mockResourceId;
+            if (!mockResourceId) {
+                return;
+            }
+            const {data} = await axios.get(`/v1/resources/mocks/${mockResourceId}`);
+            console.log(data, 'asdfwe4fr3asfdfa');
+            this.formData.resourceType = data.data.resourceType;
+            this.formData.resourceName = data.data.name;
+            this.formData.previewImage = data.data.previewImages[0] || '';
+            this.deps = data.data.systemMeta.dependencies;
+            this.formData.description = data.data.description;
+            // this.formData.description = '<div>123456</div>';
+            this.meta = JSON.stringify(data.data.meta);
+        },
+
         resourceTypeChange(type) {
             storage.set('CREATE_RESOURCE_TYPE', type);
         },
@@ -336,17 +364,17 @@ export default {
         },
         validate() {
             return new Promise((resolve, reject) => {
-                const reourceUploader = this.uploaderStates.resource;
+                // const reourceUploader = this.uploaderStates.resource;
                 this.$refs.createForm.validate((valid, err) => {
                     if (valid) {
                         let errMsg;
-                        if (this.editMode === EDIT_MODES.creator) {
-                            if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
-                                errMsg = this.$t('resourceEditView.uploadingTip');
-                            } else if (!reourceUploader.sha1) {
-                                errMsg = this.$t('resourceEditView.noFileTip');
-                            }
-                        }
+                        // if (this.editMode === EDIT_MODES.creator) {
+                        //     if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
+                        //         errMsg = this.$t('resourceEditView.uploadingTip');
+                        //     } else if (!reourceUploader.sha1) {
+                        //         errMsg = this.$t('resourceEditView.noFileTip');
+                        //     }
+                        // }
 
                         if (errMsg) {
                             reject(errMsg);
@@ -409,22 +437,37 @@ export default {
                 // 上传的资源返回来的uploadFileId值
                 uploadData.uploadFileId = reourceUploader.uploadFileId;
 
-                if (formData.resourceType === RESOURCE_TYPES.widget) {
-                    uploadData.widgetInfo = {
-                        widgetName: formData.widgetName,
-                        version: `^${formData.widgetVersion}`
-                    };
-                }
+                // if (formData.resourceType === RESOURCE_TYPES.widget) {
+                //     uploadData.widgetInfo = {
+                //         widgetName: formData.widgetName,
+                //         version: `^${formData.widgetVersion}`
+                //     };
+                // }
             }
 
+            // 如果封面图存在
             if (formData.previewImage) {
                 uploadData.previewImages = [formData.previewImage];
             }
 
-            if (this.deps.length) {
+            console.log(this.deps, 'this.depsthis.depsthis.deps');
+
+            // 从新组织依赖
+            if (!this.$route.query.mockResourceId) {
                 uploadData.dependencies = this.deps.map(r => {
                     // r.resourceId
-                    return {releaseId: r.releaseId, versionRange: r.latestVersion.version}
+                    return {
+                        releaseId: r.releaseId,
+                        versionRange: r.latestVersion.version
+                    };
+                });
+            } else {
+                uploadData.dependencies = this.deps.map(r => {
+                    // r.resourceId
+                    return {
+                        releaseId: r.releaseId,
+                        versionRange: r.versionRange
+                    };
                 });
             }
 
@@ -445,7 +488,7 @@ export default {
             return true;
         },
         /**
-         *
+         * 创建资源页，出发完成时调用
          * @return {Promise<any>}
          */
         nextHandler() {
@@ -453,20 +496,24 @@ export default {
                 this.validate()
                     .then(() => {
                         const data = this.packUploadData();
-                        if (!this.data.resourceId) {
+                        if (!this.$route.query.mockResourceId) {
                             this.createResource(data)
                                 .then(resolve)
                                 .catch(reject);
-                        } else if (this.isChanged()) {
+                        } else {
                             this.updateResource(data)
                                 .then((detail) => {
-                                    if (detail && detail.resourceId) resolve(detail);
-                                    else resolve(this.formData);
+                                    if (detail && detail.resourceId) {
+                                        resolve(detail);
+                                    } else {
+                                        resolve(this.formData)
+                                    }
                                 })
                                 .catch(reject)
-                        } else {
-                            resolve();
                         }
+                        // else {
+                        //     resolve();
+                        // }
                     })
                     .catch(reject);
             })
@@ -500,13 +547,21 @@ export default {
                 }
             })
         },
-        updateResource(data) {
-            return this.$services.resource.put(this.data.resourceId, data).then((res) => {
-                if (res.data.ret !== 0 || res.data.errcode !== 0) {
-                    return Promise.reject(res);
-                }
-                return res.getData();
-            })
+        /**
+         * 调用API，更新 mock 资源
+         * @param data
+         * @returns {Promise<any>}
+         */
+        async updateResource(data) {
+            // return this.$services.resource.put(this.data.resourceId, data).then((res) => {
+            //     if (res.data.ret !== 0 || res.data.errcode !== 0) {
+            //         return Promise.reject(res);
+            //     }
+            //     return res.getData();
+            // })
+            console.log(data, 'datadatadata');
+            // const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`);
+
         },
         uploadProgressHandler(event, file) {
             const uploaderStates = this.uploaderStates;
@@ -535,6 +590,9 @@ export default {
         beforeCloseDialogHandler() {
             this.showSearchResourceDialog = false;
         },
+        /**
+         * 显示搜索依赖的弹窗
+         */
         showSearchDialogHandler() {
             if (this.canEditDependencies) {
                 this.showSearchResourceDialog = true;

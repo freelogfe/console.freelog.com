@@ -177,27 +177,27 @@
                             </el-form-item>
                         </div>
 
-                        <template v-if="formData.resourceType === ResourceTypes.widget">
-                            <div class="require-input input-item">
-                                <el-form-item prop="widgetName">
-                                    <input
-                                        type="text"
-                                        v-model="formData.widgetName"
-                                        class="input-rect"
-                                        :disabled="!showCreatorInputItem"
-                                        :placeholder="$t('resourceEditView.widgetName')"
-                                    >
-                                </el-form-item>
-                            </div>
-                            <div class="require-input input-item">
-                                <el-form-item prop="widgetVersion">
-                                    <input type="text" v-model="formData.widgetVersion"
-                                           class="input-rect"
-                                           :disabled="!showCreatorInputItem"
-                                           :placeholder="$t('resourceEditView.widgetVersion')">
-                                </el-form-item>
-                            </div>
-                        </template>
+                        <!--                        <template v-if="formData.resourceType === ResourceTypes.widget">-->
+                        <!--                            <div class="require-input input-item">-->
+                        <!--                                <el-form-item prop="widgetName">-->
+                        <!--                                    <input-->
+                        <!--                                        type="text"-->
+                        <!--                                        v-model="formData.widgetName"-->
+                        <!--                                        class="input-rect"-->
+                        <!--                                        :disabled="!showCreatorInputItem"-->
+                        <!--                                        :placeholder="$t('resourceEditView.widgetName')"-->
+                        <!--                                    >-->
+                        <!--                                </el-form-item>-->
+                        <!--                            </div>-->
+                        <!--                            <div class="require-input input-item">-->
+                        <!--                                <el-form-item prop="widgetVersion">-->
+                        <!--                                    <input type="text" v-model="formData.widgetVersion"-->
+                        <!--                                           class="input-rect"-->
+                        <!--                                           :disabled="!showCreatorInputItem"-->
+                        <!--                                           :placeholder="$t('resourceEditView.widgetVersion')">-->
+                        <!--                                </el-form-item>-->
+                        <!--                            </div>-->
+                        <!--                        </template>-->
                     </div>
 
                     <!-- 封面上传 -->
@@ -285,6 +285,8 @@
                             :disabled="canEditDependencies"
                             :content="$t('resourceEditView.disableModifiedTip')">
                         </el-popover>
+
+                        <!-- + 添加依赖 的按钮 -->
                         <el-button
                             class="add-dep-btn"
                             @click="showSearchDialogHandler"
@@ -292,7 +294,10 @@
                             v-popover:depsPopTip
                             size="mini"><i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}
                         </el-button>
+
                     </div>
+
+                    <!-- 依赖列表 -->
                     <ul
                         class="res-deps-wrap"
                         v-if="deps.length"
@@ -316,19 +321,23 @@
                 </div>
             </div>
 
+            <!-- 资源介绍 -->
             <div class="input-item-wrap">
                 <h4>{{$t('resourceEditView.introTitle')}}</h4>
                 <div
                     class="input-area"
                     style="padding: 20px;"
                 >
-                    <rich-editor class="res-desc-editor"
-                                 ref="editor"
-                                 width="100%"
-                                 v-model="formData.description"
-                                 :config="editorConfig"
-                                 @load="imgUploadSuccessHandler"
-                                 :placeholder="$t('resourceEditView.inputDescTip')"></rich-editor>
+                    <rich-editor
+                        class="res-desc-editor"
+                        ref="editor"
+                        width="100%"
+                        v-model="formData.description"
+                        :config="editorConfig"
+                        @load="imgUploadSuccessHandler"
+                        :placeholder="$t('resourceEditView.inputDescTip')"
+                    >
+                    </rich-editor>
                 </div>
             </div>
 
@@ -338,8 +347,12 @@
                     class="input-area"
                     style="padding: 20px;"
                 >
-                    <resource-meta-info v-model="meta" @validate="checkMetaValid"
-                                        :placeholder="$t('resourceEditView.inputMetaTip')"></resource-meta-info>
+                    <!-- meta 输入框 -->
+                    <resource-meta-info
+                        v-model="meta"
+                        @validate="checkMetaValid"
+                        :placeholder="$t('resourceEditView.inputMetaTip')">
+                    </resource-meta-info>
                 </div>
             </div>
 
