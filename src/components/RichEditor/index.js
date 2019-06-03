@@ -77,14 +77,14 @@ export default {
 
   mounted() {
     this.createEditor()
-    if (this.$route.params.resourceId) {
+    // if (this.$route.params.resourceId) {
       const unwatch = this.$watch('value', () => {
         if (this.value) {
           this.content = this.value
         }
         unwatch()
       })
-    }
+    // }
   },
   components: {
     'quill-rich-editor': quillEditor

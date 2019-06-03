@@ -558,6 +558,14 @@ export default {
         // 点击显示 『添加 meta 信息』的按钮
         onClickButtonAddMetaInfo() {
             this.doShowMeta = true;
+        },
+
+        /**
+         * 模拟点击『资源上传按钮』
+         */
+        onClickUpload() {
+            // console.log( this.$refs.buttttttt.$el, 'this.$refs.resourceUploader');
+            this.$refs.sourceUploadButton.$el.click();
         }
     }
 }

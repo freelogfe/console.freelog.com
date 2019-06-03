@@ -1,5 +1,5 @@
 <template>
-  <footer class="app-footer">
+  <footer v-if="isShowFooter" class="app-footer">
     <ul class="freelog-info">
       <li><a href="/about">{{ $t('aboutView.about') }} freelog</a></li>
       <li><a href="/help">{{ $t('helpView.title') }}</a></li>

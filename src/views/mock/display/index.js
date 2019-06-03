@@ -7,13 +7,14 @@ export default {
         return {
             // 根 div 样式对象
             styleObject: {
+                // height: '100%',
                 minHeight: (window.innerHeight - 60) + 'px',
             },
 
             // 『bucket 列表』
             bucketsList: null,
             // bucket 列表』中被激活的 bucket，在 bucket 列表中的索引
-            activeBucketIndex: 0,
+            activeBucketIndex: Number(window.sessionStorage.getItem('activeBucketIndex') || 0),
 
             // 『新建 bucket 弹窗』 是否显示
             dialogVisible: false,
@@ -30,6 +31,9 @@ export default {
             mockPageSize: 10,
             // 『mock 表格』总条数
             mockTotalItem: 0,
+
+            // 删除Bucket的面板是否显示
+            deleteBucketPopoverShow: false,
         };
     },
     computed: {
@@ -57,6 +61,8 @@ export default {
          * @param index
          */
         onChangeBucketActiveIndex(index) {
+            // 将激活的索引放到本地，方便再次进入页面时选中
+            window.sessionStorage.setItem('activeBucketIndex', index);
             this.activeBucketIndex = index;
         },
 
@@ -71,6 +77,8 @@ export default {
          */
         hideNewBucketDialog() {
             this.dialogVisible = false;
+            this.bucketNameInputValue = '';
+            this.bucketNameInputValueError = '';
         },
         /**
          * 向服务端 API 发起，新建 bucket 的请求
@@ -107,8 +115,11 @@ export default {
             if (data.errcode !== 0) {
                 return this.errorMessage(data.msg);
             }
+            this.onChangeBucketActiveIndex(0);
+            this.controlDeleteBucketPopoverShow(false);
+
+            await null;
             this.initBucketsByAPI();
-            this.activeBucketIndex = 0;
         },
         /**
          * 处理展示 mock table
@@ -128,9 +139,8 @@ export default {
             };
             const str = querystring.stringify(params);
             const {data} = await axios.get(`/v1/resources/mocks?${str}`);
-            // const {data} = await axios.get(`/v1/resources/mocks`, params);
-            // console.log(data, 'data1234123423');
             this.mockTableData = data.data.dataList;
+            // console.log(this.mockTableData, 'this.mockTableDatathis.mockTableData');
             this.mockTotalItem = data.data.totalItem;
         },
         /**
@@ -138,8 +148,6 @@ export default {
          * @param mockResourceId
          */
         downloadAMockByAPI(mockResourceId) {
-            // axios.get(`https://api.freelog.com/v1/resources/mocks/${mockResourceId}/download`);
-            // window.open(`https://api.freelog.com/v1/resources/mocks/${mockResourceId}/download`);
             window.location.href = `${window.location.origin.replace('console', 'qi')}/v1/resources/mocks/${mockResourceId}/download`;
         },
         /**
@@ -216,6 +224,14 @@ export default {
         //
         //     return `${number} ${unit}`;
         // },
+
+        /**
+         * 控制 『删除 bucket 的面板是否显示』
+         * @param {boolean} bool
+         */
+        controlDeleteBucketPopoverShow(bool) {
+            this.deleteBucketPopoverShow = bool;
+        }
     },
     watch: {
         activatedBucket() {

@@ -71,6 +71,7 @@
                         >
                             <!-- 上传按钮 -->
                             <div
+                                v-show="shouldShowResourceUploader !== false"
                                 class="resource-file-uploader-wrap"
                             >
                                 <el-upload
@@ -95,10 +96,11 @@
                                 >
                                     <div style="display: flex; align-items: flex-end;">
                                         <el-button
+                                            ref="sourceUploadButton"
                                             @click="onClickUploadResource"
                                         >上传资源
                                         </el-button>
-                                        <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small>     资源最大不超过50M</span>
+                                        <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small> 资源最大不超过50M</span>
                                     </div>
                                 </el-upload>
                             </div>
@@ -127,40 +129,39 @@
                                             :show-text="false"
                                             style="flex-shrink: 1; width: 100%;"
                                         ></el-progress>
-                                        <span
+                                        <!-- 进度条右侧 -->
+                                        <div
                                             v-if="!uploaderStates.resource.isExistResource"
-                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: #3f9cfd; font-size: 14px; font-weight: 600;">
-                                            {{uploaderStates.resource.percentage < 100 ? uploaderStates.resource.percentage + '%': '上传成功！'}}
-                                        </span>
-                                        <span
-                                            v-else="uploaderStates.resource.isExistResource"
-                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: red; font-size: 14px; font-weight: 600;">
-                                            重复上传
-                                        </span>
+                                            style="
+                                            width: 130px;
+                                            box-sizing: border-box;
+                                            flex-shrink: 0;
+                                            padding-left: 10px;
+                                            color: #3f9cfd;
+                                            font-size: 14px;
+                                            font-weight: 600;">
+                                            <span v-if="uploaderStates.resource.percentage < 100">
+                                                {{uploaderStates.resource.percentage + '%'}}
+                                            </span>
+                                            <span v-if="uploaderStates.resource.percentage === 100"
+                                                  style="display: flex; align-items: center; justify-content: space-between;"
+                                            >
+                                                <i
+                                                    style="font-size: 20px; color: #5cd217;"
+                                                    class="el-icon-circle-check"
+                                                ></i>
+
+                                                <el-button size="small" @click="onClickUpload">重新上传</el-button>
+                                            </span>
+
+                                        </div>
+                                        <!--                                        <span-->
+                                        <!--                                            v-else="uploaderStates.resource.isExistResource"-->
+                                        <!--                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: red; font-size: 14px; font-weight: 600;">-->
+                                        <!--                                            重复上传-->
+                                        <!--                                        </span>-->
                                     </div>
                                 </div>
-                                <!--                                <div class="upload-state-wrap">-->
-                                <!--                                    <i class="el-icon-document">-->
-                                <!--                                        <span-->
-                                <!--                                            v-if="!shouldShowResourceUploader && uploaderStates.resource.percentage < 100">{{uploaderStates.resource.percentage}}</span>-->
-                                <!--                                        <i-->
-                                <!--                                            v-else-->
-                                <!--                                            class="el-icon-circle-check"-->
-                                <!--                                        ></i>-->
-                                <!--                                    </i>-->
-                                <!--                                </div>-->
-                                <!--                                <div>-->
-                                <!--                                    <p class="upload-file-name">{{formData.filename}}-->
-                                <!--                                        <el-button-->
-                                <!--                                            type="text"-->
-                                <!--                                            style="color: #C3C3C3;font-size: 12px;padding: 0;"-->
-                                <!--                                            size="mini"-->
-                                <!--                                            @click="reuploadHandler('resource')"-->
-                                <!--                                        >-->
-                                <!--                                            {{$t('resourceEditView.reUploadText')}}-->
-                                <!--                                        </el-button>-->
-                                <!--                                    <p class="resource-file-size"> {{humanizeSize(formData.filesize)}}</p>-->
-                                <!--                                </div>-->
                             </div>
                         </div>
 
@@ -348,11 +349,10 @@
             >
                 <el-button
                     round
-                    style="background-color: #ececec; color: #666666"
+                    style="background-color: #ececec; color: #666666; border: none;"
                     size="medium"
-                    icon="el-icon-plus"
                     @click="onClickButtonAddMetaInfo"
-                >添加meta信息
+                ><i class="el-icon-plus" style="font-weight: 600;"></i> 添加meta信息
                 </el-button>
             </div>
         </el-form>

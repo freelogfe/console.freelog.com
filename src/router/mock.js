@@ -9,7 +9,8 @@ export default {
     path: 'mock',
     meta: {
         requiresAuth: true,
-        title: i18n.t('routes.resourceSystem')
+        title: i18n.t('routes.resourceSystem'),
+        hideFooter: true,
     },
     component: Views.container,
     redirect: '/mock/display',
@@ -20,7 +21,8 @@ export default {
                 requiresAuth: true,
                 // title: i18n.t('routes.resourcePolicyTplList'),
                 title: i18n.t('routes.resourcePolicyTplList'),
-                type: 'resource'
+                type: 'resource',
+                hideFooter: true,
             },
             component: Views.mockDisplay
         },
