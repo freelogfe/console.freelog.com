@@ -214,7 +214,7 @@ export default {
                 return;
             }
             const {data} = await axios.get(`/v1/resources/mocks/${mockResourceId}`);
-            console.log(data, 'asdfwe4fr3asfdfa');
+            // console.log(data, 'asdfwe4fr3asfdfa');
             this.formData.resourceType = data.data.resourceType;
             this.formData.resourceName = data.data.name;
             this.formData.previewImage = data.data.previewImages[0] || '';
@@ -470,7 +470,7 @@ export default {
                 uploadData.previewImages = [formData.previewImage];
             }
 
-            console.log(this.deps, 'this.depsthis.depsthis.deps');
+            // console.log(this.deps, 'this.depsthis.depsthis.deps');
 
             // 从新组织依赖
             if (!this.$route.query.mockResourceId) {
@@ -580,7 +580,7 @@ export default {
             //     return res.getData();
             // })
             const mockResourceId = this.$route.query.mockResourceId;
-            console.log(data, 'datadatadata');
+            // console.log(data, 'datadatadata');
             const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`, data);
 
         },
