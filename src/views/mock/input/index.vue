@@ -246,7 +246,6 @@
                                 :on-change="previewImageChangeHandler"
                                 :on-success="imageUploadSuccessHandler"
                                 :before-upload="validateImageHandler"
-                                :on-progress="uploadProgressHandler"
                                 :show-file-list="false"
                                 :auto-upload="true"
                             >
