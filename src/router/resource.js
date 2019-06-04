@@ -45,7 +45,7 @@ export default {
                 hideFooter: true,
                 theme: 'gray'
             },
-            component: Views.mockReEdit
+            component: Views.resourceReEditor,
         },
         {
             path: 'edit/:resourceId',
