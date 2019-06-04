@@ -79,7 +79,7 @@ export default {
             formData: {
                 // 资源类型
                 resourceType: '', // storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
-                // 资源名称
+                // 资源名称（输入框）
                 resourceName: '',
                 widgetName: '',
                 // 资源描述
@@ -103,7 +103,7 @@ export default {
             percentage: 0,
             currentUploader: '',
 
-            // 上传进度
+            // 上传资源的状态
             uploaderStates: {
                 // 上传的资源进度
                 resource: {
@@ -127,7 +127,12 @@ export default {
 
             // 是否高亮提示选择上传资源类型
             doHighlightSelectTip: false,
+            // 是否显示 meta 编辑框
             doShowMeta: false,
+            // 重新修改初始化，文件资源已上传状态
+            initIsUploadedState: !!this.$route.query.mockResourceId,
+            // 是否是资源编辑模式，而非创建模式
+            isMockEditMode: !!this.$route.query.mockResourceId,
         }
     },
     props: {
@@ -213,8 +218,10 @@ export default {
             this.formData.resourceType = data.data.resourceType;
             this.formData.resourceName = data.data.name;
             this.formData.previewImage = data.data.previewImages[0] || '';
-            this.deps = data.data.systemMeta.dependencies;
+            this.deps = data.data.systemMeta.dependencies || [];
             this.formData.description = data.data.description;
+            this.formData.filesize = data.data.systemMeta.fileSize;
+            this.formData.filename = data.data.systemMeta.filename;
             // this.formData.description = '<div>123456</div>';
             this.meta = JSON.stringify(data.data.meta);
         },
@@ -377,17 +384,17 @@ export default {
         },
         validate() {
             return new Promise((resolve, reject) => {
-                // const reourceUploader = this.uploaderStates.resource;
+                const reourceUploader = this.uploaderStates.resource;
                 this.$refs.createForm.validate((valid, err) => {
                     if (valid) {
                         let errMsg;
-                        // if (this.editMode === EDIT_MODES.creator) {
-                        //     if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
-                        //         errMsg = this.$t('resourceEditView.uploadingTip');
-                        //     } else if (!reourceUploader.sha1) {
-                        //         errMsg = this.$t('resourceEditView.noFileTip');
-                        //     }
-                        // }
+                        if (!this.initIsUploadedState) {
+                            if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
+                                errMsg = this.$t('resourceEditView.uploadingTip');
+                            } else if (!reourceUploader.sha1) {
+                                errMsg = this.$t('resourceEditView.noFileTip');
+                            }
+                        }
 
                         if (errMsg) {
                             reject(errMsg);
@@ -638,6 +645,19 @@ export default {
         onClickUpload() {
             // console.log( this.$refs.buttttttt.$el, 'this.$refs.resourceUploader');
             this.$refs.sourceUploadButton.$el.click();
+        },
+
+        /**
+         * 清除已上传资源的信息
+         */
+        clearUploadedResourceInfo() {
+            this.initIsUploadedState = false;
+
+            this.uploaderStates.resource.percentage = 0;
+            this.uploaderStates.resource.isExistResource = false;
+            this.uploaderStates.resource.isUploaded = false;
+            this.uploaderStates.resource.isUploading = false;
+            this.uploaderStates.resource.name = '';
         }
     }
 }

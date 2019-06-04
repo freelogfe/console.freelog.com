@@ -32,7 +32,7 @@
                                     $t('resourceEditView.changeTypeTip2'): ''}}
                                 </el-popover>
                                 <el-select
-                                    :disabled="!enabledEditResourceType"
+                                    :disabled="!enabledEditResourceType || initIsUploadedState"
                                     v-model="formData.resourceType"
                                     allow-create
                                     filterable
@@ -72,7 +72,21 @@
                             v-if="showCreatorInputItem"
                         >
                             <div style="font-size: 13px; color: #666; line-height: 35px;">资源文件</div>
-                            <div>
+                            <div
+                                v-if="initIsUploadedState"
+                                style="background-color: #fafbfb; padding: 0 10px; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="line-height: 46px; font-size: 14px; color: #333;">
+                                    <span style="padding-right: 70px;">{{formData.filename}}</span>
+                                    <span>{{humanizeSize(formData.filesize)}}</span>
+                                </div>
+
+                                <a
+                                    @click="clearUploadedResourceInfo"
+                                    style="font-size: 20px; color: #D5D5D5;"
+                                    class="el-icon-circle-close"
+                                ></a>
+                            </div>
+                            <div v-if="!initIsUploadedState">
                                 <!-- 上传按钮 -->
                                 <div
                                     v-show="shouldShowResourceUploader !== false"
@@ -157,7 +171,7 @@
                                                     ></i>
                                                     <span style="font-size: 13px; color: #333;">上传成功</span>
                                                     <a
-                                                        @click="clearUploaderHandler"
+                                                        @click="clearUploadedResourceInfo"
                                                         style="font-size: 20px; color: #D5D5D5;"
                                                         class="el-icon-circle-close"
                                                     ></a>
@@ -181,6 +195,7 @@
                             <div style="font-size: 13px; color: #666; line-height: 35px;">资源名称</div>
                             <el-form-item prop="resourceName">
                                 <input
+                                    :disabled="isMockEditMode"
                                     type="text"
                                     class="input-rect"
                                     v-model="formData.resourceName"
@@ -215,67 +230,69 @@
                     <!-- 封面上传 -->
                     <div
                         class="resource-thumbnail-input input-item"
-                        style="display: flex; align-items: flex-end;"
                     >
-                        <el-upload
-                            style="background-color: #fff;"
-                            v-show="!uploaderStates.thumbnail.isUploading"
-                            drag
-                            ref="thumbnailUploader"
-                            :action="uploadPreviewImageAction"
-                            :with-credentials="true"
-                            :data="uploader.data"
-                            :headers="uploader.headers"
-                            :on-error="errorHandler"
-                            :on-change="previewImageChangeHandler"
-                            :on-success="imageUploadSuccessHandler"
-                            :before-upload="validateImageHandler"
-                            :on-progress="uploadProgressHandler"
-                            :show-file-list="false"
-                            :auto-upload="true"
-                        >
-
-                            <div
-                                v-if="!formData.previewImage"
-                                class="resource-thumbnail-input__button-cover"
+                        <div style="font-size: 13px; color: #666; line-height: 35px;">资源封面</div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <el-upload
+                                style="background-color: #fff;"
+                                v-show="!uploaderStates.thumbnail.isUploading"
+                                drag
+                                ref="thumbnailUploader"
+                                :action="uploadPreviewImageAction"
+                                :with-credentials="true"
+                                :data="uploader.data"
+                                :headers="uploader.headers"
+                                :on-error="errorHandler"
+                                :on-change="previewImageChangeHandler"
+                                :on-success="imageUploadSuccessHandler"
+                                :before-upload="validateImageHandler"
+                                :on-progress="uploadProgressHandler"
+                                :show-file-list="false"
+                                :auto-upload="true"
                             >
-                                <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
-                                <p class="thumbnail-tip" style="color: #666666">上传封面</p>
-                            </div>
 
-                            <template v-if="formData.previewImage">
-                                <img
-                                    :src="formData.previewImage"
-                                    style="height: 100%;"
-                                    alt=""
-                                >
-                                <!--                            <template v-else>-->
                                 <div
-                                    class="resource-thumbnail-input__button-cover_uploaded"
+                                    v-if="!formData.previewImage"
+                                    class="resource-thumbnail-input__button-cover"
                                 >
-                                    <i class="el-icon-circle-plus" style="color: #fff"></i>
-                                    <p class="thumbnail-tip" style="color: #fff">重新上传</p>
+                                    <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
+                                    <p class="thumbnail-tip" style="color: #666666">上传封面</p>
                                 </div>
-                            </template>
-                            <!--                            </template>-->
-                        </el-upload>
-                        <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
-                            <span>*&nbsp;</span>
-                            <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
+
+                                <template v-if="formData.previewImage">
+                                    <img
+                                        :src="formData.previewImage"
+                                        style="height: 100%;"
+                                        alt=""
+                                    >
+                                    <!--                            <template v-else>-->
+                                    <div
+                                        class="resource-thumbnail-input__button-cover_uploaded"
+                                    >
+                                        <i class="el-icon-circle-plus" style="color: #fff"></i>
+                                        <p class="thumbnail-tip" style="color: #fff">重新上传</p>
+                                    </div>
+                                </template>
+                                <!--                            </template>-->
+                            </el-upload>
+                            <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
+                                <span>*&nbsp;</span>
+                                <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
+                            </div>
+                            <!--                        <div-->
+                            <!--                            class="thumbnail-upload-state"-->
+                            <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
+                            <!--                        >-->
+                            <!--                            <div>-->
+                            <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
+                            <!--                                <el-progress-->
+                            <!--                                    style="margin-right: 20px;"-->
+                            <!--                                    :stroke-width="10"-->
+                            <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
+                            <!--                                    color="#333333"></el-progress>-->
+                            <!--                            </div>-->
+                            <!--                        </div>-->
                         </div>
-                        <!--                        <div-->
-                        <!--                            class="thumbnail-upload-state"-->
-                        <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
-                        <!--                        >-->
-                        <!--                            <div>-->
-                        <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
-                        <!--                                <el-progress-->
-                        <!--                                    style="margin-right: 20px;"-->
-                        <!--                                    :stroke-width="10"-->
-                        <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
-                        <!--                                    color="#333333"></el-progress>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
