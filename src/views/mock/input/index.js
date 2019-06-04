@@ -466,7 +466,7 @@ export default {
                     // r.resourceId
                     return {
                         releaseId: r.releaseId,
-                        versionRange: r.versionRange
+                        versionRange: r.latestVersion ? r.latestVersion.version : r.versionRange
                     };
                 });
             }
@@ -488,7 +488,7 @@ export default {
             return true;
         },
         /**
-         * 创建资源页，出发完成时调用
+         * 创建资源页，触发『完成』时调用
          * @return {Promise<any>}
          */
         nextHandler() {
@@ -559,8 +559,9 @@ export default {
             //     }
             //     return res.getData();
             // })
+            const mockResourceId = this.$route.query.mockResourceId;
             console.log(data, 'datadatadata');
-            // const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`);
+            const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`, data);
 
         },
         uploadProgressHandler(event, file) {
