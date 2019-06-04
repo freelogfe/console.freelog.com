@@ -109,7 +109,10 @@ export default {
 
             // 是否高亮提示选择上传资源类型
             doHighlightSelectTip: false,
+            // 是否显示 meta 编辑框
             doShowMeta: false,
+            // 是否是资源编辑模式，而非创建模式
+            isResourceIdEditMode: !!this.$route.query.resourceId,
         }
     },
     props: {

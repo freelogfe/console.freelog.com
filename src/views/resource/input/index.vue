@@ -17,58 +17,62 @@
 
                         <!-- 上传类型 -->
                         <div
+                            v-if="!isResourceIdEditMode"
                             class="require-input input-item"
-                            style="display: flex; align-items: flex-end;"
                         >
-                            <el-popover
-                                ref="typePopTip"
-                                placement="top"
-                                title=""
-                                width="200"
-                                trigger="hover"
-                                :disabled="enabledEditResourceType">
-                                {{$t('resourceEditView.changeTypeTip')}}{{showCreatorInputItem?
-                                $t('resourceEditView.changeTypeTip2'): ''}}
-                            </el-popover>
-                            <el-select
-                                :disabled="!enabledEditResourceType"
-                                v-model="formData.resourceType"
-                                allow-create
-                                filterable
-                                @change="resourceTypeChange"
-                                v-popover:typePopTip
-                                class="resource-type"
-                                placeholder="资源类型"
-                                style="background-color: #fff;"
-                            >
-                                <el-option
-                                    label="资源类型"
-                                    value="">
-                                </el-option>
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                            <div
-                                v-if="doHighlightSelectTip"
-                                style="font-size: 13px; padding-left: 20px;"
-                                :style="{color: doHighlightSelectTip? 'red': '#afafaf'}"
-                                class="animated"
-                                :class="doHighlightSelectTip ? 'shake': ''"
-                            >
-                                <small>•</small>
-                                上传资源之前需要选择资源类型
+                            <div style="font-size: 13px; color: #666; line-height: 35px;">资源类型</div>
+                            <div style="display: flex; align-items: flex-end;">
+                                <el-popover
+                                    ref="typePopTip"
+                                    placement="top"
+                                    title=""
+                                    width="200"
+                                    trigger="hover"
+                                    :disabled="enabledEditResourceType">
+                                    {{$t('resourceEditView.changeTypeTip')}}{{showCreatorInputItem?
+                                    $t('resourceEditView.changeTypeTip2'): ''}}
+                                </el-popover>
+                                <el-select
+                                    :disabled="!enabledEditResourceType"
+                                    v-model="formData.resourceType"
+                                    allow-create
+                                    filterable
+                                    @change="resourceTypeChange"
+                                    v-popover:typePopTip
+                                    class="resource-type"
+                                    placeholder="资源类型"
+                                    style="background-color: #fff;"
+                                >
+                                    <el-option
+                                        label="资源类型"
+                                        value="">
+                                    </el-option>
+                                    <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <div
+                                    v-if="doHighlightSelectTip"
+                                    style="font-size: 13px; padding-left: 20px;"
+                                    :style="{color: doHighlightSelectTip? 'red': '#afafaf'}"
+                                    class="animated"
+                                    :class="doHighlightSelectTip ? 'shake': ''"
+                                >
+                                    <small>•</small>
+                                    上传资源之前需要选择资源类型
+                                </div>
                             </div>
                         </div>
 
                         <!-- 文件上传按钮 -->
                         <div
                             class="resource-file-input require-input special input-item"
-                            v-if="showCreatorInputItem"
+                            v-if="showCreatorInputItem && !isResourceIdEditMode"
                         >
+                            <div style="font-size: 13px; color: #666; line-height: 35px;">资源文件</div>
                             <!-- 上传按钮 -->
                             <div
                                 v-show="shouldShowResourceUploader !== false"
@@ -97,7 +101,7 @@
                                     <div style="display: flex; align-items: flex-end;">
                                         <el-button
                                             @click="onClickUploadResource"
-                                        >上传资源111
+                                        >上传资源
                                         </el-button>
                                         <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small> 资源最大不超过50M</span>
                                     </div>
@@ -166,6 +170,7 @@
 
                         <!-- 资源名称输入框 -->
                         <div class="require-input input-item">
+                            <div style="font-size: 13px; color: #666; line-height: 35px;">资源名称</div>
                             <el-form-item prop="resourceName">
                                 <input
                                     type="text"
@@ -202,67 +207,69 @@
                     <!-- 封面上传 -->
                     <div
                         class="resource-thumbnail-input input-item"
-                        style="display: flex; align-items: flex-end;"
                     >
-                        <el-upload
-                            style="background-color: #fff;"
-                            v-show="!uploaderStates.thumbnail.isUploading"
-                            drag
-                            ref="thumbnailUploader"
-                            :action="uploadPreviewImageAction"
-                            :with-credentials="true"
-                            :data="uploader.data"
-                            :headers="uploader.headers"
-                            :on-error="errorHandler"
-                            :on-change="previewImageChangeHandler"
-                            :on-success="imageUploadSuccessHandler"
-                            :before-upload="validateImageHandler"
-                            :on-progress="uploadProgressHandler"
-                            :show-file-list="false"
-                            :auto-upload="true"
-                        >
-
-                            <div
-                                v-if="!formData.previewImage"
-                                class="resource-thumbnail-input__button-cover"
+                        <div style="font-size: 13px; color: #666; line-height: 35px;">资源封面</div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <el-upload
+                                style="background-color: #fff;"
+                                v-show="!uploaderStates.thumbnail.isUploading"
+                                drag
+                                ref="thumbnailUploader"
+                                :action="uploadPreviewImageAction"
+                                :with-credentials="true"
+                                :data="uploader.data"
+                                :headers="uploader.headers"
+                                :on-error="errorHandler"
+                                :on-change="previewImageChangeHandler"
+                                :on-success="imageUploadSuccessHandler"
+                                :before-upload="validateImageHandler"
+                                :on-progress="uploadProgressHandler"
+                                :show-file-list="false"
+                                :auto-upload="true"
                             >
-                                <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
-                                <p class="thumbnail-tip" style="color: #666666">上传封面</p>
-                            </div>
 
-                            <template v-if="formData.previewImage">
-                                <img
-                                    :src="formData.previewImage"
-                                    style="height: 100%;"
-                                    alt=""
-                                >
-                                <!--                            <template v-else>-->
                                 <div
-                                    class="resource-thumbnail-input__button-cover_uploaded"
+                                    v-if="!formData.previewImage"
+                                    class="resource-thumbnail-input__button-cover"
                                 >
-                                    <i class="el-icon-circle-plus" style="color: #fff"></i>
-                                    <p class="thumbnail-tip" style="color: #fff">重新上传</p>
+                                    <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
+                                    <p class="thumbnail-tip" style="color: #666666">上传封面</p>
                                 </div>
-                            </template>
-                            <!--                            </template>-->
-                        </el-upload>
-                        <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
-                            <span>*&nbsp;</span>
-                            <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
+
+                                <template v-if="formData.previewImage">
+                                    <img
+                                        :src="formData.previewImage"
+                                        style="height: 100%;"
+                                        alt=""
+                                    >
+                                    <!--                            <template v-else>-->
+                                    <div
+                                        class="resource-thumbnail-input__button-cover_uploaded"
+                                    >
+                                        <i class="el-icon-circle-plus" style="color: #fff"></i>
+                                        <p class="thumbnail-tip" style="color: #fff">重新上传</p>
+                                    </div>
+                                </template>
+                                <!--                            </template>-->
+                            </el-upload>
+                            <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
+                                <span>*&nbsp;</span>
+                                <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
+                            </div>
+                            <!--                        <div-->
+                            <!--                            class="thumbnail-upload-state"-->
+                            <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
+                            <!--                        >-->
+                            <!--                            <div>-->
+                            <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
+                            <!--                                <el-progress-->
+                            <!--                                    style="margin-right: 20px;"-->
+                            <!--                                    :stroke-width="10"-->
+                            <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
+                            <!--                                    color="#333333"></el-progress>-->
+                            <!--                            </div>-->
+                            <!--                        </div>-->
                         </div>
-                        <!--                        <div-->
-                        <!--                            class="thumbnail-upload-state"-->
-                        <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
-                        <!--                        >-->
-                        <!--                            <div>-->
-                        <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
-                        <!--                                <el-progress-->
-                        <!--                                    style="margin-right: 20px;"-->
-                        <!--                                    :stroke-width="10"-->
-                        <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
-                        <!--                                    color="#333333"></el-progress>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
