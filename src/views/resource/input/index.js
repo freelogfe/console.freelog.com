@@ -4,6 +4,7 @@ import RichEditor from '@/components/RichEditor/index.vue'
 import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
+import {axios} from '@/lib';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -179,8 +180,30 @@ export default {
 
     mounted() {
         this.resourceTypeChange(this.formData.resourceType);
+        this.fillDataIfEdit();
     },
     methods: {
+
+        /**
+         * 当为编辑状态时，填充详情数据
+         * @return {Promise<void>}
+         */
+        async fillDataIfEdit() {
+            // console.log(this.$route.query.mockResourceId, 'this.$route.query.mockResourceId;');
+            const resourceId = this.$route.query.resourceId;
+            if (!resourceId) {
+                return;
+            }
+            const {data} = await axios.get(`/v1/resources/${resourceId}`);
+            // console.log(data, 'asdfwe4fr3asfdfa');
+
+            this.formData.resourceName = data.data.aliasName;
+            this.formData.previewImage = data.data.previewImages[0] || '';
+            this.deps = data.data.systemMeta.dependencies || [];
+            this.formData.description = data.data.description;
+            this.meta = JSON.stringify(data.data.meta);
+        },
+
         resourceTypeChange(type) {
             storage.set('CREATE_RESOURCE_TYPE', type);
         },
@@ -343,7 +366,7 @@ export default {
                 this.$refs.createForm.validate((valid, err) => {
                     if (valid) {
                         let errMsg;
-                        if (this.editMode === EDIT_MODES.creator) {
+                        if (!this.isResourceIdEditMode) {
                             if (reourceUploader.isUploading && !reourceUploader.isUploaded) {
                                 errMsg = this.$t('resourceEditView.uploadingTip');
                             } else if (!reourceUploader.sha1) {
@@ -416,9 +439,16 @@ export default {
             }
 
             if (this.deps.length) {
+                // uploadData.dependencies = this.deps.map(r => {
+                //     // r.resourceId
+                //     return {releaseId: r.releaseId, versionRange: r.latestVersion.version}
+                // });
                 uploadData.dependencies = this.deps.map(r => {
-                    r.resourceId
-                    return {releaseId: r.releaseId, versionRange: r.latestVersion.version}
+                    // r.resourceId
+                    return {
+                        releaseId: r.releaseId,
+                        versionRange: r.latestVersion ? r.latestVersion.version : r.versionRange
+                    };
                 });
             }
 
@@ -441,16 +471,23 @@ export default {
                 this.validate()
                     .then(() => {
                         const data = this.packUploadData();
-                        if (!this.data.resourceId) {
+                        // if (!this.data.resourceId) {
+                        if (!this.isResourceIdEditMode) {
                             this.createResource(data).then(resolve).catch(reject);
-                        } else if (this.isChanged()) {
-                            this.updateResource(data).then((detail) => {
-                                if (detail && detail.resourceId) resolve(detail);
-                                else resolve(this.formData);
-                            }).catch(reject)
                         } else {
-                            resolve();
+                            this.updateResource(data)
+                                .then((detail) => {
+                                    if (detail && detail.resourceId) {
+                                        resolve(detail);
+                                    } else {
+                                        resolve(this.formData);
+                                    }
+                                })
+                                .catch(reject)
                         }
+                        // else {
+                        //     resolve();
+                        // }
                     }).catch(reject);
             })
         },
@@ -470,13 +507,23 @@ export default {
                 }
             })
         },
-        updateResource(data) {
-            return this.$services.resource.put(this.data.resourceId, data).then((res) => {
-                if (res.data.ret !== 0 || res.data.errcode !== 0) {
-                    return Promise.reject(res);
-                }
-                return res.getData();
-            })
+        /**
+         * 调用API，更新 资源信息
+         * @param data
+         * @returns {Promise<any>}
+         */
+        async updateResource(data) {
+            // return this.$services.resource.put(this.data.resourceId, data).then((res) => {
+            //     if (res.data.ret !== 0 || res.data.errcode !== 0) {
+            //         return Promise.reject(res);
+            //     }
+            //     return res.getData();
+            // })
+
+            console.log(data, 'datadatadata');
+            // debugger;
+            const resourceId = this.$route.query.resourceId;
+            const res = await axios.put(`/v1/resources/${resourceId}`, data);
         },
         uploadProgressHandler(event, file) {
             const uploaderStates = this.uploaderStates;

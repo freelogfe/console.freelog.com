@@ -31,7 +31,8 @@ export default {
                 requiresAuth: true,
                 title: i18n.t('routes.createResource'),
                 type: 'resource',
-                theme: 'gray'
+                theme: 'gray',
+                hideFooter: true,
             },
             component: Views.resourceCreator,
         },
