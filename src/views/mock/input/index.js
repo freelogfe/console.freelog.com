@@ -77,10 +77,14 @@ export default {
 
             // 这个表单数据
             formData: {
+                // 资源类型
                 resourceType: '', // storage.get('CREATE_RESOURCE_TYPE') || RESOURCE_TYPES.widget
+                // 资源名称
                 resourceName: '',
                 widgetName: '',
-                description: 'jkhnnk',
+                // 资源描述
+                description: '',
+                // 封面图 URL
                 previewImage: '',
                 widgetVersion: ''
             },
@@ -91,17 +95,26 @@ export default {
                 }
             },
             valid: false,
+            // meta 信息
             meta: '{}',
             editMode: EDIT_MODES.creator,
             editorConfig: {},
+
             percentage: 0,
             currentUploader: '',
+
+            // 上传进度
             uploaderStates: {
+                // 上传的资源进度
                 resource: {
+                    // 上传的百分百
                     percentage: 0,
+                    // 是否已存在资源
+                    isExistResource: false,
+
+                    // TODO: 删除下列属性
                     isUploaded: false,
                     isUploading: false,
-                    isExistResource: false,
                     name: ''
                 },
                 thumbnail: {
