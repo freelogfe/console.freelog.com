@@ -125,6 +125,15 @@ function isFunction(fn) {
   return typeof fn === 'function'
 }
 
+function versionDescendingOrder(vIt1, vIt2) {
+  let [ v1_0, v1_1, v1_2 ] = vIt1.version.split('.'), [ v2_0, v2_1, v2_2 ] = vIt2.version.split('.')
+  let v1 = +v1_0 * 100 + (+v1_1 * 10) + (+v1_2),
+    v2 = +v2_0 * 100 + (+v2_1 * 10) + (+v2_2)
+  if(v2 > v1) return 1
+  if(v2 < v1) return -1
+  return 0
+}
+
 
 export const checkResponse = (res) => {
   const {ret, errcode} = res.data
@@ -138,7 +147,8 @@ export {
   cssSupports,
   gotoLogin,
   isSafeUrl,
-  isFunction
+  isFunction,
+  versionDescendingOrder
 }
 
 

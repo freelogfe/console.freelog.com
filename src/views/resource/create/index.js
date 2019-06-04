@@ -8,7 +8,9 @@ export default {
     },
     data() {
         return {
-            resourceDetail: {}
+            resourceDetail: {},
+            // 是否是资源编辑模式，而非创建模式
+            isResourceIdEditMode: !!this.$route.query.resourceId,
         }
     },
     mounted() {

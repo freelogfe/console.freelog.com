@@ -1,15 +1,14 @@
 import {onloadResourceDetail} from '@/data/resource/loader'
-import ResourceInput from '../input/index.vue'
+import inputEdit from '../input-edit/index.vue'
 
 export default {
     name: 'resource-creator',
     components: {
-        ResourceInput
+        ResourceInput: inputEdit
     },
     data() {
         return {
-            resourceDetail: {},
-            isEditState: !!this.$route.query.mockResourceId,
+            resourceDetail: {}
         }
     },
     mounted() {
