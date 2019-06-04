@@ -21,8 +21,10 @@
           </div>
         </div>
 
-        <router-link :to="_detailInfoLink"
-                     v-if="_detailInfoLink" class="res-nav-btn">{{$t('listResourceItem.detail')}}
+        <router-link :to="`/resource/create?resourceId=${resource.resourceId}`"
+                     v-if="_detailInfoLink"
+                     class="res-nav-btn">
+            {{$t('listResourceItem.detail')}}
         </router-link>
         <!--<router-link :to="_editSchemeLink"-->
                      <!--v-if="_editSchemeLink" class="res-nav-btn">{{$t('listResourceItem.schemes')}}-->
@@ -81,7 +83,8 @@
         return (this.resource.previewImages && this.resource.previewImages[0]) || ''
       },
       _detailInfoLink(){
-        var editLink = `/resource/detail/${this.resource.resourceId}`
+        // var editLink = `/resource/detail/${this.resource.resourceId}`
+        var editLink = `/resource/detail?resourceId=${this.resource.resourceId}`
         return this.resource.resourceId? `${editLink}` : ''
       },
       _editSchemeLink(){
