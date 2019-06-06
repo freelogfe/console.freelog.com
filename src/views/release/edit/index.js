@@ -18,6 +18,7 @@ export default {
       targetResourceDetail: null,
       vTabActiveName: 'scheme',
       selectedVersion: '',
+      selectedVersionIndex: 0,
       isVersionSelectorVisible: false,
       resourceDialogVisible: false,
       contracts: [],
@@ -101,10 +102,11 @@ export default {
         .catch(e => this.$message({ type: 'error', message: e.toString() }))
     },
     // 切换 发行版本
-    exchangeVersion(item) {
+    exchangeVersion(item, index) {
       this.targetResourceId = item.resourceId
       this.selectedVersion = item.version
       this.release.selectedVersion = item.version
+      this.selectedVersionIndex = index
     },
     exchangeVTab(tab) {
       this.vTabActiveName = tab.name

@@ -2,42 +2,21 @@
   <div class="release-editor-wrapper" v-if="release !== null">
     <release-editor-layout :release.sync="release" :selectedVersion="selectedVersion" type="edit">
       <template slot="about-version">
-        <template v-if="depReleasesList.length === 0">
-          <div class="r-e-w-v-list">
-            <!--<el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">-->
-              <!--<div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>-->
-            <!--</el-tooltip>-->
-            <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
-            <el-table
-                    :show-header="false"
-                    :data="release.resourceVersions"
-                    size="small"
-                    style="width: 460px; margin-top: 20px;"
-            >
-              <el-table-column prop="version" label="版本" width="120"></el-table-column>
-              <el-table-column prop="aliasName" label="资源名称"></el-table-column>
-              <el-table-column prop="createDate" label="日期" width="180"></el-table-column>
-            </el-table>
-          </div>
-        </template>
-        <div class="r-e-w-v-box" v-else>
-          <!--<el-tooltip placement="top" :disabled="release.policies.length > 0" content="发行没策略，不能新增版本">-->
-            <!--<div class="r-e-w-v-add-btn" @click="showResourceDialog" :class="{'disabled': release.policies.length === 0}">新增版本</div>-->
-          <!--</el-tooltip>-->
-          <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
-          <div class="r-e-w-v-scheme">
+        <div class="r-e-w-v-box">
+          <div class="re-wvb-header clearfix">
             <div class="rew-v-selector">
-              <div class="rew-v-version">
-                {{selectedVersion}}
+              <div class="rew-v-version-box">
+                <span class="rew-v-b-version">版本{{release.resourceVersions[selectedVersionIndex].version}}</span>
+                <span class="rew-v-b-name">{{release.resourceVersions[selectedVersionIndex].aliasName}} | {{release.resourceVersions[selectedVersionIndex].createDate | fmtDate}}</span>
                 <i class="el-icon-arrow-down" :class="{'visible': isVersionSelectorVisible}"></i>
               </div>
               <div class="rew-v-list">
                 <ul>
                   <li class="rew-v-l-item"
                       :class="{'selected': item.version === selectedVersion}"
-                      v-for="item in release.resourceVersions"
+                      v-for="(item, index) in release.resourceVersions"
                       :key="'rew-v-l-item-'+item.version"
-                      @click.stop="exchangeVersion(item)">
+                      @click.stop="exchangeVersion(item, index)">
                     <i class="el-icon-check"></i>
                     <span class="rew-v-li-version">{{item.version}}</span>
                     <span class="rew-v-li-name">{{item.aliasName}}</span>
@@ -46,6 +25,9 @@
                 </ul>
               </div>
             </div>
+            <div class="r-e-w-v-add-btn" @click="showResourceDialog">新增版本</div>
+          </div>
+          <div class="r-e-w-v-scheme" v-if="depReleasesList.length > 0">
             <el-tabs v-model="vTabActiveName" type="card" :closable="false" @tab-click="exchangeVTab">
               <el-tab-pane label="方案" name="scheme">
                 <scheme-manage
@@ -122,26 +104,31 @@
         position: relative;
         padding-top: 5px;
       }
+    }
 
+    .re-wvb-header {
       .rew-v-selector {
-        position: absolute; left: 0; top: 33px; z-index: 20;
+        position: relative; display: inline-block;
         &:hover {
           .rew-v-list{ display: block; }
+          .el-icon-arrow-down { transform: rotate(180deg); }
         }
 
-        .rew-v-version {
-          width: 78px;
+        .rew-v-version-box {
           line-height: 34px; font-size: 14px; font-weight: 600; color: #333; cursor: pointer;
+          span { display: inline-block; }
+          .rew-v-b-version { width: 100px; }
           .el-icon-arrow-down {
+            margin-left: 15px;
             font-size: 14px; font-weight: 600; transition: all .3s;
-            &.visible { transform: rotate(180deg); }
+            transition: all .3s;
           }
         }
 
         .rew-v-list {
           display: none;
-          position: absolute; top: 34px; left: 0; z-index: 10;
-          width: 400px; border-radius:4px;
+          position: absolute; top: 34px; left: 0; z-index: 20;
+          width: 420px; border-radius:4px;
           background: #fff; box-shadow:0px 4px 7px 0px rgba(0,0,0,0.3);
         }
         .rew-v-l-item {
@@ -150,30 +137,40 @@
           span{
             display: inline-block;
             overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            padding: 0 5px; font-size: 14px; color: #999;
+            padding: 0 8px; font-size: 14px; color: #999;
             &.rew-v-li-version { width: 70px; }
-            &.rew-v-li-name { width: 160px; border-right: 1px solid #999; }
+            &.rew-v-li-name { position: relative; width: 160px;
+              &:before {
+                content: '';
+                position: absolute; right: 0; top: 50%; z-index: 5; transform: translateY(-50%);
+                width: 1px; height: 14px;
+                background-color: #999;
+              }
+            }
           }
           &.selected {
             .el-icon-check { color: #409EFF; }
             span {
               font-weight: 600; color: #333;
-              &.rew-v-li-name { border-color: #333; }
+              &.rew-v-li-name {
+                &:before { width: 2px; background-color: #333; }
+              }
             }
           }
         }
       }
+
+      .r-e-w-v-add-btn {
+        float: right; cursor: pointer;
+        width: 120px; padding: 8px; border-radius: 2px;
+        font-size: 12px; background-color: #FAFBFB; color: #409EFF; text-align: center;
+        &:hover {
+          background-color: #F5F5F5; color: #1287ff;
+        }
+        &.disabled { opacity: .7; cursor: not-allowed; pointer-events: none; }
+      }
     }
 
-    .r-e-w-v-add-btn {
-      display: inline-block; cursor: pointer;
-      width: 120px; padding: 8px; border-radius: 2px;
-      font-size: 12px; background-color: #FAFBFB; color: #409EFF; text-align: center;
-      &:hover {
-        background-color: #F5F5F5; color: #1287ff;
-      }
-      &.disabled { opacity: .7; cursor: not-allowed; pointer-events: none; }
-    }
 
     .r-e-w-search-dialog {
 
@@ -204,7 +201,6 @@
             display: none;
           }
         }
-        .el-tabs__nav { margin-left: 168px;  }
         .el-tabs__item {
           padding: 0 40px;
           &.is-active { border-bottom-color: #FAFBFB; background-color: #FAFBFB; }
