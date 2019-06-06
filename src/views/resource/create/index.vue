@@ -5,6 +5,7 @@
                     :data="resourceDetail"
                     ref="inputArea"
             >
+                <div style="height: 60px;"></div>
                 <div
                         class="btm-wrap clearfix"
                         style="position: fixed; bottom: 0; left: 0; right: 0; height: 60px; margin: 0; display: flex; justify-content: center; background-color: #fff; box-shadow: 0 -2px 5px 0 rgba(0,0,0,0.1); z-index: 100;"
@@ -27,7 +28,7 @@
                                 @click="create2AddHandler"
                         >
 <!--                            {{$t('resource.createDoneText')}}-->
-                            完成创建
+                            {{isResourceIdEditMode ? '保存': '完成创建'}}
                         </el-button>
                         <el-button
                                 class="ft-btn"
@@ -37,7 +38,7 @@
                                 @click="create2AddHandler"
                         >
                             <!--                            {{$t('resource.createDoneText')}}-->
-                            创建并发行
+                            {{isResourceIdEditMode ? '保存': '创建'}}并发行
                         </el-button>
                     </div>
                 </div>

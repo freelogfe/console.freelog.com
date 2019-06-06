@@ -15,9 +15,6 @@
                         <span>Bucket列表</span>
                         <span style="padding-left: 10px;">5/5</span>
                     </div>
-                    <!--                    <a>-->
-                    <!--                        <i class="el-icon-plus"></i>-->
-                    <!--                    </a>-->
                     <el-button
                         icon="el-icon-plus"
                         circle
@@ -228,9 +225,13 @@
                                                 >生成正式资源</a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
-                                                <a
-                                                    style="display: block; width: 100%; height: 100%;"
-                                                >编辑</a>
+                                                <router-link
+                                                    :to="'/mock/create?mockResourceId=' + scope.row.mockResourceId"
+                                                >
+                                                    <a
+                                                        style="display: block; width: 100%; height: 100%;"
+                                                    >编辑</a>
+                                                </router-link>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a
