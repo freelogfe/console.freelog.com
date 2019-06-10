@@ -148,7 +148,7 @@ export default {
                 type: i.resourceType,
                 previewImages: i.previewImages,
                 size: humanizeSize(i.systemMeta.fileSize),
-                date: i.createDate,
+                date: i.createDate.split('T')[0],
             }));
             // console.log(this.mockTableData, 'this.mockTableDatathis.mockTableData');
             this.mockTotalItem = data.data.totalItem;
