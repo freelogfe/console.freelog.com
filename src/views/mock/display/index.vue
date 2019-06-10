@@ -142,7 +142,8 @@
                         :to="'/mock/create?bucketName=' + activatedBucket.bucketName"
                         class="nav-link ls-nav-link"
                     >
-                        <el-button type="primary" style="border-radius: 2px;">创建mock资源</el-button>
+                        <el-button type="primary" style="border-radius: 2px; background-color: #409EFF;">创建mock资源
+                        </el-button>
                     </router-link>
                 </div>
 
@@ -288,7 +289,8 @@
                             style="flex-shrink: 1;"
                         >
                         </el-input>
-                        <span style="line-height: 46px; display: inline-block; flex-shrink: 0; padding: 0 10px;" slot="suffix">{{bucketNameInputValue.length}}/63</span>
+                        <span style="line-height: 46px; display: inline-block; flex-shrink: 0; padding: 0 10px;"
+                              slot="suffix">{{bucketNameInputValue.length}}/63</span>
                     </div>
                 </div>
             </div>
