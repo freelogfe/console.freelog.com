@@ -265,6 +265,7 @@
 
         <!-- 添加 bucket 弹窗 -->
         <el-dialog
+            :close-on-click-modal="false"
             title="新建Bucket"
             :visible.sync="dialogVisible"
             width="660px"
