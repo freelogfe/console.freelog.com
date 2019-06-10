@@ -130,6 +130,7 @@
                             slot="reference"
                             size="small"
                             icon="el-icon-delete"
+                            style="border-radius: 2px;"
                         >删除Bucket
                         </el-button>
                     </el-popover>
@@ -141,7 +142,7 @@
                         :to="'/mock/create?bucketName=' + activatedBucket.bucketName"
                         class="nav-link ls-nav-link"
                     >
-                        <el-button type="primary">创建mock资源</el-button>
+                        <el-button type="primary" style="border-radius: 2px;">创建mock资源</el-button>
                     </router-link>
                 </div>
 
@@ -181,24 +182,27 @@
                             <el-table-column
                                 prop="name"
                                 label="名称"
-                                width="180">
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="type"
                                 label="类型"
-                                width="180">
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="size"
-                                label="大小">
+                                label="大小"
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="date"
-                                label="创建时间">
+                                label="创建时间"
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="action"
                                 label="操作"
+                                width="70"
                             >
                                 <template slot-scope="scope">
                                     <el-dropdown>
@@ -214,14 +218,14 @@
                                             <el-dropdown-item>
                                                 <a
                                                     @click="downloadAMockByAPI(scope.row.mockResourceId)"
-                                                    style="display: block; width: 100%; height: 100%;"
+                                                    style="display: block; width: 100%; height: 100%; color: #333;"
                                                 >
                                                     下载资源文件
                                                 </a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a
-                                                    style="display: block; width: 100%; height: 100%;"
+                                                    style="display: block; width: 100%; height: 100%; color: #333;"
                                                 >生成正式资源</a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
@@ -229,7 +233,7 @@
                                                     :to="'/mock/create?mockResourceId=' + scope.row.mockResourceId"
                                                 >
                                                     <a
-                                                        style="display: block; width: 100%; height: 100%;"
+                                                        style="display: block; width: 100%; height: 100%; color: #333;"
                                                     >编辑</a>
                                                 </router-link>
                                             </el-dropdown-item>
