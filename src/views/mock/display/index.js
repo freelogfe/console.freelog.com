@@ -142,7 +142,14 @@ export default {
             };
             const str = querystring.stringify(params);
             const {data} = await axios.get(`/v1/resources/mocks?${str}`);
-            this.mockTableData = data.data.dataList;
+            this.mockTableData = data.data.dataList.map((i) => ({
+                mockResourceId: i.mockResourceId,
+                name: i.name,
+                type: i.resourceType,
+                previewImages: i.previewImages,
+                size: humanizeSize(i.systemMeta.fileSize),
+                date: i.createDate,
+            }));
             // console.log(this.mockTableData, 'this.mockTableDatathis.mockTableData');
             this.mockTotalItem = data.data.totalItem;
         },
@@ -248,3 +255,23 @@ export default {
         }
     }
 }
+
+function humanizeSize(number) {
+    const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+    if (!number) {
+        return '';
+    }
+
+    if (number < 1) {
+        return `${number} B`;
+    }
+
+    const algorithm = 1024;
+    const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
+    number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
+    const unit = UNITS[exponent];
+
+    return `${number} ${unit}`;
+}
+
