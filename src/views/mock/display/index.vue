@@ -276,10 +276,15 @@
                     <p>• Freelog为每个用户提供2GB的免费存储空间</p>
                     <div style="height: 21px;"></div>
                     <!--          v-model="input"-->
-                    <el-input
-                        v-model="bucketNameInputValue"
-                        placeholder="Bucket名称"
-                    ></el-input>
+                    <div style="display: flex;">
+                        <el-input
+                            v-model="bucketNameInputValue"
+                            placeholder="Bucket名称"
+                            style="flex-shrink: 1;"
+                        >
+                        </el-input>
+                        <span style="line-height: 46px; display: inline-block; flex-shrink: 0; padding: 0 10px;" slot="suffix">{{bucketNameInputValue.length}}/63</span>
+                    </div>
                 </div>
             </div>
 
