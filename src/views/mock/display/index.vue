@@ -289,6 +289,8 @@
             >
                 <div
                     style="width: 400px; margin: 0 auto;"
+                    class="animated"
+                    :class="{shake: !!bucketNameInputValueError}"
                 >
                     <template v-if="bucketNameInputValueError === true">
                         <p>只能包括小写字母、数字和短横线（-）；</p>

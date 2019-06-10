@@ -84,8 +84,11 @@ export default {
          * 向服务端 API 发起，新建 bucket 的请求
          */
         async createNewBucketByAPI() {
+
+            this.bucketNameInputValueError = false;
+
             if (!/^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(this.bucketNameInputValue)) {
-                this.bucketNameInputValueError = true;
+                setTimeout(() => this.bucketNameInputValueError = true);
                 return;
             }
             this.bucketNameInputValueError = '';
