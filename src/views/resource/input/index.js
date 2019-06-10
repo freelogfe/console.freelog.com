@@ -520,7 +520,7 @@ export default {
             //     return res.getData();
             // })
 
-            console.log(data, 'datadatadata');
+            // console.log(data, 'datadatadata');
             // debugger;
             const resourceId = this.$route.query.resourceId;
             const res = await axios.put(`/v1/resources/${resourceId}`, data);
