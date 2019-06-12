@@ -211,6 +211,8 @@
     },
     created() {
       this.isTuckUpRelease = this.type === 'add'
+
+      'UI4.0-发行-修复发行管理bug'
     }
   }
 </script>
