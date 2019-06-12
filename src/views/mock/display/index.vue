@@ -130,6 +130,7 @@
                             slot="reference"
                             size="small"
                             icon="el-icon-delete"
+                            style="border-radius: 2px;"
                         >删除Bucket
                         </el-button>
                     </el-popover>
@@ -141,7 +142,8 @@
                         :to="'/mock/create?bucketName=' + activatedBucket.bucketName"
                         class="nav-link ls-nav-link"
                     >
-                        <el-button type="primary">创建mock资源</el-button>
+                        <el-button type="primary" style="border-radius: 2px; background-color: #409EFF;">创建mock资源
+                        </el-button>
                     </router-link>
                 </div>
 
@@ -181,24 +183,27 @@
                             <el-table-column
                                 prop="name"
                                 label="名称"
-                                width="180">
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="type"
                                 label="类型"
-                                width="180">
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="size"
-                                label="大小">
+                                label="大小"
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="date"
-                                label="创建时间">
+                                label="创建时间"
+                                min-width="180">
                             </el-table-column>
                             <el-table-column
                                 prop="action"
                                 label="操作"
+                                width="70"
                             >
                                 <template slot-scope="scope">
                                     <el-dropdown>
@@ -214,14 +219,14 @@
                                             <el-dropdown-item>
                                                 <a
                                                     @click="downloadAMockByAPI(scope.row.mockResourceId)"
-                                                    style="display: block; width: 100%; height: 100%;"
+                                                    style="display: block; width: 100%; height: 100%; color: #333;"
                                                 >
                                                     下载资源文件
                                                 </a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a
-                                                    style="display: block; width: 100%; height: 100%;"
+                                                    style="display: block; width: 100%; height: 100%; color: #333;"
                                                 >生成正式资源</a>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
@@ -229,13 +234,13 @@
                                                     :to="'/mock/create?mockResourceId=' + scope.row.mockResourceId"
                                                 >
                                                     <a
-                                                        style="display: block; width: 100%; height: 100%;"
+                                                        style="display: block; width: 100%; height: 100%; color: #333;"
                                                     >编辑</a>
                                                 </router-link>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a
-                                                    @click="removeAMockByAPI(scope.row.mockResourceId)"
+                                                    @click="showDeleteMockDialog(scope.row.mockResourceId)"
                                                     style="color: #EE4040; display: block; width: 100%; height: 100%;"
                                                 >删除</a>
                                             </el-dropdown-item>
@@ -263,49 +268,59 @@
 
         </div>
 
-        <!-- 添加 bucket 弹窗 -->
-        <el-dialog
-            title="新建Bucket"
-            :visible.sync="dialogVisible"
-            width="660px"
-        >
-            <div style="height: 17px"></div>
-            <div class="dialog-body">
-                <div>
-                    <p>• 请注意存储空间的名称一但创建则不可修改</p>
-                    <p>• Freelog为每个用户提供2GB的免费存储空间</p>
-                    <div style="height: 21px;"></div>
-                    <!--          v-model="input"-->
-                    <el-input
-                        v-model="bucketNameInputValue"
-                        placeholder="Bucket名称"
-                    ></el-input>
-                </div>
-            </div>
-
-            <!-- 错误提示区域 -->
-            <div
-                style="height: 99px; line-height: 25px; padding: 5px 0; color: #f54242;"
+        <div class="mock-list__border-dialog">
+            <!-- 添加 bucket 弹窗 -->
+            <el-dialog
+                :close-on-click-modal="false"
+                title="新建Bucket"
+                :visible.sync="dialogVisible"
+                width="660px"
             >
+                <div style="height: 17px"></div>
+                <div class="dialog-body">
+                    <div>
+                        <p>• 请注意存储空间的名称一但创建则不可修改</p>
+                        <p>• Freelog为每个用户提供2GB的免费存储空间</p>
+                        <div style="height: 21px;"></div>
+                        <!--          v-model="input"-->
+                        <div style="display: flex;">
+                            <el-input
+                                v-model="bucketNameInputValue"
+                                placeholder="Bucket名称"
+                                style="flex-shrink: 1;"
+                            >
+                            </el-input>
+                            <span style="line-height: 46px; display: inline-block; flex-shrink: 0; padding: 0 10px;"
+                                  slot="suffix">{{bucketNameInputValue.length}}/63</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 错误提示区域 -->
                 <div
-                    style="width: 400px; margin: 0 auto;"
+                    style="height: 99px; line-height: 25px; padding: 5px 0; color: #f54242;"
                 >
-                    <template v-if="bucketNameInputValueError === true">
-                        <p>只能包括小写字母、数字和短横线（-）；</p>
-                        <p>必须以小写字母或者数字开头和结尾 ；</p>
-                        <p>长度必须在 1–63 字符之间。</p>
-                    </template>
-                    <template v-if="bucketNameInputValueError !==true && !!bucketNameInputValueError">
-                        <p>{{bucketNameInputValueError}}</p>
-                    </template>
+                    <div
+                        style="width: 400px; margin: 0 auto;"
+                        class="animated"
+                        :class="{shake: !!bucketNameInputValueError}"
+                    >
+                        <template v-if="bucketNameInputValueError === true">
+                            <p>只能包括小写字母、数字和短横线（-）；</p>
+                            <p>必须以小写字母或者数字开头和结尾 ；</p>
+                            <p>长度必须在 1–63 字符之间。</p>
+                        </template>
+                        <template v-if="bucketNameInputValueError !==true && !!bucketNameInputValueError">
+                            <p>{{bucketNameInputValueError}}</p>
+                        </template>
+                    </div>
                 </div>
-            </div>
 
-            <!-- dialog 底部按钮 -->
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
+                <!-- dialog 底部按钮 -->
+                <span
+                    slot="footer"
+                    class="dialog-footer"
+                >
                 <el-button
                     style="color: #999999"
                     type="text"
@@ -318,67 +333,121 @@
                     @click="createNewBucketByAPI"
                 >确定</el-button>
             </span>
-        </el-dialog>
-    </div>
+            </el-dialog>
+        </div>
 
+        <div class="mock-list__noheader-dialog">
+            <el-dialog
+                :visible="!!deleteMockID"
+                width="30%"
+                :show-close="false"
+                :close-on-click-modal="false"
+            >
+                <div style="height: 10px;"></div>
+                <div style="color: #333; font-size: 14px; text-align: center;">模拟资源一旦删除则无法恢复，确认删除吗？</div>
+                <div style="height: 26px;"></div>
+                <div style="text-align: center;">
+                    <el-button
+                        type="text"
+                        style="padding: 0 20px; color: #999;"
+                        @click="hideDeleteMockDialog"
+                    >取 消
+                    </el-button>
+                    <el-button
+                        type="danger"
+                        @click="deleteAMock"
+                    >确 定
+                    </el-button>
+                </div>
+            </el-dialog>
+        </div>
+    </div>
 
 </template>
 
 <script>
-    import ResourceInput from './index';
+    import MockDisplay from './index';
 
-    export default ResourceInput;
+    export default MockDisplay;
 </script>
 
 <style lang="less" type="text/less" scoped>
     @import "index.less";
+
+    .message-class {
+        background-color: #fff;
+    }
 </style>
 
 <style lang="less" type="text/less">
+
+    .message-class {
+        background-color: #fff;
+        width: 246px;
+        min-width: 246px;
+        padding: 40px 0;
+
+        .el-message__icon.el-icon-success {
+            font-size: 40px;
+        }
+    }
+
     .mock-list {
-        .el-dialog {
-            border-radius: 10px;
+        .mock-list__border-dialog {
+            .el-dialog {
+                border-radius: 10px;
 
-            .el-dialog__header {
-                padding-bottom: 6px;
-                padding-top: 6px;
-                text-align: center;
-                border-bottom: 1px solid #d8d8d8;
+                .el-dialog__header {
+                    padding-bottom: 6px;
+                    padding-top: 6px;
+                    text-align: center;
+                    border-bottom: 1px solid #d8d8d8;
 
-                .el-dialog__title {
-                    line-height: 38px;
-                    color: #333;
-                    font-size: 14px;
+                    .el-dialog__title {
+                        line-height: 38px;
+                        color: #333;
+                        font-size: 14px;
+                    }
+
+                    .el-dialog__headerbtn {
+                        top: 15px
+                    }
                 }
 
-                .el-dialog__headerbtn {
-                    top: 15px
+                .el-input__inner {
+                    border: 1px solid #979797;
+                    height: 46px;
+                    line-height: 45px;
                 }
             }
 
-            .el-input__inner {
-                border: 1px solid #979797;
-                height: 46px;
-                line-height: 45px;
+            /*.mock-list__mocks_non-empty__body_table {*/
+            /*    .el-table {*/
+            /*        overflow: auto !important;*/
+
+            /*        .el-table__body-wrapper {*/
+            /*            overflow: auto;*/
+            /*        }*/
+            /*    }*/
+            /*}*/
+
+            .el-dialog__footer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-bottom: 45px;
+                padding-top: 0;
             }
         }
 
-        /*.mock-list__mocks_non-empty__body_table {*/
-        /*    .el-table {*/
-        /*        overflow: auto !important;*/
+        .mock-list__noheader-dialog {
+            .el-dialog__header {
+                display: none;
+            }
 
-        /*        .el-table__body-wrapper {*/
-        /*            overflow: auto;*/
-        /*        }*/
-        /*    }*/
-        /*}*/
-
-        .el-dialog__footer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-bottom: 45px;
-            padding-top: 0;
+            .el-dialog__body {
+                padding-bottom: 20px;
+            }
         }
     }
 

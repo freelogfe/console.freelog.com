@@ -1,6 +1,6 @@
 <template>
     <div
-        class="resource-input-wrap"
+        class="mock-input-wrap"
         :class="['resource-edit-mode-'+editMode]"
     >
         <el-form
@@ -82,7 +82,6 @@
 
                                 <a
                                     @click="clearUploadedResourceInfo"
-                                    style="font-size: 20px; color: #D5D5D5;"
                                     class="el-icon-circle-close"
                                 ></a>
                             </div>
@@ -170,11 +169,39 @@
                                                         class="el-icon-circle-check"
                                                     ></i>
                                                     <span style="font-size: 13px; color: #333;">上传成功</span>
-                                                    <a
-                                                        @click="clearUploadedResourceInfo"
-                                                        style="font-size: 20px; color: #D5D5D5;"
-                                                        class="el-icon-circle-close"
-                                                    ></a>
+
+
+                                                    <el-popover
+                                                        placement="top"
+                                                        width="160"
+                                                        v-model="isShowDeleteUploadeFilePopover">
+                                                        <div style="height: 10px;"></div>
+                                                        <p style="font-size: 14px; color: #333; font-weight: 600; text-align: center;">
+                                                            确定删除资源文件？</p>
+                                                        <div style="height: 10px;"></div>
+                                                        <div style="text-align: center; margin: 0;">
+                                                            <el-button
+                                                                style="color: #999;"
+                                                                size="mini"
+                                                                type="text"
+                                                                @click="isShowDeleteUploadeFilePopover = false"
+                                                            >取消
+                                                            </el-button>
+                                                            <el-button
+                                                                type="danger"
+                                                                size="mini"
+                                                                @click="deleteUploadedFile"
+                                                            >确定
+                                                            </el-button>
+                                                        </div>
+                                                        <!--                                                            @click="clearUploadedResourceInfo"-->
+                                                        <a
+                                                            slot="reference"
+                                                            style="font-size: 20px; color: #D5D5D5;"
+                                                            class="el-icon-circle-close"
+                                                        ></a>
+                                                    </el-popover>
+
                                                     <!--                                                <el-button size="small" @click="onClickUpload">重新上传</el-button>-->
                                                 </div>
 
@@ -407,9 +434,30 @@
             <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
-        <div>
-
-        </div>
+        <!--        <el-dialog-->
+        <!--            :visible="true"-->
+        <!--            width="30%"-->
+        <!--            :show-close="false"-->
+        <!--            :close-on-click-modal="false"-->
+        <!--            custom-class="no-header-dialog"-->
+        <!--        >-->
+        <!--            <div style="height: 10px;"></div>-->
+        <!--            <div style="color: #333; font-size: 14px; text-align: center;">模拟资源一旦删除则无法恢复，确认删除吗？</div>-->
+        <!--            <div style="height: 26px;"></div>-->
+        <!--            <div style="text-align: center;">-->
+        <!--                <el-button-->
+        <!--                    type="text"-->
+        <!--                    style="padding: 0 20px; color: #999;"-->
+        <!--                    @click="hideDeleteMockDialog"-->
+        <!--                >取 消-->
+        <!--                </el-button>-->
+        <!--                <el-button-->
+        <!--                    type="danger"-->
+        <!--                    @click="deleteAMock"-->
+        <!--                >确 定-->
+        <!--                </el-button>-->
+        <!--            </div>-->
+        <!--        </el-dialog>-->
     </div>
 </template>
 
@@ -423,7 +471,7 @@
 <style lang="less" scoped>
     @import "index.less";
 
-    .resource-input-wrap .input-list .input-item-wrap .input-rect {
+    .mock-input-wrap .input-list .input-item-wrap .input-rect {
         background-color: #fff;
     }
 </style>
@@ -431,11 +479,24 @@
 <style lang="less">
     @import "reset-el.less";
 
-    .resource-input-wrap .resource-thumbnail-input .el-upload-dragger {
+    .mock-input-wrap .resource-thumbnail-input .el-upload-dragger {
         border: 1px dashed #cbcbcb;
     }
 
-    .resource-input-wrap .resource-type input {
+    .mock-input-wrap .resource-type input {
         background-color: #fff;
     }
+
+    /*.mock-input-wrap{*/
+    /*    .no-header-dialog {*/
+    /*        .el-dialog__header {*/
+    /*            display: none;*/
+    /*        }*/
+
+    /*        .el-dialog__body {*/
+    /*            padding-bottom: 20px;*/
+    /*        }*/
+    /*    }*/
+    /*}*/
+
 </style>

@@ -9,7 +9,8 @@ export const RESOURCE_TYPES = {
   pageBuild: 'page_build',
   revealSlide: 'reveal_slide',
   license: 'license',
-  video: 'video'
+  video: 'video',
+  catalog: 'catalog',
 }
 
 

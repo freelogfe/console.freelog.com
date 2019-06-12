@@ -133,6 +133,8 @@ export default {
             initIsUploadedState: !!this.$route.query.mockResourceId,
             // 是否是资源编辑模式，而非创建模式
             isMockEditMode: !!this.$route.query.mockResourceId,
+            // 是否显示清除已上传资源的 popover
+            isShowDeleteUploadeFilePopover: false,
         }
     },
     props: {
@@ -658,6 +660,13 @@ export default {
             this.uploaderStates.resource.isUploaded = false;
             this.uploaderStates.resource.isUploading = false;
             this.uploaderStates.resource.name = '';
+        },
+        /**
+         * 删除已上传资源
+         */
+        deleteUploadedFile() {
+            this.isShowDeleteUploadeFilePopover = false;
+            this.clearUploadedResourceInfo();
         }
     }
 }

@@ -34,6 +34,10 @@ export default {
 
             // 删除Bucket的面板是否显示
             deleteBucketPopoverShow: false,
+            // 删除mock资源的提示框是否显示
+            // deleteMockDialogShow: false,
+            // 要删除的mock ID
+            deleteMockID: '',
         };
     },
     computed: {
@@ -84,8 +88,11 @@ export default {
          * 向服务端 API 发起，新建 bucket 的请求
          */
         async createNewBucketByAPI() {
+
+            this.bucketNameInputValueError = false;
+
             if (!/^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(this.bucketNameInputValue)) {
-                this.bucketNameInputValueError = true;
+                setTimeout(() => this.bucketNameInputValueError = true);
                 return;
             }
             this.bucketNameInputValueError = '';
@@ -139,7 +146,14 @@ export default {
             };
             const str = querystring.stringify(params);
             const {data} = await axios.get(`/v1/resources/mocks?${str}`);
-            this.mockTableData = data.data.dataList;
+            this.mockTableData = data.data.dataList.map((i) => ({
+                mockResourceId: i.mockResourceId,
+                name: i.name,
+                type: i.resourceType,
+                previewImages: i.previewImages,
+                size: humanizeSize(i.systemMeta.fileSize),
+                date: i.createDate.split('T')[0],
+            }));
             // console.log(this.mockTableData, 'this.mockTableDatathis.mockTableData');
             this.mockTotalItem = data.data.totalItem;
         },
@@ -202,36 +216,42 @@ export default {
             return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
         },
         /**
-         * 将 服务返回的『比特』数字 进行友好显示
-         * @param number
-         * @returns {string}
-         */
-        // humanizeSize(number) {
-        //     const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
-        //
-        //     if (!number) {
-        //         return '';
-        //     }
-        //
-        //     if (number < 1) {
-        //         return `${number} B`;
-        //     }
-        //
-        //     const algorithm = 1024;
-        //     const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
-        //     number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
-        //     const unit = UNITS[exponent];
-        //
-        //     return `${number} ${unit}`;
-        // },
-
-        /**
          * 控制 『删除 bucket 的面板是否显示』
          * @param {boolean} bool
          */
         controlDeleteBucketPopoverShow(bool) {
             this.deleteBucketPopoverShow = bool;
-        }
+        },
+        /**
+         * 显示删除 mock 提示框
+         */
+        showDeleteMockDialog(mockResourceId) {
+            // this.deleteMockDialogShow = true;
+            // this.removeAMockByAPI(mockResourceId);
+            this.deleteMockID = mockResourceId;
+        },
+        /**
+         * 正式删除一个 mock
+         */
+        async deleteAMock() {
+            await this.removeAMockByAPI(this.deleteMockID);
+            this.$message({
+                customClass: 'message-class',
+                duration: 1500,
+                // duration: 0,
+                center: true,
+                type: 'success',
+                dangerouslyUseHTMLString: true,
+                message: '<div style="font-size: 14px; color: #333;">删除成功</div>'
+            });
+            this.hideDeleteMockDialog();
+        },
+        /**
+         * 隐藏删除 mock 提示框
+         */
+        hideDeleteMockDialog() {
+            this.deleteMockID = '';
+        },
     },
     watch: {
         activatedBucket() {
@@ -245,3 +265,23 @@ export default {
         }
     }
 }
+
+function humanizeSize(number) {
+    const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+    if (!number) {
+        return '';
+    }
+
+    if (number < 1) {
+        return `${number} B`;
+    }
+
+    const algorithm = 1024;
+    const exponent = Math.min(Math.floor(Math.log(number) / Math.log(algorithm)), UNITS.length - 1);
+    number = Number((number / Math.pow(algorithm, exponent)).toPrecision(2));
+    const unit = UNITS[exponent];
+
+    return `${number} ${unit}`;
+}
+

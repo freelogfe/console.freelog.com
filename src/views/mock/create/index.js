@@ -87,12 +87,12 @@ export default {
         cancelHandler() {
             // 弹窗提示，是否取消发布
             // this.$confirm(this.$t('resource.cancelQuestion'))
-            this.$confirm('确定取消创建 mock ？')
-                .then(() => {
-                    this.$router.push('/mock/display')
-                })
-                .catch(() => {
-                });
+            // this.$confirm('确定取消创建 mock ？')
+            //     .then(() => {
+            this.$router.push('/mock/display');
+            // })
+            // .catch(() => {
+            // });
         }
     }
 }

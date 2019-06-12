@@ -73,7 +73,7 @@ export default {
     },
     updateResourceHandler() {
       this.executeNext(() => {
-        this.$message.success(this.$18n.t('resourceEditView.updateSuccess'))
+        this.$message.success(this.$t('resourceEditView.updateSuccess'))
         this.switchModeHandler()
       })
     },

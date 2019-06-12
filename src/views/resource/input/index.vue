@@ -181,27 +181,27 @@
                             </el-form-item>
                         </div>
 
-<!--                        <template v-if="formData.resourceType === ResourceTypes.widget">-->
-<!--                            <div class="require-input input-item">-->
-<!--                                <el-form-item prop="widgetName">-->
-<!--                                    <input-->
-<!--                                        type="text"-->
-<!--                                        v-model="formData.widgetName"-->
-<!--                                        class="input-rect"-->
-<!--                                        :disabled="!showCreatorInputItem"-->
-<!--                                        :placeholder="$t('resourceEditView.widgetName')"-->
-<!--                                    >-->
-<!--                                </el-form-item>-->
-<!--                            </div>-->
-<!--                            <div class="require-input input-item">-->
-<!--                                <el-form-item prop="widgetVersion">-->
-<!--                                    <input type="text" v-model="formData.widgetVersion"-->
-<!--                                           class="input-rect"-->
-<!--                                           :disabled="!showCreatorInputItem"-->
-<!--                                           :placeholder="$t('resourceEditView.widgetVersion')">-->
-<!--                                </el-form-item>-->
-<!--                            </div>-->
-<!--                        </template>-->
+                        <!--                        <template v-if="formData.resourceType === ResourceTypes.widget">-->
+                        <!--                            <div class="require-input input-item">-->
+                        <!--                                <el-form-item prop="widgetName">-->
+                        <!--                                    <input-->
+                        <!--                                        type="text"-->
+                        <!--                                        v-model="formData.widgetName"-->
+                        <!--                                        class="input-rect"-->
+                        <!--                                        :disabled="!showCreatorInputItem"-->
+                        <!--                                        :placeholder="$t('resourceEditView.widgetName')"-->
+                        <!--                                    >-->
+                        <!--                                </el-form-item>-->
+                        <!--                            </div>-->
+                        <!--                            <div class="require-input input-item">-->
+                        <!--                                <el-form-item prop="widgetVersion">-->
+                        <!--                                    <input type="text" v-model="formData.widgetVersion"-->
+                        <!--                                           class="input-rect"-->
+                        <!--                                           :disabled="!showCreatorInputItem"-->
+                        <!--                                           :placeholder="$t('resourceEditView.widgetVersion')">-->
+                        <!--                                </el-form-item>-->
+                        <!--                            </div>-->
+                        <!--                        </template>-->
                     </div>
 
                     <!-- 封面上传 -->
@@ -276,7 +276,8 @@
 
             <!-- 依赖 -->
             <div class="input-item-wrap">
-                <h4>{{$t('resourceEditView.depResources')}}</h4>
+                <!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
+                <h4>依赖发行</h4>
                 <div
                     class="input-area"
                     :class="{'edit-disabled': !canEditDependencies}"
@@ -297,7 +298,9 @@
                             @click="showSearchDialogHandler"
                             type="text"
                             v-popover:depsPopTip
-                            size="mini"><i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}
+                            size="mini">
+                            <!--                            <i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}-->
+                            <i class="el-icon-plus"></i>添加依赖发行
                         </el-button>
                     </div>
                     <ul
@@ -370,6 +373,7 @@
 
         <slot></slot>
 
+        <!-- 依赖搜索框 -->
         <el-dialog width="750px"
                    top="10vh"
                    center
@@ -377,9 +381,6 @@
             <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
-        <div>
-
-        </div>
     </div>
 </template>
 
