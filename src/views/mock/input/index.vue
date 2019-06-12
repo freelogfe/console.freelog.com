@@ -174,7 +174,7 @@
                                                     <el-popover
                                                         placement="top"
                                                         width="160"
-                                                        v-model="visible2">
+                                                        v-model="isShowDeleteUploadeFilePopover">
                                                         <div style="height: 10px;"></div>
                                                         <p style="font-size: 14px; color: #333; font-weight: 600; text-align: center;">
                                                             确定删除资源文件？</p>
@@ -184,11 +184,13 @@
                                                                 style="color: #999;"
                                                                 size="mini"
                                                                 type="text"
+                                                                @click="isShowDeleteUploadeFilePopover = false"
                                                             >取消
                                                             </el-button>
                                                             <el-button
                                                                 type="danger"
                                                                 size="mini"
+                                                                @click="deleteUploadedFile"
                                                             >确定
                                                             </el-button>
                                                         </div>
@@ -429,7 +431,7 @@
                    top="10vh"
                    center
                    :visible.sync="showSearchResourceDialog">
-                <release-search @add="addDepReleaseHandler"></release-search>
+            <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
         <!--        <el-dialog-->
