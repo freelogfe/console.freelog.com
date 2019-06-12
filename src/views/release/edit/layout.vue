@@ -13,7 +13,13 @@
             </template>
             <template v-else>
               {{release.username}}/
-              <el-input type="text" v-model="tmpReleaseName" placeholder="请输入发行名称"></el-input>
+              <el-input
+                      autofocus
+                      show-word-limit
+                      type="text"
+                      maxlength="100"
+                      v-model="tmpReleaseName"
+                      placeholder="请输入发行名称"></el-input>
               <el-button size="small" round type="primary" class="r-e-l-name-save" @click="saveEditName">保存</el-button>
               <el-button size="small" round class="r-e-l-name-cancel" @click="cancelEditName">取消</el-button>
             </template>

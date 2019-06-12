@@ -201,9 +201,12 @@
             display: none;
           }
         }
+        .el-tabs__nav { border-width: 0; }
         .el-tabs__item {
-          padding: 0 40px;
-          &.is-active { border-bottom-color: #FAFBFB; background-color: #FAFBFB; }
+          padding: 0 40px; border-width: 0;
+          &.is-active {
+            border-bottom: 2px solid #409eff; background-color: #FAFBFB;
+          }
         }
         .el-tabs__content { overflow: visible; }
       }
