@@ -4,7 +4,11 @@
       <el-tab-pane :label="$t('search.myRelease')" name="my-release">
         <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchMyData">
           <template slot-scope="scope">
-            <release-item :release="scope.data" type="search" @add="addToReleaseHandler"></release-item>
+            <release-item
+                    type="search"
+                    :historicalReleaseIds="historicalReleaseIds"
+                    :release="scope.data"
+                    @add="addToReleaseHandler"></release-item>
           </template>
           <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
         </lazy-list-view>
@@ -12,7 +16,11 @@
       <el-tab-pane :label="$t('search.favorTitle')" name="favor">
         <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchFavorData">
           <template slot-scope="scope">
-            <release-item :release="scope.data" type="search" @add="addToReleaseHandler"></release-item>
+            <release-item
+                    type="search"
+                    :historicalReleaseIds="historicalReleaseIds"
+                    :release="scope.data"
+                    @add="addToReleaseHandler"></release-item>
           </template>
           <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
         </lazy-list-view>
@@ -32,7 +40,11 @@
                         class="search-release-list"
                         :height="60" :fetch="searchDataHandler">
           <template slot-scope="scope">
-            <release-item :release="scope.data" type="search" @add="addToReleaseHandler"></release-item>
+            <release-item
+                    type="search"
+                    :historicalReleaseIds="historicalReleaseIds"
+                    :release="scope.data"
+                    @add="addToReleaseHandler"></release-item>
           </template>
         </lazy-list-view>
       </el-tab-pane>
@@ -50,6 +62,10 @@
       type: {
         type: String,
         default: 'release'
+      },
+      historicalReleases: {
+        type: Array,
+        default(){ return [] }
       }
     },
     data() {
@@ -59,6 +75,11 @@
         myReleases: [],
         favorReleases: [],
         searchReleases: [],
+      }
+    },
+    computed: {
+      historicalReleaseIds() {
+        return this.historicalReleases.map(r => r.releaseId)
       }
     },
     mounted() {

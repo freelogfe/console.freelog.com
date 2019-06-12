@@ -7,7 +7,16 @@
         </div>
         <div class="cont">
           <div class="r-e-l-name">
-            {{release.username}}/{{release.releaseName}}
+            <template v-if="!isEditingReleaseName">
+              {{release.username}}/{{release.releaseName}}
+              <span class="el-icon-edit-outline" @click="tapEditName"></span>
+            </template>
+            <template v-else>
+              {{release.username}}/
+              <el-input type="text" v-model="tmpReleaseName" placeholder="请输入发行名称"></el-input>
+              <el-button size="small" round type="primary" class="r-e-l-name-save" @click="saveEditName">保存</el-button>
+              <el-button size="small" round class="r-e-l-name-cancel" @click="cancelEditName">取消</el-button>
+            </template>
             <span class="r-e-l-version">{{selectedVersion || release.latestVersion.version}}</span>
           </div>
           <div class="r-e-l-info">
@@ -99,6 +108,7 @@
     components: {
       PolicyEditor, PolicyList,
     },
+
     props: {
       release: Object,
       type: String,
@@ -107,6 +117,8 @@
 
     data() {
       return {
+        tmpReleaseName: '',
+        isEditingReleaseName: false,
         editTmpPolicy: { policyName: '未命名策略', policyText: '' },
         isShowEditPolicy: false,
         isEditingIntro: false,
@@ -115,6 +127,7 @@
         tempEditingIntro: this.release.intro,
       }
     },
+
     methods: {
       updateRelease(params, message) {
         return this.$services.ReleaseService.put(this.release.releaseId, params)
@@ -178,6 +191,22 @@
           .then(() => {
             this.isEditingIntro = false
           })
+      },
+      tapEditName() {
+        this.tmpReleaseName = this.release.releaseName
+        this.isEditingReleaseName = true
+      },
+      saveEditName() {
+        this.updateRelease({
+          "releaseName": this.tmpReleaseName,
+        }, '发行名称更新成功！')
+        .then((data) => {
+          this.isEditingReleaseName = false
+        })
+      },
+      cancelEditName() {
+        this.tmpReleaseName = this.release.releaseName
+        this.isEditingReleaseName = false
       },
     },
     created() {

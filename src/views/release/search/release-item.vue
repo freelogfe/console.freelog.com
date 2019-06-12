@@ -5,6 +5,7 @@
       <span class="r-i-type">{{release.resourceType}}</span>
       <span class="r-i-version">{{release.latestVersion && release.latestVersion.version}}</span>
       <span class="r-i-date">{{release.updateDate | fmtDate}}</span>
+      <strong v-if="historicalReleaseIds.indexOf(release.releaseId) !== -1">历史版本</strong>
     </div>
     <el-button class="add-release-btn" @click="addToRelease">{{$t('search.addBtn')}}</el-button>
   </div>
@@ -21,7 +22,11 @@
           return {}
         }
       },
-      type: String
+      type: String,
+      historicalReleaseIds: {
+        type: Array,
+        default() { return [] }
+      }
     },
     methods: {
       addToRelease() {
@@ -47,6 +52,11 @@
         &:not(:first-child) {
           margin-left: 5px; padding-left: 5px; border-left: 1px solid #999;
         }
+      }
+      strong {
+        display: inline-block; margin-left: 10px; padding: 0 8px; border-radius: 12px;
+        font-size: 12px; background-color: #409EFF; color: #fff;
+        transform: scale(.8);
       }
     }
 

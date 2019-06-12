@@ -173,7 +173,7 @@ export default {
 
         this.$router.push(`/release/add?releaseId=${this.release.releaseId}&resourceId=${resource.resourceId}`)
       }else {
-        this.$message({ type: 'warning', message: `所选资源的类型必须为${resource.resourceType}`, duration: 5000 })
+        this.$message({ type: 'warning', message: `所选资源的类型必须为${this.release.resourceType}`, duration: 5000 })
       }
     },
   },
