@@ -121,6 +121,7 @@
                                         </div>
                                     </el-upload>
                                 </div>
+
                                 <div style="height: 10px;"></div>
 
                                 <!-- 上传进度 -->
@@ -157,9 +158,11 @@
                                             color: #3f9cfd;
                                             font-size: 14px;
                                             font-weight: 600;">
-                                            <span v-if="uploaderStates.resource.percentage < 100">
-                                                {{uploaderStates.resource.percentage + '%'}}
-                                            </span>
+
+                                                <span v-if="uploaderStates.resource.percentage < 100">
+                                                    {{uploaderStates.resource.percentage + '%'}}
+                                                </span>
+
                                                 <div
                                                     v-if="uploaderStates.resource.percentage === 100"
                                                     style="display: flex; align-items: center; justify-content: space-between;"
