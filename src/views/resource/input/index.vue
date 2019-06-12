@@ -406,7 +406,7 @@
             </div>
             <div style="height: 40px;"></div>
             <div style="display: flex; align-items: center; justify-content: center;">
-                <el-button type="text" style="color: #999;">取消</el-button>
+                <el-button type="text" style="color: #999;" @click="hideUploadErrorDialog">取消</el-button>
                 &nbsp;&nbsp;&nbsp;
                 <el-button
                     type="primary"

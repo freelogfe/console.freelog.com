@@ -627,6 +627,7 @@ export default {
          */
         hideUploadErrorDialog() {
             this.uploadErrorDialogText = '';
+            this.deleteUploadedFile();
         },
     }
 }
