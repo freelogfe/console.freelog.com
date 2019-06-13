@@ -8,11 +8,12 @@
       style="margin-bottom: 15px"
       type="error">
     </el-alert>
+<!--      :placeholder="$t('metaInput.metaJSONError')"-->
     <codemirror :code="data"
                 :options="editorOptions"
                 ref="codeMirror"
-                :placeholder="$t('metaInput.metaJSONError')"
-                @input="onCodeChange">
+                @input="onCodeChange"
+    >
     </codemirror>
   </section>
 </template>

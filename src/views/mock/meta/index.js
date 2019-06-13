@@ -60,9 +60,9 @@ export default {
     },
     validateJSON() {
       try {
-        if (this.data) {
+        // if (this.data) {
           JSON.parse(this.data)
-        }
+        // }
         this.clearErrorMsg()
       } catch (err) {
         this.errorMsg = `${this.$t('metaInput.metaJSONError')}！${err}`
