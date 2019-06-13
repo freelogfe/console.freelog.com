@@ -82,6 +82,7 @@
                                     v-if="showCreatorInputItem"
                                     class="resource-file-uploader"
                                     drag
+                                    :accept="formData.resourceType === 'image' ? 'image/*': '*'"
                                     ref="resourceUploader"
                                     :action="uploadResourceFileAction"
                                     :with-credentials="true"

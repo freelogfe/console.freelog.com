@@ -65,6 +65,7 @@
                                 </div>
                             </div>
                         </div>
+<!--                        {{formData.resourceType}}-->
 
                         <!-- 文件上传按钮 -->
                         <div
@@ -95,6 +96,7 @@
                                         v-if="showCreatorInputItem"
                                         class="resource-file-uploader"
                                         drag
+                                        :accept="formData.resourceType === 'image' ? 'image/*': '*'"
                                         ref="resourceUploader"
                                         :action="uploadResourceFileAction"
                                         :with-credentials="true"
