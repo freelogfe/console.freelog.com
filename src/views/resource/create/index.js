@@ -66,10 +66,11 @@ export default {
             })
         },
         create2AddHandler() {
-            const detail = this.resourceDetail
+            const detail = this.resourceDetail;
             this.executeNext(() => {
                 if (detail.resourceId) {
-                    this.$router.push(`/resource/detail/${detail.resourceId}`)
+                    this.$router.push(`/resource/detail/${detail.resourceId}`);
+                    this.$message.success(this.$t('resource.createSuccess'))
                 }
             })
         },
