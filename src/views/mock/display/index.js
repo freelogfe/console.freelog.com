@@ -47,7 +47,6 @@ export default {
         }
     },
     mounted() {
-
         this.initBucketsByAPI();
     },
     methods: {
@@ -55,10 +54,13 @@ export default {
          * 通过 服务端 API 获取 buckets 数据，并初始化 buckets
          * @returns {Promise<void>}
          */
-        async initBucketsByAPI() {
+        async initBucketsByAPI(bool) {
             const {data} = await axios.get('/v1/resources/mocks/buckets');
             // console.log(data, 'datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata');
             this.bucketsList = data.data;
+            if (bool) {
+                this.activeBucketIndex = data.data.length - 1
+            }
         },
         /**
          * 改变 bucket 列表中激活的索引
@@ -107,7 +109,8 @@ export default {
                 return;
             }
             this.hideNewBucketDialog();
-            this.initBucketsByAPI();
+            await this.initBucketsByAPI(true);
+            // this.activeBucketIndex = this.bucketsList.length - 1;
         },
         /**
          * 向 API 发起请求，删除当前激活的 bucket
