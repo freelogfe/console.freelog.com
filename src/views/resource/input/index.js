@@ -360,8 +360,19 @@ export default {
         reuploadHandler(uploader) {
             this.clearUploaderHandler(uploader);
         },
+
+        /**
+         * 文件资源上传之前
+         * @param file
+         */
         beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
+
+            if (file.size > 50 * 1048576) {
+                // console.log()
+                this.uploadErrorDialogText = '资源最大不超过50M';
+                return false;
+            }
         },
         resetUploaderState(uploader, file) {
             Object.assign(uploader, {

@@ -391,7 +391,7 @@ export default {
         beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
 
-            console.log(file.size / 1048576, 'filefilefilefilefile');
+            // console.log(file.size / 1048576, 'filefilefilefilefile');
             if (file.size > 50 * 1048576) {
                 // console.log()
                 this.uploadErrorDialogText = '资源最大不超过50M';
