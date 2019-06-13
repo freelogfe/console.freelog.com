@@ -272,7 +272,7 @@ export default {
          * @param file
          */
         successHandler(res, file) {
-            console.log(res, 'res, fileres, fileres, file');
+            // console.log(res, 'res, fileres, fileres, file');
 
             // if (res.data.errcode === 2) {
             //     this.uploadErrorDialogText = res.data.message;
@@ -384,9 +384,25 @@ export default {
         reuploadHandler(uploader) {
             this.clearUploaderHandler(uploader);
         },
+        /**
+         * 文件资源上传之前
+         * @param file
+         */
         beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
+
+            console.log(file.size / 1048576, 'filefilefilefilefile');
+            if (file.size > 50 * 1048576) {
+                // console.log()
+                this.uploadErrorDialogText = '资源最大不超过50M';
+                return false;
+            }
         },
+        /**
+         * 重置上传资源的状态
+         * @param uploader
+         * @param file
+         */
         resetUploaderState(uploader, file) {
             Object.assign(uploader, {
                 file,
