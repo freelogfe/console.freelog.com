@@ -135,6 +135,8 @@ export default {
             isMockEditMode: !!this.$route.query.mockResourceId,
             // 是否显示清除已上传资源的 popover
             isShowDeleteUploadeFilePopover: false,
+            // 上传资源文件错误文字
+            uploadErrorDialogText: '',
         }
     },
     props: {
@@ -234,6 +236,11 @@ export default {
         checkMetaValid(valid) {
             this.valid = valid;
         },
+
+        /**
+         * 文件资源上传失败后回调
+         * @param err
+         */
         errorHandler(err) {
             this.loading = false;
             let errMsg;
@@ -255,11 +262,24 @@ export default {
                 error = {error: errMsg};
             }
 
-            this.$emit('uploadEnd', error);
+            // this.$emit('uploadEnd', error);
+            this.uploadErrorDialogText = errMsg;
             this.$refs.resourceUploader.clearFiles(); // reset clearFiles
         },
+        /**
+         * 文件资源上传完成后回调
+         * @param res
+         * @param file
+         */
         successHandler(res, file) {
-            // console.log(res, file, 'res, fileres, fileres, file');
+            console.log(res, 'res, fileres, fileres, file');
+
+            // if (res.data.errcode === 2) {
+            //     this.uploadErrorDialogText = res.data.message;
+            // } else if (res.data.isExistResource) {
+            //     this.uploadErrorDialogText = '该资源已存在，不能重复创建';
+            // }
+
             this.loading = false;
             if (res.ret !== 0 || res.errcode !== 0) {
                 // reset
@@ -267,8 +287,9 @@ export default {
                 this.uploaderStates.resource.isUploading = false;
                 this.uploaderStates.resource.isExistResource = false;
                 this.uploaderStates.resource.percentage = 0;
-                this.$message.error(res.msg);
-                this.$emit('uploadEnd', {error: res.msg});
+                // this.$message.error(res.msg);
+                // this.$emit('uploadEnd', {error: res.msg});
+                this.uploadErrorDialogText = res.msg;
             } else {
                 this.uploaderStates.resource.sha1 = res.data.sha1;
                 this.uploaderStates.resource.uploadFileId = res.data.uploadFileId;
@@ -647,6 +668,7 @@ export default {
         onClickUpload() {
             // console.log( this.$refs.buttttttt.$el, 'this.$refs.resourceUploader');
             this.$refs.sourceUploadButton.$el.click();
+            this.hideUploadErrorDialog();
         },
 
         /**
@@ -667,6 +689,14 @@ export default {
         deleteUploadedFile() {
             this.isShowDeleteUploadeFilePopover = false;
             this.clearUploadedResourceInfo();
-        }
+        },
+
+        /**
+         * 关闭上传错误按钮
+         */
+        hideUploadErrorDialog() {
+            this.uploadErrorDialogText = '';
+            this.deleteUploadedFile();
+        },
     }
 }

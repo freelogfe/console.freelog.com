@@ -437,30 +437,32 @@
             <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
-        <!--        <el-dialog-->
-        <!--            :visible="true"-->
-        <!--            width="30%"-->
-        <!--            :show-close="false"-->
-        <!--            :close-on-click-modal="false"-->
-        <!--            custom-class="no-header-dialog"-->
-        <!--        >-->
-        <!--            <div style="height: 10px;"></div>-->
-        <!--            <div style="color: #333; font-size: 14px; text-align: center;">模拟资源一旦删除则无法恢复，确认删除吗？</div>-->
-        <!--            <div style="height: 26px;"></div>-->
-        <!--            <div style="text-align: center;">-->
-        <!--                <el-button-->
-        <!--                    type="text"-->
-        <!--                    style="padding: 0 20px; color: #999;"-->
-        <!--                    @click="hideDeleteMockDialog"-->
-        <!--                >取 消-->
-        <!--                </el-button>-->
-        <!--                <el-button-->
-        <!--                    type="danger"-->
-        <!--                    @click="deleteAMock"-->
-        <!--                >确 定-->
-        <!--                </el-button>-->
-        <!--            </div>-->
-        <!--        </el-dialog>-->
+        <!-- 上传文件有问题的 dialog -->
+        <el-dialog
+            custom-class="upload-error-dialog"
+            :visible="!!uploadErrorDialogText"
+            width="30%"
+            :close-on-click-modal="false"
+            :show-close="false"
+        >
+            <div style="height: 20px;"></div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <i class="el-icon-warning" style="color: #FFC000; font-size: 20px;"></i> <span
+                style="font-size: 14px; color: #333; font-weight: 600; padding-left: 10px;">{{uploadErrorDialogText}}</span>
+            </div>
+            <div style="height: 40px;"></div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <el-button type="text" style="color: #999;" @click="hideUploadErrorDialog">取消</el-button>
+                &nbsp;&nbsp;&nbsp;
+                <el-button
+                    type="primary"
+                    plain
+                    round
+                    @click="onClickUpload"
+                >重新选择
+                </el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 

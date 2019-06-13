@@ -214,6 +214,11 @@ export default {
         checkMetaValid(valid) {
             this.valid = valid;
         },
+
+        /**
+         * 文件资源上传失败后回调
+         * @param err
+         */
         errorHandler(err) {
             this.loading = false;
             let errMsg;
@@ -618,7 +623,7 @@ export default {
          * 模拟点击『资源上传按钮』
          */
         onClickUpload() {
-            console.log(this.$refs.sourceUploadButton.$el, 'this.$refs.resourceUploader');
+            // console.log(this.$refs.sourceUploadButton.$el, 'this.$refs.resourceUploader');
             this.$refs.sourceUploadButton.$el.click();
             this.hideUploadErrorDialog();
         },
