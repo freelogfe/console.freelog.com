@@ -258,7 +258,8 @@ export default {
                 this.uploaderStates.resource.isUploading = false;
                 this.uploaderStates.resource.isExistResource = false;
                 this.uploaderStates.resource.percentage = 0;
-                this.$message.error(res.msg);
+                // this.$message.error(res.msg);
+                this.uploadErrorDialogText = res.msg;
                 this.$emit('uploadEnd', {error: res.msg});
             } else {
                 this.uploaderStates.resource.sha1 = res.data.sha1;
