@@ -268,7 +268,7 @@
                                 v-show="!uploaderStates.thumbnail.isUploading"
                                 drag
                                 ref="thumbnailUploader"
-                                accept="image/jpeg,image/pjpeg,image/png,image/gif"
+                                accept="image/*"
                                 :action="uploadPreviewImageAction"
                                 :with-credentials="true"
                                 :data="uploader.data"

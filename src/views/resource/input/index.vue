@@ -237,7 +237,7 @@
                                 style="background-color: #fff;"
                                 v-show="!uploaderStates.thumbnail.isUploading"
                                 drag
-                                accept="image/jpeg,image/pjpeg,image/png,image/gif"
+                                accept="image/*"
                                 ref="thumbnailUploader"
                                 :action="uploadPreviewImageAction"
                                 :with-credentials="true"
