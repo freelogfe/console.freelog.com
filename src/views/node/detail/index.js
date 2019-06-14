@@ -50,6 +50,7 @@ export default {
     loadNodeDetail(nodeId) {
       return this.$store.dispatch('loadNodeDetail', nodeId)
         .then(detail => {
+
           this.detail = detail
           detail.statusInfo = NODE_STATUS[detail.status]
         })
