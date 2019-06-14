@@ -48,6 +48,40 @@
                     </template>
                 </lazy-list-view>
             </el-tab-pane>
+
+            <!-- 我的 mock 资源 -->
+            <el-tab-pane
+                :label="'我的mock资源'"
+                name="mock-search"
+            >
+                <div class="search-input-area">
+                    <el-input
+                        v-model="mockSearchInput"
+                        class="search-release-input"
+                        clearable
+                        ref="mockSearchInputRef"
+                        @keyup.native.enter="mockSearchHandler"
+                        :placeholder="$t('search.placeholder')">
+                    </el-input>
+                </div>
+                <lazy-list-view
+                    :list="searchReleases"
+                    ref="searchView"
+                    class="search-release-list"
+                    :height="60"
+                    :fetch="searchDataHandler"
+                >
+                    <template slot-scope="scope">
+                        <release-item
+                            type="search"
+                            :historicalReleaseIds="historicalReleaseIds"
+                            :release="scope.data"
+                            @add="addToReleaseHandler"
+                        >
+                        </release-item>
+                    </template>
+                </lazy-list-view>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -75,9 +109,13 @@
             return {
                 activeName: 'search',
                 searchInput: '',
+                // 我的 mock 输入框文本
+                mockSearchInput: '',
                 myReleases: [],
                 favorReleases: [],
                 searchReleases: [],
+                // 我的 mock 搜索列表
+                mockSearchReleases: [],
             }
         },
         computed: {
@@ -183,7 +221,13 @@
                 this.activeName = 'search'
                 this.searchReleases = []
                 this.$refs.searchView.refresh()
-            }
+            },
+            /**
+             * mock
+             */
+            mockSearchHandler() {
+
+            },
         }
     }
 </script>
