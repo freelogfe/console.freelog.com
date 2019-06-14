@@ -79,6 +79,7 @@ export default {
                 // }
                 // 数据提交成功后返回列表展示页
                 this.$router.back();
+                this.$message.success(this.$t('resource.createSuccess'));
             })
         },
         /**

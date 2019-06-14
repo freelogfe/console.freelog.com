@@ -114,6 +114,10 @@ export default {
             doShowMeta: false,
             // 是否是资源编辑模式，而非创建模式
             isResourceIdEditMode: !!this.$route.query.resourceId,
+            // 是否显示清除已上传资源的 popover
+            isShowDeleteUploadeFilePopover: false,
+            // 上传资源文件错误文字
+            uploadErrorDialogText: '',
         }
     },
     props: {
@@ -210,6 +214,11 @@ export default {
         checkMetaValid(valid) {
             this.valid = valid;
         },
+
+        /**
+         * 文件资源上传失败后回调
+         * @param err
+         */
         errorHandler(err) {
             this.loading = false;
             let errMsg;
@@ -234,8 +243,19 @@ export default {
             this.$emit('uploadEnd', error);
             this.$refs.resourceUploader.clearFiles(); // reset clearFiles
         },
+
+        /**
+         * 文件资源上传完成后回调
+         * @param res
+         * @param file
+         */
         successHandler(res, file) {
             // console.log(res, file, 'res, fileres, fileres, file');
+
+            if (res.data.isExistResource) {
+                this.uploadErrorDialogText = '该资源已存在，不能重复创建';
+            }
+
             this.loading = false;
             if (res.ret !== 0 || res.errcode !== 0) {
                 // reset
@@ -243,7 +263,8 @@ export default {
                 this.uploaderStates.resource.isUploading = false;
                 this.uploaderStates.resource.isExistResource = false;
                 this.uploaderStates.resource.percentage = 0;
-                this.$message.error(res.msg);
+                // this.$message.error(res.msg);
+                this.uploadErrorDialogText = res.msg;
                 this.$emit('uploadEnd', {error: res.msg});
             } else {
                 this.uploaderStates.resource.sha1 = res.data.sha1;
@@ -339,8 +360,19 @@ export default {
         reuploadHandler(uploader) {
             this.clearUploaderHandler(uploader);
         },
+
+        /**
+         * 文件资源上传之前
+         * @param file
+         */
         beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
+
+            if (file.size > 50 * 1048576) {
+                // console.log()
+                this.uploadErrorDialogText = '资源最大不超过50M';
+                return false;
+            }
         },
         resetUploaderState(uploader, file) {
             Object.assign(uploader, {
@@ -575,6 +607,44 @@ export default {
         // 点击显示 『添加 meta 信息』的按钮
         onClickButtonAddMetaInfo() {
             this.doShowMeta = true;
-        }
+        },
+
+        /**
+         * 删除已上传资源
+         */
+        deleteUploadedFile() {
+            this.isShowDeleteUploadeFilePopover = false;
+            this.clearUploadedResourceInfo();
+        },
+
+        /**
+         * 清除已上传资源的信息
+         */
+        clearUploadedResourceInfo() {
+            this.initIsUploadedState = false;
+
+            this.uploaderStates.resource.percentage = 0;
+            this.uploaderStates.resource.isExistResource = false;
+            this.uploaderStates.resource.isUploaded = false;
+            this.uploaderStates.resource.isUploading = false;
+            this.uploaderStates.resource.name = '';
+        },
+
+        /**
+         * 模拟点击『资源上传按钮』
+         */
+        onClickUpload() {
+            // console.log(this.$refs.sourceUploadButton.$el, 'this.$refs.resourceUploader');
+            this.$refs.sourceUploadButton.$el.click();
+            this.hideUploadErrorDialog();
+        },
+
+        /**
+         * 关闭上传错误按钮
+         */
+        hideUploadErrorDialog() {
+            this.uploadErrorDialogText = '';
+            this.deleteUploadedFile();
+        },
     }
 }
