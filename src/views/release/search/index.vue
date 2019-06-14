@@ -1,53 +1,6 @@
 <template>
     <div class="releases-search-wrapper">
         <el-tabs v-model="activeName">
-            <el-tab-pane :label="$t('search.myRelease')" name="my-release">
-                <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchMyData">
-                    <template slot-scope="scope">
-                        <release-item
-                                type="search"
-                                :historicalReleaseIds="historicalReleaseIds"
-                                :release="scope.data"
-                                @add="addToReleaseHandler"></release-item>
-                    </template>
-                    <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
-                </lazy-list-view>
-            </el-tab-pane>
-            <el-tab-pane :label="$t('search.favorTitle')" name="favor">
-                <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchFavorData">
-                    <template slot-scope="scope">
-                        <release-item
-                                type="search"
-                                :historicalReleaseIds="historicalReleaseIds"
-                                :release="scope.data"
-                                @add="addToReleaseHandler"></release-item>
-                    </template>
-                    <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
-                </lazy-list-view>
-            </el-tab-pane>
-            <el-tab-pane :label="$t('search.searchTitle')" name="search">
-                <div class="search-input-area">
-                    <el-input v-model="searchInput"
-                              class="search-release-input"
-                              clearable
-                              ref="searchInputRef"
-                              @clear="clearSearchInputHandler"
-                              @keyup.native.enter="searchHandler"
-                              :placeholder="$t('search.placeholder')"></el-input>
-                </div>
-                <lazy-list-view :list="searchReleases"
-                                ref="searchView"
-                                class="search-release-list"
-                                :height="60" :fetch="searchDataHandler">
-                    <template slot-scope="scope">
-                        <release-item
-                                type="search"
-                                :historicalReleaseIds="historicalReleaseIds"
-                                :release="scope.data"
-                                @add="addToReleaseHandler"></release-item>
-                    </template>
-                </lazy-list-view>
-            </el-tab-pane>
 
             <!-- 我的 mock 资源 -->
             <el-tab-pane
@@ -84,6 +37,57 @@
                     </template>
                 </lazy-list-view>
             </el-tab-pane>
+
+            <!-- 全局搜索 -->
+            <el-tab-pane :label="$t('search.searchTitle')" name="search">
+                <div class="search-input-area">
+                    <el-input v-model="searchInput"
+                              class="search-release-input"
+                              clearable
+                              ref="searchInputRef"
+                              @clear="clearSearchInputHandler"
+                              @keyup.native.enter="searchHandler"
+                              :placeholder="$t('search.placeholder')"></el-input>
+                </div>
+                <lazy-list-view :list="searchReleases"
+                                ref="searchView"
+                                class="search-release-list"
+                                :height="60" :fetch="searchDataHandler">
+                    <template slot-scope="scope">
+                        <release-item
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
+                    </template>
+                </lazy-list-view>
+            </el-tab-pane>
+
+            <el-tab-pane :label="$t('search.myRelease')" name="my-release">
+                <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchMyData">
+                    <template slot-scope="scope">
+                        <release-item
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
+                    </template>
+                    <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
+                </lazy-list-view>
+            </el-tab-pane>
+            <el-tab-pane :label="$t('search.favorTitle')" name="favor">
+                <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchFavorData">
+                    <template slot-scope="scope">
+                        <release-item
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
+                    </template>
+                    <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
+                </lazy-list-view>
+            </el-tab-pane>
+
         </el-tabs>
         <!--        {{searchReleases}}-->
     </div>
