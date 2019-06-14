@@ -86,7 +86,7 @@
       }
     }
     .r-policies {
-      margin-right: 8px; margin-bottom: 8px;  border-bottom: 1px solid #D4D4D4;
+      margin-right: 8px; border-bottom: 1px solid #D4D4D4;
       .r-p-item {
         display: inline-block;
         margin: 0 8px 10px 0; padding: 2px 10px; border: 1px solid #A5D1FF; border-radius: 2px;
