@@ -391,7 +391,11 @@ export default {
         beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
 
-            // console.log(file.size / 1048576, 'filefilefilefilefile');
+            // setTimeout(() => {
+            //     console.log(this.$refs.resourceUploader.$el.querySelector('[name=file]').files, 'resourceUploaderresourceUploader');
+            // });
+
+            // console.log(file, 'filefilefilefilefile');
             if (file.size > 50 * 1048576) {
                 // console.log()
                 this.uploadErrorDialogText = '资源最大不超过50M';
@@ -623,7 +627,13 @@ export default {
             const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`, data);
 
         },
+        /**
+         * 资源文件正在上传时
+         * @param event
+         * @param file
+         */
         uploadProgressHandler(event, file) {
+            // console.log(event.target, file, 'event, fileevent, fileevent, fileevent, file');
             const uploaderStates = this.uploaderStates;
             let uploader;
             if (uploaderStates.resource.name === file.name) {
