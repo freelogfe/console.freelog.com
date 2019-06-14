@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                         </div>
-<!--                        {{formData.resourceType}}-->
+                        <!--                        {{formData.resourceType}}-->
 
                         <!-- 文件上传按钮 -->
                         <div
@@ -329,6 +329,7 @@
                 </div>
             </div>
 
+            <!-- 依赖列表 -->
             <div class="input-item-wrap">
                 <h4>{{$t('resourceEditView.depResources')}}</h4>
                 <div
@@ -433,10 +434,13 @@
 
         <slot></slot>
 
-        <el-dialog width="750px"
-                   top="10vh"
-                   center
-                   :visible.sync="showSearchResourceDialog">
+        <!-- 添加依赖的搜索弹出框 -->
+        <el-dialog
+            width="750px"
+            top="10vh"
+            center
+            :visible.sync="showSearchResourceDialog"
+        >
             <release-search @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
