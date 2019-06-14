@@ -441,7 +441,7 @@
             center
             :visible.sync="showSearchResourceDialog"
         >
-            <release-search @add="addDepReleaseHandler"></release-search>
+            <release-search :mock-tab="true" @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
         <!-- 上传文件有问题的 dialog -->

@@ -5,10 +5,10 @@
                 <lazy-list-view :list="myReleases" class="search-release-list" :height="60" :fetch="fetchMyData">
                     <template slot-scope="scope">
                         <release-item
-                            type="search"
-                            :historicalReleaseIds="historicalReleaseIds"
-                            :release="scope.data"
-                            @add="addToReleaseHandler"></release-item>
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
                     </template>
                     <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
                 </lazy-list-view>
@@ -17,10 +17,10 @@
                 <lazy-list-view :list="favorReleases" class="search-release-list" :height="60" :fetch="fetchFavorData">
                     <template slot-scope="scope">
                         <release-item
-                            type="search"
-                            :historicalReleaseIds="historicalReleaseIds"
-                            :release="scope.data"
-                            @add="addToReleaseHandler"></release-item>
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
                     </template>
                     <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
                 </lazy-list-view>
@@ -41,54 +41,59 @@
                                 :height="60" :fetch="searchDataHandler">
                     <template slot-scope="scope">
                         <release-item
-                            type="search"
-                            :historicalReleaseIds="historicalReleaseIds"
-                            :release="scope.data"
-                            @add="addToReleaseHandler"></release-item>
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToReleaseHandler"></release-item>
                     </template>
                 </lazy-list-view>
             </el-tab-pane>
 
             <!-- 我的 mock 资源 -->
             <el-tab-pane
-                :label="'我的mock资源'"
-                name="mock-search"
+                    v-if="mockTab"
+                    :label="'我的mock资源'"
+                    name="mock-search"
             >
                 <div class="search-input-area">
                     <el-input
-                        v-model="mockSearchInput"
-                        class="search-release-input"
-                        clearable
-                        ref="mockSearchInputRef"
-                        @keyup.native.enter="mockSearchHandler"
-                        :placeholder="$t('search.placeholder')">
+                            v-model="mockSearchInput"
+                            class="search-release-input"
+                            clearable
+                            ref="mockSearchInputRef"
+                            @keyup.native.enter="mockSearchHandler"
+                            :placeholder="$t('search.placeholder')">
                     </el-input>
                 </div>
+                <!--                :fetch="mockSearchReleases"-->
                 <lazy-list-view
-                    :list="searchReleases"
-                    ref="searchView"
-                    class="search-release-list"
-                    :height="60"
-                    :fetch="searchDataHandler"
+                        :list="mockSearchReleases"
+                        ref="mockSearchView"
+                        class="search-release-list"
+                        :height="60"
+                        :fetch="mockSearchDataHandler"
                 >
                     <template slot-scope="scope">
                         <release-item
-                            type="search"
-                            :historicalReleaseIds="historicalReleaseIds"
-                            :release="scope.data"
-                            @add="addToReleaseHandler"
+                                type="search"
+                                :historicalReleaseIds="historicalReleaseIds"
+                                :release="scope.data"
+                                @add="addToMockReleaseHandler"
                         >
                         </release-item>
                     </template>
                 </lazy-list-view>
             </el-tab-pane>
         </el-tabs>
+        <!--        {{searchReleases}}-->
     </div>
 </template>
 
 <script>
     import LazyListView from '@/components/LazyListView/index.vue'
     import ReleaseItem from './release-item.vue'
+    import {axios} from "@/lib";
+    import querystring from 'querystring';
 
     export default {
         name: 'releases-search',
@@ -103,6 +108,9 @@
                 default() {
                     return []
                 }
+            },
+            'mockTab': {
+                type: Boolean,
             }
         },
         data() {
@@ -130,6 +138,9 @@
         },
         methods: {
             addToReleaseHandler(release) {
+                this.$emit('add', release)
+            },
+            addToMockReleaseHandler(release) {
                 this.$emit('add', release)
             },
             clearSearchInputHandler() {
@@ -204,9 +215,11 @@
                         pageSize
                     }, this.searchScope)
                 }).then((res) => {
+                    console.log(res, 'resresres');
                     const data = res.getData() || {}
                     if (res.data.errcode === 0) {
                         data.dataList = data.dataList.filter(r => r.policies.length > 0)
+                        console.log(data.dataList, 'data.dataListdata.dataListdata.dataList');
                         this.searchReleases = this.searchReleases.concat(data.dataList)
                         if (data.dataList.length < pageSize) {
                             data.canLoadMore = false
@@ -214,6 +227,7 @@
                     } else {
                         data.canLoadMore = false
                     }
+                    console.log(data, 'datadatadatadatadata');
                     return data
                 })
             },
@@ -223,10 +237,64 @@
                 this.$refs.searchView.refresh()
             },
             /**
-             * mock
+             * mock 搜索
+             */
+            mockSearchDataHandler(page) {
+                // console.log(12342134);
+                const pageSize = 10
+
+                if (!this.mockSearchInput) {
+                    return Promise.resolve({canLoadMore: false})
+                }
+
+                // return this.$services.ReleaseService.get({
+                //     params: Object.assign({
+                //         keywords: encodeURIComponent(this.mockSearchInput),
+                //         page,
+                //         pageSize
+                //     }, this.searchScope)
+                // })
+                const params = {
+                    page,
+                    pageSize,
+                    // bucketName: this.activatedBucket.bucketName,
+                    keywords: encodeURIComponent(this.mockSearchInput),
+                    // resourceType: '',
+                    // projection: '',
+                    ...this.searchScope
+                };
+                const str = querystring.stringify(params);
+                return axios.get(`/v1/resources/mocks?${str}`)
+                    .then((res) => {
+                        console.log(res, 'CASEFRWWFEA');
+                        const data = res.getData() || {}
+                        if (res.data.errcode === 0) {
+                            data.dataList = data.dataList
+                            // .filter(r => r.policies.length > 0)
+                                .map(i => ({
+                                    releaseName: i.name,
+                                    resourceType: i.resourceType,
+                                    // latestVersion: '',
+                                    updateDate: i.updateDate,
+                                    releaseId: i.mockResourceId,
+                                }));
+                            this.mockSearchReleases = this.mockSearchReleases.concat(data.dataList)
+                            if (data.dataList.length < pageSize) {
+                                data.canLoadMore = false
+                            }
+                        } else {
+                            data.canLoadMore = false
+                        }
+                        return data
+                    })
+            },
+            /**
+             *
              */
             mockSearchHandler() {
-
+                this.activeName = 'mock-search'
+                this.mockSearchReleases = []
+                this.$refs.mockSearchView.refresh()
             },
         }
     }
