@@ -5,9 +5,9 @@
       <span class="r-i-type">{{release.resourceType}}</span>
       <span v-if="!!release.latestVersion" class="r-i-version">{{release.latestVersion && release.latestVersion.version}}</span>
       <span class="r-i-date">{{release.updateDate | fmtDate}}</span>
-      <strong v-if="historicalReleaseIds.indexOf(release.releaseId) !== -1">历史版本</strong>
+      <strong v-if="isHistoricalRelease">历史版本</strong>
     </div>
-    <el-button class="add-release-btn" @click="addToRelease">{{$t('search.addBtn')}}</el-button>
+    <el-button class="add-release-btn" :class="{ 'disabled': isHistoricalRelease }" @click="addToRelease">{{$t('search.addBtn')}}</el-button>
   </div>
 </template>
 
@@ -28,9 +28,16 @@
         default() { return [] }
       }
     },
+    computed: {
+      isHistoricalRelease() {
+        return this.historicalReleaseIds.indexOf(this.release.releaseId) !== -1
+      }
+    },
     methods: {
       addToRelease() {
-        this.$emit('add', this.release)
+        if(!this.isHistoricalRelease) {
+          this.$emit('add', this.release)
+        }
       }
     }
   }
@@ -65,6 +72,10 @@
       padding: 8px 16px; border-radius: 16px; border-width: 0;
       font-size: 12px; font-weight: 400; background-color: #409EFF; color: #fff;
       transform: translateY(-50%);
+
+      &.disabled {
+        opacity: .3; cursor: not-allowed;
+      }
     }
   }
 
