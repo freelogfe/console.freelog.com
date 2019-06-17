@@ -16,7 +16,7 @@
             <label>历史版本</label>
             <div style="margin-left: 72px;">
               <ul class="raw-v--ul">
-                <li v-for="item in release.resourceVersions">
+                <li v-for="item in targetVersionsList">
                   <div class="raw-v--li-box">
                     <span class="raw-v--li-version">{{item.version}}</span>
                     <span class="raw-v--li-date">({{item.createDate}})</span>
@@ -27,7 +27,7 @@
                   </div>
                 </li>
               </ul>
-              <!--<div class="r-a-w-v-l-more">更多...</div>-->
+              <div class="r-a-w-v-l-more" v-if="release.resourceVersions.length > 3" @click="tapMoreBtn">{{this.isShowAllVersions ? "收起" : "更多..."}}</div>
             </div>
           </div>
         </div>
@@ -71,11 +71,18 @@
         depReleasesDetailList: [],
         releasesTreeData: [],
         resolvedReleases: [],
-        newVersion: ''
+        targetVersionsList: [],
+        newVersion: '',
+        isShowAllVersions: false
       }
     },
     computed: {
 
+    },
+    watch: {
+      isShowAllVersions() {
+        this.getTargetVersionsList()
+      },
     },
     methods: {
       fetchResourceDetail() {
@@ -121,6 +128,7 @@
           i.createDate = format(i.createDate, 'YYYY-MM-DD')
           return i
         })
+        this.getTargetVersionsList()
       },
 
       fetchEveryVersionRDetail() {
@@ -140,16 +148,27 @@
                 resource.createDate = format(resource.createDate, 'YYYY-MM-DD')
                 return resource
               })
+              this.getTargetVersionsList()
             }else {
               this.$message({ type: 'error', message: res.msg })
             }
           })
           .catch(e => this.$message({ type: 'error', message: e.toString() }))
       },
+      getTargetVersionsList() {
+        if(this.isShowAllVersions) {
+          this.targetVersionsList = this.release.resourceVersions.slice()
+        }else {
+          this.targetVersionsList = this.release.resourceVersions.slice(0, 3)
+        }
+      },
       getNewVersion() {
         let [ fN, sN, tN ] = this.release.latestVersion.version.split('.')
         tN = +tN + 1
         return `${fN}.${sN}.${tN}`
+      },
+      tapMoreBtn() {
+        this.isShowAllVersions = !this.isShowAllVersions
       },
       updateResolvedReleases(releases) {
         this.resolvedReleases = releases.map(r => {

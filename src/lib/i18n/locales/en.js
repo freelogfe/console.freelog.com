@@ -220,11 +220,11 @@ export default {
     resourceDetail: 'Resource Detail',
     createResourcePolicyTpl: 'Create Resource Policy Template',
     resourcePolicyTplDetail: 'Resource Policy Template Detail',
-    createRelease: '',
-    releaseDetail: '',
+    createRelease: 'Create release',
+    releaseDetail: 'Release details',
     releaseSystem: '',
-    releaseManager: '',
-    releaseAdd: ''
+    releaseManager: 'Release management',
+    releaseAdd: 'Add the release'
   },
 
   axios: {

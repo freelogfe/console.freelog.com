@@ -226,11 +226,11 @@ export default {
         resourceDetail: '资源详情',
         createResourcePolicyTpl: '创建资源策略模板',
         resourcePolicyTplDetail: '资源策略模板详情',
-        createRelease: '',
-        releaseDetail: '',
+        createRelease: '创建发行',
+        releaseDetail: '发行详情',
         releaseSystem: '',
         releaseManager: '发行管理',
-        releaseAdd: ''
+        releaseAdd: '添加发行'
     },
 
     axios: {
