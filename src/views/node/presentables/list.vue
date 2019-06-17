@@ -12,8 +12,8 @@
         <template slot-scope="scope">
           <div>
             <a :href="`/resource/detail/${scope.row.resourceId}`" target="_blank">
-              <img :src="scope.row.resourceInfo.postImgUrl | padImage"
-                   :class="{'resource-default-preview':!scope.row.resourceInfo.postImgUrl}"
+              <img :src="scope.row.releaseInfo.postImgUrl | padImage"
+                   :class="{'resource-default-preview':!scope.row.releaseInfo.postImgUrl}"
                    alt="">
             </a>
           </div>
@@ -30,7 +30,7 @@
               :label="$t('resource.resourceType')">
         <template slot-scope="scope">
           <div>
-            <span class="resource-type" :class="['is-'+scope.row.resourceInfo.resourceType]">{{scope.row.resourceInfo.resourceType}}</span>
+            <span class="resource-type" :class="['is-'+scope.row.releaseInfo.resourceType]">{{scope.row.releaseInfo.resourceType}}</span>
           </div>
         </template>
       </el-table-column>
@@ -176,7 +176,7 @@ export default {
 
         maps[item.resourceId] = index
         presentablesIdMap[item.presentableId] = item
-        item.resourceInfo.postImgUrl = this.resolvePostImgUrl(item.resourceInfo)
+        item.releaseInfo.postImgUrl = this.resolvePostImgUrl(item.releaseInfo)
         this.resolvePresentable(item)
       })
 
@@ -299,7 +299,9 @@ export default {
       item.isOnlineChecked = !!item.isOnline
       item._statusInfo = PRESENTABLE_STATUS_TIPS[item.status]
       item.isReady = (item.status & 7) === 7
-      item.hasContract = item.contracts.length > 0
+      if(item.resolveReleases) {
+        item.hasContract = item.resolveReleases.length > 0
+      }
       item.detailLink = `/node/${this.$route.params.nodeId}/presentable/${item.presentableId}`
     },
     //加载presentable已签约方案&策略信息
@@ -319,29 +321,18 @@ export default {
       }
     },
     getPresentableContract(presentableInfo) {
-      const contracts = presentableInfo.contracts || []
-      if (contracts.length) {
-        let contract
-        for (let i = 0; i < contracts.length; i += 1) {
-          contract = contracts[i]
-          if (contract.resourceId === presentableInfo.resourceId) {
-            return contract
-          }
+      const { resolveReleases = [], releaseInfo } = presentableInfo
+      const leng = resolveReleases.length
+      for(let i = 0; i < leng; i++) {
+        if(resolveReleases[i].releaseId === releaseInfo.releaseId) {
+          let { contracts = [] } = resolveReleases[i]
+          return contracts.length ? contracts[0] : null
         }
       }
-
       return null
     },
-    resolvePostImgUrl(resource) {
-      let src
-
-      if (resource.previewImages.length) {
-        src = resource.previewImages[0]
-      } else {
-        src = ''
-      }
-
-      return src
+    resolvePostImgUrl(release) {
+      return release.postImgUrl || ''
     },
     deletePresentableHandler(presentable) {
       this.$emit('delete', presentable)

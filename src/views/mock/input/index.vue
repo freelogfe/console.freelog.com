@@ -331,7 +331,8 @@
 
             <!-- 依赖列表 -->
             <div class="input-item-wrap">
-                <h4>{{$t('resourceEditView.depResources')}}</h4>
+<!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
+                <h4>依赖发行</h4>
                 <div
                     class="input-area"
                     :class="{'edit-disabled': !canEditDependencies}"
@@ -354,7 +355,8 @@
                             @click="showSearchDialogHandler"
                             type="text"
                             v-popover:depsPopTip
-                            size="mini"><i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}
+                            size="mini"><i class="el-icon-plus"></i>添加依赖发行
+<!--                            {{$t('resourceEditView.addDepResource')}}-->
                         </el-button>
 
                     </div>

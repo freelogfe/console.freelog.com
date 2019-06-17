@@ -108,7 +108,8 @@
       update(data) {
         if (!data || !data.dataList) return
         this.total = data.totalItem || data.dataList.length
-        this.tableProps.data = (typeof this.formatHandler === 'function') ? this.formatHandler(data.dataList) : data.dataList
+        const list = (typeof this.formatHandler === 'function') ? this.formatHandler(data.dataList) : data.dataList
+        this.tableProps.data = list
       },
       reload() {
         this.currentPage = 1
