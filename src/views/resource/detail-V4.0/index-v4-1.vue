@@ -140,7 +140,7 @@
                top="10vh"
                center
                :visible.sync="isShowReleaseSearchDialog">
-      <release-search :historicalReleases="releasesList" @add="releaseSearchHandler"></release-search>
+      <release-search :tabLayout="['my-release']" :historicalReleases="releasesList" @add="releaseSearchHandler"></release-search>
       <div class="" slot="footer">
         <el-button round type="primary" class="create-release-btn" @click="createNewRelease">创建新发行</el-button>
       </div>

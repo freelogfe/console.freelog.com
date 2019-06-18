@@ -10,9 +10,9 @@
                :class="['contract-status-'+masterContract.status,
                {'current':currentContract.contractId===masterContract.contractId}]"
                @click="showContractDetailHandler(masterContract)">
-            <div v-if="masterContract.resourceDetail">
+            <div v-if="masterContract.releaseDetail">
               <i class="dot"></i>
-              <span v-if="masterContract.resourceDetail.resourceName">{{masterContract.resourceDetail.resourceName}}</span>
+              <span v-if="masterContract.releaseDetail.releaseName">{{masterContract.releaseDetail.releaseName}}</span>
               <span v-else>{{ $t('components.contractManager.subResourceId')}} {{masterContract.contractId}}</span>
             </div>
           </div>
@@ -27,7 +27,7 @@
                 :class="['contract-status-'+contract.status, {'current':currentContract.contractId===contract.contractId}]"
                 @click="showContractDetailHandler(contract)">
               <div>
-                <span class="res-contract-title" v-if="contract.resourceDetail.resourceName">{{contract.resourceDetail.resourceName}}</span>
+                <span class="res-contract-title" v-if="contract.releaseDetail.releaseName">{{contract.releaseDetail.releaseName}}</span>
                 <span class="res-contract-title" v-else>{{ $t('components.contractManager.subResourceId')}} {{contract.contractId}}</span>
                 <span class="contract-state-tip" :class="['contract-state-'+contract.statusInfo.type]"
                       v-if="contract.statusInfo">{{contract.statusInfo.desc}}</span>

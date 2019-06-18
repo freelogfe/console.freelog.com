@@ -135,11 +135,11 @@ export default {
           } else {
             presentable.isOnline = 0
           }
-          return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
-            isOnline: presentable.isOnline
+          return this.$axios.put(`/v1/presentables/${presentable.presentableId}/switchOnlineState`, {
+            onlineState: presentable.isOnline
           }).then((res) => {
             presentable.isLoading = false
-            if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+            if (res.data.errcode !== 0) {
               return Promise.reject(res.data.msg || this.$t('presentable.updateFailTip'))
             }
           })
@@ -154,12 +154,12 @@ export default {
     presentableOnlineOrOffline(presentable) {
       presentable.isLoading = true
       presentable.isOnline = presentable.isOnlineChecked ? 0 : 1
-      return this.$axios.put(`/v1/presentables/${presentable.presentableId}/onlineOrOffline`, {
-        isOnline: presentable.isOnline
+      return this.$axios.put(`/v1/presentables/${presentable.presentableId}/switchOnlineState`, {
+        onlineState: presentable.isOnline
       })
         .then((res) => {
           presentable.isLoading = false
-          if (!(res.data.errcode === 0 && res.data.errcode === 0)) {
+          if (res.data.errcode !== 0) {
             return Promise.reject(res.data.msg || this.$t('presentable.updateFailTip'))
           } else {
             presentable.isOnlineChecked = !!presentable.isOnline

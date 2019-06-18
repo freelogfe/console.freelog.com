@@ -443,7 +443,7 @@
             center
             :visible.sync="showSearchResourceDialog"
         >
-            <release-search :mock-tab="true" @add="addDepReleaseHandler"></release-search>
+            <release-search :tabLayout="['mock-search', 'search', 'my-release', 'favor']" @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
         <!-- 上传文件有问题的 dialog -->

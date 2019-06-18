@@ -104,7 +104,7 @@
                   :disabled="rSubordinateNodesIds.indexOf(node.nodeId) !== -1"
           >{{node.nodeName}}</el-checkbox>
         </el-checkbox-group>
-        <div class="rdwr-no-nodes">
+        <div class="rdwr-no-nodes" v-else>
           <el-alert type="warning" show-icon :closable="false">
             <div class="" slot="title">
               你还没有创建节点；<a href="/node/create" target="_blank">前去创建？</a>

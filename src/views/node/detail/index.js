@@ -1,7 +1,7 @@
 import {NODE_STATUS} from '@/config/node'
 import ClipBoard from '@/components/clipboard/index.vue'
 import {mapGetters} from 'vuex'
-import NodePresentables from '../presentables/index.vue'
+import NodePresentables from '../presentables-V4/index.vue'
 
 export default {
   name: 'node-detail',

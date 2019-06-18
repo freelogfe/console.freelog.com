@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     resolvePolicy(policy) {
-      if (policy.segmentId) {
+      if (policy.policyId) {
         this.mode = 'preview'
         let policyText = policy.policyText
         const ret = compile(policyText)
@@ -64,7 +64,7 @@ export default {
         Object.assign(this.policy, {
           policyName: policy.policyName || '',
           policyText,
-          policySegmentId: policy.segmentId,
+          policySegmentId: policy.policyId,
           disabled: policy.status === 0
         })
       }

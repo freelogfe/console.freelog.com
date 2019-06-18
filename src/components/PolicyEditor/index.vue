@@ -45,7 +45,7 @@
       </div>
       <div class="policy-content-input-wrap policy-editing clearfix">
         <div class="policy-content-input-padding">
-          <div v-if="policy.segmentId" class="policy-text" v-html="policy.policyText"></div>
+          <div v-if="policy.policyId" class="policy-text" v-html="policy.policyText"></div>
           <template v-else>
             <div class="policy-input-area">
               <div class="input-placeholder">{{policy.policyText}}</div>
@@ -58,7 +58,7 @@
             </div>
           </template>
         </div>
-        <div class="policy-content-input-ft" v-if="showFooterBtns">
+        <div class="policy-content-input-ft" v-if="showFooterBtns && mode !== 'preview'">
           <el-button round size="mini" @click="cancelPolicyHandler">{{$t('common.cancel')}}</el-button>
           <el-button round size="mini" type="primary" @click="savePolicyHandler" v-if="autoSave === false">{{$t('common.save')}}</el-button>
         </div>

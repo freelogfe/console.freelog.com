@@ -1,9 +1,10 @@
 <template>
   <div class="fl-policy-list-wrap">
-    <policy-editor v-for="policy in policyList"
-                   :policy="policy"
-                   @save="savePolicyHandler"
-                   @delete="deletePolicyHandler"></policy-editor>
+    <policy-editor
+            v-for="policy in policyList"
+            :policy="policy"
+            @save="savePolicyHandler"
+            @delete="deletePolicyHandler"></policy-editor>
     <div>
       <el-button type="text" class="add-new-policy-btn" @click="addNewPolicyHandler">
         <span><i class="el-icon-plus"></i>{{$t('components.policyList.addPolicy')}}<i class="dot solid" v-if="!policyList.length"></i></span>
@@ -65,25 +66,25 @@
         }
       },
       getChangeData(policy) {
-        var policies = {
-          updatePolicySegments: [],
-          addPolicySegments: []
+        var policyInfo = {
+          updatePolicies: [],
+          addPolicies: []
         }
-        if (policy.policySegmentId) {
-          policies.updatePolicySegments = policies.updatePolicySegments || []
-          policies.updatePolicySegments.push({
-            policySegmentId: policy.policySegmentId,
+        if (policy.policyId) {
+          policyInfo.updatePolicies = policyInfo.updatePolicies || []
+          policyInfo.updatePolicies.push({
+            policyId: policy.policyId,
             policyName: policy.policyName,
             status: policy.disabled ? 0 : 1
           })
         } else if (policy.policyText) {
-          policies.addPolicySegments = policies.addPolicySegments || []
-          policies.addPolicySegments.push({
+          policyInfo.addPolicies = policyInfo.addPolicies || []
+          policyInfo.addPolicies.push({
             policyName: policy.policyName,
             policyText: btoa(policy.policyText)
           })
         }
-        return {policies}
+        return {policyInfo}
       },
       savePolicyHandler(policy) {
         var payload = this.getChangeData(policy)
@@ -97,7 +98,7 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" type="text/less" scoped>
   .fl-policy-list-wrap {
     .add-new-policy-btn {
       color: #333333;

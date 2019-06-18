@@ -264,10 +264,7 @@ export default {
     ,
     // 获取授权：即创建presentable
     authSign() {
-      this.$message({ type: 'warning', message: '未完成开发！' })
-      return
-
-      const targetNodes = this.checkedNodeList.filter(n => this.rSubordinateNodesIds.indexOf(n.nodeId) > -1)
+      const targetNodes = this.checkedNodeList.filter(nodeId => this.rSubordinateNodesIds.indexOf(nodeId) === -1)
       targetNodes.forEach(nodeId => {
         this.$services.PresentablesService.post({
           nodeId,
@@ -279,9 +276,12 @@ export default {
           .then(res => res.data)
           .then(res => {
             if(res.errcode === 0) {
-
+              this.$message({ type: 'success', message: '授权签约成功！' })
+            }else {
+              this.$error.showErrorMessage(res.msg)
             }
           })
+          .catch(this.$error.showErrorMessage)
       })
     },
     // 获取 发行以及其上抛的解决方式

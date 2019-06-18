@@ -25,8 +25,15 @@ export default {
   },
 
   watch: {
-    contracts() {
-      this.initView()
+    contracts(newContracts, oldContracts) {
+      const newCIds = newContracts.map(c => c.contractId)
+      const oldCIds = oldContracts.map(c => c.contractId)
+      for(let i = 0; i < newCIds.length; i++) {
+        if(oldCIds.indexOf(newCIds[i]) === -1) {
+          this.initView()
+          break
+        }
+      }
     }
   },
 
@@ -35,9 +42,9 @@ export default {
       this.initView()
     }
   },
+
   methods: {
     initView() {
-
       if (!this.contracts.length || this.shouldUpdate() === false) return
 
       this.masterContract = {}
@@ -74,16 +81,16 @@ export default {
         return false
       }
     },
-    formatContracts({contracts, resources}) {
-      var resourcesMap = {}
+    formatContracts({contracts, releases}) {
+      var releasesMap = {}
       var contractList = []
 
-      resources.forEach(resource => {
-        resourcesMap[resource.resourceId] = resource
+      releases.forEach(release => {
+        releasesMap[release.releaseId] = release
       })
 
       contracts.forEach((contract) => {
-        contract.resourceDetail = resourcesMap[contract.resourceId]
+        contract.releaseDetail = releasesMap[contract.partyOne]
         if (contract.contractId === this.masterContract.contractId) {
           Object.assign(this.masterContract, contract)
           ContractUtils.format(this.masterContract)
@@ -96,30 +103,30 @@ export default {
     },
     loadData() {
       var contractIds = []
-      var resourceIds = []
 
       this.contracts.map(contract => {
         if (contract.contractId){
           contractIds.push(contract.contractId)
         }
-        resourceIds.push(contract.resourceId)
         if (contract.isMasterContract) {
           this.masterContract = contract
         }
       })
 
-      resourceIds = Array.from(new Set(resourceIds))
-      return Promise.all([this.loadContractInfos(contractIds), this.loadResourcesInfo(resourceIds)])
+      return this.loadContractInfos(contractIds)
+        .then(this.loadReleasesInfo)
+    },
+    loadReleasesInfo(contracts) {
+      const releaseIds = contracts.map(c => c.partyOne).join(',')
+      return this.$services.ReleaseService.get(`list?releaseIds=${releaseIds}`)
+        .then(res => res.data)
         .then(res => {
-          var [contracts, resources] = res
-          return {
-            contracts,
-            resources
+          if(res.errcode === 0) {
+            return { contracts, releases: res.data }
+          }else {
+            return { contracts, releases: [] }
           }
         })
-    },
-    loadResourcesInfo(resourceIds) {
-      return loadResources(resourceIds)
     },
     loadContractInfos(contractIds) {
       return this.$services.contractRecords.get({
