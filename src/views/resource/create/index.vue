@@ -35,7 +35,7 @@
                             style="margin-left: 30px;"
                             type="primary"
                             round
-                            @click="create2AddHandler"
+                            @click="handleRelease"
                         >
                             <!--                            {{$t('resource.createDoneText')}}-->
                             {{isResourceIdEditMode ? '保存': '创建'}}并发行
@@ -44,6 +44,27 @@
                 </div>
             </resource-input>
         </div>
+
+        <el-dialog
+            width="750px"
+            top="10vh"
+            center
+            :visible.sync="isShowReleaseSearchDialog"
+        >
+            <release-search
+                :tabLayout="['my-release']"
+                :historicalReleases="releasesList"
+                @add="releaseSearchHandler"
+            ></release-search>
+            <div slot="footer">
+                <el-button
+                    round
+                    type="primary"
+                    class="create-release-btn"
+                    @click="createNewRelease">创建新发行
+                </el-button>
+            </div>
+        </el-dialog>
     </section>
 </template>
 
