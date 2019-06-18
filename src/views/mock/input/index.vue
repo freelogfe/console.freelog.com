@@ -161,8 +161,16 @@
                                             font-size: 14px;
                                             font-weight: 600;">
 
-                                                <span v-if="uploaderStates.resource.percentage < 100">
-                                                    {{uploaderStates.resource.percentage + '%'}}
+                                                <span
+                                                    style="display: flex; align-items: center; justify-content: space-between;"
+                                                    v-if="uploaderStates.resource.percentage < 100"
+                                                >
+                                                    <span>{{uploaderStates.resource.percentage + '%'}}</span>
+                                                    <a
+                                                        @click="clearUploaderHandler('resource')"
+                                                        style="font-size: 20px; color: #D5D5D5;"
+                                                        class="el-icon-circle-close"
+                                                    ></a>
                                                 </span>
 
                                                 <div
@@ -331,7 +339,7 @@
 
             <!-- 依赖列表 -->
             <div class="input-item-wrap">
-<!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
+                <!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
                 <h4>依赖发行</h4>
                 <div
                     class="input-area"
@@ -356,7 +364,7 @@
                             type="text"
                             v-popover:depsPopTip
                             size="mini"><i class="el-icon-plus"></i>添加依赖发行
-<!--                            {{$t('resourceEditView.addDepResource')}}-->
+                            <!--                            {{$t('resourceEditView.addDepResource')}}-->
                         </el-button>
 
                     </div>
@@ -443,7 +451,8 @@
             center
             :visible.sync="showSearchResourceDialog"
         >
-            <release-search :tabLayout="['mock-search', 'search', 'my-release', 'favor']" @add="addDepReleaseHandler"></release-search>
+            <release-search :tabLayout="['mock-search', 'search', 'my-release', 'favor']"
+                            @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
         <!-- 上传文件有问题的 dialog -->

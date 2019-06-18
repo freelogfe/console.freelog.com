@@ -152,8 +152,16 @@
                                             font-size: 14px;
                                             font-weight: 600;">
 
-                                            <span v-if="uploaderStates.resource.percentage < 100">
-                                                {{uploaderStates.resource.percentage + '%'}}
+                                            <span
+                                                style="display: flex; align-items: center; justify-content: space-between;"
+                                                v-if="uploaderStates.resource.percentage < 100"
+                                            >
+                                                <span>{{uploaderStates.resource.percentage + '%'}}</span>
+                                                <a
+                                                    @click="clearUploaderHandler('resource')"
+                                                    style="font-size: 20px; color: #D5D5D5;"
+                                                    class="el-icon-circle-close"
+                                                ></a>
                                             </span>
 
                                             <div
