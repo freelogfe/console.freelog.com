@@ -521,7 +521,7 @@ export default {
                     // r.resourceId
                     return {
                         releaseId: r.releaseId,
-                        versionRange: r.latestVersion.version
+                        versionRange: r.latestVersion ? r.latestVersion.version : r.versionRange
                     };
                 });
             } else {
@@ -558,7 +558,13 @@ export default {
             return new Promise((resolve, reject) => {
                 this.validate()
                     .then(() => {
-                        const data = this.packUploadData();
+                        const data = {...this.packUploadData()};
+                        // console.log(data, 'dat214324234123adatadatadata');
+                        data.dependencyInfo = {
+                            mocks: data.dependencies.filter(i => !i.versionRange).map(i => ({mockResourceId: i.releaseId})),
+                            releases: data.dependencies.filter(i => i.versionRange)
+                        };
+                        // console.log(data, 'datadatadatadatadata');
                         if (!this.$route.query.mockResourceId) {
                             this.createResource(data)
                                 .then(resolve)

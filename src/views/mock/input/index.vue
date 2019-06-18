@@ -150,8 +150,8 @@
                                                 style="flex-shrink: 1; width: 100%;"
                                             ></el-progress>
                                             <!-- 进度条右侧 -->
+<!--                                            v-if="!uploaderStates.resource.isExistResource"-->
                                             <div
-                                                v-if="!uploaderStates.resource.isExistResource"
                                                 style="
                                             width: 130px;
                                             box-sizing: border-box;
