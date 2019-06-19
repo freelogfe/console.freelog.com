@@ -1,16 +1,21 @@
 import {onloadResourceDetail} from '@/data/resource/loader'
 import ResourceInput from '../input/index.vue'
+import ReleaseSearch from '@/views/release/search/index.vue'
 
 export default {
     name: 'resource-creator',
     components: {
-        ResourceInput
+        ResourceInput,
+        ReleaseSearch,
     },
     data() {
         return {
             resourceDetail: {},
             // 是否是资源编辑模式，而非创建模式
             isResourceIdEditMode: !!this.$route.query.resourceId,
+
+            isShowReleaseSearchDialog: false,
+            releasesList: [],                   // 所有发行集合
         }
     },
     mounted() {
@@ -30,6 +35,9 @@ export default {
             this.isRequesting = true
             if (this.$refs.inputArea.nextHandler) {
                 this.$refs.inputArea.nextHandler(this.data).then((detail) => {
+                    // console.log(detail, 'detaildetaildetaildetaildetail');
+                    this.resourceId = detail.resourceId;
+
                     if (detail && detail.resourceId) {
                         Object.assign(this.resourceDetail, detail)
                     }
@@ -65,11 +73,17 @@ export default {
                 }, 5e2)
             })
         },
-        create2AddHandler() {
+        create2AddHandler(bool) {
             const detail = this.resourceDetail;
             this.executeNext(() => {
                 if (detail.resourceId) {
-                    this.$router.push(`/resource/detail/${detail.resourceId}`);
+                    if (!bool) {
+                        this.$router.push(`/resource/detail/${detail.resourceId}`);
+                    }
+                    // else {
+                    //     this.$router.push(`/release/create?resourceId=${this.resourceId}`)
+                    // }
+
                     this.$message.success(this.$t('resource.createSuccess'))
                 }
             })
@@ -80,6 +94,82 @@ export default {
                     this.$router.push('/resource/list')
                 }).catch(() => {
             })
-        }
+        },
+
+        // 获取"所属发行列表"
+        fetchReleaseList() {
+            this.$services.ResourceService.get(`${this.resourceId}/releases`)
+                .then(res => res.data)
+                .then(res => {
+                    if (res.errcode === 0) {
+                        this.releasesList = res.data
+                    }
+                })
+        },
+        // 添加依赖
+        tapAddDependencyBtn() {
+            // 若该资源已发行，则不能修改依赖
+            if (this.releasesList.length > 0) return
+            this.isShowReleaseSearchDialog = true
+            this.releaseSearchType = 'dependency'
+        },
+        updateResourceDetail() {
+            const params = {
+                aliasName: this.resourceDetail.resourceInfo.aliasName,
+                description: this.resourceDetail.resourceInfo.description,
+            }
+            if (this.releasesList.length === 0) {
+                params.dependencies = this.dependencies.map(dep => {
+                    return {releaseId: dep.releaseId, versionRange: dep.latestVersion.version}
+                })
+            }
+            if (this.resPreviewImage !== '') {
+                params.previewImages = [this.resPreviewImage]
+            }
+            var promise = null
+            try {
+                params.meta = JSON.parse(this.meta)
+                promise = this.$services.ResourceService.put(this.resourceId, params).then(res => res.data)
+            } catch (e) {
+                promise = Promise.reject(`JSON格式有误:${e}`)
+            }
+            return promise.catch(this.$error.showErrorMessage)
+        },
+
+        releaseSearchHandler(release) {
+            switch (this.releaseSearchType) {
+                case 'release': {
+                    if (release.resourceType === this.resourceDetail.resourceInfo.resourceType) {
+                        // 跳转 发行编辑页
+                        this.$router.push(`/release/add?releaseId=${release.releaseId}&resourceId=${this.resourceId}`)
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: `所选发行的资源类型必须为${this.resourceDetail.resourceInfo.resourceType}`
+                        })
+                    }
+                    break
+                }
+                case 'dependency': {
+                    this.addDependency(release)
+                    break
+                }
+            }
+        },
+        // 创建一个全新的发行
+        createNewRelease() {
+            // 跳转 发行中间页
+            this.$router.push(`/release/create?resourceId=${this.resourceId}`)
+        },
+        handleRelease() {
+            this.create2AddHandler(true)
+            // .then(data => {
+            this.addToRelease();
+            // })
+        },
+        addToRelease() {
+            this.isShowReleaseSearchDialog = true
+            this.releaseSearchType = 'release'
+        },
     }
 }

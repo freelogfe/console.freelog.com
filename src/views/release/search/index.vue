@@ -2,42 +2,6 @@
   <div class="releases-search-wrapper">
     <el-tabs v-model="activeName">
 
-      <!-- 我的 mock 资源 -->
-      <el-tab-pane
-              v-if="tabLayout.indexOf('mock-search') !== -1"
-              :label="'我的mock资源'"
-              name="mock-search"
-      >
-        <div class="search-input-area">
-          <el-input
-                  v-model="mockSearchInput"
-                  class="search-release-input"
-                  clearable
-                  ref="mockSearchInputRef"
-                  @keyup.native.enter="mockSearchHandler"
-                  :placeholder="$t('search.placeholder')">
-          </el-input>
-        </div>
-        <!--                :fetch="mockSearchReleases"-->
-        <lazy-list-view
-                :list="mockSearchReleases"
-                ref="mockSearchView"
-                class="search-release-list"
-                :height="60"
-                :fetch="mockSearchDataHandler"
-        >
-          <template slot-scope="scope">
-            <release-item
-                    type="search"
-                    :historicalReleaseIds="historicalReleaseIds"
-                    :release="scope.data"
-                    @add="addToMockReleaseHandler"
-            >
-            </release-item>
-          </template>
-        </lazy-list-view>
-      </el-tab-pane>
-
       <!-- 全局搜索 -->
       <el-tab-pane v-if="tabLayout.indexOf('search') !== -1" :label="$t('search.searchTitle')" name="search">
         <div class="search-input-area">
@@ -85,6 +49,42 @@
                     @add="addToReleaseHandler"></release-item>
           </template>
           <div class="no-release-items" slot="empty">{{$t('search.noFavorReleases')}}</div>
+        </lazy-list-view>
+      </el-tab-pane>
+
+      <!-- 我的 mock 资源 -->
+      <el-tab-pane
+              v-if="tabLayout.indexOf('mock-search') !== -1"
+              :label="'我的mock资源'"
+              name="mock-search"
+      >
+        <div class="search-input-area">
+          <el-input
+                  v-model="mockSearchInput"
+                  class="search-release-input"
+                  clearable
+                  ref="mockSearchInputRef"
+                  @keyup.native.enter="mockSearchHandler"
+                  :placeholder="$t('search.placeholder')">
+          </el-input>
+        </div>
+        <!--                :fetch="mockSearchReleases"-->
+        <lazy-list-view
+                :list="mockSearchReleases"
+                ref="mockSearchView"
+                class="search-release-list"
+                :height="60"
+                :fetch="mockSearchDataHandler"
+        >
+          <template slot-scope="scope">
+            <release-item
+                    type="search"
+                    :historicalReleaseIds="historicalReleaseIds"
+                    :release="scope.data"
+                    @add="addToMockReleaseHandler"
+            >
+            </release-item>
+          </template>
         </lazy-list-view>
       </el-tab-pane>
 
