@@ -382,7 +382,7 @@ export default {
             const hash = await getSHA1Hash(file);
             const res = await axios.get(`/v1/resources/${hash}`);
             // console.log(res.data.errcode, 'resres');
-            if (res.data.errcode === 0) {
+            if (res.data.data) {
                 this.uploadErrorDialogText = '该资源已存在，不能重复创建';
                 throw new Error();
             }
