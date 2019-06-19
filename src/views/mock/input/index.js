@@ -362,6 +362,10 @@ export default {
             this.resetUploaderState(this.uploaderStates.thumbnail);
             return true;
         },
+        /**
+         * 清空上传状态
+         * @param uploader
+         */
         clearUploaderHandler(uploader) {
             let $uploader;
             const uploaderState = this.uploaderStates[uploader];
