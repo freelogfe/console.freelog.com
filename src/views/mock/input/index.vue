@@ -150,7 +150,7 @@
                                                 style="flex-shrink: 1; width: 100%;"
                                             ></el-progress>
                                             <!-- 进度条右侧 -->
-<!--                                            v-if="!uploaderStates.resource.isExistResource"-->
+                                            <!--                                            v-if="!uploaderStates.resource.isExistResource"-->
                                             <div
                                                 style="
                                             width: 130px;
@@ -451,7 +451,7 @@
             center
             :visible.sync="showSearchResourceDialog"
         >
-            <release-search :tabLayout="['mock-search', 'search', 'my-release', 'favor']"
+            <release-search :tabLayout="['search', 'my-release', 'favor', 'mock-search']"
                             @add="addDepReleaseHandler"></release-search>
         </el-dialog>
 
