@@ -11,7 +11,7 @@
               width="100">
         <template slot-scope="scope">
           <div>
-            <a :href="`/resource/detail/${scope.row.resourceId}`" target="_blank">
+            <a :href="`/release/detail/${scope.row.releaseInfo.releaseId}`" target="_blank">
               <img :src="scope.row.releaseInfo.postImgUrl | padImage"
                    :class="{'resource-default-preview':!scope.row.releaseInfo.postImgUrl}"
                    alt="">
@@ -68,7 +68,9 @@
             </router-link>
             <span>|</span>
             <router-link :to="row.detailLink + '?tab=policy'">
-              <el-button type="text" class="nav-link-btn">{{ $t('node.tabTitles.policy') }}<i class="dot" v-if="(row.status&2) !== 2"></i>
+              <!--<el-button type="text" class="nav-link-btn">{{ $t('node.tabTitles.policy') }}<i class="dot" v-if="(row.status&2) !== 2"></i>-->
+              <!--</el-button>-->
+              <el-button type="text" class="nav-link-btn">{{ $t('node.tabTitles.policy') }}<i class="dot" v-if="row.policies.length === 0"></i>
               </el-button>
             </router-link>
           </div>
@@ -153,6 +155,7 @@ export default {
 
       var maps = {}
       var presentablesIdMap = {}
+      const promises = []
 
       list.forEach((item, index) => {
         let contract = this.getPresentableContract(item)
@@ -165,12 +168,20 @@ export default {
 
       const presentableIds = Object.keys(presentablesIdMap)
       if(presentableIds) {
-        this.fetchPresentablesContractState(presentableIds)
+        const p = this.fetchPresentablesContractState(presentableIds)
           .then(data => {
-            
+            data.forEach(item => {
+              const { authResult, presentableId } = item
+              const presentable = presentablesIdMap[presentableId]
+              presentable.isContractActived = !!authResult.isAuth
+            })
           })
+        promises.push(p)
       }
-      this.fillWarningTips(list)
+      Promise.all(promises)
+        .then(() => {
+          this.fillWarningTips(list)
+        })
 
       return list
     },

@@ -86,7 +86,8 @@ export default {
 
       if (presentable.isLoading) return
 
-      if (RESOURCE_TYPES.pageBuild === presentable.resourceInfo.resourceType) {
+      console.log('presentable --', JSON.parse(JSON.stringify(presentable)))
+      if (RESOURCE_TYPES.pageBuild === presentable.releaseInfo.resourceType) {
         this.isHadPageBuild().then(is => {
           if (is) {
             let text = presentable.isOnline ?

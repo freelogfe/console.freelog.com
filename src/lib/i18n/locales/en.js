@@ -301,8 +301,8 @@ export default {
 
     contractDetail: {
       title: 'contract detail',
-      resourceName: 'resource name',
-      resourceType: 'resource type',
+      releaseName: 'release name',
+      releaseType: 'release type',
       activateContract: 'activate contract',
       triggerContract: 'activate',
       authState: 'Authorization status: ',

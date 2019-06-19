@@ -1,6 +1,6 @@
 import TableView from '@/components/TableView/index.vue'
 import ContractUtils from '@/data/contract/utils'
-import {loadResources} from '@/data/resource/loader'
+// import {loadResources} from '@/data/resource/loader'
 import ContractDetail from '@/components/ContractDetail/index.vue'
 
 export default {

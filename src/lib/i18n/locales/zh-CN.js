@@ -307,8 +307,8 @@ export default {
 
         contractDetail: {
             title: '合约详情',
-            resourceName: '资源名称',
-            resourceType: '资源类型',
+            releaseName: '发行名称',
+            releaseType: '发行类型',
             activateContract: '激活合同',
             triggerContract: '立即激活',
             authState: '授权状态：',

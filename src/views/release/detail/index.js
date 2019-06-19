@@ -59,7 +59,8 @@ export default {
       return map
     },
   }, mapGetters({
-    nodes: 'nodes'
+    nodes: 'nodes',
+    session: 'session'
   })),
   watch: {
     activeReleaseVersion(newV, oldV) {
@@ -117,7 +118,13 @@ export default {
         })
     },
     fetchReleaseSubordinateNodes() {
-      this.$services.PresentablesService.get(`releaseSubordinateNodes?releaseId=${this.releaseId}`)
+      this.$services.PresentablesService.get(`list`, {
+        params: {
+          releaseIds: this.releaseId,
+          userId: this.session.user.userId,
+          projection: 'nodeId'
+        }
+      })
         .then(res => res.data)
         .then(res => {
           if(res.errcode === 0) {
@@ -276,6 +283,7 @@ export default {
           .then(res => res.data)
           .then(res => {
             if(res.errcode === 0) {
+              this.rSubordinateNodesIds.push(res.data.nodeId)
               this.$message({ type: 'success', message: '授权签约成功！' })
             }else {
               this.$error.showErrorMessage(res.msg)

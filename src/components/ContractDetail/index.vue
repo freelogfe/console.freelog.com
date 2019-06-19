@@ -6,8 +6,8 @@
                           :showRefreshing="true"
                           :labelWidth="85">
       <template slot="prepend">
-        <el-form-item :label="$t('components.contractDetail.resourceName')">{{resourceDetail.resourceName}}</el-form-item>
-        <el-form-item :label="$t('components.contractDetail.resourceType')">{{resourceDetail.resourceType}}</el-form-item>
+        <el-form-item :label="$t('components.contractDetail.releaseName')">{{releaseDetail.releaseName}}</el-form-item>
+        <el-form-item :label="$t('components.contractDetail.releaseType')">{{releaseDetail.resourceType}}</el-form-item>
       </template>
       <el-form-item :label="$t('components.contractDetail.activateContract')"
                     v-if="contractDetail.status === 1" class="flex-grid">
@@ -46,7 +46,7 @@
         dialogTitle: '',
         showEventExecDialog: false,
         contractDetail: {},
-        resourceDetail: {},
+        releaseDetail: {},
         account: '',
         options: [],
         password: '',
@@ -77,13 +77,13 @@
             this.contractDetail = ContractUtils.format(contract)
           }
 
-          if (contract.resourceDetail) {
-            this.resourceDetail = contract.resourceDetail
+          if (contract.releaseDetail) {
+            this.releaseDetail = contract.releaseDetail
           } else {
-            onloadResourceDetail(contract.resourceId)
-              .then((resInfo) => {
-                this.resourceDetail = resInfo
-              })
+            // onloadResourceDetail(contract.resourceId)
+            //   .then((resInfo) => {
+            //     this.releaseDetail = resInfo
+            //   })
           }
         }
       },
