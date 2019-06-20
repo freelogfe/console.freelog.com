@@ -7,7 +7,12 @@
             <div class="rew-v-selector">
               <div class="rew-v-version-box">
                 <span class="rew-v-b-version">版本{{release.resourceVersions[selectedVersionIndex].version}}</span>
-                <span class="rew-v-b-name">{{release.resourceVersions[selectedVersionIndex].aliasName}} | {{release.resourceVersions[selectedVersionIndex].createDate | fmtDate}}</span>
+                <span class="rew-v-b-name">
+                  <router-link
+                          target="_blank"
+                          :to="`/resource/detail/${release.resourceVersions[selectedVersionIndex].resourceId}`">{{release.resourceVersions[selectedVersionIndex].aliasName}}
+                    </router-link>
+                  | {{release.resourceVersions[selectedVersionIndex].createDate | fmtDate}}</span>
                 <i class="el-icon-arrow-down" :class="{'visible': isVersionSelectorVisible}"></i>
               </div>
               <div class="rew-v-list">
@@ -117,6 +122,12 @@
         .rew-v-version-box {
           line-height: 34px; font-size: 14px; font-weight: 600; color: #333; cursor: pointer;
           span { display: inline-block; }
+          .rew-v-b-name {
+            a {
+              color: #333;
+              &:hover { text-decoration: underline; }
+            }
+          }
           .rew-v-b-version { width: 100px; }
           .el-icon-arrow-down {
             margin-left: 15px;

@@ -59,8 +59,9 @@ export default {
       isMetaEditing: false,
       metaValid: false,
       isShowReleaseSearchDialog: false,
+      isShowReleaseDenpDialog: false,
       releaseSearchType: 'release',
-      meta: "{}"
+      meta: "{}",
     }
   },
 
@@ -333,7 +334,7 @@ export default {
     tapAddDependencyBtn() {
       // 若该资源已发行，则不能修改依赖
       if(this.releasesList.length > 0) return
-      this.isShowReleaseSearchDialog = true
+      this.isShowReleaseDenpDialog = true
       this.releaseSearchType = 'dependency'
     },
     releaseSearchHandler(release) {

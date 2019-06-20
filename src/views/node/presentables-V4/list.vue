@@ -11,7 +11,7 @@
               width="100">
         <template slot-scope="scope">
           <div>
-            <a :href="`/release/detail/${scope.row.releaseInfo.releaseId}`" target="_blank">
+            <a :href="`/release/edit/${scope.row.releaseInfo.releaseId}`" target="_blank">
               <img :src="scope.row.releaseInfo.postImgUrl | padImage"
                    :class="{'resource-default-preview':!scope.row.releaseInfo.postImgUrl}"
                    alt="">
