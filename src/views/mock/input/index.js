@@ -338,6 +338,10 @@ export default {
         fileChangeHandler(file, fileList) {
             this.fileLimitValidator(file, fileList);
         },
+        /**
+         * 上传封面成功
+         * @param res
+         */
         imageUploadSuccessHandler(res) {
             this.uploaderStates.thumbnail.isUploading = false;
             if (res.errcode === 0) {
