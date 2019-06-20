@@ -5,6 +5,7 @@ import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
 import {axios} from '@/lib';
+import CryptoJS from 'crypto-js';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -338,6 +339,10 @@ export default {
             this.resetUploaderState(this.uploaderStates.thumbnail);
             return true;
         },
+        /**
+         * 清空上传状态
+         * @param uploader
+         */
         clearUploaderHandler(uploader) {
             let $uploader;
             const uploaderState = this.uploaderStates[uploader];
@@ -365,13 +370,21 @@ export default {
          * 文件资源上传之前
          * @param file
          */
-        beforeUploadHandler(file) {
+        async beforeUploadHandler(file) {
             this.resetUploaderState(this.uploaderStates.resource, file);
 
             if (file.size > 50 * 1048576) {
                 // console.log()
                 this.uploadErrorDialogText = '资源最大不超过50M';
-                return false;
+                throw new Error();
+            }
+
+            const hash = await getSHA1Hash(file);
+            const res = await axios.get(`/v1/resources/${hash}`);
+            // console.log(res.data.errcode, 'resres');
+            if (res.data.data) {
+                this.uploadErrorDialogText = '该资源已存在，不能重复创建';
+                throw new Error();
             }
         },
         resetUploaderState(uploader, file) {
@@ -647,4 +660,20 @@ export default {
             this.deleteUploadedFile();
         },
     }
+}
+
+/**
+ * 根据 File 获取 SHA1 Hash 字符串
+ * @param file
+ * @return {Promise<string>}
+ */
+function getSHA1Hash(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+            const hash = CryptoJS.SHA1(evt.target.result);
+            resolve(hash.toString(CryptoJS.enc.Hex));
+        };
+        reader.readAsBinaryString(file);
+    });
 }
