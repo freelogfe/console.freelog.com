@@ -78,3 +78,12 @@
     @import "index.less";
     @import "../../../styles/footer.less";
 </style>
+
+<style lang="less">
+    .create-resource-wrapper {
+        .el-tabs__content {
+            max-height: 370px;
+            overflow: auto;
+        }
+    }
+</style>
