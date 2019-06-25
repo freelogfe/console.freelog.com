@@ -19,49 +19,60 @@ export default {
         }
     },
     mounted() {
-        this.$axios.get('')
-        const params = this.$route.params
+        // this.$axios.get('')
+        const params = this.$route.params;
         if (params.resourceId) {
             onloadResourceDetail(params.resourceId)
                 .then((data) => {
-                    this.resourceDetail = data
-                }).catch(this.$error.showErrorMessage)
+                    this.resourceDetail = data;
+                })
+                .catch(this.$error.showErrorMessage);
         }
     },
     methods: {
         executeNext(callback) {
-            if (this.isRequesting) return
+            if (this.isRequesting) return;
 
-            this.isRequesting = true
+            this.isRequesting = true;
             if (this.$refs.inputArea.nextHandler) {
-                this.$refs.inputArea.nextHandler(this.data).then((detail) => {
-                    // console.log(detail, 'detaildetaildetaildetaildetail');
-                    this.resourceId = detail.resourceId;
+                this.$refs.inputArea.nextHandler(this.data).then(
+                    (detail) => {
+                        console.log(detail, 'detaildetaildetaildetaildetail');
+                        this.resourceId = detail.resourceId;
 
-                    if (detail && detail.resourceId) {
-                        Object.assign(this.resourceDetail, detail)
-                    }
-                    this.isRequesting = false
-                    callback()
-                }).catch((err) => {
-                    this.isRequesting = false
-                    this.$nextTick(() => {
-                        const $error = this.$el.querySelector('.el-form-item__error')
-                        if ($error) {
-                            $error.parentElement.scrollIntoView()
-                            window.scrollBy(0, -80) // 填补fixed占位的高度
-                        } else {
-                            this.$error.showErrorMessage(err)
+                        if (detail && detail.resourceId) {
+                            Object.assign(this.resourceDetail, detail);
                         }
-                    })
-                })
+                        this.isRequesting = false;
+                        callback();
+                    },
+                    () => {
+                        console.log('!@#$!@#@#$@#$');
+                        this.isRequesting = false;
+                        callback(true);
+                    }
+                )
+                    .catch((err) => {
+                        console.log('1234123423');
+                        this.isRequesting = false;
+                        callback(true);
+                        this.$nextTick(() => {
+                            const $error = this.$el.querySelector('.el-form-item__error')
+                            if ($error) {
+                                $error.parentElement.scrollIntoView()
+                                window.scrollBy(0, -80) // 填补fixed占位的高度
+                            } else {
+                                this.$error.showErrorMessage(err)
+                            }
+                        });
+                    });
             } else {
                 this.isRequesting = false
                 callback()
             }
         },
         create2QuitHandler() {
-            this.executeNext(() => {
+            this.executeNext((bool) => {
                 const detail = this.resourceDetail
                 if (this.$route.params.resourceId) {
                     this.$message.success(this.$t('resource.updateSuccess'))
@@ -74,19 +85,30 @@ export default {
             })
         },
         create2AddHandler(bool) {
-            const detail = this.resourceDetail;
-            this.executeNext(() => {
-                if (detail.resourceId) {
-                    if (!bool) {
-                        this.$router.push(`/resource/detail/${detail.resourceId}`);
-                    }
-                    // else {
-                    //     this.$router.push(`/release/create?resourceId=${this.resourceId}`)
-                    // }
 
-                    this.$message.success(this.$t('resource.createSuccess'))
-                }
-            })
+            return new Promise((resolve, reject) => {
+                const detail = this.resourceDetail;
+                this.executeNext((boo) => {
+                    if (boo) {
+                        reject();
+                        return;
+                    }
+
+                    resolve();
+
+                    if (detail.resourceId) {
+                        if (!bool) {
+                            this.$router.push(`/resource/detail/${detail.resourceId}`);
+                        }
+                        // else {
+                        //     this.$router.push(`/release/create?resourceId=${this.resourceId}`)
+                        // }
+
+                        this.$message.success(this.$t('resource.createSuccess'))
+                    }
+                })
+            });
+
         },
         cancelHandler() {
             this.$confirm(this.$t('resource.cancelQuestion'))
@@ -161,15 +183,28 @@ export default {
             // 跳转 发行中间页
             this.$router.push(`/release/create?resourceId=${this.resourceId}`)
         },
-        handleRelease() {
-            this.create2AddHandler(true)
+        /**
+         * 点击『创建并发行』
+         * @return {Promise<void>}
+         */
+        async handleRelease() {
+            try {
+                await this.create2AddHandler(true);
+                this.addToRelease();
+            } catch (e) {
+
+            }
+
             // .then(data => {
-            this.addToRelease();
+
             // })
         },
+        /**
+         * 添加发布
+         */
         addToRelease() {
-            this.isShowReleaseSearchDialog = true
-            this.releaseSearchType = 'release'
+            this.isShowReleaseSearchDialog = true;
+            this.releaseSearchType = 'release';
         },
     }
 }

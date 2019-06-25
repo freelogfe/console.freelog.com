@@ -513,6 +513,7 @@ export default {
         },
         nextHandler() {
             return new Promise((resolve, reject) => {
+                console.log('asdfasdfasdfdsf');
                 this.validate()
                     .then(() => {
                         const data = this.packUploadData();
