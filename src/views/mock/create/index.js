@@ -71,7 +71,7 @@ export default {
          * 点击『创建完成』按钮
          */
         create2AddHandler() {
-            const detail = this.resourceDetail;
+            // const detail = this.resourceDetail;
             // 向服务端提交数据
             this.executeNext(() => {
                 // if (detail.resourceId) {
@@ -79,7 +79,12 @@ export default {
                 // }
                 // 数据提交成功后返回列表展示页
                 this.$router.back();
-                this.$message.success(this.$t('resource.createSuccess'));
+                if(this.isEditState){
+                    this.$message.success('保存成功');
+                } else {
+                    this.$message.success(this.$t('resource.createSuccess'));
+                }
+
             })
         },
         /**
