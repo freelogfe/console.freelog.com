@@ -105,7 +105,8 @@ function isSafeUrl(url) {
 }
 
 function gotoLogin(redirect) {
-  const loginPath = '/login'
+  // const loginPath = '/login'
+  const loginPath = '/auth'
   console.log(' --- ',  loginPath, window.location.pathname)
   if (window.location.pathname === loginPath) {
     return
