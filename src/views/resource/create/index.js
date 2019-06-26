@@ -11,6 +11,7 @@ export default {
     data() {
         return {
             resourceDetail: {},
+            detailData: {},
             // 是否是资源编辑模式，而非创建模式
             isResourceIdEditMode: !!this.$route.query.resourceId,
 
@@ -38,6 +39,7 @@ export default {
                 this.$refs.inputArea.nextHandler(this.data).then(
                     (detail) => {
                         console.log(detail, 'detaildetaildetaildetaildetail');
+                        this.detailData = detail;
                         this.resourceId = detail.resourceId;
 
                         if (detail && detail.resourceId) {
@@ -159,25 +161,45 @@ export default {
         },
 
         releaseSearchHandler(release) {
-            switch (this.releaseSearchType) {
-                case 'release': {
-                    if (release.resourceType === this.resourceDetail.resourceInfo.resourceType) {
-                        // 跳转 发行编辑页
-                        this.$router.push(`/release/add?releaseId=${release.releaseId}&resourceId=${this.resourceId}`)
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: `所选发行的资源类型必须为${this.resourceDetail.resourceInfo.resourceType}`
-                        })
-                    }
-                    break
+            // switch (this.releaseSearchType) {
+            //     case 'release': {
+            // console.log(resourceDetail, 'resourceDetailresourceDetailresourceDetail');
+            setTimeout(() => {
+                if (release.resourceType === this.detailData.resourceType) {
+                    // 跳转 发行编辑页
+                    this.$router.push(`/release/add?releaseId=${release.releaseId}&resourceId=${this.resourceId}`)
+                } else {
+                    this.$message({
+                        type: 'warning',
+                        message: `所选发行的资源类型必须为${this.resourceDetail.resourceInfo.resourceType}`
+                    })
                 }
-                case 'dependency': {
-                    this.addDependency(release)
-                    break
-                }
-            }
+            });
+
+                //     break
+                // }
+                // case 'dependency': {
+                //     this.addDependency(release)
+                //     break
+                // }
+            // }
         },
+        // addDependency(release) {
+        //     let isExisted = false
+        //     const leng = this.dependencies.length
+        //     for(let i = 0; i < leng; i++) {
+        //         if(this.dependencies[i].releaseId === release.releaseId) {
+        //             isExisted = true
+        //             break
+        //         }
+        //     }
+        //     if(isExisted) {
+        //         this.$message({ type: 'warning', message: `依赖中已存在发行"${release.releaseName}"!` })
+        //     }else {
+        //         this.dependencies.push(release)
+        //     }
+        //
+        // },
         // 创建一个全新的发行
         createNewRelease() {
             // 跳转 发行中间页
