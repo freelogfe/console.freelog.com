@@ -13,7 +13,7 @@
                 <div class="mock-list__buckets__title__content">
                     <div>
                         <span>Bucket列表</span>
-                        <span style="padding-left: 10px;">5/5</span>
+                        <span style="padding-left: 10px;">{{bucketsList && bucketsList.length}}/5</span>
                     </div>
                     <el-button
                         icon="el-icon-plus"
