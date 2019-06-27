@@ -305,7 +305,6 @@
                                         style="height: 100%;"
                                         alt=""
                                     >
-                                    <!--                            <template v-else>-->
                                     <div
                                         class="resource-thumbnail-input__button-cover_uploaded"
                                     >
@@ -313,25 +312,11 @@
                                         <p class="thumbnail-tip" style="color: #fff">重新上传</p>
                                     </div>
                                 </template>
-                                <!--                            </template>-->
                             </el-upload>
                             <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
                                 <span>*&nbsp;</span>
                                 <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
                             </div>
-                            <!--                        <div-->
-                            <!--                            class="thumbnail-upload-state"-->
-                            <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
-                            <!--                        >-->
-                            <!--                            <div>-->
-                            <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
-                            <!--                                <el-progress-->
-                            <!--                                    style="margin-right: 20px;"-->
-                            <!--                                    :stroke-width="10"-->
-                            <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
-                            <!--                                    color="#333333"></el-progress>-->
-                            <!--                            </div>-->
-                            <!--                        </div>-->
                         </div>
                     </div>
                 </div>
