@@ -45,37 +45,6 @@ function initEnv() {
   document.body.classList.add(win.g_freelog.Env.language || navigator.language)
 }
 
-
-// function initEnv(FreelogApp) {
-//   var mainDomain = window.location.host
-//
-//   const isTestFreelog = _isTestFreelog(mainDomain)
-//   const isLocalhost = _isLocalhost(mainDomain)
-//
-//   if(isTestFreelog) {
-//     mainDomain = `test${mainDomain}`
-//   }else if(isLocalhost) {
-//     mainDomain = `testfreelog.com`
-//   }
-//   const qiOrigin = `${location.protocol}//qi.${mainDomain}`
-//
-//   FreelogApp.Env = {
-//     isTest: isTestFreelog || isLocalhost,
-//     mainDomain,
-//     qiOrigin
-//   }
-//
-//   const authInfo = window.__auth_info__
-//   if (authInfo) {
-//     Object.assign(FreelogApp.Env, {
-//       nodeId: authInfo.__auth_node_id__ || '',
-//       userId: authInfo.__auth_user_id__ || ''
-//     })
-//   }
-//
-//   FreelogApp.$loading = { show(){}, hide(){} }
-// }
-
 function _isTestFreelog(mainDomain) {
   return new RegExp(`\\.test${mainDomain}$`).test(location.host)
 }
