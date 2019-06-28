@@ -6,6 +6,7 @@ import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
 import {axios} from '@/lib';
 import CryptoJS from 'crypto-js';
+import UploadCover from '@/components/UploadCover/index.vue';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -18,7 +19,8 @@ export default {
         ResourceMetaInfo,
         RichEditor,
         SearchResource,
-        ReleaseSearch
+        ReleaseSearch,
+        UploadCover,
     },
     data() {
         const validateResourceType = (rule, value, callback) => {
@@ -315,16 +317,20 @@ export default {
         fileChangeHandler(file, fileList) {
             this.fileLimitValidator(file, fileList);
         },
-        imageUploadSuccessHandler(res) {
-            this.uploaderStates.thumbnail.isUploading = false;
-            if (res.errcode === 0) {
-                this.formData.previewImage = res.data;
-                this.uploaderStates.thumbnail.isUploaded = true;
-                this.uploaderStates.thumbnail.percentage = 100;
-            } else {
-                this.uploaderStates.thumbnail.percentage = 0;
-                this.$error.showErrorMessage(res.msg);
-            }
+        /**
+         * 上传封面成功
+         * @param imageUrl
+         */
+        imageUploadSuccessHandler(imageUrl) {
+            // this.uploaderStates.thumbnail.isUploading = false;
+            // if (res.errcode === 0) {
+                this.formData.previewImage = imageUrl;
+                // this.uploaderStates.thumbnail.isUploaded = true;
+                // this.uploaderStates.thumbnail.percentage = 100;
+            // } else {
+            //     this.uploaderStates.thumbnail.percentage = 0;
+            //     this.$error.showErrorMessage(res.msg);
+            // }
         },
         previewImageChangeHandler(file, fileList) {
             // console.log(fileList, '###@#$@#$#$');
@@ -513,6 +519,7 @@ export default {
         },
         nextHandler() {
             return new Promise((resolve, reject) => {
+                console.log('asdfasdfasdfdsf');
                 this.validate()
                     .then(() => {
                         const data = this.packUploadData();

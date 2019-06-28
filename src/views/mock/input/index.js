@@ -5,6 +5,7 @@ import ResourceMetaInfo from '../meta/index.vue'
 import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
 import {axios} from '@/lib';
+import UploadCover from '@/components/UploadCover/index.vue';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -17,7 +18,8 @@ export default {
         ResourceMetaInfo,
         RichEditor,
         SearchResource,
-        ReleaseSearch
+        ReleaseSearch,
+        UploadCover,
     },
     data() {
         const validateResourceType = (rule, value, callback) => {
@@ -340,18 +342,18 @@ export default {
         },
         /**
          * 上传封面成功
-         * @param res
+         * @param imageUrl
          */
-        imageUploadSuccessHandler(res) {
-            this.uploaderStates.thumbnail.isUploading = false;
-            if (res.errcode === 0) {
-                this.formData.previewImage = res.data;
-                this.uploaderStates.thumbnail.isUploaded = true;
-                this.uploaderStates.thumbnail.percentage = 100;
-            } else {
-                this.uploaderStates.thumbnail.percentage = 0;
-                this.$error.showErrorMessage(res.msg);
-            }
+        imageUploadSuccessHandler(imageUrl) {
+            // this.uploaderStates.thumbnail.isUploading = false;
+            // if (res.errcode === 0) {
+                this.formData.previewImage = imageUrl;
+            //     this.uploaderStates.thumbnail.isUploaded = true;
+            //     this.uploaderStates.thumbnail.percentage = 100;
+            // } else {
+            //     this.uploaderStates.thumbnail.percentage = 0;
+            //     this.$error.showErrorMessage(res.msg);
+            // }
         },
         previewImageChangeHandler(file, fileList) {
             // console.log(fileList, '###@#$@#$#$');

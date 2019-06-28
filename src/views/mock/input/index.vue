@@ -273,65 +273,54 @@
                     >
                         <div style="font-size: 13px; color: #666; line-height: 35px;">资源封面</div>
                         <div style="display: flex; align-items: flex-end;">
-                            <el-upload
-                                style="background-color: #fff;"
-                                v-show="!uploaderStates.thumbnail.isUploading"
-                                drag
-                                ref="thumbnailUploader"
-                                accept="image/*"
-                                :action="uploadPreviewImageAction"
-                                :with-credentials="true"
-                                :data="uploader.data"
-                                :headers="uploader.headers"
-                                :on-error="errorHandler"
-                                :on-change="previewImageChangeHandler"
-                                :on-success="imageUploadSuccessHandler"
-                                :before-upload="validateImageHandler"
-                                :show-file-list="false"
-                                :auto-upload="true"
-                            >
+                            <!--                            <el-upload-->
+                            <!--                                style="background-color: #fff;"-->
+                            <!--                                v-show="!uploaderStates.thumbnail.isUploading"-->
+                            <!--                                drag-->
+                            <!--                                ref="thumbnailUploader"-->
+                            <!--                                accept="image/*"-->
+                            <!--                                :action="uploadPreviewImageAction"-->
+                            <!--                                :with-credentials="true"-->
+                            <!--                                :data="uploader.data"-->
+                            <!--                                :headers="uploader.headers"-->
+                            <!--                                :on-error="errorHandler"-->
+                            <!--                                :on-change="previewImageChangeHandler"-->
+                            <!--                                :on-success="imageUploadSuccessHandler"-->
+                            <!--                                :before-upload="validateImageHandler"-->
+                            <!--                                :show-file-list="false"-->
+                            <!--                                :auto-upload="true"-->
+                            <!--                            >-->
 
-                                <div
-                                    v-if="!formData.previewImage"
-                                    class="resource-thumbnail-input__button-cover"
-                                >
-                                    <i class="el-icon-circle-plus" style="color: #EDEDED"></i>
-                                    <p class="thumbnail-tip" style="color: #666666">上传封面</p>
-                                </div>
+                            <!--                                <div-->
+                            <!--                                    v-if="!formData.previewImage"-->
+                            <!--                                    class="resource-thumbnail-input__button-cover"-->
+                            <!--                                >-->
+                            <!--                                    <i class="el-icon-circle-plus" style="color: #EDEDED"></i>-->
+                            <!--                                    <p class="thumbnail-tip" style="color: #666666">上传封面</p>-->
+                            <!--                                </div>-->
 
-                                <template v-if="formData.previewImage">
-                                    <img
-                                        :src="formData.previewImage"
-                                        style="height: 100%;"
-                                        alt=""
-                                    >
-                                    <!--                            <template v-else>-->
-                                    <div
-                                        class="resource-thumbnail-input__button-cover_uploaded"
-                                    >
-                                        <i class="el-icon-circle-plus" style="color: #fff"></i>
-                                        <p class="thumbnail-tip" style="color: #fff">重新上传</p>
-                                    </div>
-                                </template>
-                                <!--                            </template>-->
-                            </el-upload>
+                            <!--                                <template v-if="formData.previewImage">-->
+                            <!--                                    <img-->
+                            <!--                                        :src="formData.previewImage"-->
+                            <!--                                        style="height: 100%;"-->
+                            <!--                                        alt=""-->
+                            <!--                                    >-->
+                            <!--                                    <div-->
+                            <!--                                        class="resource-thumbnail-input__button-cover_uploaded"-->
+                            <!--                                    >-->
+                            <!--                                        <i class="el-icon-circle-plus" style="color: #fff"></i>-->
+                            <!--                                        <p class="thumbnail-tip" style="color: #fff">重新上传</p>-->
+                            <!--                                    </div>-->
+                            <!--                                </template>-->
+                            <!--                            </el-upload>-->
+                            <UploadCover
+                                :imageUrl="formData.previewImage"
+                                :onUploaded="imageUploadSuccessHandler"
+                            />
                             <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
                                 <span>*&nbsp;</span>
                                 <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
                             </div>
-                            <!--                        <div-->
-                            <!--                            class="thumbnail-upload-state"-->
-                            <!--                            v-show="uploaderStates.thumbnail.isUploading"-->
-                            <!--                        >-->
-                            <!--                            <div>-->
-                            <!--                                <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>-->
-                            <!--                                <el-progress-->
-                            <!--                                    style="margin-right: 20px;"-->
-                            <!--                                    :stroke-width="10"-->
-                            <!--                                    :percentage="uploaderStates.thumbnail.percentage"-->
-                            <!--                                    color="#333333"></el-progress>-->
-                            <!--                            </div>-->
-                            <!--                        </div>-->
                         </div>
                     </div>
                 </div>

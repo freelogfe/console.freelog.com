@@ -13,7 +13,7 @@
                 <div class="mock-list__buckets__title__content">
                     <div>
                         <span>Bucket列表</span>
-                        <span style="padding-left: 10px;">5/5</span>
+                        <span style="padding-left: 10px;">{{bucketsList && bucketsList.length}}/5</span>
                     </div>
                     <el-button
                         icon="el-icon-plus"
@@ -217,6 +217,15 @@
 
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item>
+                                                <router-link
+                                                    :to="'/mock/create?mockResourceId=' + scope.row.mockResourceId"
+                                                >
+                                                    <a
+                                                        style="display: block; width: 100%; height: 100%; color: #333;"
+                                                    >编辑</a>
+                                                </router-link>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item>
                                                 <a
                                                     @click="downloadAMockByAPI(scope.row.mockResourceId)"
                                                     style="display: block; width: 100%; height: 100%; color: #333;"
@@ -228,15 +237,6 @@
                                                 <a
                                                     style="display: block; width: 100%; height: 100%; color: #333;"
                                                 >生成正式资源</a>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item>
-                                                <router-link
-                                                    :to="'/mock/create?mockResourceId=' + scope.row.mockResourceId"
-                                                >
-                                                    <a
-                                                        style="display: block; width: 100%; height: 100%; color: #333;"
-                                                    >编辑</a>
-                                                </router-link>
                                             </el-dropdown-item>
                                             <el-dropdown-item>
                                                 <a

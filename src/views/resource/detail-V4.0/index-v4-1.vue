@@ -29,27 +29,31 @@
                 v-model="resourceDetail.resourceInfo.aliasName"></el-input>
         <h3>资源封面</h3>
         <div class="resource-thumbnail-input">
-          <el-upload
-                  v-show="!uploaderStates.thumbnail.isUploading"
-                  class="resource-thumbnail-uploader"
-                  drag
-                  ref="thumbnailUploader"
-                  :action="uploadPreviewImageAction"
-                  :with-credentials="true"
-                  :data="uploader.data"
-                  :headers="uploader.headers"
-                  :on-error="errorHandler"
-                  :on-change="previewImageChangeHandler"
-                  :on-success="imageUploadSuccessHandler"
-                  :before-upload="validateImageHandler"
-                  :on-progress="uploadProgressHandler"
-                  :show-file-list="false"
-                  :auto-upload="true">
-            <img :src="resPreviewImage" :class="{'resource-default-preview': resPreviewImage === ''}" style="height: 100%;" alt="">
-            <div class="r-t-update-preview-image">
-              <i class="el-icon-plus"></i>
-            </div>
-          </el-upload>
+<!--          <el-upload-->
+<!--                  v-show="!uploaderStates.thumbnail.isUploading"-->
+<!--                  class="resource-thumbnail-uploader"-->
+<!--                  drag-->
+<!--                  ref="thumbnailUploader"-->
+<!--                  :action="uploadPreviewImageAction"-->
+<!--                  :with-credentials="true"-->
+<!--                  :data="uploader.data"-->
+<!--                  :headers="uploader.headers"-->
+<!--                  :on-error="errorHandler"-->
+<!--                  :on-change="previewImageChangeHandler"-->
+<!--                  :on-success="imageUploadSuccessHandler"-->
+<!--                  :before-upload="validateImageHandler"-->
+<!--                  :on-progress="uploadProgressHandler"-->
+<!--                  :show-file-list="false"-->
+<!--                  :auto-upload="true">-->
+<!--            <img :src="resPreviewImage" :class="{'resource-default-preview': resPreviewImage === ''}" style="height: 100%;" alt="">-->
+<!--            <div class="r-t-update-preview-image">-->
+<!--              <i class="el-icon-plus"></i>-->
+<!--            </div>-->
+<!--          </el-upload>-->
+            <UploadCover
+                :imageUrl="resPreviewImage"
+                :onUploaded="imageUploadSuccessHandler"
+            />
           <div class="thumbnail-upload-state" v-show="uploaderStates.thumbnail.isUploading">
             <div>
               <i class="el-icon-circle-close" @click="clearUploaderHandler('thumbnail')"></i>

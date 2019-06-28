@@ -108,6 +108,7 @@ export default {
                 this.bucketNameInputValueError = data.msg;
                 return;
             }
+            this.$message.success('创建成功');
             this.hideNewBucketDialog();
             await this.initBucketsByAPI(true);
             // this.activeBucketIndex = this.bucketsList.length - 1;
