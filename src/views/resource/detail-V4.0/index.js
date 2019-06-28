@@ -15,6 +15,7 @@ import ReleaseSearch from '@/views/release/search/index.vue'
 import {loadDetail} from '@/data/resource/loader'
 import {onloadNodeList} from '@/data/node/loader'
 import {cssSupports} from '@/lib/utils'
+import UploadCover from '@/components/UploadCover/index.vue';
 
 export default {
   name: 'resource-detail',
@@ -22,6 +23,7 @@ export default {
     RichEditor,
     ResourceMetaInfo,
     ReleaseSearch,
+      UploadCover
   },
   data() {
     return {
@@ -225,16 +227,20 @@ export default {
 
       return true
     },
-    imageUploadSuccessHandler(res) {
-      this.uploaderStates.thumbnail.isUploading = false
-      if (res.errcode === 0) {
-        this.uploaderStates.thumbnail.isUploaded = true
-        this.uploaderStates.thumbnail.percentage = 100
-        this.resPreviewImage = res.data
-      } else {
-        this.uploaderStates.thumbnail.percentage = 0
-        this.$error.showErrorMessage(res.msg)
-      }
+      /**
+       * 上传封面成功
+       * @param imageUrl
+       */
+    imageUploadSuccessHandler(imageUrl) {
+      // this.uploaderStates.thumbnail.isUploading = false
+      // if (res.errcode === 0) {
+      //   this.uploaderStates.thumbnail.isUploaded = true
+      //   this.uploaderStates.thumbnail.percentage = 100
+        this.resPreviewImage = imageUrl
+      // } else {
+      //   this.uploaderStates.thumbnail.percentage = 0
+      //   this.$error.showErrorMessage(res.msg)
+      // }
     },
     validateImageHandler(file) {
       if (!/\.(jpg|png|gif|jpeg)$/.test(file.name)) {
