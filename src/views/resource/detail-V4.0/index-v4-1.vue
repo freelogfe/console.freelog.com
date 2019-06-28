@@ -66,10 +66,15 @@
           </div>
         </div>
         <div class="resource-thumbnail-input-tip">
-          <ul>
-            <li>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M</li>
-            <li>建议尺寸为800X600</li>
-          </ul>
+<!--          <ul>-->
+<!--&lt;!&ndash;            <li>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M</li>&ndash;&gt;-->
+<!--&lt;!&ndash;            <li>建议尺寸为800X600</li>&ndash;&gt;-->
+<!--            <li>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</li>-->
+<!--          </ul>-->
+            <div style="display: flex; padding-left: 20px; font-size: 13px; color: #afafaf;">
+                <span>*&nbsp;</span>
+                <div>只支持JPG/PNG/GIF，GIF文件不能动画化，大小不超过5M 建议尺寸为800X600</div>
+            </div>
         </div>
       </div>
     </div>
