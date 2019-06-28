@@ -93,7 +93,7 @@
              * 图片上传完成
              */
             handleAvatarSuccess(res, file) {
-                if (errcode !== 0) {
+                if (res.errcode !== 0) {
                     return;
                 }
                 // console.log(res, 'resresresresresresres');
@@ -153,8 +153,9 @@
 
 <style lang="less">
     #upload-cover {
-        padding: 10px;
+        /*padding: 10px;*/
         background-color: #fff;
+        display: inline-block;
 
         .avatar-uploader {
             .el-upload {
