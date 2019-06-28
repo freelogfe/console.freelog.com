@@ -149,7 +149,7 @@
                top="10vh"
                center
                :visible.sync="isShowReleaseDenpDialog">
-      <release-search :tabLayout="['my-release', 'search', 'favor']" :historicalReleases="releasesList" @add="releaseSearchHandler"></release-search>
+      <release-search :tabLayout="['search', 'my-release', 'favor']" :historicalReleases="releasesList" @add="releaseSearchHandler"></release-search>
     </el-dialog>
 
     <el-dialog width="750px"
