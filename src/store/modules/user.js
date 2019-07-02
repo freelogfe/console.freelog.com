@@ -101,8 +101,10 @@ const user = {
     [types.CHECK_USER_SESSION]({getters}) {
       const session = getters.session
       let userId = cookieStore.get('uid') || ''
+      // console.log(cookieStore.get('authInfo'), 'cookieStorecookieStorecookieStore');
       return new Promise((resolve) => {
         var logined
+        // console.log(session, 'sessionsessionsessionsession');
         if (userId) {
           logined = !!(session && session.user && session.user.userId === userId)
         } else {
