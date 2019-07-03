@@ -6,6 +6,7 @@ import SearchResource from '../search/index.vue'
 import ReleaseSearch from '@/views/release/search/index.vue'
 import {axios} from '@/lib';
 import UploadCover from '@/components/UploadCover/index.vue';
+import UploadFile from '@/components/UploadFile/index.vue';
 
 const EDIT_MODES = {
     creator: 'creator',
@@ -20,6 +21,7 @@ export default {
         SearchResource,
         ReleaseSearch,
         UploadCover,
+        UploadFile,
     },
     data() {
         const validateResourceType = (rule, value, callback) => {
@@ -139,6 +141,12 @@ export default {
             isShowDeleteUploadeFilePopover: false,
             // 上传资源文件错误文字
             uploadErrorDialogText: '',
+            // 上传文件的信息
+            uploadFileInfo: {
+                fileID: '',
+                name: '',
+                size: 0,
+            },
         }
     },
     props: {
@@ -226,8 +234,14 @@ export default {
             this.formData.previewImage = data.data.previewImages[0] || '';
             this.deps = data.data.systemMeta.dependencies || [];
             this.formData.description = data.data.description;
-            this.formData.filesize = data.data.systemMeta.fileSize;
-            this.formData.filename = data.data.systemMeta.filename;
+
+            this.uploadFileInfo = {
+                fileID: '',
+                name: data.data.systemMeta.filename,
+                size: data.data.systemMeta.fileSize,
+            };
+            // this.formData.filesize = data.data.systemMeta.fileSize;
+            // this.formData.filename = data.data.systemMeta.filename;
             // this.formData.description = '<div>123456</div>';
             this.meta = JSON.stringify(data.data.meta);
         },
@@ -347,7 +361,7 @@ export default {
         imageUploadSuccessHandler(imageUrl) {
             // this.uploaderStates.thumbnail.isUploading = false;
             // if (res.errcode === 0) {
-                this.formData.previewImage = imageUrl;
+            this.formData.previewImage = imageUrl;
             //     this.uploaderStates.thumbnail.isUploaded = true;
             //     this.uploaderStates.thumbnail.percentage = 100;
             // } else {
@@ -689,14 +703,17 @@ export default {
         },
 
 
-        // 点击上传资源按钮时，进行合法性检查
-        onClickUploadResource(e) {
+        /**
+         * 当上传时，没有选择文件类型时
+         * @param e
+         */
+        onUploadNoType(e) {
             // console.log(e, 'eefrdsaasdf');
             this.doHighlightSelectTip = false;
 
-            if (!this.formData.resourceType) {
-                setTimeout(() => this.doHighlightSelectTip = true, 30);
-            }
+            // if (!this.formData.resourceType) {
+            setTimeout(() => this.doHighlightSelectTip = true, 30);
+            // }
         },
 
         // 点击显示 『添加 meta 信息』的按钮
@@ -740,5 +757,13 @@ export default {
             this.uploadErrorDialogText = '';
             this.deleteUploadedFile();
         },
+
+        /**
+         * 上传文件信息发生变化
+         */
+        onFileInfoChange(fileInfo) {
+            this.uploadFileInfo = {...fileInfo};
+            console.log(this.uploadFileInfo, 'this.uploadFileInfothis.uploadFileInfo0000000');
+        }
     }
 }

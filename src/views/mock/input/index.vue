@@ -73,161 +73,155 @@
                             v-if="showCreatorInputItem"
                         >
                             <div style="font-size: 13px; color: #666; line-height: 35px;">资源文件</div>
-                            <div
-                                v-if="initIsUploadedState"
-                                style="background-color: #fafbfb; padding: 0 10px; display: flex; align-items: center; justify-content: space-between;">
-                                <div style="line-height: 46px; font-size: 14px; color: #333;">
-                                    <span style="padding-right: 70px;">{{formData.filename}}</span>
-                                    <span>{{humanizeSize(formData.filesize)}}</span>
-                                </div>
+                            <UploadFile
+                                :fileType="formData.resourceType"
+                                :fileInfo="uploadFileInfo"
+                                :onFileInfoChange="onFileInfoChange"
+                                @error="onUploadNoType"
+                            />
+<!--                            <div-->
+<!--                                v-if="initIsUploadedState"-->
+<!--                                style="background-color: #fafbfb; padding: 0 10px; display: flex; align-items: center; justify-content: space-between;">-->
+<!--                                <div style="line-height: 46px; font-size: 14px; color: #333;">-->
+<!--                                    <span style="padding-right: 70px;">{{formData.filename}}</span>-->
+<!--                                    <span>{{humanizeSize(formData.filesize)}}</span>-->
+<!--                                </div>-->
 
-                                <a
-                                    @click="clearUploadedResourceInfo"
-                                    class="el-icon-circle-close"
-                                ></a>
-                            </div>
-                            <div v-if="!initIsUploadedState">
-                                <!-- 上传按钮 -->
-                                <div
-                                    v-show="shouldShowResourceUploader !== false"
-                                    class="resource-file-uploader-wrap"
-                                >
-                                    <el-upload
-                                        v-if="showCreatorInputItem"
-                                        class="resource-file-uploader"
-                                        drag
-                                        :accept="formData.resourceType === 'image' ? 'image/*': '*'"
-                                        ref="resourceUploader"
-                                        :action="uploadResourceFileAction"
-                                        :with-credentials="true"
-                                        :multiple="false"
-                                        :data="{resourceType: formData.resourceType}"
-                                        :headers="uploader.headers"
-                                        :before-upload="beforeUploadHandler"
-                                        :on-error="errorHandler"
-                                        :on-change="fileChangeHandler"
-                                        :on-success="successHandler"
-                                        :show-file-list="false"
-                                        :disabled="!formData.resourceType"
-                                        :on-progress="uploadProgressHandler"
-                                        v-popover:uploadPopTip
-                                        :auto-upload="true"
-                                    >
-                                        <div style="display: flex; align-items: flex-end;">
-                                            <el-button
-                                                ref="sourceUploadButton"
-                                                @click="onClickUploadResource"
-                                            >上传资源
-                                            </el-button>
-                                            <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small> 资源最大不超过50M</span>
-                                        </div>
-                                    </el-upload>
-                                </div>
+<!--                                <a-->
+<!--                                    @click="clearUploadedResourceInfo"-->
+<!--                                    class="el-icon-circle-close"-->
+<!--                                ></a>-->
+<!--                            </div>-->
+<!--                            <div v-if="!initIsUploadedState">-->
+<!--                                &lt;!&ndash; 上传按钮 &ndash;&gt;-->
+<!--                                <div-->
+<!--                                    v-show="shouldShowResourceUploader !== false"-->
+<!--                                    class="resource-file-uploader-wrap"-->
+<!--                                >-->
+<!--                                    <el-upload-->
+<!--                                        v-if="showCreatorInputItem"-->
+<!--                                        class="resource-file-uploader"-->
+<!--                                        drag-->
+<!--                                        :accept="formData.resourceType === 'image' ? 'image/*': '*'"-->
+<!--                                        ref="resourceUploader"-->
+<!--                                        :action="uploadResourceFileAction"-->
+<!--                                        :with-credentials="true"-->
+<!--                                        :multiple="false"-->
+<!--                                        :data="{resourceType: formData.resourceType}"-->
+<!--                                        :headers="uploader.headers"-->
+<!--                                        :before-upload="beforeUploadHandler"-->
+<!--                                        :on-error="errorHandler"-->
+<!--                                        :on-change="fileChangeHandler"-->
+<!--                                        :on-success="successHandler"-->
+<!--                                        :show-file-list="false"-->
+<!--                                        :disabled="!formData.resourceType"-->
+<!--                                        :on-progress="uploadProgressHandler"-->
+<!--                                        v-popover:uploadPopTip-->
+<!--                                        :auto-upload="true"-->
+<!--                                    >-->
+<!--                                        <div style="display: flex; align-items: flex-end;">-->
+<!--                                            <el-button-->
+<!--                                                ref="sourceUploadButton"-->
+<!--                                            >上传资源-->
+<!--                                            </el-button>-->
+<!--                                            <span style="font-size: 13px; color: #afafaf; padding-left: 20px;"><small>•</small> 资源最大不超过50M</span>-->
+<!--                                        </div>-->
+<!--                                    </el-upload>-->
+<!--                                </div>-->
 
-                                <div style="height: 10px;"></div>
+<!--                                <div style="height: 10px;"></div>-->
 
-                                <!-- 上传进度 -->
-                                <div
-                                    class="resource-upload-state
-                                 clearfix"
-                                    style="display: block;"
-                                    v-show="shouldShowResourceUploader === false"
-                                >
-                                    <!-- v-show="shouldShowResourceUploader === true" -->
-                                    <div style="background-color: #fafbfb;">
-                                        <div
-                                            style="display: flex; justify-content: space-between;  font-size: 16px; color: #333; padding: 0 20px; line-height: 45px; height: 45px">
-                                            <span>{{formData.filename}}</span>
-                                            <span>{{humanizeSize(formData.filesize)}}</span>
-                                        </div>
-                                        <div
-                                            style="padding: 18px 20px; border-top: 1px solid #e8e8e8; display: flex; align-items: center;">
-                                            <el-progress
-                                                :percentage="uploaderStates.resource.percentage"
-                                                :stroke-width="14"
-                                                color="#409eff"
-                                                :show-text="false"
-                                                style="flex-shrink: 1; width: 100%;"
-                                            ></el-progress>
-                                            <!-- 进度条右侧 -->
-                                            <!--                                            v-if="!uploaderStates.resource.isExistResource"-->
-                                            <div
-                                                style="
-                                            width: 130px;
-                                            box-sizing: border-box;
-                                            flex-shrink: 0;
-                                            padding-left: 10px;
-                                            color: #3f9cfd;
-                                            font-size: 14px;
-                                            font-weight: 600;">
+<!--                                &lt;!&ndash; 上传进度 &ndash;&gt;-->
+<!--                                <div-->
+<!--                                    class="resource-upload-state clearfix"-->
+<!--                                    style="display: block;"-->
+<!--                                    v-show="shouldShowResourceUploader === false"-->
+<!--                                >-->
+<!--                                    &lt;!&ndash; v-show="shouldShowResourceUploader === true" &ndash;&gt;-->
+<!--                                    <div style="background-color: #fafbfb;">-->
+<!--                                        <div-->
+<!--                                            style="display: flex; justify-content: space-between;  font-size: 16px; color: #333; padding: 0 20px; line-height: 45px; height: 45px">-->
+<!--                                            <span>{{formData.filename}}</span>-->
+<!--                                            <span>{{humanizeSize(formData.filesize)}}</span>-->
+<!--                                        </div>-->
+<!--                                        <div-->
+<!--                                            style="padding: 18px 20px; border-top: 1px solid #e8e8e8; display: flex; align-items: center;">-->
+<!--                                            <el-progress-->
+<!--                                                :percentage="uploaderStates.resource.percentage"-->
+<!--                                                :stroke-width="14"-->
+<!--                                                color="#409eff"-->
+<!--                                                :show-text="false"-->
+<!--                                                style="flex-shrink: 1; width: 100%;"-->
+<!--                                            ></el-progress>-->
+<!--                                            <div-->
+<!--                                                style="-->
+<!--                                            width: 130px;-->
+<!--                                            box-sizing: border-box;-->
+<!--                                            flex-shrink: 0;-->
+<!--                                            padding-left: 10px;-->
+<!--                                            color: #3f9cfd;-->
+<!--                                            font-size: 14px;-->
+<!--                                            font-weight: 600;">-->
 
-                                                <span
-                                                    style="display: flex; align-items: center; justify-content: space-between;"
-                                                    v-if="uploaderStates.resource.percentage < 100"
-                                                >
-                                                    <span>{{uploaderStates.resource.percentage + '%'}}</span>
-                                                    <a
-                                                        @click="clearUploaderHandler('resource')"
-                                                        style="font-size: 20px; color: #D5D5D5;"
-                                                        class="el-icon-circle-close"
-                                                    ></a>
-                                                </span>
+<!--                                                <span-->
+<!--                                                    style="display: flex; align-items: center; justify-content: space-between;"-->
+<!--                                                    v-if="uploaderStates.resource.percentage < 100"-->
+<!--                                                >-->
+<!--                                                    <span>{{uploaderStates.resource.percentage + '%'}}</span>-->
+<!--                                                    <a-->
+<!--                                                        @click="clearUploaderHandler('resource')"-->
+<!--                                                        style="font-size: 20px; color: #D5D5D5;"-->
+<!--                                                        class="el-icon-circle-close"-->
+<!--                                                    ></a>-->
+<!--                                                </span>-->
 
-                                                <div
-                                                    v-if="uploaderStates.resource.percentage === 100"
-                                                    style="display: flex; align-items: center; justify-content: space-between;"
-                                                >
-                                                    <i
-                                                        style="font-size: 20px; color: #5cd217;"
-                                                        class="el-icon-circle-check"
-                                                    ></i>
-                                                    <span style="font-size: 13px; color: #333;">上传成功</span>
+<!--                                                <div-->
+<!--                                                    v-if="uploaderStates.resource.percentage === 100"-->
+<!--                                                    style="display: flex; align-items: center; justify-content: space-between;"-->
+<!--                                                >-->
+<!--                                                    <i-->
+<!--                                                        style="font-size: 20px; color: #5cd217;"-->
+<!--                                                        class="el-icon-circle-check"-->
+<!--                                                    ></i>-->
+<!--                                                    <span style="font-size: 13px; color: #333;">上传成功</span>-->
 
 
-                                                    <el-popover
-                                                        placement="top"
-                                                        width="160"
-                                                        v-model="isShowDeleteUploadeFilePopover">
-                                                        <div style="height: 10px;"></div>
-                                                        <p style="font-size: 14px; color: #333; font-weight: 600; text-align: center;">
-                                                            确定删除资源文件？</p>
-                                                        <div style="height: 10px;"></div>
-                                                        <div style="text-align: center; margin: 0;">
-                                                            <el-button
-                                                                style="color: #999;"
-                                                                size="mini"
-                                                                type="text"
-                                                                @click="isShowDeleteUploadeFilePopover = false"
-                                                            >取消
-                                                            </el-button>
-                                                            <el-button
-                                                                type="danger"
-                                                                size="mini"
-                                                                @click="deleteUploadedFile"
-                                                            >确定
-                                                            </el-button>
-                                                        </div>
-                                                        <!--                                                            @click="clearUploadedResourceInfo"-->
-                                                        <a
-                                                            slot="reference"
-                                                            style="font-size: 20px; color: #D5D5D5;"
-                                                            class="el-icon-circle-close"
-                                                        ></a>
-                                                    </el-popover>
-
-                                                    <!--                                                <el-button size="small" @click="onClickUpload">重新上传</el-button>-->
-                                                </div>
-
-                                            </div>
-                                            <!--                                        <span-->
-                                            <!--                                            v-else="uploaderStates.resource.isExistResource"-->
-                                            <!--                                            style="width: 75px; flex-shrink: 0; padding-left: 14px; color: red; font-size: 14px; font-weight: 600;">-->
-                                            <!--                                            重复上传-->
-                                            <!--                                        </span>-->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                                                    <el-popover-->
+<!--                                                        placement="top"-->
+<!--                                                        width="160"-->
+<!--                                                        v-model="isShowDeleteUploadeFilePopover">-->
+<!--                                                        <div style="height: 10px;"></div>-->
+<!--                                                        <p style="font-size: 14px; color: #333; font-weight: 600; text-align: center;">-->
+<!--                                                            确定删除资源文件？</p>-->
+<!--                                                        <div style="height: 10px;"></div>-->
+<!--                                                        <div style="text-align: center; margin: 0;">-->
+<!--                                                            <el-button-->
+<!--                                                                style="color: #999;"-->
+<!--                                                                size="mini"-->
+<!--                                                                type="text"-->
+<!--                                                                @click="isShowDeleteUploadeFilePopover = false"-->
+<!--                                                            >取消-->
+<!--                                                            </el-button>-->
+<!--                                                            <el-button-->
+<!--                                                                type="danger"-->
+<!--                                                                size="mini"-->
+<!--                                                                @click="deleteUploadedFile"-->
+<!--                                                            >确定-->
+<!--                                                            </el-button>-->
+<!--                                                        </div>-->
+<!--                                                        &lt;!&ndash;                                                            @click="clearUploadedResourceInfo"&ndash;&gt;-->
+<!--                                                        <a-->
+<!--                                                            slot="reference"-->
+<!--                                                            style="font-size: 20px; color: #D5D5D5;"-->
+<!--                                                            class="el-icon-circle-close"-->
+<!--                                                        ></a>-->
+<!--                                                    </el-popover>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
 
                         <!-- 资源名称输入框 -->
@@ -445,31 +439,31 @@
         </el-dialog>
 
         <!-- 上传文件有问题的 dialog -->
-        <el-dialog
-            custom-class="upload-error-dialog"
-            :visible="!!uploadErrorDialogText"
-            width="30%"
-            :close-on-click-modal="false"
-            :show-close="false"
-        >
-            <div style="height: 20px;"></div>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <i class="el-icon-warning" style="color: #FFC000; font-size: 20px;"></i> <span
-                style="font-size: 14px; color: #333; font-weight: 600; padding-left: 10px;">{{uploadErrorDialogText}}</span>
-            </div>
-            <div style="height: 40px;"></div>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <el-button type="text" style="color: #999;" @click="hideUploadErrorDialog">取消</el-button>
-                &nbsp;&nbsp;&nbsp;
-                <el-button
-                    type="primary"
-                    plain
-                    round
-                    @click="onClickUpload"
-                >重新选择
-                </el-button>
-            </div>
-        </el-dialog>
+<!--        <el-dialog-->
+<!--            custom-class="upload-error-dialog"-->
+<!--            :visible="!!uploadErrorDialogText"-->
+<!--            width="30%"-->
+<!--            :close-on-click-modal="false"-->
+<!--            :show-close="false"-->
+<!--        >-->
+<!--            <div style="height: 20px;"></div>-->
+<!--            <div style="display: flex; align-items: center; justify-content: center;">-->
+<!--                <i class="el-icon-warning" style="color: #FFC000; font-size: 20px;"></i> <span-->
+<!--                style="font-size: 14px; color: #333; font-weight: 600; padding-left: 10px;">{{uploadErrorDialogText}}</span>-->
+<!--            </div>-->
+<!--            <div style="height: 40px;"></div>-->
+<!--            <div style="display: flex; align-items: center; justify-content: center;">-->
+<!--                <el-button type="text" style="color: #999;" @click="hideUploadErrorDialog">取消</el-button>-->
+<!--                &nbsp;&nbsp;&nbsp;-->
+<!--                <el-button-->
+<!--                    type="primary"-->
+<!--                    plain-->
+<!--                    round-->
+<!--                    @click="onClickUpload"-->
+<!--                >重新选择-->
+<!--                </el-button>-->
+<!--            </div>-->
+<!--        </el-dialog>-->
     </div>
 </template>
 
