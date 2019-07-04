@@ -324,7 +324,7 @@
             <!-- 依赖列表 -->
             <div class="input-item-wrap">
                 <!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
-                <h4>依赖发行</h4>
+                <h4>依赖</h4>
                 <div
                     class="input-area"
                     :class="{'edit-disabled': !canEditDependencies}"
