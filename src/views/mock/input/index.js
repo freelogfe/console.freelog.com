@@ -144,6 +144,7 @@ export default {
             // 上传文件的信息
             uploadFileInfo: {
                 fileID: '',
+                sha1: '',
                 name: '',
                 size: 0,
             },
@@ -237,6 +238,7 @@ export default {
 
             this.uploadFileInfo = {
                 fileID: '',
+                sha1: '',
                 name: data.data.systemMeta.filename,
                 size: data.data.systemMeta.fileSize,
             };
@@ -498,7 +500,7 @@ export default {
          * @return {object}
          */
         packUploadData() {
-            const reourceUploader = this.uploaderStates.resource;
+            // const reourceUploader = this.uploaderStates.resource;
             const uploadData = {};
             const formData = this.formData;
             let metaData;
@@ -513,24 +515,25 @@ export default {
                 metaData = {};
             }
 
-            if (this.editMode === EDIT_MODES.creator) {
-                keys = keys.concat(INPUT_KEYS);
-                uploadData.sha1 = reourceUploader.sha1;
+            // if (this.editMode === EDIT_MODES.creator) {
+            keys = keys.concat(INPUT_KEYS);
+            uploadData.sha1 = this.uploadFileInfo.sha1 || undefined;
 
-                // 资源名称,需要同一个bucket下唯一
-                // uploadData.aliasName = formData.resourceName;
-                uploadData.name = formData.resourceName;
+            // 资源名称,需要同一个bucket下唯一
+            // uploadData.aliasName = formData.resourceName;
+            uploadData.name = formData.resourceName;
 
-                // 上传的资源返回来的uploadFileId值
-                uploadData.uploadFileId = reourceUploader.uploadFileId;
+            // 上传的资源返回来的uploadFileId值
+            // uploadData.uploadFileId = reourceUploader.uploadFileId;
+            uploadData.uploadFileId = this.uploadFileInfo.fileID || undefined;
 
-                // if (formData.resourceType === RESOURCE_TYPES.widget) {
-                //     uploadData.widgetInfo = {
-                //         widgetName: formData.widgetName,
-                //         version: `^${formData.widgetVersion}`
-                //     };
-                // }
-            }
+            // if (formData.resourceType === RESOURCE_TYPES.widget) {
+            //     uploadData.widgetInfo = {
+            //         widgetName: formData.widgetName,
+            //         version: `^${formData.widgetVersion}`
+            //     };
+            // }
+            // }
 
             // 如果封面图存在
             if (formData.previewImage) {
@@ -763,7 +766,12 @@ export default {
          */
         onFileInfoChange(fileInfo) {
             this.uploadFileInfo = {...fileInfo};
-            console.log(this.uploadFileInfo, 'this.uploadFileInfothis.uploadFileInfo0000000');
+            // console.log(this.uploadFileInfo, 'this.uploadFileInfothis.uploadFileInfo0000000');
+            if (!this.formData.resourceName) {
+                const arr = fileInfo.name.split('.');
+                arr.pop();
+                this.formData.resourceName = arr.join('.');
+            }
         }
     }
 }

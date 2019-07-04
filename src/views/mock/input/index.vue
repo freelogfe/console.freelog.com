@@ -31,8 +31,9 @@
                                     {{$t('resourceEditView.changeTypeTip')}}{{showCreatorInputItem?
                                     $t('resourceEditView.changeTypeTip2'): ''}}
                                 </el-popover>
+<!--                                :disabled="!enabledEditResourceType || initIsUploadedState"-->
                                 <el-select
-                                    :disabled="!enabledEditResourceType || initIsUploadedState"
+                                    :disabled="!!uploadFileInfo.name"
                                     v-model="formData.resourceType"
                                     allow-create
                                     filterable

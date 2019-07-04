@@ -18,6 +18,7 @@ export default {
             type: Object,
             default: {
                 fileID: '',
+                sha1: '',
                 name: '',
                 size: 0,
             },
@@ -133,6 +134,7 @@ export default {
 
             this.onFileInfoChange && this.onFileInfoChange({
                 fileID: '',
+                sha1: '',
                 name: file.name,
                 size: file.size,
             });
@@ -157,6 +159,7 @@ export default {
             this.onFileInfoChange({
                 ...this.fileInfo,
                 fileID: response.data.uploadFileId,
+                sha1: response.data.sha1,
             });
         },
         /**
@@ -172,6 +175,7 @@ export default {
             this.percentage = null;
             this.onFileInfoChange({
                 fileID: '',
+                sha1: '',
                 name: '',
                 size: 0,
             });
@@ -202,7 +206,7 @@ export default {
 function humanizeSize(number) {
     const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-    if (!number) {
+    if (!number && number !== 0) {
         return '';
     }
 
