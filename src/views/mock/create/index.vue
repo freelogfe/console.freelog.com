@@ -33,8 +33,7 @@
                             style="color: #999999;"
                             @click="cancelHandler"
                             type="text"
-                        >{{
-                            $t('common.cancelCreateText') }}
+                        > {{isEditState ? '取消': '取消创建'}}
                         </el-button>
                         <el-button
                             class="ft-btn"

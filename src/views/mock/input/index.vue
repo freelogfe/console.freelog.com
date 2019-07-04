@@ -347,7 +347,7 @@
                             @click="showSearchDialogHandler"
                             type="text"
                             v-popover:depsPopTip
-                            size="mini"><i class="el-icon-plus"></i>添加依赖发行
+                            size="mini"><i class="el-icon-plus"></i>添加依赖
                             <!--                            {{$t('resourceEditView.addDepResource')}}-->
                         </el-button>
 
