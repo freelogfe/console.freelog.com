@@ -300,7 +300,7 @@
             <!-- 依赖 -->
             <div class="input-item-wrap">
                 <!--                <h4>{{$t('resourceEditView.depResources')}}</h4>-->
-                <h4>依赖发行</h4>
+                <h4>依赖</h4>
                 <div
                     class="input-area"
                     :class="{'edit-disabled': !canEditDependencies}"
@@ -323,7 +323,7 @@
                             v-popover:depsPopTip
                             size="mini">
                             <!--                            <i class="el-icon-plus"></i>{{$t('resourceEditView.addDepResource')}}-->
-                            <i class="el-icon-plus"></i>添加依赖发行
+                            <i class="el-icon-plus"></i>添加依赖
                         </el-button>
                     </div>
                     <ul
