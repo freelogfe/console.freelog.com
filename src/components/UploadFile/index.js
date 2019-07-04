@@ -173,6 +173,7 @@ export default {
          */
         deleteUploadedFile() {
             this.percentage = null;
+            this.visiblePopover = false;
             this.onFileInfoChange({
                 fileID: '',
                 sha1: '',
