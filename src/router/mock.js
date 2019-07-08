@@ -39,34 +39,46 @@ export default {
         //     },
         //     component: Views.mockReEdit
         // },
+        // {
+        //     path: 'create',
+        //     hidden: true,
+        //     meta: {
+        //         requiresAuth: true,
+        //         // title: i18n.t('routes.createResource'),
+        //         title: '创建模拟资源',
+        //         type: 'resource',
+        //         theme: 'gray',
+        //         hideFooter: true,
+        //     },
+        //     component: Views.mockCreator,
+        // },
+        // {
+        //     path: 'create/:mockResourceId',
+        //     hidden: true,
+        //     meta: {
+        //         requiresAuth: true,
+        //         // title: i18n.t('routes.createResource'),
+        //         title: '模拟资源管理',
+        //         type: 'resource',
+        //         theme: 'gray',
+        //         hideFooter: true,
+        //     },
+        //     component: Views.mockCreator,
+        // },
         {
-            path: 'create',
+            path: 'create/:bucketName',
             hidden: true,
             meta: {
                 requiresAuth: true,
                 // title: i18n.t('routes.createResource'),
                 title: '创建模拟资源',
-                type: 'resource',
                 theme: 'gray',
                 hideFooter: true,
             },
-            component: Views.mockCreator,
+            component: Views.mockEditor,
         },
         {
-            path: 'create/:mockResourceId',
-            hidden: true,
-            meta: {
-                requiresAuth: true,
-                // title: i18n.t('routes.createResource'),
-                title: '模拟资源管理',
-                type: 'resource',
-                theme: 'gray',
-                hideFooter: true,
-            },
-            component: Views.mockCreator,
-        },
-        {
-            path: 'editor',
+            path: 'update/:mockResourceId',
             hidden: true,
             meta: {
                 requiresAuth: true,
