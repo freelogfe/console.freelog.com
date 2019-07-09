@@ -70,7 +70,7 @@ export default {
     },
     mounted() {
         // console.log(this.$route, 'this.$routethis.$routethis.$route');
-        this.initDataByMockResourceId();
+        this.initDataByResourceId();
     },
 
     methods: {
@@ -78,12 +78,13 @@ export default {
          * 当为更新 mock 资源时，初始化数据
          * @return {Promise<void>}
          */
-        async initDataByMockResourceId() {
-            const {mockResourceId} = this.$route.params;
-            if (!mockResourceId) {
+        async initDataByResourceId() {
+            const {resourceId} = this.$route.params;
+            if (!resourceId) {
                 return;
             }
-            const res = await this.$axios.get(`/v1/resources/mocks/${mockResourceId}`);
+            const res = await this.$axios.get(`/v1/resources/${resourceId}`);
+            return;
             // console.log(res.data.data, 'res.data.datares.data.data');
             const result = res.data.data;
             this.resourceType = result.resourceType;
