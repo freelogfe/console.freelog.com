@@ -134,9 +134,9 @@ export default {
             // 是否显示 meta 编辑框
             doShowMeta: false,
             // 重新修改初始化，文件资源已上传状态
-            initIsUploadedState: !!this.$route.query.mockResourceId,
+            initIsUploadedState: !!this.$route.params.mockResourceId,
             // 是否是资源编辑模式，而非创建模式
-            isMockEditMode: !!this.$route.query.mockResourceId,
+            isMockEditMode: !!this.$route.params.mockResourceId,
             // 是否显示清除已上传资源的 popover
             isShowDeleteUploadeFilePopover: false,
             // 上传资源文件错误文字
@@ -223,8 +223,8 @@ export default {
          * @return {Promise<void>}
          */
         async fillDataIfEdit() {
-            // console.log(this.$route.query.mockResourceId, 'this.$route.query.mockResourceId;');
-            const mockResourceId = this.$route.query.mockResourceId;
+            // console.log(this.$route.params.mockResourceId, 'this.$route.params.mockResourceId;');
+            const mockResourceId = this.$route.params.mockResourceId;
             if (!mockResourceId) {
                 return;
             }
@@ -543,7 +543,7 @@ export default {
             // console.log(this.deps, 'this.depsthis.depsthis.deps');
 
             // 从新组织依赖
-            if (!this.$route.query.mockResourceId) {
+            if (!this.$route.params.mockResourceId) {
                 uploadData.dependencies = this.deps.map(r => {
                     // r.resourceId
                     return {
@@ -592,7 +592,7 @@ export default {
                             releases: data.dependencies.filter(i => i.versionRange)
                         };
                         // console.log(data, 'datadatadatadatadata');
-                        if (!this.$route.query.mockResourceId) {
+                        if (!this.$route.params.mockResourceId) {
                             this.createResource(data)
                                 .then(resolve)
                                 .catch(reject);
@@ -655,7 +655,7 @@ export default {
             //     }
             //     return res.getData();
             // })
-            const mockResourceId = this.$route.query.mockResourceId;
+            const mockResourceId = this.$route.params.mockResourceId;
             // console.log(data, 'datadatadata');
             const res = await axios.put(`/v1/resources/mocks/${mockResourceId}`, data);
 

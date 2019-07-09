@@ -7,9 +7,10 @@ export default {
         ResourceInput
     },
     data() {
+        console.log(this.$route, 'this.$routethis.$route');
         return {
             resourceDetail: {},
-            isEditState: !!this.$route.query.mockResourceId,
+            isEditState: !!this.$route.params.mockResourceId,
         }
     },
     mounted() {

@@ -435,8 +435,10 @@
             center
             :visible.sync="showSearchResourceDialog"
         >
-            <release-search :tabLayout="['search', 'my-release', 'favor', 'mock-search']"
-                            @add="addDepReleaseHandler"></release-search>
+            <ReleaseSearch
+                :tabLayout="['search', 'my-release', 'favor', 'mock-search']"
+                @add="addDepReleaseHandler"
+            ></ReleaseSearch>
         </el-dialog>
 
         <!-- 上传文件有问题的 dialog -->
