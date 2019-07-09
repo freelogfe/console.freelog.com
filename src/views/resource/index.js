@@ -5,13 +5,16 @@ const resourceDetail = resolve => require.ensure([], () => resolve(require('./de
 const resourceList = resolve => require.ensure([], () => resolve(require('./list/index.vue')), 'resource-list')
 const resourceEditor = resolve => require.ensure([], () => resolve(require('./edit/index.vue')), 'resource-editor')
 
+const resourceNew = resolve => require.ensure([], () => resolve(require('./editor/index.vue')), 'resource-editor')
+
 
 export default {
     resourceCreator,
     resourceReEditor,
 
-
     resourceEditor,
     resourceDetail,
     resourceList,
+
+    resourceNew,
 }

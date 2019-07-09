@@ -1,7 +1,7 @@
 import BlockBody from '@/components/ResourceComponents/BlockBody.vue';
 import SmallTitle from '@/components/ResourceComponents/SmallTitle.vue';
 import DepList from '@/components/ResourceComponents/DepList.vue';
-import HeaderAlert from '@/components/ResourceComponents/HeaderAlert.vue';
+// import HeaderAlert from '@/components/ResourceComponents/HeaderAlert.vue';
 import UploadFile from '@/components/ResourceComponents/UploadFile/index.vue';
 import UploadCover from '@/components/ResourceComponents/UploadCover/index.vue';
 import ReleaseSearch from '@/views/release/search/index.vue';
@@ -20,12 +20,12 @@ export default {
         BlockBody,
         RichEditor,
         MetaInfoInput,
-        HeaderAlert,
+        // HeaderAlert,
     },
 
     data() {
         return {
-            isUpdateResource: !!this.$route.params.mockResourceId,
+            isUpdateResource: !!this.$route.params.resourceId,
             // 资源类型选项
             resourceTypes: ['json', 'widget', 'image', 'audio', 'markdown', 'pageBuild', 'revealSlide', 'license', 'video', 'catalog'],
             // 资源类型值
@@ -61,6 +61,11 @@ export default {
             visibleMetaInput: false,
             // meta 错误信息提示
             metaValidError: '',
+
+            // 是否显示发布
+            isShowReleaseSearchDialog: false,
+            // 临时存放的 新建的资源 ID
+            tmpRreatedResourceID: '',
         };
     },
     mounted() {
@@ -215,39 +220,69 @@ export default {
                 return this.$message.error('meta JSON格式有误');
             }
 
-            const {bucketName, mockResourceId} = this.$route.params;
-            console.log(this.depList, 'this.depListthis.depListthis.depListthis.depList');
+            // const {bucketName, mockResourceId} = this.$route.params;
             const params = {
-                bucketName,
-                resourceType: this.resourceType,
                 uploadFileId: this.uploadFileInfo.fileID || undefined,
-                name: this.resourceName,
+                aliasName: this.resourceName,
                 previewImages: this.coverURL ? [this.coverURL] : undefined,
-                dependencyInfo: {
-                    mocks: this.depList.filter(i => !i.version).map(i => ({mockResourceId: i.id})),
-                    releases: this.depList.filter(i => i.version).map(i => ({releaseId: i.id, versionRange: i.version}))
-                },
+                dependencies: this.depList.filter(i => i.version).map(i => ({
+                    releaseId: i.id,
+                    versionRange: i.version
+                })),
                 description: this.description,
                 meta: JSON.parse(this.metaInfo),
             };
 
-            if (bucketName) {
-                const res = await this.$axios.post('/v1/resources/mocks', params);
-                if (res.data.errcode !== 0) {
-                    return this.$message.error('创建失败');
-                }
-                this.$message.success('创建成功');
-                return this.$router.replace(`/mock/update/${res.data.data.mockResourceId}`);
+            // if (bucketName) {
+            const res = await this.$axios.post('/v1/resources', params);
+            if (res.data.errcode !== 0) {
+                return this.$message.error('创建失败');
+            }
+            this.$message.success('创建成功');
+            return res.data.data.resourceId;
+            // }
+
+            // if (mockResourceId) {
+            //     const res = await this.$axios.put(`/v1/resources/mocks/${mockResourceId}`, params);
+            //     if (res.data.errcode !== 0) {
+            //         return this.$message.error('保存失败');
+            //     }
+            //     this.$message.success('保存成功');
+            // }
+
+        },
+        /**
+         * 当两个创建按钮点击时
+         * @param bool 是否一起发布
+         */
+        async onSubmitButtonClick(bool) {
+            const resourceId = await this.submit();
+            if (!bool) {
+                return this.$router.replace(`/resource/list`);
+            }
+            this.tmpRreatedResourceID = resourceId;
+            this.isShowReleaseSearchDialog = true;
+        },
+        /**
+         * 创建发行
+         */
+        createRelease(releaseInfo) {
+            // 如果是 创建新发行
+            if (!releaseInfo) {
+                // console.log(this.tmpRreatedResourceID, 'this.tmpRreatedResourceIDthis.tmpRreatedResourceID');
+                return this.$router.replace(`/release/create?resourceId=${this.tmpRreatedResourceID}`);
             }
 
-            if (mockResourceId) {
-                const res = await this.$axios.put(`/v1/resources/mocks/${mockResourceId}`, params);
-                if (res.data.errcode !== 0) {
-                    return this.$message.error('保存失败');
-                }
-                this.$message.success('保存成功');
+            if (releaseInfo.resourceType === this.resourceType) {
+                // 跳转 发行编辑页
+                this.$router.replace(`/release/add?releaseId=${releaseInfo.releaseId}&resourceId=${this.tmpRreatedResourceID}`)
+            } else {
+                this.$message({
+                    type: 'warning',
+                    message: `所选发行的资源类型必须为${this.resourceType}`
+                })
             }
-
+            // console.log(releaseInfo, 'releaseInforeleaseInforeleaseInforeleaseInfo');
         },
         /**
          * 返回 mock 首页

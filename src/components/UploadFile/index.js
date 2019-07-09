@@ -109,7 +109,7 @@ export default {
          * @param file
          */
         handleChange(file) {
-            console.log(file, 'efasdfasdc asdf');
+            // console.log(file, 'efasdfasdc asdf');
         },
         /**
          * 上传文件之前的钩子
