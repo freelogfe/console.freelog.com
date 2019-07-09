@@ -25,6 +25,7 @@ export default {
 
     data() {
         return {
+            isUpdateResource: !!this.$route.params.mockResourceId,
             // 资源类型选项
             resourceTypes: ['json', 'widget', 'image', 'audio', 'markdown', 'pageBuild', 'revealSlide', 'license', 'video', 'catalog'],
             // 资源类型值
@@ -63,10 +64,47 @@ export default {
         };
     },
     mounted() {
-        console.log(this.$route, 'this.$routethis.$routethis.$route');
+        // console.log(this.$route, 'this.$routethis.$routethis.$route');
+        this.initDataByMockResourceId();
     },
 
     methods: {
+        /**
+         * 当为更新 mock 资源时，初始化数据
+         * @return {Promise<void>}
+         */
+        async initDataByMockResourceId() {
+            const {mockResourceId} = this.$route.params;
+            if (!mockResourceId) {
+                return;
+            }
+            const res = await this.$axios.get(`/v1/resources/mocks/${mockResourceId}`);
+            // console.log(res.data.data, 'res.data.datares.data.data');
+            const result = res.data.data;
+            this.resourceType = result.resourceType;
+            this.uploadFileInfo = {
+                fileID: '',
+                sha1: '',
+                name: result.systemMeta.filename,
+                size: result.systemMeta.fileSize,
+            };
+            this.resourceName = result.name;
+            this.coverURL = result.previewImages[0] || '';
+            this.depList = [
+                ...result.systemMeta.dependencyInfo.releases.map(i => ({
+                    id: i.releaseId,
+                    name: i.releaseName,
+                    version: i.versionRange,
+                })),
+                ...result.systemMeta.dependencyInfo.mocks.map(i => ({
+                    id: i.mockResourceId,
+                    name: i.mockResourceName,
+                })),
+            ];
+            this.description = result.description;
+            this.metaInfo = JSON.stringify(result.meta);
+        },
+
         /**
          * 资源类型改变时
          */
@@ -160,7 +198,7 @@ export default {
         /**
          * 提交数据
          */
-        submit() {
+        async submit() {
             if (!this.resourceType) {
                 return this.$message.error('请选择资源类型');
             }
@@ -177,11 +215,14 @@ export default {
                 return this.$message.error('meta JSON格式有误');
             }
 
+            const {bucketName, mockResourceId} = this.$route.params;
+            console.log(this.depList, 'this.depListthis.depListthis.depListthis.depList');
             const params = {
-                bucketName: '12345678',
-                uploadFileId: this.uploadFileInfo.fileID,
+                bucketName,
+                resourceType: this.resourceType,
+                uploadFileId: this.uploadFileInfo.fileID || undefined,
                 name: this.resourceName,
-                previewImages: [this.coverURL],
+                previewImages: this.coverURL ? [this.coverURL] : undefined,
                 dependencyInfo: {
                     mocks: this.depList.filter(i => !i.version).map(i => ({mockResourceId: i.id})),
                     releases: this.depList.filter(i => i.version).map(i => ({releaseId: i.id, versionRange: i.version}))
@@ -189,7 +230,30 @@ export default {
                 description: this.description,
                 meta: JSON.parse(this.metaInfo),
             };
-            this.$axios.post('/v1/resources/mocks', params);
+
+            if (bucketName) {
+                const res = await this.$axios.post('/v1/resources/mocks', params);
+                if (res.data.errcode !== 0) {
+                    return this.$message.error('创建失败');
+                }
+                this.$message.success('创建成功');
+                return this.$router.replace(`/mock/update/${res.data.data.mockResourceId}`);
+            }
+
+            if (mockResourceId) {
+                const res = await this.$axios.put(`/v1/resources/mocks/${mockResourceId}`, params);
+                if (res.data.errcode !== 0) {
+                    return this.$message.error('保存失败');
+                }
+                this.$message.success('保存成功');
+            }
+
+        },
+        /**
+         * 返回 mock 首页
+         */
+        goBack() {
+            this.$router.back();
         },
     }
 

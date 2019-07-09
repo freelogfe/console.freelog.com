@@ -15,6 +15,7 @@
                     placeholder="资源类型"
                     allow-create
                     filterable
+                    :disabled="!!this.uploadFileInfo.name"
                 >
                     <el-option
                         v-for="item in resourceTypes"
@@ -51,6 +52,7 @@
 
             <div style="padding-left: 40px;">
                 <el-input
+                    :disabled="isUpdateResource"
                     :minlength="1"
                     :maxlength="100"
                     v-model="resourceName"
@@ -166,14 +168,15 @@
                     round
                     style="color: #999999;"
                     type="text"
-                >取消创建
+                    @click="goBack"
+                >{{isUpdateResource ? '取消': '取消创建'}}
                 </el-button>
                 <el-button
                     size="medium"
                     round
                     type="primary"
                     @click="submit"
-                >完成创建
+                >{{isUpdateResource ? '保存': '完成创建'}}
                 </el-button>
             </div>
         </div>
