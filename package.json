@@ -19,7 +19,7 @@
     "@freelog/freelog-ui-contract": "0.0.9",
     "@freelog/resource-policy-lang": "0.0.33",
     "@vue/component-compiler-utils": "^2.4.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "codemirror": "^5.42.2",
     "cropperjs": "^1.4.3",
     "date-fns": "^1.30.1",
