@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@freelog/freelog-ui-contract": "0.0.9",
-    "@freelog/resource-policy-lang": "0.0.33",
+    "@freelog/resource-policy-lang": "1.5.6",
     "@vue/component-compiler-utils": "^2.4.0",
     "axios": "^0.18.0",
     "codemirror": "^5.42.2",
